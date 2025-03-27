@@ -9,13 +9,13 @@ import { ContactItem } from '../components'
 const Contact = () => {
   return (
     <div className='mt-8 w-full flex items-center justify-center'>
-        <div className='w-[90%] flex items-center justify-between'>
-            <div className='w-[60%]'>
+        <div className='w-[90%] flex flex-col md:flex-row items-center justify-between'>
+            <div className='w-full md:w-[60%]'>
                 <p className='text-sm font-bold'>Connect</p>
                 <h2 className='mt-2 text-4xl font-bold'>Get In Touch</h2>
-                <p className='mt-1'>We are here to help you with any inquiries or support you need.</p>
+                <p className='mt-1 w-[90%] md:w-full'>We are here to help you with any inquiries or support you need.</p>
             </div>
-            <div className='w-[40%] flex flex-col'>
+            <div className='w-full md:w-[40%] flex flex-col'>
                 <ContactItem contactType="Email" logo={emailIcon} desc="info@microdomeclasses.com" />
                 <ContactItem contactType="Phone" logo={phoneIcon} desc="+91 99999 99999" />
                 <ContactItem contactType="Office" logo={locationIcon} desc="Kolkata - 700032" />

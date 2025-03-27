@@ -12,8 +12,8 @@ const Enroll = () => {
         <p className="mt-4 text-center">
           Follow these simple steps to start your learning.
         </p>
-        <div className="mt-16 w-full flex items-center justify-between">
-          <div className="w-[45%] p-8 border border-black">
+        <div className="mt-16 w-full flex flex-col md:flex-row md:items-center gap-4 ">
+          <div className="w-full md:w-[45%] p-8 border border-black">
             <img className="w-8" src={boxIcon} alt="box icon" />
             <h2 className="mt-2 text-2xl font-bold">Get Started Now</h2>
             <p>
@@ -25,13 +25,13 @@ const Enroll = () => {
                 <button className="px-3 py-1.5 border border-black bg-black text-white">Enroll</button>
             </div>
           </div>
-          <div className="w-[25%] p-8 border border-black">
+          <div className="w-full md:w-[25%] p-8 border border-black">
             <img className="w-8" src={boxIcon} alt="box icon" />
             <h2 className="mt-2 text-2xl font-bold">Access Courses and Materials</h2>
             <p>Start learning with our expert-led 
             courses today!</p>
           </div>
-          <div className="w-[25%] p-8 border border-black">
+          <div className="w-full md:w-[25%] p-8 border border-black">
             <img className="w-8" src={boxIcon} alt="box icon" />
             <h2 className="mt-2 text-2xl font-bold">Join Live Classes Anytime</h2>
             <p>Engage with instructors and peers 

@@ -9,11 +9,11 @@ import ImageAnchor from "./ImageAnchor.jsx";
 
 const Footer = () => {
   return (
-    <div className="w-full mt-8 mb-16 flex items-center justify-center">
+    <div className="w-full mt-8 mb-8 md:mb-16 flex items-center justify-center">
       <div className="w-[90%]">
         <hr className="w-full" />
-        <div className="my-16 w-full px-8 flex justify-between">
-          <div className="w-[40%] flex flex-col justify-center">
+        <div className="my-8 md:my-16 w-full px-2 md:px-8 flex flex-col md:flex-row justify-between">
+          <div className="w-full md:w-[40%] flex flex-col justify-center">
             <h3 className="text-2xl font-bold">MicroDome</h3>
             <p className="mt-2">Let's connect with our socials</p>
             <div className="mt-4 w-full flex items-center gap-4">
@@ -54,7 +54,7 @@ const Footer = () => {
               />
             </div>
           </div>
-          <div className="w-[20%] px-8">
+          <div className="w-full md:w-[20%] mt-8 md:mt-0 px-0 md:px-8">
             <h3 className="text-xl font-bold">Company</h3>
             <ul className="mt-2">
               <li>About Us</li>
@@ -64,7 +64,7 @@ const Footer = () => {
               <li>Pricing and Refund</li>
             </ul>
           </div>
-          <div className="w-[20%] px-8">
+          <div className="w-full md:w-[20%] mt-4 md:mt-0 px-o md:px-8">
             <h3 className="text-xl font-bold">Quick Links</h3>
             <ul className="mt-2">
               <li>Courses</li>
@@ -73,7 +73,7 @@ const Footer = () => {
               <li>FAQs</li>
             </ul>
           </div>
-          <div className="w-[20%] px-8">
+          <div className="w-full md:w-[20%] mt-4 md:mt-0 px-0 md:px-8">
             <h3 className="text-xl font-bold">Community</h3>
             <ul className="mt-2">
               <li>Telegram</li>
