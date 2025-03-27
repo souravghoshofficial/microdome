@@ -4,11 +4,11 @@ import boxImg from "../assets/cube-solid.svg";
 
 const About = () => {
   return (
-    <div className="mt-8 w-full h-screen flex justify-center md:items-center md:justify-center">
+    <div className="mt-8 md:mt-16 w-full h-screen flex justify-center md:items-center md:justify-center">
       <div className="w-[90%] flex flex-col md:flex-row items-center justify-between">
         <div className="w-full md:w-[45%]">
           <div>
-            <img className="w-10 h-10" src={boxImg} alt="Box Image" />
+            <img className="w-8 md:w-10" src={boxImg} alt="Box Image" />
           </div>
           <div className="mt-4">
             <h2 className="text-4xl font-bold">Empowering Your Journey to Success in Biology</h2>

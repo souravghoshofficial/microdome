@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import facebookIcon from "../assets/facebook.svg";
 import instagramIcon from "../assets/instagram.svg";
 import xIcon from "../assets/twitter.svg";
@@ -83,7 +84,7 @@ const Footer = () => {
         </div>
         <hr className="w-full" />
         <p className="text-sm text-center">
-          Copyright &copy; 2025 Microdome Classes.
+          Copyright &copy; {new Date().getFullYear()} Microdome Classes.
         </p>
         <p className="text-sm text-center">All Rights Reserved.</p>
       </div>

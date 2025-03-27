@@ -8,7 +8,7 @@ import { ContactItem } from '../components'
 
 const Contact = () => {
   return (
-    <div className='mt-8 w-full flex items-center justify-center'>
+    <div className='mt-16 md:mt-32 w-full flex items-center justify-center'>
         <div className='w-[90%] flex flex-col md:flex-row items-center justify-between'>
             <div className='w-full md:w-[60%]'>
                 <p className='text-sm font-bold'>Connect</p>

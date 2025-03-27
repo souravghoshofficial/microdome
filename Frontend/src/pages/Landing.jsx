@@ -5,7 +5,7 @@ const Landing = () => {
     <div className="md:mt-48 mt-32 w-full flex items-center justify-center">
       <div className="w-[90%] flex flex-col items-center justify-center">
         <div className="mt-4 w-full md:w-[60%]">
-          <h1 className="text-center text-6xl font-bold">Unlock Your Potential With Microdome Classes</h1>
+          <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold">Unlock Your Potential With Microdome Classes</h1>
         </div>
         <div className="mt-4 w-full md:w-[50%]">
           <p className="text-center ">
@@ -20,7 +20,7 @@ const Landing = () => {
           <a href="#" className="px-4 py-2 border">Learn More</a>
         </div>
         <div className="w-full mt-16">
-        <iframe className="mx-auto w-[280px] h-[157px] md:w-[560px] md:h-[315px] lg:w-[1120px] lg:h-[630px]" src="https://www.youtube.com/embed/P-gZSzOaPp0?si=MLOFdd-KtMnCud-i&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe className="mx-auto w-full h-[55vw] md:w-[90%] md:h-[46vw]" src="https://www.youtube.com/embed/P-gZSzOaPp0?si=MLOFdd-KtMnCud-i&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
       </div>
     </div>
