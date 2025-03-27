@@ -20,7 +20,7 @@ const Landing = () => {
           <a href="#" className="px-4 py-2 border">Learn More</a>
         </div>
         <div className="w-full mt-16">
-        <iframe className="w-full h-[360px] md:h-[620px] mx-auto" src="https://www.youtube.com/embed/P-gZSzOaPp0?si=tMeyJUu-AEjK0B0H" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe className="mx-auto w-[280px] h-[157px] md:w-[560px] md:h-[315px] lg:w-[1120px] lg:h-[630px]" src="https://www.youtube.com/embed/P-gZSzOaPp0?si=MLOFdd-KtMnCud-i&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
       </div>
     </div>
