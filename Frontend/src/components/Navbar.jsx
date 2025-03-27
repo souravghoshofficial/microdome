@@ -36,9 +36,12 @@ const Navbar = () => {
         </div>
       </div>
       <div
-        className={`md:hidden ${showSideNav ? 'block' : 'hidden'} absolute top-0 w-full h-screen flex items-start justify-items-start bg-blue-300`}
+        className={`md:hidden ${showSideNav ? 'block' : 'hidden'} absolute top-0 w-full h-screen flex items-start justify-items-start bg-white`}
       >
-        <img src={xmark} onClick={() => setShowSideNav(false)} className="w-6 h-6 absolute top-5 right-5" alt="x mark" />
+        <div className="w-[90%] absolute top-0 left-[50%] translate-x-[-50%] flex items-center justify-between py-4">
+        <a href="#" className="text-lg font-bold">MicroDome</a>
+        <img src={xmark} onClick={() => setShowSideNav(false)} className="w-6 h-6" alt="x mark" />
+        </div>
         <div className="w-[90%] mx-auto mt-32 flex flex-col gap-4">
           <NavLink className="text-lg">Home</NavLink>
           <NavLink className="text-lg">Courses</NavLink>

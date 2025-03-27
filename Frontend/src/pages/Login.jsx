@@ -95,7 +95,7 @@ const Login = () => {
             />
           </div>
           <p className="text-right cursor-pointer hover:text-emerald-300">
-            Fogot Password ?
+            Forgot Password ?
           </p>
           <button
             type="submit"
