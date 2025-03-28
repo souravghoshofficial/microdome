@@ -5,7 +5,7 @@ const Courses = () => {
   const courses = [
     {
       id: 1,
-      courseTitle: "IIJ JAM Biotechnology",
+      courseTitle: "IIT JAM Biotechnology",
       courseImg: "https://i.pinimg.com/736x/6a/3e/55/6a3e559df3b2ab60acf2c0a8eca63dba.jpg",
       price: "₹3600"
     },
@@ -23,7 +23,7 @@ const Courses = () => {
     },
     {
       id: 4,
-      courseTitle: "CUET PG physiology",
+      courseTitle: "CUET PG Physiology",
       courseImg: "https://i.pinimg.com/736x/62/2c/65/622c6522a470b3ebcedd2ea91609bacd.jpg",
       price: "₹3200"
     },
