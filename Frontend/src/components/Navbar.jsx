@@ -15,7 +15,7 @@ const Navbar = () => {
           </a>
         </div>
         <div className="hidden md:flex items-center gap-8">
-          <NavLink className="hover:underline hover:underline-offset-4 decoration-gray-800">Home</NavLink>
+          <a href="#home" className="hover:underline hover:underline-offset-4 decoration-gray-800">Home</a>
           <NavLink className="hover:underline hover:underline-offset-4 decoration-gray-800" to="/courses">Courses</NavLink>
           <a href="#about" className="hover:underline hover:underline-offset-4 decoration-gray-800">About Us</a>
           <NavLink className="hover:underline hover:underline-offset-4 decoration-gray-800">Resources</NavLink>
@@ -47,9 +47,9 @@ const Navbar = () => {
           <img src={xmark} onClick={() => setShowSideNav(false)} className="w-6 h-6" alt="x mark" />
         </div>
         <div className="w-[90%] mx-auto mt-32 flex flex-col gap-4">
-          <NavLink className="text-lg">Home</NavLink>
+          <a href="#home" className="text-lg">Home</a>
           <NavLink to="/courses" className="text-lg">Courses</NavLink>
-          <NavLink className="text-lg">About Us</NavLink>
+          <a href="#about" className="text-lg">About Us</a>
           <NavLink className="text-lg">Resources</NavLink>
           <NavLink
             to="/login"

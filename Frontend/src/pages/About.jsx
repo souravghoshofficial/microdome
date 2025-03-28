@@ -1,6 +1,7 @@
 import React from "react";
 import brainImg from "../assets/brain-img.jpeg";
 import boxImg from "../assets/cube-solid.svg";
+import { Link } from "react-router";
 
 const About = () => {
   return (
@@ -23,8 +24,8 @@ const About = () => {
             </p>
           </div>
           <div className="flex mt-4 gap-4">
-            <button className="px-4 py-2 border border-black">Learn More</button>
-            <button className="px-4 py-2 border border-black bg-black text-white">Join Us</button>
+            <Link className="px-4 py-2 border border-black">Learn More</Link>
+            <Link to="/signup" className="px-4 py-2 border border-black bg-black text-white">Join Us</Link>
           </div>
         </div>
         <div className="w-full md:w-[45%]">

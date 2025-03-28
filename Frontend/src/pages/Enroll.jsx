@@ -1,5 +1,6 @@
 import React from "react";
 import boxIcon from "../assets/cube-solid.svg";
+import { Link } from "react-router";
 
 const Enroll = () => {
   return (
@@ -21,8 +22,8 @@ const Enroll = () => {
               courses tailored for you.
             </p>
             <div className="mt-2 w-full flex gap-4">
-                <button className="px-3 py-1.5 border">Signup</button>
-                <button className="px-3 py-1.5 border border-black bg-black text-white">Enroll</button>
+                <Link to="/signup" className="px-3 py-1.5 border">Signup</Link>
+                <Link to ="/courses" className="px-3 py-1.5 border border-black bg-black text-white">Enroll</Link>
             </div>
           </div>
           <div className="mt-4 md:mt-0 w-full md:w-[25%] px-4 py-8 md:px-8 border border-black">
