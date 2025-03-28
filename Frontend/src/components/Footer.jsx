@@ -7,6 +7,7 @@ import linkedInIcon from "../assets/linkedin.svg";
 import youtubeIcon from "../assets/youtube.svg";
 
 import ImageAnchor from "./ImageAnchor.jsx";
+import { Link } from "react-router";
 
 const Footer = () => {
   return (
@@ -67,9 +68,9 @@ const Footer = () => {
           </div>
           <div className="w-full md:w-[20%] mt-4 md:mt-0 px-o md:px-8">
             <h3 className="text-xl font-bold">Quick Links</h3>
-            <ul className="mt-2">
-              <li>Courses</li>
-              <li>Testimonials</li>
+            <ul className="mt-2 flex flex-col">
+              <Link to="/courses">Courses</Link>
+              <a href="#testimonial">Testimonials</a>
               <li>Our Facultites</li>
               <li>FAQs</li>
             </ul>

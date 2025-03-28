@@ -3,7 +3,8 @@ import './index.css'
 import { BrowserRouter, Routes, Route } from "react-router";
 
 import Layout from './Layout.jsx'
-import { Signup , Login } from './pages'
+import { Signup , Login , Courses } from './pages'
+
 
 
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
       <Route path="/" element={<Layout />} />
+      <Route path="/courses" element={<Courses />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
       </Routes>

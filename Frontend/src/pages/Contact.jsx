@@ -12,7 +12,7 @@ const Contact = () => {
         <div className='w-[90%] flex flex-col md:flex-row items-center justify-between'>
             <div className='w-full md:w-[60%]'>
                 <p className='text-sm font-bold'>Connect</p>
-                <h2 className='mt-2 text-4xl font-bold'>Get In Touch</h2>
+                <h2 className='mt-2 text-3xl md:text-4xl font-bold'>Get In Touch</h2>
                 <p className='mt-1 w-[90%] md:w-full'>We are here to help you with any inquiries or support you need.</p>
             </div>
             <div className='w-full md:w-[40%] flex flex-col'>
