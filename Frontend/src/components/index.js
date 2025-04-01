@@ -1,7 +1,7 @@
 import Navbar from "./Navbar";
 import ContactItem from "./ContactItem";
 import Footer from "./Footer";
-import ImageAnchor from "./ImageAnchor";
 import CourseCard from "./CourseCard";
+import TestimonialCard from "./TestimonialCard";
 
-export { Navbar , ContactItem , Footer , ImageAnchor , CourseCard };
+export { Navbar , ContactItem , Footer , CourseCard , TestimonialCard };

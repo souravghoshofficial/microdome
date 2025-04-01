@@ -3,7 +3,7 @@ import { Link } from "react-router";
 
 const Landing = () => {
   return (
-    <div id="home" className="md:mt-48 mt-32 w-full flex items-center justify-center">
+    <div id="home" className="md:pt-48 pt-32 pb-5 w-full flex items-center justify-center">
       <div className="w-[90%] flex flex-col items-center justify-center">
         <div className="mt-4 w-full md:w-[60%]">
           <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold">Unlock Your Potential With Microdome Classes</h1>
@@ -17,7 +17,7 @@ const Landing = () => {
           </p>
         </div>
         <div className="mt-4 w-full md:w-[50%] flex items-center justify-center gap-4">
-          <Link to="/courses" className="px-4 py-2 bg-black border border-black text-white">Enroll</Link>
+          <Link to="courses" className="px-4 py-2 bg-black border border-black dark:border-white dark:bg-white dark:text-black text-white">Enroll</Link>
           <Link  className="px-4 py-2 border">Learn More</Link>
         </div>
         <div className="w-full mt-16">

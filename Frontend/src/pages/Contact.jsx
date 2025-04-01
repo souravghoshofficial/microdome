@@ -1,10 +1,6 @@
 import React from 'react'
-
-import emailIcon from '../assets/envelope.svg'
-import phoneIcon from '../assets/phone.svg'
-import locationIcon from '../assets/map-pin.svg'
-
 import { ContactItem } from '../components'
+import { RiMailLine , RiPhoneLine , RiMapPinLine } from "@remixicon/react"
 
 const Contact = () => {
   return (
@@ -16,9 +12,9 @@ const Contact = () => {
                 <p className='mt-1 w-[90%] md:w-full'>We are here to help you with any inquiries or support you need.</p>
             </div>
             <div className='w-full md:w-[40%] flex flex-col'>
-                <ContactItem contactType="Email" logo={emailIcon} desc="info@microdomeclasses.com" />
-                <ContactItem contactType="Phone" logo={phoneIcon} desc="+91 99999 99999" />
-                <ContactItem contactType="Office" logo={locationIcon} desc="Kolkata - 700032" />
+                <ContactItem contactType="Email" logo={<RiMailLine size={24} />} desc="info@microdomeclasses.com" />
+                <ContactItem contactType="Phone" logo={<RiPhoneLine size={24} />} desc="+91 99999 99999" />
+                <ContactItem contactType="Office" logo={<RiMapPinLine size={24} />} desc="Kolkata - 700032" />
             </div> 
         </div>
     </div>

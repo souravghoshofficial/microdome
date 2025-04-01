@@ -1,19 +1,15 @@
 import React from 'react'
 import './index.css'
-import { BrowserRouter, Routes, Route } from "react-router";
+import { Outlet } from "react-router";
 
 import { Navbar , Footer } from './components'
 import { Landing , About , Contact , Enroll , Testimonial, Signup } from './pages'
 
 const Layout = () => {
   return (
-    <div className='w-full relative'>
+    <div className='w-full relative bg-white dark:bg-gray-950 text-black dark:text-white'>
       <Navbar />
-      <Landing />
-      <About />
-      <Enroll />
-      <Testimonial />
-      <Contact />
+      <Outlet />
       <Footer />
     </div>
   )
