@@ -8,6 +8,6 @@ import Login from "./Login";
 import Courses from "./Courses";
 import { CourseLayout } from "./CourseLayout";
 import IITJAM from "./MyCourse";
-import User from "./User";
 
-export { Landing , About , Contact  , Enroll , Testimonial , Signup , Login , Courses , IITJAM , CourseLayout , User }
+
+export { Landing , About , Contact  , Enroll , Testimonial , Signup , Login , Courses , IITJAM , CourseLayout }
