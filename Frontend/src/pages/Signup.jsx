@@ -84,7 +84,7 @@ const Signup = () => {
 
   return (
     <div className="bg-[url(./assets/login-bg-mobile.jpeg)] lg:bg-[url(./assets/login-bg-desktop.jpg)] bg-cover w-full h-screen flex justify-center items-center">
-      <div className="bg-white/5 backdrop-blur-md border border-white/20 lg:w-[23%] md:w-[25%] w-[85%] p-4 lg:p-7 md:p-6 rounded-lg shadow-md text-white">
+      <div className="bg-white/5 backdrop-blur-md border border-white/20 md:w-[25%] w-[85%] p-4 lg:p-7 md:p-6 rounded-lg shadow-md text-white">
         <h1 className="text-center font-bold text-3xl mt-2 text-emerald-500">
           MicroDome
         </h1>

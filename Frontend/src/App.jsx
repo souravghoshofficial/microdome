@@ -13,7 +13,8 @@ import {
   Enroll,
   Testimonial,
   Contact,
-  CourseLayout
+  CourseLayout , 
+  User
 } from "./pages";
 import Navbar from "./components/Navbar.jsx";
 
@@ -40,6 +41,7 @@ const App = () => {
         </Route>
         <Route path="signup" element={[<Navbar /> , <Signup />]} />
         <Route path="/login" element={[<Navbar /> , <Login />]} />
+        <Route path="/user" element={<User />} />
       </Routes>
     </BrowserRouter>
   );

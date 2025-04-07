@@ -35,8 +35,11 @@ const Enroll = () => {
      <div className="w-[90%]">
         <h4 className="text-center text-sm font-bold">Testmonials</h4>
         <h2 className="text-center text-3xl md:text-4xl font-bold">See What Our Students Say</h2>
-    <div id="marquee" className="py-16 w-[90%] mx-auto">
-      <div className="w-full flex gap-8 overflow-hidden">
+    <div id="marquee" className=" my-16 flex gap-[var(--gap)] w-[100%] mx-auto overflow-hidden">
+      <div className="testimonial-container flex shrink-0 gap-[var(--gap)]">
+      {studentsReview.map((student) => <TestimonialCard key={student.name} name={student.name} message={student.message} imageUrl={student.imageUrl} designation={student.designation} />)}
+      </div>
+      <div className="testimonial-container flex shrink-0 gap-[var(--gap)]">
       {studentsReview.map((student) => <TestimonialCard key={student.name} name={student.name} message={student.message} imageUrl={student.imageUrl} designation={student.designation} />)}
       </div>
     </div>

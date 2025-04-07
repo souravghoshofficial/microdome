@@ -40,7 +40,7 @@ const Navbar = () => {
       <div
         className={`md:hidden ${
           showSideNav ? "block" : "hidden"
-        } absolute top-0 w-full h-screen flex items-start justify-items-start bg-white dark:bg-gray-950`}
+        } absolute top-0 w-full h-screen z-50 flex items-start justify-items-start bg-white dark:bg-gray-950`}
       >
         <div className="w-[90%] absolute top-0 left-[50%] translate-x-[-50%] flex items-center justify-between py-4">
           <Link to="/" className="text-lg font-bold">
