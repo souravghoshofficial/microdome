@@ -8,7 +8,7 @@ const Navbar = () => {
   const [showSideNav, setShowSideNav] = useState(false);
   
   return (
-    <div className="fixed top-0 left-0 w-full border-b border-gray-950/[.1] dark:border-gray-50/[.1]  flex items-center justify-center z-50 backdrop-blur-md text-black dark:text-white">
+    <nav className="fixed top-0 left-0 w-full border-b border-gray-950/[.1] dark:border-gray-50/[.1]  flex items-center justify-center z-50 backdrop-blur-md text-black dark:text-white">
       <div className="w-[90%] py-4 flex items-center justify-between">
         <div>
           <Link to="/" className="text-lg font-bold" href="#">
@@ -68,7 +68,7 @@ const Navbar = () => {
           </NavLink>
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 
