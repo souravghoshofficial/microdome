@@ -19,7 +19,7 @@ const About = () => {
           </div>
           <div className="mt-4">
             <p>
-              At Microdome Classes, we are dedicated to providing top-notch
+              At Microdome Classes, we are dedicated to provide top-notch
               coaching for M.Sc entrance examinations, focusing on biology. Our
               mission is to equip students with the knowledge and skills they
               need to excel in their academic pursuits and achieve their career
