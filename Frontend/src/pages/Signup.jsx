@@ -110,7 +110,7 @@ const Signup = () => {
               console.log(e.target.value);
               setRoll(e.target.value);
             }}
-            placeholder="Enter your mobile number"
+            placeholder="Enter your mobile no."
             className="remove-arrow px-3 py-2 rounded w-full bg-transparent border border-slate-300 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
             required
           />
