@@ -1,24 +1,23 @@
 @import "tailwindcss";
 
-:root{
-    --gap: 32px;
+:root {
+  --gap: 32px;
 }
 
-#marquee{
-    mask-image: linear-gradient(to right , transparent , #000 10% 90% , transparent);
+#marquee {
+  mask-image: linear-gradient(to right, transparent, #000 10% 90%, transparent);
 }
 
-.testimonial-container{
-    animation: scroll 20s linear infinite;
+.testimonial-container {
+  animation: scroll 20s linear infinite;
 }
 
-#marquee:hover .testimonial-container{
-    animation-play-state: paused;
+#marquee:hover .testimonial-container {
+  animation-play-state: paused;
 }
-
 
 @keyframes scroll {
-    to{
-      transform: translateX(calc(-100% - var(--gap)));
-    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
   }
+}

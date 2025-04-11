@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Link, NavLink } from "react-router";
 import { RiMenuFill , RiCloseLine } from "@remixicon/react";
+import Logo from "./Logo";
 
 
 const Navbar = () => {
@@ -9,11 +10,12 @@ const Navbar = () => {
   
   return (
     <nav className="fixed top-0 left-0 w-full border-b border-gray-950/[.1] dark:border-gray-50/[.1]  flex items-center justify-center z-50 backdrop-blur-md text-black dark:text-white">
-      <div className="w-[90%] py-4 flex items-center justify-between">
+      <div className="w-[90%] py-3 flex items-center justify-between">
         <div>
-          <Link to="/" className="text-lg font-bold" href="#">
-            MicroDome
-          </Link>
+        <a className="flex items-center" href="/">
+        <Logo className="w-9 md:w-12" />
+          <p className="text-lg font-bold">Microdome</p>
+        </a>
         </div>
         <div className="hidden md:flex items-center gap-8">
           <NavLink to="/" className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">Home</NavLink>
@@ -42,10 +44,11 @@ const Navbar = () => {
           showSideNav ? "block" : "hidden"
         } absolute top-0 w-full h-screen z-50 flex items-start justify-items-start bg-white dark:bg-gray-950`}
       >
-        <div className="w-[90%] absolute top-0 left-[50%] translate-x-[-50%] flex items-center justify-between py-4">
-          <Link to="/" className="text-lg font-bold">
-            MicroDome
-          </Link>
+        <div className="w-[90%] absolute top-0 left-[50%] translate-x-[-50%] flex items-center justify-between py-3">
+        <a className="flex items-center" href="/">
+        <Logo className="w-9 md:w-12" />
+          <p className="text-lg font-bold">Microdome</p>
+        </a>
           {/* <img src={xmark} onClick={() => setShowSideNav(false)} className="w-6 h-6" alt="x mark" /> */}
           <RiCloseLine size={24} onClick={() => setShowSideNav(false)} />
         </div>

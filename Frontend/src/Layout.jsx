@@ -1,9 +1,7 @@
 import React from 'react'
 import './index.css'
 import { Outlet } from "react-router";
-
-import { Navbar , Footer } from './components'
-import { Landing , About , Contact , Enroll , Testimonial, Signup } from './pages'
+import { Navbar , Footer } from './components';
 
 const Layout = () => {
   return (
