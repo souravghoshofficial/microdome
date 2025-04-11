@@ -23,19 +23,18 @@ const Navbar = () => {
           <NavLink className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">About Us</NavLink>
           <NavLink className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">Resources</NavLink>
           <div className=" flex items-center gap-3">
-            <NavLink to="/login" className="px-3 py-1.5 border ">
+            <NavLink to="/login" className="px-3 py-1.5 border rounded-sm">
               Login
             </NavLink>
             <NavLink
               to="/signup"
-              className="px-3 py-1.5 bg-black border border-black text-white dark:bg-white dark:border-white dark:text-black"
+              className="px-3 py-1.5 bg-black border rounded-sm border-black text-white dark:bg-white dark:border-white dark:text-black"
             >
               Sign Up
             </NavLink>
           </div>
         </div>
         <div className="block md:hidden">
-          {/* <img className="w-6 h-6" src={ham} onClick={() => setShowSideNav(true)} alt="menu" /> */}
           <RiMenuFill size={24} onClick={() => setShowSideNav(true)} />
         </div>
       </div>
@@ -49,7 +48,6 @@ const Navbar = () => {
         <Logo className="w-9 md:w-12" />
           <p className="text-lg font-bold">Microdome</p>
         </a>
-          {/* <img src={xmark} onClick={() => setShowSideNav(false)} className="w-6 h-6" alt="x mark" /> */}
           <RiCloseLine size={24} onClick={() => setShowSideNav(false)} />
         </div>
         <div className="w-[90%] mx-auto mt-32 flex flex-col gap-4">
@@ -59,13 +57,13 @@ const Navbar = () => {
           <NavLink className="text-lg">Resources</NavLink>
           <NavLink
             to="/login"
-            className=" w-full py-2 text-center text-lg border"
+            className=" w-full py-2 text-center text-lg border rounded-sm"
           >
             Login
           </NavLink>
           <NavLink
             to="/signup"
-            className="w-full py-2 text-center text-lg bg-black border border-black text-white dark:text-black dark:bg-white dark:border-white"
+            className="w-full py-2 text-center text-lg bg-black border rounded-sm border-black text-white dark:text-black dark:bg-white dark:border-white"
           >
             Sign Up
           </NavLink>

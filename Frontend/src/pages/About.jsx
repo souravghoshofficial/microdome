@@ -9,9 +9,8 @@ const About = () => {
   return (
     <div id="about" className="pt-16 w-full h-screen flex justify-center md:items-center md:justify-center">
       <div className="w-[90%] flex flex-col md:flex-row items-center justify-between">
-        <div className="w-full md:w-[45%]">
+        <div className="w-full md:w-[48%]">
           <div>
-            {/* <img className="w-8 md:w-10" src={boxImg} alt="Box Image" /> */}
             <FontAwesomeIcon icon={faCube} className="text-3xl md:text-4xl" />
           </div>
           <div className="mt-4">
@@ -27,12 +26,12 @@ const About = () => {
             </p>
           </div>
           <div className="flex mt-4 gap-4">
-            <Link className="px-4 py-2 border">Learn More</Link>
-            <Link to="signup" className="px-4 py-2 border border-black dark:border-white bg-black dark:bg-white text-white dark:text-black">Join Us</Link>
+            <Link className="px-4 py-2 border rounded-sm">Learn More</Link>
+            <Link to="signup" className="px-4 py-2 border rounded-sm border-black dark:border-white bg-black dark:bg-white text-white dark:text-black">Join Us</Link>
           </div>
         </div>
-        <div className="w-full md:w-[45%]">
-          <img className="w-full" src={brainImg} alt="Brain Image" />
+        <div className="w-full md:w-[36%] overflow-hidden">
+          <img className="w-full rounded-xl" src={brainImg} alt="Brain Image" />
         </div>
       </div>
     </div>
