@@ -1,5 +1,5 @@
 import React from 'react'
-import microdomeLogo from "../assets/microdome-logo.png"
+import microdomeLogo from "../assets/microdomeLogo.png"
 
 const Logo = ({className}) => {
   return (

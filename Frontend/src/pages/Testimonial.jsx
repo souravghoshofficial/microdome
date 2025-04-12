@@ -34,7 +34,7 @@ const Enroll = () => {
     <div id="testimonial" className="my-8 md:my-16 w-full flex items-center justify-center">
      <div className="w-[90%]">
         <h4 className="text-center text-sm font-bold">Testmonials</h4>
-        <h2 className="text-center text-3xl md:text-4xl font-bold">See What Our Students Say</h2>
+        <h2 className="text-center text-3xl md:text-4xl font-bold">See What Our <span className="highlighted-text">Students</span> Say</h2>
     <div id="marquee" className=" my-16 flex gap-[var(--gap)] w-[100%] mx-auto overflow-hidden">
       <div className="testimonial-container flex shrink-0 gap-[var(--gap)]">
       {studentsReview.map((student) => <TestimonialCard key={student.name} name={student.name} message={student.message} imageUrl={student.imageUrl} designation={student.designation} />)}

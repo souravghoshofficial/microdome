@@ -14,7 +14,7 @@ const About = () => {
             <FontAwesomeIcon icon={faCube} className="text-3xl md:text-4xl" />
           </div>
           <div className="mt-4">
-            <h2 className="text-3xl md:text-4xl font-bold">Empowering Your Journey to Success in Biology</h2>
+            <h2 className="text-3xl md:text-4xl font-bold">Empowering Your Journey to Success in <span className="highlighted-text">Biology</span></h2>
           </div>
           <div className="mt-4">
             <p>

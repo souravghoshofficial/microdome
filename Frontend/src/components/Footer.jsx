@@ -10,7 +10,7 @@ const Footer = () => {
         <hr className="w-full" />
         <div className="my-8 md:my-16 w-full px-2 md:px-8 flex flex-col md:flex-row justify-between">
           <div className="w-full md:w-[40%] flex flex-col justify-center">
-            <Logo className="w-20 md:w-24" />
+            <Logo className="w-16 md:w-18" />
             <p className="mt-2">Let's connect with our socials</p>
             <div className="mt-4 w-full flex items-center gap-4">
               <a className="" href="https://facebook.com">

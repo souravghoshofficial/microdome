@@ -2,6 +2,16 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+.gradiant-text{
+  background: linear-gradient(to left, #DB3B7E, #3EB5A2 );
+  background-clip: text;
+  color: transparent;
+}
+
+.highlighted-text{
+  color: #3EB5A2;
+}
+
 :root {
   --gap: 32px;
 }

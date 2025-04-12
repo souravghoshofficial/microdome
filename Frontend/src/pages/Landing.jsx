@@ -7,7 +7,7 @@ const Landing = () => {
     <div id="home" className="md:pt-48 pt-32 pb-5 w-full flex items-center justify-center">
       <div className="w-[90%] flex flex-col items-center justify-center">
         <div className="mt-4 w-full md:w-[60%]">
-          <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold">Unlock Your Potential With <span className="gradiant-text">Microdome Classes</span></h1>
+          <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold">Unlock Your Potential With <span className="gradiant-text">Microdome</span> Classes</h1>
         </div>
         <div className="mt-4 w-full md:w-[50%]">
           <p className="text-center ">

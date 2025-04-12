@@ -10,7 +10,7 @@ const Enroll = () => {
       <div className="w-[90%]">
         <h4 className="text-center text-sm font-bold">Enroll</h4>
         <h2 className="mt-2 text-3xl md:text-4xl text-center font-bold">
-          Join Our Learning Journey
+          Join Our Learning <span className="highlighted-text">Journey</span>
         </h2>
         <p className="mt-4 text-center">
           Follow these simple steps to start your learning.

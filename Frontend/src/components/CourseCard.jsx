@@ -13,7 +13,7 @@ const CourseCard = ({
 
   const discount = Math.trunc(((actualPrice - discountedPrice) / actualPrice) * 100)
   return (
-    <div className="w-full hover:scale-105 transition-all cursor-pointer flex flex-col border overflow-hidden text-black dark:text-white">
+    <div className="w-full hover:scale-105 transition-all cursor-pointer flex flex-col border overflow-hidden bg-white text-black dark:bg-black dark:text-white rounded-lg overflow-hidden">
       <div className="w-full relative">
         <h5 className={`${courseTag ? "block" : "hidden"} absolute top-3 right-3 text-[0.6vw] font-bold px-3 py-0.5 rounded-md bg-slate-100 text-black`}>{courseTag}</h5>
         <img className="w-full" src={courseImg} alt="course image" />
@@ -31,7 +31,7 @@ const CourseCard = ({
             <h4 className={`${discount ? "block" : "hidden"} text-right px-2 py-0.5 text-sm font-semibold bg-slate-100 rounded-md text-black`}>{discount}% OFF</h4>
           </div>
         </div>
-        <Link to={linkAddress} className="mt-4 block w-full px-3 py-2 text-center text-lg font-semibold cursor-pointer bg-black text-white dark:bg-white dark:text-black">
+        <Link to={linkAddress} className="mt-4 block w-full px-3 py-2 text-center text-lg font-semibold cursor-pointer bg-blue-600 text-white rounded-md">
           {btnText}
         </Link>
       </div>
