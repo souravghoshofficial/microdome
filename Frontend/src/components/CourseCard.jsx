@@ -13,7 +13,7 @@ const CourseCard = ({
 
   const discount = Math.trunc(((actualPrice - discountedPrice) / actualPrice) * 100)
   return (
-    <div className="w-full hover:scale-105 transition-all cursor-pointer flex flex-col border overflow-hidden bg-white text-black dark:bg-black dark:text-white rounded-lg overflow-hidden">
+    <div className="w-full hover:scale-105 transition-all cursor-pointer flex flex-col border overflow-hidden bg-white text-black dark:bg-black dark:text-white rounded-lg">
       <div className="w-full relative">
         <h5 className={`${courseTag ? "block" : "hidden"} absolute top-3 right-3 text-[0.6vw] font-bold px-3 py-0.5 rounded-md bg-slate-100 text-black`}>{courseTag}</h5>
         <img className="w-full" src={courseImg} alt="course image" />

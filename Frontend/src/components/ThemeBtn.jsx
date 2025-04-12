@@ -1,12 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { darkTheme , lightTheme } from "../features/theme/themeSlice";
 
 
 export default function ThemeBtn() {
 
-  const theme = useSelector(state => state.theme.theme)
   const dispatch = useDispatch()
+  useEffect(() => {
+      const localTheme = localStorage.getItem("theme");    
+      if(!localTheme){
+        const systemDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if(systemDarkTheme){
+          dispatch(darkTheme());
+        }
+        else{
+          dispatch(lightTheme());
+        }
+      }
+      else{
+        if(localTheme === "dark") dispatch(darkTheme());
+        else dispatch(lightTheme());
+      }
+      
+  }, [])
+
+  const theme = useSelector(state => state.theme.theme)
+
+  useEffect(() => {
+    localStorage.setItem("theme" , theme);
+    document.querySelector("html").classList.remove("light", "dark");
+    document.querySelector("html").classList.add(theme);
+  }, [theme]);
 
   const changeTheme = (e) => {
     const darkThemeStatus = e.currentTarget.checked;
@@ -16,11 +40,6 @@ export default function ThemeBtn() {
       dispatch(lightTheme());
     }
   };
-
-  useEffect(() => {
-    document.querySelector("html").classList.remove("light", "dark");
-    document.querySelector("html").classList.add(theme);
-  }, [theme]);
 
   return (
     <label className="relative inline-flex items-center cursor-pointer">
