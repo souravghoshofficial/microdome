@@ -1,11 +1,14 @@
 import React from "react";
-import { useState } from "react";
-import { Link, NavLink } from "react-router";
+import { useState , useEffect } from "react";
+import { NavLink } from "react-router";
 import { RiMenuFill , RiCloseLine } from "@remixicon/react";
 import Logo from "./Logo";
+import ThemeBtn from "./ThemeBtn";
+
 
 
 const Navbar = () => {
+
   const [showSideNav, setShowSideNav] = useState(false);
   
   return (
@@ -17,12 +20,15 @@ const Navbar = () => {
           <p className="text-lg font-bold">Microdome</p>
         </a>
         </div>
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           <NavLink to="/" className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">Home</NavLink>
           <NavLink to="/courses" className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">Courses</NavLink>
           <NavLink className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">About Us</NavLink>
           <NavLink className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">Resources</NavLink>
-          <div className=" flex items-center gap-3">
+          <div className="px-4 border-l border-r border-gray-400/50">
+            <ThemeBtn />
+          </div>
+          <div className=" flex items-center gap-4">
             <NavLink to="/login" className="px-3 py-1.5 border rounded-sm">
               Login
             </NavLink>
@@ -55,6 +61,10 @@ const Navbar = () => {
           <NavLink to="/courses" className="text-lg">Courses</NavLink>
           <NavLink className="text-lg">About Us</NavLink>
           <NavLink className="text-lg">Resources</NavLink>
+          <div className="py-2 flex items-center gap-4 text-lg">
+            <p>Theme :</p>
+          <ThemeBtn />
+          </div>
           <NavLink
             to="/login"
             className=" w-full py-2 text-center text-lg border rounded-sm"

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --gap: 32px;
 }
@@ -21,3 +23,5 @@
     transform: translateX(calc(-100% - var(--gap)));
   }
 }
+
+
