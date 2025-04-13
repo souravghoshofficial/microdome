@@ -18,7 +18,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-8">
           <NavLink to="/" className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">Home</NavLink>
           <NavLink to="/courses" className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">Courses</NavLink>
-          <NavLink className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">About Us</NavLink>
+          <NavLink to="/aboutus"className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">About Us</NavLink>
           <NavLink className="hover:underline hover:underline-offset-4 decoration-gray-800 dark:decoration-white">Resources</NavLink>
           <div className=" flex items-center gap-3">
             <NavLink to="/login" className="px-3 py-1.5 border ">
@@ -52,7 +52,7 @@ const Navbar = () => {
         <div className="w-[90%] mx-auto mt-32 flex flex-col gap-4">
           <NavLink to="/" className="text-lg">Home</NavLink>
           <NavLink to="/courses" className="text-lg">Courses</NavLink>
-          <NavLink className="text-lg">About Us</NavLink>
+          <NavLink to="/aboutus" className="text-lg">About Us</NavLink>
           <NavLink className="text-lg">Resources</NavLink>
           <NavLink
             to="/login"
