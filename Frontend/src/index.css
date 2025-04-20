@@ -13,6 +13,10 @@
   color: transparent;
 }
 
+.scrollbar{
+  scrollbar-width: none;
+}
+
 .highlighted-text{
   color: #3EB5A2;
 }
