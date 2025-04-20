@@ -27,7 +27,7 @@ const About = () => {
           </div>
           <div className="flex mt-4 gap-4">
             <Link className="px-4 py-2 border rounded-sm">Learn More</Link>
-            <Link to="signup" className="px-4 py-2 border rounded-sm border-black dark:border-white bg-black dark:bg-white text-white dark:text-black">Join Us</Link>
+            <Link to="signup" className="px-4 py-2 border rounded-sm border-highlighted bg-highlighted text-white">Join Us</Link>
           </div>
         </div>
         <div className="w-full md:w-[36%] overflow-hidden">

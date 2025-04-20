@@ -2,6 +2,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme{
+  --color-button : #3EB5A2;
+  --color-highlighted: #3EB5A2;
+}
+
 .gradiant-text{
   background: linear-gradient(to left, #DB3B7E, #3EB5A2 );
   background-clip: text;
@@ -11,6 +16,7 @@
 .highlighted-text{
   color: #3EB5A2;
 }
+
 
 :root {
   --gap: 32px;
@@ -34,4 +40,8 @@
   }
 }
 
+
+/* nav{
+  bg-[rgba(244,242,242,0.85)] dark:bg-[rgba(8,_8,_8,_0.2)] border-b border-gray-950/[.1] dark:border-gray-50/[.1]
+} */
 

@@ -5,6 +5,8 @@ import mailIcon from "../assets/mail-line.svg";
 import eyeOpen from "../assets/eye-line.svg";
 import eyeClosed from "../assets/eye-off-line.svg";
 
+import { Logo } from "../components";
+
 
 
 const Login = () => {
@@ -48,10 +50,12 @@ const Login = () => {
   return (
     <div className="bg-[url(./assets/login-bg-mobile.jpeg)] lg:bg-[url(./assets/login-bg-desktop.jpg)] bg-cover w-full h-screen flex justify-center items-center">
       <div className="bg-white/5 backdrop-blur-md border border-white/20 md:w-[25%] w-[85%] p-4 lg:p-7 md:p-6 rounded-lg shadow-md text-white">
-        <h1 className="text-center font-bold text-3xl mt-2 text-emerald-500">
-          MicroDome
-        </h1>
-        <p className="text-center text-lg mb-2">Log in to your Account</p>
+     <div className="flex items-center justify-center gap-2">
+     <Logo className="w-12" />
+        <h3 className="text-center font-bold text-3xl mt-2 gradiant-text">Microdome
+        </h3>
+     </div>
+        <p className="my-2 text-center text-lg">Log in to your Account</p>
         <form className="flex flex-col gap-1" onSubmit={handleSubmit}>
           <label htmlFor="email">Email</label>
           <div className="relative w-full ">

@@ -5,7 +5,7 @@ import CourseCard from '../components/CourseCard'
 
 const IITJAM = () => {
   return (
-    <div className='w-full h-screen relative bg-white dark:bg-gray-950 text-black dark:text-white'>
+    <div className='w-full h-screen relative'>
       <div className='w-[25vw] h-[80vh] absolute top-[12%] right-[12%] flex items-center justify-center'>
         <CourseCard courseImg={"https://i.pinimg.com/736x/6a/3e/55/6a3e559df3b2ab60acf2c0a8eca63dba.jpg"} courseTitle={"IIT JAM Microbiology"} actualPrice={4200} discountedPrice={3600} btnText='Buy Now' linkAddress='/'/>
       </div>

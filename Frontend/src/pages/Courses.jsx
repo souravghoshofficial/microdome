@@ -50,7 +50,7 @@ const Courses = () => {
     },
   ]
   return (
-    <div className='w-full bg-white dark:bg-gray-950 dark:text-white flex items-center justify-center'>
+    <div className='w-full flex items-center justify-center transition-colors duration-300'>
         <div className='my-24 md:my-32 w-[90%]'>
             <h4 className='text-center text-sm font-bold'>Courses</h4>
             <h2 className='text-3xl md:text-4xl font-bold text-center'>Courses Offered</h2>

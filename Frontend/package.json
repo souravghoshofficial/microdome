@@ -18,6 +18,7 @@
     "@headlessui/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.6.1",
     "@remixicon/react": "^4.6.0",
+    "@splinetool/react-spline": "^4.0.0",
     "@tailwindcss/vite": "^4.0.1",
     "axios": "^1.8.4",
     "react": "^18.3.1",

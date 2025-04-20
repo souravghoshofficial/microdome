@@ -4,15 +4,10 @@ let value = null;
 const localTheme = localStorage.getItem("theme");
 
 if (localTheme) {
-  if (localTheme === "dark") {
-    value = "dark";
-  } else {
-    value = "light";
-  }
-}
-else{
-  const systemDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-  if(systemDarkTheme) value = "dark";
+  value = localTheme;
+} else {
+  const systemDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (systemDarkTheme) value = "dark";
   else value = "light";
 }
 

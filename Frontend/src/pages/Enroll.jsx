@@ -25,7 +25,7 @@ const Enroll = () => {
             </p>
             <div className="mt-2 w-full flex gap-4">
                 <Link to="signup" className="px-3 py-1.5 border rounded-sm">Signup</Link>
-                <Link to ="courses" className="px-3 py-1.5 border rounded-sm border-black dark:border-white bg-black dark:bg-white text-white dark:text-black">Enroll</Link>
+                <Link to ="courses" className="px-3 py-1.5 border rounded-sm border-highlighted bg-highlighted text-white">Enroll</Link>
             </div>
           </div>
           <div className="mt-4 md:mt-0 w-full md:w-[25%] px-4 py-8 md:px-8 border">

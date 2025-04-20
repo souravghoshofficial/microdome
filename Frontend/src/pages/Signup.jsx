@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import eyeOpen from "../assets/eye-line.svg";
 import eyeClosed from "../assets/eye-off-line.svg";
+import { Logo } from "../components";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [roll, setRoll] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordErrors, setPasswordErrors] = useState([]);
@@ -15,6 +15,7 @@ const Signup = () => {
   const [showEyeIcon, setShowEyeIcon] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+ 
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -71,7 +72,6 @@ const Signup = () => {
 
       // Clear form
       setName("");
-      setRoll("");
       setEmail("");
       setPassword("");
     } catch (err) {
@@ -85,10 +85,12 @@ const Signup = () => {
   return (
     <div className="bg-[url(./assets/login-bg-mobile.jpeg)] lg:bg-[url(./assets/login-bg-desktop.jpg)] bg-cover w-full h-screen flex justify-center items-center">
       <div className="bg-white/5 backdrop-blur-md border border-white/20 md:w-[25%] w-[85%] p-4 lg:p-7 md:p-6 rounded-lg shadow-md text-white">
-        <h1 className="text-center font-bold text-3xl mt-2 text-emerald-500">
-          MicroDome
-        </h1>
-        <p className="text-center text-lg mb-2">Create your Account</p>
+      <div className="flex items-center justify-center gap-2">
+     <Logo className="w-12" />
+        <h3 className="text-center font-bold text-3xl mt-2 gradiant-text">Microdome
+        </h3>
+     </div>
+        <p className="text-center text-lg my-2">Create your Account</p>
         <form className="flex flex-col gap-1" onSubmit={handleSubmit}>
           <label htmlFor="name">Name</label>
           <input
@@ -98,20 +100,6 @@ const Signup = () => {
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter your name"
             className="px-3 py-2 rounded w-full bg-transparent border border-slate-300 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
-            required
-          />
-          <label htmlFor="mobile">Mobile No</label>
-          <input
-            type="number"
-            pattern="[0-9]{12}"
-            id="mobile"
-            value={roll}
-            onChange={(e) => {
-              console.log(e.target.value);
-              setRoll(e.target.value);
-            }}
-            placeholder="Enter your mobile number"
-            className="remove-arrow px-3 py-2 rounded w-full bg-transparent border border-slate-300 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
             required
           />
           <label htmlFor="email">Email</label>

@@ -13,11 +13,17 @@ import {
   Enroll,
   Testimonial,
   Contact,
-  CourseLayout 
+  CourseLayout,
+  AboutUs,
+  ProfileDashboard,
+  Resources
 } from "./pages";
-import Navbar from "./components/Navbar.jsx";
+import { Navbar, AuthenticatedRoute } from "./components";
+
+
 
 const App = () => {
+ 
   return (
     <BrowserRouter>
       <Routes>
@@ -32,14 +38,19 @@ const App = () => {
               <Contact />,
             ]}
           />
-      
+
           <Route path="courses" element={<CourseLayout />}>
-          <Route path="" element={<Courses />} />
-          <Route path="iit-jam" element={<IITJAM />} />
+            <Route path="" element={<Courses />} />
+            <Route path="iit-jam" element={<IITJAM />} />
           </Route>
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/about-us" element={<AboutUs />} />
+            <Route path="profile" element={<AuthenticatedRoute />}>
+                <Route path="" element={<ProfileDashboard />} />
+            </Route>
         </Route>
-        <Route path="signup" element={[<Navbar /> , <Signup />]} />
-        <Route path="/login" element={[<Navbar /> , <Login />]} />
+        <Route path="signup" element={[<Navbar />, <Signup />]} />
+        <Route path="/login" element={[<Navbar />, <Login />]} />
       </Routes>
     </BrowserRouter>
   );

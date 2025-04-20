@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { darkTheme , lightTheme } from "../features/theme/themeSlice";
 
@@ -25,14 +25,14 @@ export default function ThemeBtn() {
 
   return (
     <label className="relative inline-flex items-center cursor-pointer">
-      <input
+      <input 
         type="checkbox"
         value=""
         onChange={changeTheme}
         checked={theme === "dark"}
         className="sr-only peer"
       />
-      <div className="w-11 h-6 border border-gray-700 dark:border-gray-300 hover:border-blue-500 bg-[url(./assets/morning-sky.jpeg)] bg-cover bg-center peer-focus:outline-none  rounded-full peer-checked:bg-[url(./assets/night-sky.jpeg)] after:bg-[#FED32E] peer-checked:after:bg-[#D1D8E0] after:border after:border-yellow-500 peer-checked:after:border-white  after:shadow-xl peer-checked:after:translate-x-full after:absolute after:top-[2px] after:left-[2px]  after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+      <div className="w-11 h-6 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-400 hover:border-blue-500 peer-focus:outline-none  rounded-full after:content-[url(./assets/sun.svg)] peer-checked:after:content-[url(./assets/moon.svg)] after:shadow-xl peer-checked:after:translate-x-full after:absolute after:top-[2px] after:left-[2px]  after:rounded-full after:h-5 after:w-5 after:transition-all after:duration-300 transition-all duration-300"></div>
     </label>
   );
 }
