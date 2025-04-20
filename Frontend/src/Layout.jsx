@@ -12,6 +12,7 @@ const Layout = () => {
       <Navbar />
       <Outlet />
       <Footer />
+
       <div
         className={` ${
           showMessage ? "block" : "hidden"
@@ -28,6 +29,9 @@ const Layout = () => {
             Join Now
         </a>
       </div>
+
+
+      
       <div
         onClick={() => setShowMessage((prev) => !prev)}
         className="w-12 h-12 z-10 md:w-14 md:h-14  bg-[#2DD54D] rounded-full fixed bottom-5 right-8 text-white flex items-center justify-center cursor-pointer text-2xl"
