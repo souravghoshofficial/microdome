@@ -24,7 +24,7 @@ const Layout = () => {
           sciences field, notifications related to jobs, workshops, seminars,
           PhD vacancies, exams etc.
         </p>
-        <a href="https://google.com" target="_blank" className="mt-2 md:mt-4 inline-block rounded-sm w-full py-2 bg-highlighted text-white text-center font-semibold cursor-pointer">
+        <a href="https://chat.whatsapp.com/LepMbONA6YlF95IGOITe8h " target="_blank" className="mt-2 md:mt-4 inline-block rounded-sm w-full py-2 bg-highlighted text-white text-center font-semibold cursor-pointer">
             Join Now
         </a>
       </div>
