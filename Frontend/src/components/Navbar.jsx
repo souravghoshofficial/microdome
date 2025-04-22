@@ -19,12 +19,12 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 w-full flex items-center justify-center z-50 backdrop-blur-2xl text-black dark:text-white">
       <div className="w-[90%] py-4 flex items-center justify-between relative">
-        <div>
+      <div>
         <a className="flex items-center gap-2" href="/">
         <Logo className="w-7 md:w-9" />
           <p className="text-lg font-bold gradiant-text">MicroDome</p>
         </a>
-        </div>
+      </div>
         <div className="hidden md:flex items-center gap-8">
           <NavLink to="/" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} hover:underline underline-offset-4 decoration-gray-800 dark:decoration-white`}>Home</NavLink>
           <NavLink to="/courses" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} hover:underline underline-offset-4 decoration-gray-800 dark:decoration-white`}>Courses</NavLink>
