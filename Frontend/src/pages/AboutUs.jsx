@@ -4,7 +4,7 @@ import sayan from '../assets/sayanpic.png';
  
  const AboutUs = () => {
    return (
-     <section className="bg-gradient-to-br from-green-50 to-green-100 py-12 px-6 md:px-20 animate-fadeIn">
+     <section className="py-12 px-6 md:px-20 animate-fadeIn">
        <div className="max-w-4xl mx-auto mt-16 text-center space-y-16">
  
          {/* Top image - real image with rounded corners only */}
@@ -17,13 +17,13 @@ import sayan from '../assets/sayanpic.png';
          </div>
  
          {/* Title */}
-         <h2 className="text-5xl font-extrabold text-green-800 underline decoration-green-500 underline-offset-8 drop-shadow-md">
+         <h2 className="text-5xl font-extrabold text-[#3EB5A2] underline dark:decoration-white decoration-black underline-offset-8 drop-shadow-md">
            About Us
          </h2>
  
          {/* About Microdome Section */}
-         <div className="bg-white rounded-2xl shadow-xl p-8 text-left space-y-4">
-           <h3 className="text-3xl font-semibold text-green-700 underline decoration-green-400 underline-offset-4 mb-4">
+         <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-xl p-8 text-left space-y-4">
+           <h3 className="text-3xl font-semibold text-[#3EB5A2] underline decoration-green-400 underline-offset-4 mb-4">
              About Microdome
            </h3>
            <p className="text-gray-700 text-lg leading-relaxed">
