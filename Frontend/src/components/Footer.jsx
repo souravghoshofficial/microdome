@@ -49,7 +49,7 @@ const Footer = () => {
             <h3 className="text-xl font-bold">Quick Links</h3>
             <ul className="mt-2 flex flex-col">
               <Link to="courses">Courses</Link>
-              <a href="#">Testimonials</a>
+              <Link to="/">Testimonials</Link>
               <li>Our Facultites</li>
               <li>FAQs</li>
             </ul>
