@@ -1,4 +1,5 @@
 import React from "react";
+import parse from 'html-react-parser';
 
 export default function InstructorsCard({ image, name, subject, description }) {
   return (
@@ -10,7 +11,7 @@ export default function InstructorsCard({ image, name, subject, description }) {
       />
       <h3 className="dark:text-white text-xl font-bold text-gray-800">{name}</h3>
       <p className="dark:text-white text-indigo-600 font-semibold">{subject}</p>
-      <p className="dark:text-white text-gray-600 mt-3 text-sm">{description}</p>
+      <p className="dark:text-white text-gray-600 mt-3 text-sm">{parse(description)}</p>
     </div>
   );
 }

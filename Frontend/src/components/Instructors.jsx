@@ -4,26 +4,30 @@ import Sayan from '../assets/sayanpic.png';
 import Rupayan from '../assets/Rupayan_pic.png';
 import Subhadeep from '../assets/subhadip_pic.png';
 import Akash from '../assets/Akash_pic.jpg';
+
+
+
+
 const mentors = [
   {
     name: "Sayan Ganguly",
     subject: "Founder of Microdome Classes",
     description:
-      "Qualifications:– 1. B.Sc. Microbiology (Hons), Kalyani Mahavidyalaya, Kalyani. 2. M.Sc. Virology, ICMR-National Institute of Virology, Pune. Achievements:– 1. IIT-JAM, GATE, GAT-B, CUET-PG, SPPU OEE qualified. 2. Got selected for admission into Pondicherry University, BHU, SPPU, ICMR-NIV.",
+      "<strong className='text-blue-500'>Qualifications:–</strong> 1. B.Sc. Microbiology (Hons), Kalyani Mahavidyalaya, Kalyani. 2. M.Sc. Virology, ICMR-National Institute of Virology, Pune. <strong className='text-blue-500'>Achievement:–</strong>1. IIT-JAM, GATE, GAT-B, CUET-PG, SPPU OEE qualified. 2. Got selected for admission into Pondicherry University, BHU, SPPU, ICMR-NIV.",
     image: Sayan,
   },
   {
     name: "Rupayan Bhattacharjee",
     subject: "Actogen batch mentor",
     description:
-      "Qualifications:– 1. B.Sc. Biochemistry (Hons), Gurudas College, Kolkata.  2. M.Sc. Virology, ICMR-National Institute of Virology,Pune.  Achievements:–  1. CUET-PG, AIIMS, SPPU OEE qualified.  2. Got selected for admission into Pondicherry University, BHU, AIIMS, ICMR-NIV.",
+      "<strong className='text-blue-500'>Qualifications:–</strong> 1. B.Sc. Biochemistry (Hons), Gurudas College, Kolkata.  2. M.Sc. Virology, ICMR-National Institute of Virology,Pune.  <strong className='text-blue-500'>Achievement:–</strong> 1. CUET-PG, AIIMS, SPPU OEE qualified.  2. Got selected for admission into Pondicherry University, BHU, AIIMS, ICMR-NIV.",
     image: Rupayan,
   },
   {
     name: "Subhadeep Podder",
     subject: "Actogen batch mentor",
     description:
-      "Qualifications:–  1. B.Sc. Mirobiology (Hons), St. Xavier’s College, Kolkata.  2. M.Sc. Virology, ICMR-National Institute of Virology, Pune. Achievements:–  1. DST INSPIRE Scholar.",
+      "<strong className='text-blue-500'>Qualifications:–</strong>  1. B.Sc. Mirobiology (Hons), St. Xavier’s College, Kolkata.  2. M.Sc. Virology, ICMR-National Institute of Virology, Pune. <strong className='text-blue-500'>Achievement:–</strong> 1. DST INSPIRE Scholar.",
     image: Subhadeep,
   },
 
@@ -31,7 +35,7 @@ const mentors = [
     name: "Akash Biswas",
     subject: "Semester Batch mentor",
     description:
-      "Qualifications:– 1. B.Sc. Microbiology (Hons), Kalyani Mahavidyalaya, Kalyani.  2. Gujarat Biotechnology University, Gujarat. Achievements:– 1. TIFR, IIT-JAM, GATE, GAT-B, CUET-PG, SPPU OEE qualified.  2. Got selected for admission into BHU, SPPU, GBU, ICMR-NIV, IBAB.",
+      "<strong className='text-blue-500'>Qualifications:–</strong> 1. B.Sc. Microbiology (Hons), Kalyani Mahavidyalaya, Kalyani.  2. Gujarat Biotechnology University, Gujarat. <strong className='text-blue-500'>Achievement:–</strong>1. TIFR, IIT-JAM, GATE, GAT-B, CUET-PG, SPPU OEE qualified.  2. Got selected for admission into BHU, SPPU, GBU, ICMR-NIV, IBAB.",
     image: Akash,
   },
 ];
