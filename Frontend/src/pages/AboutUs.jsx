@@ -1,6 +1,6 @@
 import React from 'react';
-import microdome from '../assets/microdome.jpg';
-import sayan from '../assets/sayanpic.png';
+import Microdome from '../assets/microdome.jpg';
+import Sayan from '../assets/sayanpic.png';
 
 const AboutUs = () => {
   return (
@@ -15,7 +15,7 @@ const AboutUs = () => {
         <div className="flex flex-col md:flex-row items-center gap-10">
           <div className="w-full md:w-1/2">
             <img
-              src={microdome}
+              src={Microdome}
               alt="Microdome Biology Coaching"
               className="rounded-2xl shadow-2xl mx-auto w-full object-contain transition-transform duration-300 hover:scale-105"
             />
@@ -44,7 +44,7 @@ const AboutUs = () => {
         <div className="flex flex-col md:flex-row items-center gap-10">
           <div className="w-full md:w-1/2 space-y-3">
             <img
-              src={sayan}
+              src={Sayan}
               alt="photo of the founder of microdome"
               className="rounded-2xl shadow-2xl w-full max-w-xs mx-auto object-contain transition-transform duration-300 hover:scale-105"
             />
