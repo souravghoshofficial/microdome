@@ -3,10 +3,10 @@ import { Link } from "react-router";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faCube} from '@fortawesome/free-solid-svg-icons'
-
+import Instructors from "../components/Instructors";
 
 const About = () => {
-  return (
+  return (<>
     <div id="about" className="pt-16 w-full h-screen flex justify-center md:items-center md:justify-center">
       <div className="w-[90%] flex flex-col md:flex-row items-center justify-between">
         <div className="w-full md:w-[48%]">
@@ -26,7 +26,7 @@ const About = () => {
             </p>
           </div>
           <div className="flex mt-4 gap-4">
-            <Link className="px-4 py-2 border rounded-sm">Learn More</Link>
+            <Link to="/about-us" className="px-4 py-2 border rounded-sm">Learn More</Link>
             <Link to="signup" className="px-4 py-2 border rounded-sm border-highlighted bg-highlighted text-white">Join Us</Link>
           </div>
         </div>
@@ -35,6 +35,11 @@ const About = () => {
         </div>
       </div>
     </div>
+
+    <div>
+    <Instructors></Instructors>
+    </div>
+    </>
   );
 };
 

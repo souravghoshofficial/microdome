@@ -32,7 +32,7 @@ const Landing = () => {
             Enroll
           </Link>
           <Link className="px-4 py-2 border rounded-sm flex items-center">
-            Learn More
+            <Link to="/about-us">Learn More</Link>
             <RiArrowRightSLine size={24} />
           </Link>
         </div>
