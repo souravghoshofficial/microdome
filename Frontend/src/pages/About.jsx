@@ -3,7 +3,6 @@ import { Link } from "react-router";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faCube} from '@fortawesome/free-solid-svg-icons'
-import Instructors from "../components/Instructors";
 
 const About = () => {
   return (<>
@@ -34,10 +33,6 @@ const About = () => {
           <img className="w-full rounded-xl" src={brainImg} alt="Brain Image" />
         </div>
       </div>
-    </div>
-
-    <div>
-    <Instructors></Instructors>
     </div>
     </>
   );

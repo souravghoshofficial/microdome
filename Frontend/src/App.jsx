@@ -18,7 +18,7 @@ import {
   ProfileDashboard,
   Resources
 } from "./pages";
-import { Navbar, AuthenticatedRoute } from "./components";
+import { Navbar, AuthenticatedRoute , Instructor } from "./components";
 
 
 
@@ -34,6 +34,7 @@ const App = () => {
               <Landing />,
               <About />,
               <Enroll />,
+              <Instructor />,
               <Testimonial />,
               <Contact />,
             ]}
