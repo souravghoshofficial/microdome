@@ -1,10 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const response = fetch("http://localhost:3000/profile")
+console.log(response);
+
+
 const initialState = {
-    status : true,
+    status : false,
     userData: {
-        username: "Sayan Ganguly",
-        email: "sayanganguly20024@gmail.com",
+        name: "",
+        email: "",
         image: null
     }
 }
@@ -15,7 +19,7 @@ const authSlice = createSlice({
     reducers: {
         login: (state, action) => {
             state.status = true;
-            state.userData = action.payload.userData;
+            state.userData = action.payload;
         },
         logout: (state) => {
             state.status = false;

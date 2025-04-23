@@ -3,9 +3,12 @@ import { Link, useNavigate } from "react-router";
 import eyeOpen from "../assets/eye-line.svg";
 import eyeClosed from "../assets/eye-off-line.svg";
 import { Logo } from "../components";
+import { useDispatch } from "react-redux";
+import { login } from "../features/auth/authSlice";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +52,7 @@ const Signup = () => {
     setLoading(true);
     setError("");
 
-    const newUser = { name, roll, email, password };
+    const newUser = { name, email, password };
 
     try {
       const response = await fetch("http://localhost:3000/signup", {
@@ -68,7 +71,9 @@ const Signup = () => {
       const data = await response.json();
       console.log("Signup Success:", data);
       setUser(newUser);
-      navigate("/login");
+      const userData = {name , email}
+      dispatch(login(userData));
+      navigate("/");
 
       // Clear form
       setName("");

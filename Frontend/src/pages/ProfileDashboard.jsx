@@ -14,7 +14,7 @@ const ProfileDashboard = () => {
                   <div className='flex items-center gap-4'>
                   <UserIcon className='w-16 h-16' />
                     <div className='flex flex-col'>
-                        <h3 className='text-xl'>{userData?.username}</h3>
+                        <h3 className='text-xl'>{userData?.name}</h3>
                         <p className='text-sm font-light mt-1'>{userData?.email}</p>
                     </div>
                   </div>

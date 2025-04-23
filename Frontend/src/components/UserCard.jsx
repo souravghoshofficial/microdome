@@ -21,7 +21,7 @@ const UserCard = ({ className = "" }) => {
     >
       <div className="relative px-4 py-6 flex flex-col items-center">
         <UserIcon className="w-16 h-16" />
-        <h3 className="text-lg font-bold mt-3">Hi , {userData?.username}</h3>
+        <h3 className="text-lg font-bold mt-3">Hi , {userData?.name}</h3>
         <Link
           to="/profile"
           onClick={() => dispatch(hideCard())}

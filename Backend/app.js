@@ -1,6 +1,9 @@
 import express from "express"
+import dotenv from "dotenv"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+
+dotenv.config()
 
 const app = express()
 
@@ -18,16 +21,7 @@ app.use(express.urlencoded({
     limit: "16kb"
 }))
 
-app.use(express.static("public"))
-
 app.use(cookieParser())
-
-
-// // import routes
-// import {router} from './routes/user.route.js'
-
-// // routes declearation
-// app.use("/api/v1/users", router)
 
 
 export {app}
