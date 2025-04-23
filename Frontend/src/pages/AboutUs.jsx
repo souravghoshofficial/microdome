@@ -17,7 +17,7 @@ const AboutUs = () => {
             <img
               src={Microdome}
               alt="Microdome Biology Coaching"
-              className="rounded-2xl shadow-2xl mx-auto w-full object-contain transition-transform duration-300 hover:scale-105"
+              className="rounded-2xl shadow-2xl mx-auto w-80 object-contain transition-transform duration-300 hover:scale-105"
             />
           </div>
 
