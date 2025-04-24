@@ -8,7 +8,7 @@ const Layout = () => {
   const [showMessage, setShowMessage] = useState(false);
 
   return (
-    <div className="w-full h-screen overflow-y-scroll scrollbar relative bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300 ">
+    <div className="w-full h-screen overflow-y-scroll scrollbar-none relative bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300 ">
       <Navbar />
       <Outlet />
       <Footer />
