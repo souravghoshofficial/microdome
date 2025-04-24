@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const response = fetch("http://localhost:3000/profile")
-console.log(response);
+// const response = fetch("http://localhost:3000/profile")
+// console.log(response);
 
 
 const initialState = {
