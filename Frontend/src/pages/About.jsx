@@ -7,7 +7,7 @@ import {faCube} from '@fortawesome/free-solid-svg-icons'
 
 const About = () => {
   return (<>
-    <div id="about" className="pt-16 w-full h-screen flex justify-center md:items-center md:justify-center">
+    <div id="about" className="pt-16 w-full lg:h-screen flex justify-center md:items-center md:justify-center">
       <div className="w-[90%] flex flex-col md:flex-row items-center md:justify-between gap-10 md:gap-4">
         <div className="w-full md:w-[45%]">
           <div>

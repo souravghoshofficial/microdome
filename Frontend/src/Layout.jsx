@@ -16,7 +16,7 @@ const Layout = () => {
       <div
         className={` ${
           showMessage ? "block" : "hidden"
-        } fixed z-10 bottom-20 md:bottom-24 w-[85%] md:w-[25%]  right-8 p-4 md:p-5 rounded-sm border border-gray-200 dark:border-gray-50/[.1] bg-white dark:bg-zinc-900 text-black dark:text-white transition-all duration-500`}
+        } fixed z-10 bottom-20 md:bottom-24 w-[85%] md:w-[25%] right-5 md:right-8 p-4 md:p-5 rounded-sm border border-gray-200 dark:border-gray-50/[.1] bg-white dark:bg-zinc-900 text-black dark:text-white transition-all duration-500`}
       >
         <h4 className="text-lg font-bold">Let's Connect</h4>
         <p className="text-sm">
@@ -34,7 +34,7 @@ const Layout = () => {
       
       <div
         onClick={() => setShowMessage((prev) => !prev)}
-        className="w-12 h-12 z-10 md:w-14 md:h-14  bg-[#2DD54D] rounded-full fixed bottom-5 right-8 text-white flex items-center justify-center cursor-pointer text-2xl"
+        className="w-12 h-12 z-10 md:w-14 md:h-14  bg-[#2DD54D] rounded-full fixed bottom-3 right-5 md:bottom-5 md:right-8 text-white flex items-center justify-center cursor-pointer text-2xl"
       >
         <RiWhatsappLine
           className={`${showMessage ? "hidden" : "block"} size-8 md:size-10`}

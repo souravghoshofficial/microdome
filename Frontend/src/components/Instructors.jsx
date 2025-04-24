@@ -74,7 +74,7 @@ return (
        
           ))}
         </Swiper>
-        <div className='mt-4 mx-auto w-full md:w-[90%] flex items-center gap-5 justify-center md:justify-end'>
+        <div className='mt-4 mx-auto w-full md:w-[90%] flex items-center gap-5 justify-center md:justify-end text-white'>
           <button className='w-12 h-12 bg-highlighted rounded-full flex items-center justify-center cursor-pointer' onClick={() => swiperRef.current?.slidePrev()}>
             <RiArrowLeftSLine size={28} />
           </button>
