@@ -34,14 +34,17 @@ const Layout = () => {
       
       <div
         onClick={() => setShowMessage((prev) => !prev)}
-        className="w-12 h-12 z-10 md:w-14 md:h-14  bg-[#2DD54D] rounded-full fixed bottom-3 right-5 md:bottom-5 md:right-8 text-white flex items-center justify-center cursor-pointer text-2xl"
-      >
+        className="h-12 z-10  md:h-14  bg-[#2DD54D] rounded-full fixed bottom-5 right-8 text-white flex items-center justify-center cursor-pointer ">
+        <div className={`flex items-center gap-2 px-3 py-1 ${showMessage ? "hidden" : "block"} w-12 md:w-auto`}>
         <RiWhatsappLine
-          className={`${showMessage ? "hidden" : "block"} size-8 md:size-10`}
-        />
+          className= "size-8 md:size-10"/>
+          <p className="hidden md:block font-bold">Let's Connect</p>
+        </div>
+        
+        <div className={`w-12 md:w-14 ${showMessage ? "block" : "hidden"} flex items-center justify-center`}>
         <RiCloseLargeLine
-          className={`${showMessage ? "block" : "hidden"} size-5 md:size-6`}
-        />
+          className={`size-5 md:size-6`}/>
+        </div>
       </div>
     </div>
   );
