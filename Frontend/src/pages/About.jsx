@@ -1,4 +1,3 @@
-import brainImg from "../assets/brain-img.jpeg";
 import cellVideo  from "../assets/cell.mp4"
 import { Link } from "react-router";
 

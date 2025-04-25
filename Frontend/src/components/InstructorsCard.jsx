@@ -1,7 +1,7 @@
 import React from "react";
 import parse from 'html-react-parser';
 
-export default function InstructorsCard({ image, name, subject, description1 , description2 }) {
+export default function InstructorsCard({ image, name, subject, description }) {
   return (
     <div className="w-[100%] flex flex-col-reverse lg:flex-row  justify-between shrink-0 overflow-hidden h-[70vh] md:h-auto">
     <div className="w-[100%] lg:w-[50%] flex justify-center pt-4 relative">
@@ -19,11 +19,10 @@ export default function InstructorsCard({ image, name, subject, description1 , d
         </div>
       </div>
     </div>
- <div className="w-[100%] lg:w-[50%] p-6 md:p-4 lg:pr-8"> 
+ <div className="w-[100%] lg:w-[50%] p-6 md:p-23 lg:pr-8"> 
  <h3 className=" dark:text-white text-xl md:text-2xl font-bold text-gray-800 lg:mt-4 mt-1">{name}</h3>
       <p className="dark:text-white text-indigo-600 font-semibold">{subject}</p>
-      <p className="mt-4 dark:text-white text-black text-sm leading-5">{parse(description1)}</p>
-      <p className="mt-4 dark:text-white text-black text-sm leading-5">{parse(description2)}</p>
+      <p className="mt-4 dark:text-white text-black text-sm leading-5">{parse(description)}</p>
  </div>
     </div>
   );
