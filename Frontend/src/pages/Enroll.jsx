@@ -16,7 +16,7 @@ const Enroll = () => {
           Follow these simple steps to start your learning.
         </p>
         <div className="mt-16 w-full flex flex-col md:flex-row md:items-center md:justify-between">
-          <div className="w-full md:w-[45%] px-4 py-8 md:px-8 border">
+          <div className="w-full h-56 md:w-[45%] px-4 py-8 md:px-8 border">
             <FontAwesomeIcon icon={faCube} className="text-xl md:text-2xl" />
             <h2 className="mt-2 text-xl md:text-2xl font-bold">Get Started Now</h2>
             <p>
@@ -28,13 +28,13 @@ const Enroll = () => {
                 <Link to ="courses" className="px-3 py-1.5 border rounded-sm border-highlighted bg-highlighted text-white">Enroll</Link>
             </div>
           </div>
-          <div className="mt-4 md:mt-0 w-full md:w-[25%] px-4 py-8 md:px-8 border">
+          <div className="mt-4 h-56 md:mt-0 w-full md:w-[25%] px-4 py-8 md:px-8 border">
             <FontAwesomeIcon icon={faCube} className="text-xl md:text-2xl" />
             <h2 className="mt-2 text-xl md:text-2xl font-bold">Access Courses and Materials</h2>
             <p>Start learning with our expert-led 
             courses today!</p>
           </div>
-          <div className="mt-4 md:mt-0 w-full md:w-[25%] px-4 py-8 md:px-8 border">
+          <div className="mt-4 h-56 md:mt-0 w-full md:w-[25%] px-4 py-8 md:px-8 border">
             <FontAwesomeIcon icon={faCube} className="text-xl md:text-2xl" />
             <h2 className="mt-2 text-xl md:text-2xl font-bold">Join Live Classes Anytime</h2>
             <p>Engage with instructors and peers 
