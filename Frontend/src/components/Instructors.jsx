@@ -55,7 +55,7 @@ return (
   <h1 className="text-3xl md:text-4xl text-black dark:text-white text-center font-bold">Your <span className='text-button'>Instructors</span></h1>
   <p className='text-center mt-4'>Learning becomes limitless when you have the right mentors.</p>
   
-  <Swiper modules={[Autoplay , Navigation]} navigation={false} onBeforeInit={(swiper) => swiperRef.current = swiper} spaceBetween={0} speed={1000} slidesPerView={2} loop={true}  autoplay={{pauseOnMouseEnter: true}}  className="w-[100%] md:w-[90%] mt-8 flex shrink-0 mx-auto dark:bg-gray-50/[.10] rounded-2xl shadow-2xl transition-shadow">
+  <Swiper modules={[Autoplay , Navigation]} navigation={false} onBeforeInit={(swiper) => swiperRef.current = swiper} spaceBetween={0} speed={1000} slidesPerView={1} loop={true}  autoplay={{pauseOnMouseEnter: true}}  className="w-[100%] md:w-[90%] mt-8 flex shrink-0 mx-auto dark:bg-gray-50/[.10] rounded-2xl shadow-2xl transition-shadow">
        
             {mentors.map((mentor, index) => (
                 <SwiperSlide> <InstructorsCard

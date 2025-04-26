@@ -22,7 +22,7 @@ const AboutUs = () => {
           </div>
 
           <div className="w-full md:w-1/2 bg-white dark:bg-[#232B38] rounded-2xl shadow-xl p-8 text-left space-y-4">
-            <h3 className="text-3xl font-semibold text-[#2C7A7B] underline dark:decoration-white decoration-[#23615F] underline-offset-4 mb-4">
+            <h3 className="text-3xl font-semibold text-[#2C7A7B] mb-4">
               About Microdome
             </h3>
             <p className="text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
@@ -54,7 +54,7 @@ const AboutUs = () => {
           </div>
 
           <div className="w-full md:w-1/2 bg-white dark:bg-[#232B38] rounded-2xl shadow-xl p-8 text-left space-y-4">
-            <h3 className="text-3xl font-semibold text-[#2C7A7B] underline dark:decoration-white decoration-[#23615F] underline-offset-4 mb-4">
+            <h3 className="text-3xl font-semibold text-[#2C7A7B] mb-4">
               About Me
             </h3>
             <p className="text-gray-800 dark:text-gray-200 text-lg leading-relaxed">

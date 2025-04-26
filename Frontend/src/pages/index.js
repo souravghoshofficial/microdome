@@ -11,6 +11,6 @@ import IITJAM from "./MyCourse";
 import AboutUs from "./AboutUs";
 import ProfileDashboard from "./ProfileDashboard";
 import Resources from "./Resources";
+import Faculties from "./Faculties";
 
-
-export { Landing , About , Contact  , Enroll , Testimonial , Signup , Login , Courses , IITJAM , CourseLayout , AboutUs , ProfileDashboard , Resources}
+export { Landing , About , Contact  , Enroll , Testimonial , Signup , Login , Courses , IITJAM , CourseLayout , AboutUs , ProfileDashboard , Resources,Faculties}
