@@ -34,7 +34,7 @@ const Layout = () => {
       
       <div
         onClick={() => setShowMessage((prev) => !prev)}
-        className="h-12 z-10  md:h-14  bg-[#2DD54D] rounded-full fixed bottom-5 right-8 text-white flex items-center justify-center cursor-pointer border-b-4 border-green-600">
+        className="h-12 z-10  md:h-14  bg-[#2DD54D] rounded-full fixed bottom-5 right-8 text-white flex items-center justify-center cursor-pointer">
         <div className={`flex items-center gap-2 px-3 py-1 ${showMessage ? "hidden" : "block"} w-12 md:w-auto`}>
         <RiWhatsappLine
           className= "size-8 md:size-10"/>

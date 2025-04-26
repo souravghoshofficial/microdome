@@ -9,7 +9,7 @@ const Landing = () => {
       id="home"
       className=" w-full flex items-center justify-center relative"
     >
-      <div className=" w-[90%] flex flex-col items-center justify-center z-20">
+      <div className=" w-[90%] flex flex-col items-center justify-center">
         <div className="md:mt-48 mt-32 mb-5 w-full md:w-[60%]">
           <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold leading-10 md:leading-14 lg:leading-16">
             Unlock Your Potential With{" "}
