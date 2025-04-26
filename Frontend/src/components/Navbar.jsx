@@ -29,6 +29,9 @@ const Navbar = () => {
           <NavLink to="/" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} hover:underline underline-offset-4 decoration-gray-800 dark:decoration-white`}>Home</NavLink>
           <NavLink to="/courses" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} hover:underline underline-offset-4 decoration-gray-800 dark:decoration-white`}>Courses</NavLink>
           <NavLink to="/about-us" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} hover:underline underline-offset-4 decoration-gray-800 dark:decoration-white`}>About Us</NavLink>
+
+          <NavLink to="/faculties" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} hover:underline underline-offset-4 decoration-gray-800 dark:decoration-white`}>Our Faculties</NavLink>
+
           <NavLink to="/resources" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} hover:underline underline-offset-4 decoration-gray-800 dark:decoration-white`}>Resources</NavLink>
           <div className="px-4 border-l border-r border-gray-400/50">
             <ThemeBtn />
@@ -63,6 +66,7 @@ const Navbar = () => {
           <NavLink onClick={() => setShowSideNav(false)} to="/" className="text-lg">Home</NavLink>
           <NavLink onClick={() => setShowSideNav(false)} to="/courses" className="text-lg">Courses</NavLink>
           <NavLink onClick={() => setShowSideNav(false)} to="/about-us" className="text-lg">About Us</NavLink>
+          <NavLink onClick={() => setShowSideNav(false)} to="/faculties" className="text-lg">Our Faculties</NavLink>
           <NavLink onClick={() => setShowSideNav(false)} className="text-lg">Resources</NavLink>
           <div className="flex items-center gap-4"> 
             <span>Theme : </span>

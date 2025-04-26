@@ -16,11 +16,10 @@ import {
   CourseLayout,
   AboutUs,
   ProfileDashboard,
-  Resources
+  Resources, 
+  Faculties,
 } from "./pages";
 import { Navbar, AuthenticatedRoute , Instructor } from "./components";
-
-
 
 const App = () => {
  
@@ -46,6 +45,7 @@ const App = () => {
           </Route>
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/faculties" element={<Faculties />}/>
             <Route path="profile" element={<AuthenticatedRoute />}>
                 <Route path="" element={<ProfileDashboard />} />
             </Route>
