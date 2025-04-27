@@ -4,11 +4,12 @@ import Sayan from '../assets/sayan.png';
 import Rupayan from '../assets/Rupayan.png';
 import Subhadeep from '../assets/subhadip.png';
 import Akash from '../assets/Akash.png';
+import KrishnenduPicNew from '../assets/new-img3.png';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay , Navigation } from 'swiper/modules';
 
-import{ RiArrowRightSLine , RiArrowLeftSLine } from "@remixicon/react"
+import{ RiArrowRightSLine , RiArrowLeftSLine } from "@remixicon/react";
 
 // Import Swiper styles
 import 'swiper/css';
@@ -45,6 +46,14 @@ const mentors = [
       "<strong>M.Sc.</strong> in <strong>Biotechnology</strong> from <strong>Gujrat Biotechnology University,</strong> Gandhinagar.",
     image: Akash,
   },
+
+  {
+    name:"Krishnendu Das",
+    subject:"Actogen Batch Mentor (Adjunct Faculty)",
+    description:
+      "<strong>M.Sc.</strong> in <strong>Virology</strong> from <strong>ICMR-National Institute of Virology,</strong> Pune.",
+    image: KrishnenduPicNew,  
+  }
 ];
 
 const Instructors=()=>{

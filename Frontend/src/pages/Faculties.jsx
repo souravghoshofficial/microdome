@@ -3,6 +3,7 @@ import Sayan from '../assets/sayanpic.png';
 import Rupayan from '../assets/Rupayanpic.png';
 import Subhadeep from '../assets/Subhadeep.png';
 import Akash from '../assets/Akashpic.jpg';
+import Krishnendu from '../assets/krishnendupic.jpg';
 
 const Faculties=()=>{
   return (
@@ -22,7 +23,7 @@ const Faculties=()=>{
 
               <div className="w-full md:w-1/2 bg-white dark:bg-[#232B38] rounded-2xl shadow-xl p-8 text-left space-y-4">
                 
-                <h3 className="text-2xl font-bold text-[#2C7A7B] mb-2">Founder | Life Science Researcher</h3>
+                <h3 className="text-2xl font-bold text-[#2C7A7B] mb-2">Founder of Microdome Classes | Life Science Researcher</h3>
 
                 <h3 className="text-1xl font-bold mb-2 text-pink-500">Expertise in - Molecular Biology, Cell Biology, Biophysical Techniques</h3>
 
@@ -91,7 +92,12 @@ const Faculties=()=>{
                 Subhadeep brings both knowledge and mentorship to the platform, guiding students with dedication and insight in the field of life sciences.
                 </p>
               </div>
-            </div> 
+            </div>
+
+
+
+
+
 
             <div className="flex flex-col md:flex-row items-center gap-5 pt-20 pr-35">
               <div className="w-full md:w-1/2">
@@ -106,7 +112,7 @@ const Faculties=()=>{
 
               <div className="w-full md:w-1/2 bg-white dark:bg-[#232B38] rounded-2xl shadow-xl p-8 text-left space-y-4 ">
 
-                <h3 className="text-2xl font-bold text-[#2C7A7B] mb-4">Semester Batch Member | Biotechnology Aspirant</h3>
+                <h3 className="text-2xl font-bold text-[#2C7A7B] mb-4">Semester Batch Mentor | Biotechnology Aspirant</h3>
                 <h3 className="text-1xl font-bold mb-2 text-pink-500">Expertise in - Microbiology, Industrial Microbiology, Agricultural Microbiology</h3>
 
                 <p className="text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
@@ -118,8 +124,49 @@ const Faculties=()=>{
                 </p>
               </div>
             </div> 
+
+            <h2 className="text-black text-3xl text-center font-bold pt-25 dark:text-white">Our <span className="text-button">Adjunct faculty</span></h2>
+            
+            <div className="flex flex-col md:flex-row items-center gap-5 pt-20 pr-35">
+              <div className="w-full md:w-1/2">
+                <img
+                  src={Krishnendu}
+                  alt="akash's image"
+                  className="rounded-2xl shadow-2xl mx-auto w-80 object-contain transition-transform duration-300 hover:scale-105"
+                />
+
+                 <h3 className="text-3xl font-bold text-[#2C7A7B] mb-4 pl-57 mt-3">Krishnendu Das</h3>
+              </div>
+
+              <div className="w-full md:w-1/2 bg-white dark:bg-[#232B38] rounded-2xl shadow-xl p-8 text-left space-y-4 ">
+
+                <h3 className="text-2xl font-bold text-[#2C7A7B] mb-4">Actogen Batch Mentor | Bioinformatics Aspirant</h3>
+
+                <h3 className="text-1xl font-bold mb-2 text-pink-500">Expertise in - Bioinformatics</h3>
+
+                <p className="text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
+                Krishnendu holds a B.Sc. (Hons) in Microbiology from Ramakrishna Mission Vidyamandira, Belur, and an M.Sc. in Virology from ICMR–National Institute of Virology, Pune.
+
+                He has qualified top national-level exams including IIT-JAM, GATE, GAT-B, CUET-PG, and SPPU OEE.
+                He received admission offers from reputed institutions like CSIR-CFTRI, Mysuru and Centre for Human Genetics, Bangalore SPPU, and ICMR-NIV.
+
+                With a strong academic background and passion for science, Krishnendu founded this platform to support and guide aspiring students in the life sciences field.
+                </p>
+              </div>
+            </div>
+
   </div>
   )
 }
 
 export default Faculties;
+
+
+
+
+
+
+
+
+
+
