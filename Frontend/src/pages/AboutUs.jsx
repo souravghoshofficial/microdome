@@ -1,6 +1,5 @@
 import React from 'react';
 import Microdome from '../assets/microdome.jpg';
-import Sayan from '../assets/sayanpic.png';
 
 const AboutUs = () => {
   return (
@@ -17,7 +16,7 @@ const AboutUs = () => {
             <img
               src={Microdome}
               alt="Microdome Biology Coaching"
-              className="rounded-full shadow-2xl w-80 object-contain transition-transform duration-300 hover:scale-105 -mt-4"
+              className="rounded-4xl shadow-2xl w-80 object-contain transition-transform duration-300 hover:scale-105 -mt-4"
             />
           </div>
 
@@ -46,14 +45,30 @@ const AboutUs = () => {
           </h3>
 
           <div className="text-gray-800 dark:text-gray-200 text-lg leading-relaxed space-y-4">
-            <ul className="list-disc list-inside space-y-2">
-              <li><strong className='text-2xl font-semibold'>Expert Mentorship:</strong> All our mentors are highly qualified to guide undergraduate students (B.Sc) in the field of biological sciences.</li>
-              <li><strong className='text-2xl font-semibold'>Proven Success:</strong> Our mentors have successfully qualified for most major entrance exams, ensuring you're learning from the best.</li>
-              <li><strong className='text-2xl font-semibold'>Interactive Learning:</strong> We offer students the opportunity to teach or present topics, promoting deeper understanding and confidence.</li>
-            </ul>
+
+           <div>
+              <p className="text-2xl font-semibold text-pink-500">Expert Mentorship</p>
+              <ul className="list-disc list-inside ml-4 space-y-1">
+                <li>All our mentors are highly qualified to guide undergraduate students (B.Sc) in the field of biological sciences.</li>
+              </ul>
+            </div>
 
             <div>
-              <p className="font-semibold">Structured Classes:</p>
+              <p className="text-2xl font-semibold text-pink-500">Proven Success</p>
+              <ul className="list-disc list-inside ml-4 space-y-1">
+                <li>Our mentors have successfully qualified for most major entrance exams, ensuring you're learning from the best.</li>
+              </ul>
+            </div> 
+
+            <div>
+              <p className="text-2xl font-semibold text-pink-500">Interactive Learning</p>
+              <ul className="list-disc list-inside ml-4 space-y-1">
+                <li>We offer students the opportunity to teach or present topics, promoting deeper understanding and confidence.</li>
+              </ul>
+            </div> 
+
+            <div>
+              <p className="text-2xl font-semibold text-pink-500">Structured Classes</p>
               <ul className="list-disc list-inside ml-4 space-y-1">
                 <li>3 dedicated Biology classes every week</li>
                 <li>Additional support with PCM (Physics, Chemistry, Mathematics) classes</li>
@@ -61,7 +76,7 @@ const AboutUs = () => {
             </div>
 
             <div>
-              <p className="font-semibold">Flexible Learning:</p>
+              <p className="text-2xl font-semibold text-pink-500">Flexible Learning</p>
               <ul className="list-disc list-inside ml-4 space-y-1">
                 <li>Access to recorded sessions via our Telegram channel</li>
                 <li>Recorded classes also available on our YouTube channel and directly through the Microdome website</li>
@@ -69,14 +84,14 @@ const AboutUs = () => {
             </div>
 
             <div>
-              <p className="font-semibold">Online Convenience:</p>
+              <p className="text-2xl font-semibold text-pink-500">Online Convenience</p>
               <ul className="list-disc list-inside ml-4 space-y-1">
                 <li>All classes are conducted online through Google Meet, so you can learn from anywhere!</li>
               </ul>
             </div>
 
             <div>
-              <p className="font-semibold">Affordable Fees:</p>
+              <p className="text-2xl font-semibold text-pink-500">Affordable Fees</p>
               <ul className="list-disc list-inside ml-4 space-y-1">
                 <li>First class absolutely free!</li>
                 <li>Only ₹500 for the first month</li>
@@ -84,8 +99,12 @@ const AboutUs = () => {
               </ul>
             </div>
 
-            <p className="font-semibold">Financial Support:</p>
-            <p>If you are facing any financial difficulties, we are always ready to help!</p>
+            <div>
+            <p className="text-2xl font-semibold text-pink-500">Financial Support</p>
+            <ul className="list-disc list-inside ml-4 space-y-1">
+            <li>If you are facing any financial difficulties, we are always ready to help!</li>
+            </ul>
+            </div>
           </div>
         </div>
 
