@@ -18,7 +18,7 @@ const Faculties=()=>{
                   className="rounded-2xl shadow-2xl mx-auto w-80 object-contain transition-transform duration-300 hover:scale-105 "
                 />
 
-               <h3 className="text-3xl font-bold text-[#2C7A7B]  mb-4 pl-58 mt-3">Sayan Ganguly</h3>
+               <h3 className="text-3xl font-bold text-[#2C7A7B]  mb-4 text-center mt-3">Sayan Ganguly</h3>
               </div>
 
               <div className="w-full md:w-1/2 bg-white dark:bg-[#232B38] rounded-2xl shadow-xl p-8 text-left space-y-4">
@@ -48,7 +48,7 @@ const Faculties=()=>{
                   className="rounded-2xl shadow-2xl mx-auto w-80 object-contain transition-transform duration-300 hover:scale-105"
                 />
 
-                  <h3 className="text-3xl font-bold text-[#2C7A7B] mb-4 pl-44 mt-3">Rupayan Bhattacharjee </h3> 
+                  <h3 className="text-3xl font-bold text-[#2C7A7B] mb-4 text-center mt-3">Rupayan Bhattacharjee </h3> 
               </div>
 
               <div className="w-full md:w-1/2 bg-white dark:bg-[#232B38] rounded-2xl shadow-xl p-8 text-left space-y-4 ">
@@ -77,7 +77,7 @@ const Faculties=()=>{
                   className="rounded-2xl shadow-2xl mx-auto w-80 object-contain transition-transform duration-300 hover:scale-105"
                 />
 
-                   <h3 className="text-3xl font-bold text-[#2C7A7B] mb-4 pl-52 mt-3">Subhadeep Podder </h3>
+                   <h3 className="text-3xl font-bold text-[#2C7A7B] mb-4 text-center mt-3">Subhadeep Podder </h3>
               </div>
 
               <div className="w-full md:w-1/2 bg-white dark:bg-[#232B38] rounded-2xl shadow-xl p-8 text-left space-y-4 ">
@@ -107,7 +107,7 @@ const Faculties=()=>{
                   className="rounded-2xl shadow-2xl mx-auto w-80 object-contain transition-transform duration-300 hover:scale-105"
                 />
 
-                 <h3 className="text-3xl font-bold text-[#2C7A7B] mb-4 pl-62 mt-3">Akash Biswas</h3>
+                 <h3 className="text-3xl font-bold text-[#2C7A7B] mb-4 text-center mt-3">Akash Biswas</h3>
               </div>
 
               <div className="w-full md:w-1/2 bg-white dark:bg-[#232B38] rounded-2xl shadow-xl p-8 text-left space-y-4 ">
@@ -135,7 +135,7 @@ const Faculties=()=>{
                   className="rounded-2xl shadow-2xl mx-auto w-80 object-contain transition-transform duration-300 hover:scale-105"
                 />
 
-                 <h3 className="text-3xl font-bold text-[#2C7A7B] mb-4 pl-57 mt-3">Krishnendu Das</h3>
+                 <h3 className="text-3xl font-bold text-[#2C7A7B] mb-4 text-center mt-3">Krishnendu Das</h3>
               </div>
 
               <div className="w-full md:w-1/2 bg-white dark:bg-[#232B38] rounded-2xl shadow-xl p-8 text-left space-y-4 ">

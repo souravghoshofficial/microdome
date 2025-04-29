@@ -7,6 +7,8 @@ import Logo from "./Logo";
 import UserIcon from "./UserIcon";
 import UserCard from "./UserCard";
 import AuthenticatedRoute from "./AuthenticatedRoute";
-import Instructor from "./Instructors"
+import Instructor from "./Instructors";
+import ResourceTopic from "./ResourceTopic";
+import ResourceVideo from "./ResourceVideo";
 
-export { Navbar , ContactItem , Footer , CourseCard , TestimonialCard , Logo , UserIcon , UserCard  , AuthenticatedRoute , Instructor };
+export { Navbar , ContactItem , Footer , CourseCard , TestimonialCard , Logo , UserIcon , UserCard  , AuthenticatedRoute , Instructor, ResourceTopic, ResourceVideo };
