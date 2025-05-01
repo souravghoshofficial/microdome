@@ -13,12 +13,12 @@ const CourseCard = ({
 
   const discount = Math.trunc(((actualPrice - discountedPrice) / actualPrice) * 100)
   return (
-    <div className="w-full hover:scale-105 transition-all cursor-pointer flex flex-col border overflow-hidden bg-white text-black dark:bg-black dark:text-white rounded-lg">
+    <Link to={linkAddress} className="w-full cursor-pointer flex flex-col overflow-hidden text-black dark:bg-zinc-900/90 dark:text-white rounded-xl bg-white shadow-lg shadow-gray-300 dark:shadow-[0_4px_12px_rgba(0,0,0,0.6)_0_1px_3px_rgba(255,255,255,0.05)]">
       <div className="w-full relative">
         <h5 className={`${courseTag ? "block" : "hidden"} absolute top-3 right-3 text-[0.6vw] font-bold px-3 py-0.5 rounded-md bg-slate-100 text-black`}>{courseTag}</h5>
-        <img className="w-full" src={courseImg} alt="course image" />
+        <img className="w-full h-80 object-cover object-center" src={courseImg} alt="course image" />
       </div>
-      <div className="p-3">
+      <div className="p-3 lg:p-4">
         <h2 className="mt-2 text-xl font-bold">{courseTitle}</h2>
         <div className="mt-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -35,7 +35,7 @@ const CourseCard = ({
           {btnText}
         </Link>
       </div>
-    </div>
+    </Link>
   );
 };
 
