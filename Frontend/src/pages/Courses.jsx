@@ -6,7 +6,7 @@ const Courses = () => {
     {
       id: 1,
       courseTitle: "M.Sc Entrance Batch",
-      subTitle: "Crack M.Sc Entrances — IIT JAM, CUET PG & More!",
+      subTitle: "Crack M.Sc Entrances — IIT JAM, CUET PG & More",
       courseTag: "M.Sc Entrance",
       type: "live",
       language: "hinglish",

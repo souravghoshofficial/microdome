@@ -1,29 +1,19 @@
-import React from "react";
-import parse from 'html-react-parser';
+import React from 'react'
 
-export default function InstructorsCard({ image, name, subject, description }) {
+
+const InstructorsCard = ({name, image , subject , description , bgColor}) => {
   return (
-    <div className="w-[100%] flex flex-col-reverse lg:flex-row  justify-between shrink-0 overflow-hidden h-[70vh] md:h-auto">
-    <div className="w-[100%] lg:w-[50%] flex justify-center pt-4 relative">
-    <div className="absolute bottom-0 w-40 h-40 md:h-60 md:w-60 lg:w-72 lg:h-72 xl:w-80 xl:h-80">
-    <img 
-        src={image}
-        alt={name}
-        className="w-full h-full object-cover"
-      />
-    </div>
-      <div className="w-[70%] sm:w-[50%] md:w-[50%] lg:w-[75%] h-32 md:h-60 lg:h-80  flex items-end">
-        <div className="h-[150px] md:h-[240px] w-full  rounded-t-full p-[25px] md:p-[40px] md:pb-0 pb-0 border border-blue-500 mb-[-20px] md:mb-[-36px]">
-            <div className="h-full w-full bg-blue-500 rounded-t-full">
-            </div>
+    <div className='w-[96%] mx-auto flex flex-col bg-white dark:bg-gray-50/[.10] rounded-xl overflow-hidden justify-center items-center border border-zinc-900/15 dark:border-gray-700/25 hover:border-blue-500/50 '>
+        <div className={` ${bgColor} w-full flex items-center justify-center`}>
+          <img className='h-72' src={image} alt="image" />
         </div>
-      </div>
+        <div className='w-full px-4 py-6'>
+            <h3 className='text-xl md:text-2xl font-bold'>{name}</h3>
+            <h4 className='text-[16px] mt-0.5 text-highlighted font-medium'>{subject}</h4>
+            <p className='mt-2 text-[14px] text-gray-700 dark:text-gray-400'>{description}</p>
+        </div>
     </div>
- <div className="w-[100%] lg:w-[50%] p-6 md:p-23 lg:pr-8"> 
- <h3 className=" dark:text-white text-xl md:text-2xl font-bold text-gray-800 lg:mt-4 mt-1">{name}</h3>
-      <p className="dark:text-white text-indigo-600 font-semibold">{subject}</p>
-      <p className="mt-4 dark:text-white text-black text-sm leading-5">{parse(description)}</p>
- </div>
-    </div>
-  );
+  )
 }
+
+export default InstructorsCard
