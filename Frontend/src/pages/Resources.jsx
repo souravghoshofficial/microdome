@@ -1,7 +1,7 @@
 import React from "react";
 import { ResourceTopic } from "../components";
 
-import BT_Syllabus from "../assets/pdfs/BT_Syllabus.pdf"
+import BT_Syllabus from "../assets/pdfs/BT_Syllabus.pdf";
 
 const resources = [
   {
@@ -25,18 +25,22 @@ const resources = [
         noteTitle: "Translation Part 2",
         noteUrl: BT_Syllabus,
       },
-    ]
+    ],
   },
-]
+];
 
 const Resources = () => {
   return (
-    <div className="w-full flex items-center justify-center transition-colors duration-300">
+    <div className="w-full flex items-center justify-center">
       <div className="my-24 md:my-32 w-[90%]">
-      <h4 className='text-center text-sm font-bold'>Resources</h4>
-      <h2 className='text-3xl md:text-4xl font-bold text-center'>View Resources</h2>
+        <h4 className="text-center text-sm font-bold">Resources</h4>
+        <h2 className="text-3xl md:text-4xl font-bold text-center">
+          View Resources
+        </h2>
         <div className="w-full mt-8">
-        {resources.map((resource) => (<ResourceTopic key={resource.topic} resource={resource} />))}
+          {resources.map((resource) => (
+            <ResourceTopic key={resource.topic} resource={resource} />
+          ))}
         </div>
       </div>
     </div>

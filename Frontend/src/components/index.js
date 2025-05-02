@@ -10,5 +10,6 @@ import AuthenticatedRoute from "./AuthenticatedRoute";
 import Instructor from "./Instructors";
 import ResourceTopic from "./ResourceTopic";
 import ResourceVideo from "./ResourceVideo";
+import FacultyCard from "./FacultyCard";
 
-export { Navbar , ContactItem , Footer , CourseCard , TestimonialCard , Logo , UserIcon , UserCard  , AuthenticatedRoute , Instructor, ResourceTopic, ResourceVideo };
+export { Navbar , ContactItem , Footer , CourseCard , TestimonialCard , Logo , UserIcon , UserCard  , AuthenticatedRoute , Instructor, ResourceTopic, ResourceVideo , FacultyCard };

@@ -7,7 +7,6 @@ import {
   Signup,
   Login,
   Courses,
-  IITJAM,
   Landing,
   About,
   Enroll,
@@ -41,7 +40,6 @@ const App = () => {
 
           <Route path="courses" element={<CourseLayout />}>
             <Route path="" element={<Courses />} />
-            <Route path="iit-jam" element={<IITJAM />} />
           </Route>
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />

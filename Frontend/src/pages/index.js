@@ -6,11 +6,10 @@ import Testimonial from './Testimonial';
 import Signup from "./Signup";
 import Login from "./Login";
 import Courses from "./Courses";
-import { CourseLayout } from "./CourseLayout";
-import IITJAM from "./MyCourse";
+import CourseLayout from "./CourseLayout";
 import AboutUs from "./AboutUs";
 import ProfileDashboard from "./ProfileDashboard";
 import Resources from "./Resources";
 import Faculties from "./Faculties";
 
-export { Landing , About , Contact  , Enroll , Testimonial , Signup , Login , Courses , IITJAM , CourseLayout , AboutUs , ProfileDashboard , Resources,Faculties}
+export { Landing , About , Contact  , Enroll , Testimonial , Signup , Login , Courses , CourseLayout , AboutUs , ProfileDashboard , Resources,Faculties}

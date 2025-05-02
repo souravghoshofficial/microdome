@@ -5,6 +5,12 @@
 @theme{
   --color-button : #3EB5A2;
   --color-highlighted: #3EB5A2;
+  --color-light-pink: #F4CCCC;
+  --color-mint-green: #A8E6CF;
+  --color-warm-salmon: #EA9999;
+  --color-light-lilac: #E0BBE4;
+  --color-baby-blue: #BFEFFF;
+
 }
 
 .gradiant-text{
@@ -47,5 +53,8 @@
 
 /* nav{
   bg-[rgba(244,242,242,0.85)] dark:bg-[rgba(8,_8,_8,_0.2)] border-b border-gray-950/[.1] dark:border-gray-50/[.1]
+
+  dark:bg-[#232B38]
+  text-[#2C7A7B]
 } */
 
