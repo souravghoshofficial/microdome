@@ -1,92 +1,50 @@
 import { app } from "./app.js";
-import dotenv from "dotenv";
-import { pool } from "./db/db.js";
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
 
-dotenv.config();
+dotenv.config('.env')
 
-const port = process.env.PORT;
+const studentsReview = [
+    {
+      name: "Sourav Ghosh",
+      message: '"The Microdome classes transformed my preparation journey! Their resources and support were invaluable in my success."',
+      designation: "M.Sc in Biotechnology , IIT Delhi",
+      imageUrl : "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    },
+    {
+      name: "Abhijit Rabidas",
+      message: '"Microdome classes played a crucial role in my success! Their well-structured resources and dedicated support made my preparation journey smooth and effective. Highly recommended!"',
+      designation: "M.Sc in Microbiology , Banaras Hindu University",
+      imageUrl : "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    },
+    {
+      name: "Rohit Gupta",
+      message: '"An absolute game-changer! The Microdome classes provided exceptional guidance and top-notch resources that significantly boosted my confidence and performance."',
+      designation: "M.Sc in Biotechnology , Delhi University",
+      imageUrl : "https://images.pexels.com/photos/1121796/pexels-photo-1121796.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    },
+    {
+      name: "Sayan Ganguly",
+      message: '"An absolute game-changer! The Microdome classes provided exceptional guidance and top-notch resources that significantly boosted my confidence and performance."',
+      designation: "M.Sc in Biotechnology , Delhi University",
+      imageUrl : "https://images.pexels.com/photos/1861594/pexels-photo-1861594.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    },
+  ];
+
+
+const port = process.env.PORT || 3000;
+
+app.get('/' , (req, res) => {
+    res.send("Hello World");
+})
+
+app.get('/api/testimonial' , (req, res) => {
+    res.send(studentsReview);
+})
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
-
-
-app.get("/profile" , (req, res) => {
-    const token = req.cookies.token
-    if(!token){
-      console.log("token nehi hai");
-      res.send("Not Authenticated!!")   
-    }
-
-    else{
-      const data = jwt.verify(token , "secret")
-      if(!data){
-        res.send("Token is wrong")
-      }
-      else{
-        res.send(data)
-      }
-    }
+    console.log(`Server is listening on port http://localhost:${port}`);
 })
 
-app.post("/logout" , (req , res) => {
-    res.cookie("token" , "")
-    res.send("Logout Successfully")
-})
 
-app.post("/signup", async (req, res) => {
-  const client = await pool.connect();
-  const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
 
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const sql = "INSERT INTO users (name, email, password) VALUES ($1, $2, $3)";
-    await client.query(sql, [name, email, hashedPassword]);
-    const token = jwt.sign({email: email} , "secret");
-    console.log(token);
-    res
-    .cookie("token", token)
-    .status(201).json({ message: "User registered successfully" });
-  } 
-  catch (error) {
-    if(error.code === "23505"){
-        res.status(409).json({ message: "Email already exists" });
-        return
-    }
-  } 
-  finally {
-    client.release();
-  }
-});
-
-// pool.query('SELECT NOW()')
-// .then(() => {
-//     createDB();
-//     console.log("DB connected");
-
-//     app.listen(port, () => {
-//         console.log(`Server is running on port ${port}`);
-
-//     })
-// })
-// .catch((err) => {
-//     console.log("Postgresql connection failed ", err);
-
-// })
-
-// app.get("/" , (res) =>{
-//     res.send({
-//         staus: 400,
-//         messsage: "hello"
-//     });
-// })
