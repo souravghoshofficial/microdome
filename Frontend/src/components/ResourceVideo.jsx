@@ -1,15 +1,17 @@
 import React from "react";
 
-const ResourceVideo = ({videoTitle , videoUrl}) => {
+const ResourceVideo = ({title,url}) => {
   return (
-    <div className="w-full flex items-center justify-center">
-      <iframe className="w-full h-[53vw] lg:w-[40vw] lg:h-[22.5vw] rounded-xl"
-        src={videoUrl}
-        title={videoTitle}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-      ></iframe>
+    <div className="w-[100%] gap-6 grid grid-cols-1 lg:grid-cols-2 mb-16">
+        <iframe
+          className="w-64 h-auto rounded-2xl lg:w-[560px] lg:h-80"
+          src={url}
+          title={title}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        ></iframe>
     </div>
   );
 };
