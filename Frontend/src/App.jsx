@@ -17,6 +17,9 @@ import {
   ProfileDashboard,
   Resources, 
   Faculties,
+  EntranceBatchLive,
+  EntranceBatchRecorded,
+  BScHonsBatch
 } from "./pages";
 import { Navbar, AuthenticatedRoute , Instructor } from "./components";
 
@@ -38,8 +41,11 @@ const App = () => {
             ]}
           />
 
-          <Route path="courses" element={<CourseLayout />}>
+          <Route path="/courses" element={<CourseLayout />}>
             <Route path="" element={<Courses />} />
+            <Route path="entrance-batch-live" element = {<EntranceBatchLive />} />
+            <Route path="entrance-batch-recorded" element = {<EntranceBatchRecorded />} />
+            <Route path="bsc-hons-batch" element = {<BScHonsBatch />} />
           </Route>
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
@@ -48,7 +54,7 @@ const App = () => {
                 <Route path="" element={<ProfileDashboard />} />
             </Route>
         </Route>
-        <Route path="signup" element={[<Navbar />, <Signup />]} />
+        <Route path="/signup" element={[<Navbar />, <Signup />]} />
         <Route path="/login" element={[<Navbar />, <Login />]} />
       </Routes>
     </BrowserRouter>

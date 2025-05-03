@@ -13,7 +13,7 @@ const Courses = () => {
       courseImg: "https://i.pinimg.com/736x/5a/81/fc/5a81fca747dbe4f7b10c8e1102a5db32.jpg",
       actualPrice: 4200,
       discountedPrice: 3600,
-      linkAddress: "#"
+      linkAddress: "entrance-batch-live"
     },
     {
       id: 2,
@@ -25,7 +25,7 @@ const Courses = () => {
       courseImg: "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
       actualPrice: 3600,
       discountedPrice: 3000,
-      linkAddress: "#"
+      linkAddress: "bsc-hons-batch"
     },
     {
       id: 3,
@@ -37,7 +37,7 @@ const Courses = () => {
       courseImg: "https://i.pinimg.com/736x/cf/e3/32/cfe332e963458f410c8cb6157a14e92e.jpg",
       actualPrice: 3600,
       discountedPrice: 3000,
-      linkAddress: "#"
+      linkAddress: "entrance-batch-recorded"
     },
   ]
   return (
