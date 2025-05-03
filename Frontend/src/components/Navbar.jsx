@@ -8,6 +8,7 @@ import UserCard from "./UserCard";
 import UserIcon from "./UserIcon";
 import { useSelector , useDispatch } from "react-redux";
 import { toogleCard } from "../features/profileCard/profileCardSlice"
+import { isAction } from "@reduxjs/toolkit";
 
 const Navbar = () => {
 
@@ -63,11 +64,11 @@ const Navbar = () => {
           </div>
         </div>
         <div className="w-[90%] relative mx-auto mt-32 flex flex-col gap-4">
-          <NavLink onClick={() => setShowSideNav(false)} to="/" className="text-lg">Home</NavLink>
-          <NavLink onClick={() => setShowSideNav(false)} to="/courses" className="text-lg">Courses</NavLink>
-          <NavLink onClick={() => setShowSideNav(false)} to="/about-us" className="text-lg">About Us</NavLink>
-          <NavLink onClick={() => setShowSideNav(false)} to="/faculties" className="text-lg">Our Faculties</NavLink>
-          <NavLink onClick={() => setShowSideNav(false)} className="text-lg">Resources</NavLink>
+          <NavLink onClick={() => setShowSideNav(false)} to="/" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} text-lg`}>Home</NavLink>
+          <NavLink onClick={() => setShowSideNav(false)} to="/courses" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} text-lg`}>Courses</NavLink>
+          <NavLink onClick={() => setShowSideNav(false)} to="/about-us" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} text-lg`}>About Us</NavLink>
+          <NavLink onClick={() => setShowSideNav(false)} to="/faculties" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} text-lg`}>Our Faculties</NavLink>
+          <NavLink onClick={() => setShowSideNav(false)} to="/resources" className={({isActive}) => `${isActive ? "text-highlighted font-semibold" : ""} text-lg`}>Resources</NavLink>
           <div className="flex items-center gap-4"> 
             <span>Theme : </span>
           <ThemeBtn />

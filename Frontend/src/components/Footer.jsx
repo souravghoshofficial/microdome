@@ -17,19 +17,19 @@ const Footer = () => {
             </div>
             <p className="mt-2">Let's connect with our socials</p>
             <div className="mt-4 w-full flex items-center gap-4">
-              <a className="" href="https://www.facebook.com/profile.php?id=100014111567971&ref=ig_profile_ac">
+              <a target="_blank" href="https://www.facebook.com/profile.php?id=100014111567971&ref=ig_profile_ac">
                 <RiFacebookCircleFill size={24} className="hover:text-blue-500"/>
               </a>
-              <a href="https://www.instagram.com/say_an_02?igsh=c2JocGhiODIxeDR4">
+              <a target="_blank" href="https://www.instagram.com/say_an_02?igsh=c2JocGhiODIxeDR4">
                 <RiInstagramFill size={24} className="hover:text-pink-500" />
               </a>
-              <a href="https://x.com">
+              <a target="_blank" href="https://x.com">
                 <RiTwitterXFill size={24} className="" />
               </a>
-              <a href="https://linkedin.com/in/sayan-ganguly-5883831bb">
+              <a target="_blank" href="https://linkedin.com/in/sayan-ganguly-5883831bb">
                 <RiLinkedinBoxFill size={24} className="hover:text-blue-500" />
               </a>
-              <a href="https://youtube.com/@microdomeclasses?si=P625Gx-bxJa69Q4I">
+              <a target="_blank" href="https://youtube.com/@microdomeclasses?si=P625Gx-bxJa69Q4I">
                 <RiYoutubeFill size={24} className="hover:text-red-500" />
               </a>
        

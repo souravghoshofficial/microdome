@@ -25,8 +25,8 @@ const CourseCard = ({
         <h2 className="mt-1 text-xl font-bold">{courseTitle}</h2>
         <h3 className="mt-1 text-[14px]">{subTitle}</h3>
         <div className="w-full mt-2 flex items-center gap-2">
-          <div className="py-[4px] px-3 rounded-md bg-slate-200 dark:bg-zinc-700 text-[13px] font-semibold">{type === "LIVE" ? `${type} BATCH` : `${type}`}</div>
-          <div className="py-[4px] px-3 rounded-md bg-slate-200 dark:bg-zinc-700 text-[13px] font-semibold">{language}</div>
+          <div className="py-[4px] px-3 rounded-md bg-slate-200 dark:bg-zinc-700 text-[12px] font-semibold">{type === "LIVE" ? `${type} BATCH` : `${type}`}</div>
+          <div className="py-[4px] px-3 rounded-md bg-slate-200 dark:bg-zinc-700 text-[12px] font-semibold">{language}</div>
         </div>
         <div className="mt-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
