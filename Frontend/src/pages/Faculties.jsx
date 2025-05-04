@@ -38,16 +38,19 @@ const faculties = [
   {
     id: 4,
     facultyName: "Akash Biswas ",
-    facultyTitle: "Semester Batch Mentor | Biotechnology Aspirant ",
+    facultyTitle: "Semester Batch Mentor | Biotechnology Educator ",
     facultyImage: akashImg,
     facultyDescription: "Akash holds a B.Sc. (Hons) in Microbiology from Kalyani Mahavidyalaya, Kalyani, and is currently pursuing his postgraduation at Gujarat Biotechnology University, Gujarat. He has successfully qualified several top national-level exams, including TIFR, IIT-JAM, GATE, GAT-B, CUET-PG, and SPPU OEE. Akash received admission offers from prestigious institutions such as BHU, SPPU, GBU, ICMR-NIV, and IBAB, showcasing his academic dedication and strong foundation in life sciences.",
     experties: ["Microbiology" , "Industrial Microbiology" , "Agricultural Microbiology "],
     bgColor: '#E0BBE4',
   },
+]
+
+const adjunctFactulties = [
   {
     id: 5,
     facultyName: "Krishnendu Das ",
-    facultyTitle: "Actogen Batch Mentor | Bioinformatics Aspirant ",
+    facultyTitle: "Actogen Batch Mentor | Bioinformatics Educator",
     facultyImage: krishnenduImg,
     facultyDescription: "Krishnendu holds a B.Sc. (Hons) in Microbiology from Ramakrishna Mission Vidyamandira, Belur, and an M.Sc. in Virology from ICMR-National Institute of Virology, Pune. He has qualified top national-level exams including IIT-JAM, GATE, GAT-B, CUET-PG, and SPPU OEE. He received admission offers from reputed institutions like CSIR-CFTRI, Mysuru and Centre for Human Genetics, Bangalore SPPU, and ICMR-NIV. With a strong academic background and passion for science, Krishnendu founded this platform to support and guide aspiring students in the life sciences field.",
     experties: ["Bioinformatics"],
@@ -65,6 +68,8 @@ const Faculties = () => {
         </h2>
         <div className="w-full mt-8">
             {faculties.map((faculty , index) => (<FacultyCard key={faculty.id} index={index} facultyName={faculty.facultyName} facultyTitle={faculty.facultyTitle} facultyImage={faculty.facultyImage} facultyDescription={faculty.facultyDescription} experties={faculty.experties} bgColor={faculty.bgColor}/>))}
+            <h3 className='mt-12 -mb-6 w-full lg:w-[84%]  mx-auto text-xl md:text-2xl font-semibold'>Adjunct Faculty : </h3>
+            {adjunctFactulties.map((faculty , index) => (<FacultyCard key={faculty.id} index={index} facultyName={faculty.facultyName} facultyTitle={faculty.facultyTitle} facultyImage={faculty.facultyImage} facultyDescription={faculty.facultyDescription} experties={faculty.experties} bgColor={faculty.bgColor}/>))}
         </div>
        </div>
     </div>

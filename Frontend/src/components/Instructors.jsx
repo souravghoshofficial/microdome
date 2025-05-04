@@ -49,7 +49,7 @@ const mentors = [
   {
     name: "Krishnendu Das",
     image: KrishnenduPicNew,
-    subject: "Actogen Batch Mentor",
+    subject: "Actogen Batch Mentor (Adjunct Faculty)",
     description: "M.Sc. in Virology from ICMR-National Institute of Virology, Pune.",
     backgroundColor: "bg-baby-blue",
   },

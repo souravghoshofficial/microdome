@@ -7,30 +7,31 @@ import { RiArrowDropRightLine } from "@remixicon/react";
 import { CourseCard } from "../components";
 
 const courseDetails = {
-    id: 3,
-    courseTitle: "M.Sc Entrance Batch",
-    subTitle: "Ace IIT JAM, CUET PG & Beyond",
-    courseTag: "M.Sc Entrance",
-    type: "recorded",
-    language: "hinglish",
-    courseImg: "https://i.pinimg.com/736x/cf/e3/32/cfe332e963458f410c8cb6157a14e92e.jpg",
-    actualPrice: 3600,
-    discountedPrice: 3000,
-    linkAddress: "entrance-batch-recorded"
+  id: 3,
+  courseTitle: "M.Sc Entrance Batch",
+  subTitle: "Ace IIT JAM, CUET PG & Beyond",
+  courseTag: "M.Sc Entrance",
+  type: "recorded",
+  language: "hinglish",
+  courseImg:
+    "https://i.pinimg.com/736x/cf/e3/32/cfe332e963458f410c8cb6157a14e92e.jpg",
+  actualPrice: 3600,
+  discountedPrice: 3000,
+  linkAddress: "entrance-batch-recorded",
 };
 
 const EntranceBatchRecorded = () => {
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="mt-8 w-[90%] relative flex justify-center gap-10 px-12 py-6">
-        <div className="w-[100vw] h-96 absolute bg-slate-200/50 dark:bg-gray-800 z-10"></div>
-        <div className="w-[60%] z-20 mt-16">
-          <div className="flex items-center gap-2">
+      <div className="mt-8 w-full lg:w-[90%]  relative flex flex-col lg:flex-row justify-center lg:gap-10 lg:px-12 lg:py-6 mb-16">
+        <div className="w-[100vw] h-[108%] lg:h-96 absolute bg-slate-200/50 dark:bg-gray-800 z-10"></div>
+        <div className="w-[90%] mx-auto lg:w-[60%] z-20 mt-16">
+          <div className="flex items-center gap-2 text-sm font-normal text-gray-600 dark:text-gray-300">
             <Link to="/">Home</Link>
             <RiArrowDropRightLine size={30} fontWeight={100} color="gray" />
             <Link to="/courses">Courses</Link>
             <RiArrowDropRightLine size={30} fontWeight={100} color="gray" />
-            <Link to="#">M.Sc Entrance Batch (Recorded)</Link>
+            <Link to="#">M.Sc Entrance Mastery</Link>
           </div>
           <h3 className="mt-2 leading-10 text-2xl md:text-3xl font-bold">
             M.Sc. Entrance Mastery
@@ -41,7 +42,7 @@ const EntranceBatchRecorded = () => {
             and other M.Sc. entrance exams — perfect for self-paced preparation.
           </h5>
         </div>
-        <div className="mt-16 sticky h-fit top-32 w-[28%] z-20">
+        <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto lg:w-[28%] z-20">
           <CourseCard
             courseTitle={courseDetails.courseTitle}
             subTitle={courseDetails.subTitle}
