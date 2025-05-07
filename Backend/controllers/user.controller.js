@@ -22,19 +22,19 @@ const registerUser = async (req, res) => {
     return res.send("User already exits");
   }
 
-   const hashedPassword = await bcrypt.hash(password,10)
+  //  const hashedPassword = await bcrypt.hash(password,10)
 
-    const user = await User.create({
-      name,
-      email,
-      password:hashedPassword
-  })
+  //   const user = await User.create({
+  //     name,
+  //     email,
+  //     password:hashedPassword
+  // })
 
-  // const user = await User.create({
-  //   name,
-  //   email,
-  //   password,
-  // });
+  const user = await User.create({
+    name,
+    email,
+    password,
+  });
 
   const createdUser = await User.findById(user._id);
 
