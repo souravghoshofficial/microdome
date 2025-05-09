@@ -19,22 +19,22 @@ const registerUser = async (req, res) => {
   const exitedUser = await User.findOne({ email });
 
   if (exitedUser) {
-    return res.send("User already exits");
+    return res.send("User already exists");
   }
 
-   const hashedPassword = await bcrypt.hash(password,10)
+  //  const hashedPassword = await bcrypt.hash(password,10)
 
-    const user = await User.create({
-      name,
-      email,
-      password:hashedPassword
-  })
+  //   const user = await User.create({
+  //     name,
+  //     email,
+  //     password:hashedPassword
+  // })
 
-  // const user = await User.create({
-  //   name,
-  //   email,
-  //   password,
-  // });
+  const user = await User.create({
+    name,
+    email,
+    password,
+  });
 
   const createdUser = await User.findById(user._id);
 
@@ -45,7 +45,7 @@ const registerUser = async (req, res) => {
   return res
     .status(201)
     .json({ message: "User registered successfully" })
-    .send(user);
+    // .send(user);
 };
 
 export { registerUser };
