@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { Link , useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import lockIcon from "../assets/lock-line.svg";
 import mailIcon from "../assets/mail-line.svg";
 import eyeOpen from "../assets/eye-line.svg";
 import eyeClosed from "../assets/eye-off-line.svg";
-
+import axios from "axios";
 import { Logo } from "../components";
-
-
+import { useDispatch } from "react-redux";
+import { login } from "../features/auth/authSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,22 +20,25 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const user = { email, password };
+    // const user = { email, password };
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      });
+      axios
+        .post("/api/v1/users/login", {
+          email: email,
+          password: password,
+        })
+        .then((response) => {
+          console.log(response.data.data.message);
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed. Please try again.");
-      }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(errorData.message || "Login failed. Please try again.");
+      // }
 
-      const data = await response.json();
-      console.log(data);
+      // const data = await response.json();
+      // console.log(data);
       setEmail("");
       setPassword("");
       navigate("/");
@@ -50,11 +54,12 @@ const Login = () => {
   return (
     <div className="bg-[url(./assets/login-bg-mobile.jpeg)] lg:bg-[url(./assets/login-bg-desktop.jpg)] bg-cover w-full h-screen flex justify-center items-center">
       <div className="bg-white/5 backdrop-blur-md border border-white/20 md:w-[25%] w-[85%] p-4 lg:p-7 md:p-6 rounded-lg shadow-md text-white">
-     <div className="flex items-center justify-center gap-2">
-     <Logo className="w-12" />
-        <h3 className="text-center font-bold text-3xl mt-2 gradiant-text">Microdome
-        </h3>
-     </div>
+        <div className="flex items-center justify-center gap-2">
+          <Logo className="w-12" />
+          <h3 className="text-center font-bold text-3xl mt-2 gradiant-text">
+            Microdome
+          </h3>
+        </div>
         <p className="my-2 text-center text-lg">Log in to your Account</p>
         <form className="flex flex-col gap-1" onSubmit={handleSubmit}>
           <label htmlFor="email">Email</label>
