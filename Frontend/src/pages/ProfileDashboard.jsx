@@ -14,8 +14,8 @@ const ProfileDashboard = () => {
                   <div className='flex items-center gap-4'>
                   <UserIcon className='w-16 h-16' />
                     <div className='flex flex-col'>
-                        <h3 className='text-xl'>{userData?.name}</h3>
-                        <p className='text-sm font-light mt-1'>{userData?.email}</p>
+                        <h3 className='text-xl'>{userData?.name || "User Name"}</h3>
+                        <p className='text-sm font-light mt-1'>{userData?.email || "user email"}</p>
                     </div>
                   </div>
                   <div className='p-1'>
@@ -27,7 +27,7 @@ const ProfileDashboard = () => {
                   <h3 className='font-semibold'>Personal Information</h3>
                   <div className='mt-6 flex items-center gap-2'>
                     <RiMailLine size={16} />
-                    <p className='text-sm'>{userData.email}</p>
+                    <p className='text-sm'>{userData?.email || "user email"}</p>
                   </div>
                   <div className='mt-3 flex items-center gap-2'>
                     <RiGraduationCapLine size={16} />
@@ -35,7 +35,7 @@ const ProfileDashboard = () => {
                   </div>
                   <div className='mt-3 flex items-center gap-2'>
                     <RiMapPinLine size={16} />
-                    <p className='text-sm'>{userData?.address || "-"}</p>
+                    <p className='text-sm'>{userData?.location || "-"}</p>
                   </div>
                 </div>
                 <hr className='w-full h-0.5 my-5 text-gray-950/[.1] dark:text-gray-50/[.1]' />

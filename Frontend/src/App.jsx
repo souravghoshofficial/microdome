@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router";
 
@@ -21,10 +21,14 @@ import {
   EntranceBatchRecorded,
   BScHonsBatch
 } from "./pages";
-import { Navbar, AuthenticatedRoute , Instructor } from "./components";
+import { Navbar, AuthenticatedRoute , Instructor, AuthLayout } from "./components";
 
 const App = () => {
+
+  const [loader, setLoader] = useState(false)
  
+  if(loader) return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
+
   return (
     <BrowserRouter>
       <Routes>
@@ -50,12 +54,16 @@ const App = () => {
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/faculties" element={<Faculties />}/>
-            <Route path="profile" element={<AuthenticatedRoute />}>
+            <Route path="/profile" element={<AuthenticatedRoute />}>
                 <Route path="" element={<ProfileDashboard />} />
             </Route>
         </Route>
-        <Route path="/signup" element={[<Navbar />, <Signup />]} />
-        <Route path="/login" element={[<Navbar />, <Login />]} />
+        <Route path="/signup" element={<AuthLayout />}>
+          <Route path="" element={[<Navbar />, <Signup />]} />
+        </Route>
+        <Route path="/login" element={<AuthLayout />}>
+          <Route path="" element={[<Navbar />, <Login />]} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
