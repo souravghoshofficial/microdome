@@ -5,8 +5,8 @@ import { Link , useNavigate } from "react-router";
 import axios from "axios";
 
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../features/auth/authSlice";
-import { hideCard } from "../features/profileCard/profileCardSlice";
+import { logout } from "../features/auth/authSlice.js";
+import { hideCard } from "../features/profileCard/profileCardSlice.js";
 
 const UserCard = ({ className = "" }) => {
   const dispatch = useDispatch();
