@@ -54,12 +54,18 @@ const Signup = () => {
 
     // const newUser = { name, email, password };
 
-    
-      axios.post("https://microdome-backend.vercel.app/api/v1/users/register", {
-        name: name,
-        email: email,
-        password: password,
-      })
+    axios
+      .post(
+        "https://microdome-backend.vercel.app/api/v1/users/register",
+        {
+          name: name,
+          email: email,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         console.log(res.data.data.name);
         // Clear form
@@ -68,24 +74,21 @@ const Signup = () => {
         setPassword("");
 
         navigate("/login");
-      
       })
       .catch((err) => {
         console.log(err);
 
-        if(err.status === 500){
+        if (err.status === 500) {
           setError(err.response.statusText);
         }
-        
-        if(err.status === 409){
-            setError("User with this email already exists")
-        }
 
-        
+        if (err.status === 409) {
+          setError("User with this email already exists");
+        }
       })
-     .finally(() => {
+      .finally(() => {
         setLoading(false);
-     })
+      });
   };
 
   return (

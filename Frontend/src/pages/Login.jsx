@@ -26,35 +26,41 @@ const Login = () => {
     setError("");
 
     // const user = { email, password };
-    axios.post("https://microdome-backend.vercel.app/api/v1/users/login" , {
-      email: email,
-      password: password
-    })
-    .then((res) => {
-      console.log(res.data.data.user);
-      dispatch(login(res.data.data.user));
-      // Clear form
-      setEmail("");
-      setPassword("");
+    axios
+      .post(
+        "https://microdome-backend.vercel.app/api/v1/users/login",
+        {
+          email: email,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log(res.data.data.user);
+        dispatch(login(res.data.data.user));
+        // Clear form
+        setEmail("");
+        setPassword("");
 
-      navigate("/");
-    })
-    .catch((err) => {
-      console.log(err);
-      if(err.status === 404){
-        setError("User does not exist");
-      }
-      if(err.status === 401){
-        setError("Invalid Credentials");
-      }
-      if(err.status === 500){
-        setError(err.response.statusText);
-      }
-    })
-    .finally(() => {
-      setLoading(false);
-    })
-
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.status === 404) {
+          setError("User does not exist");
+        }
+        if (err.status === 401) {
+          setError("Invalid Credentials");
+        }
+        if (err.status === 500) {
+          setError(err.response.statusText);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const togglePassword = () => {
