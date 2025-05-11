@@ -26,7 +26,7 @@ const userSchema = new Schema(
     },
     profileImage: {
       type: String,
-      default: "https://i.pinimg.com/736x/37/57/5a/37575a213755cad83bd408908623ba22.jpg"
+      default: null
     },
     instituteName: {
       type: String,

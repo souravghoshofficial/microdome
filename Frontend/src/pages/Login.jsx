@@ -16,35 +16,45 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showEyeIcon, setShowEyeIcon] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+    setError("");
+
     // const user = { email, password };
-
-    try {
-      axios
-        .post("/api/v1/users/login", {
-          email: email,
-          password: password,
-        })
-        .then((response) => {
-          console.log(response.data.data.message);
-        });
-
-      // if (!response.ok) {
-      //   const errorData = await response.json();
-      //   throw new Error(errorData.message || "Login failed. Please try again.");
-      // }
-
-      // const data = await response.json();
-      // console.log(data);
+    axios.post("/api/v1/users/login" , {
+      email: email,
+      password: password
+    })
+    .then((res) => {
+      console.log(res.data.data.user);
+      dispatch(login(res.data.data.user));
+      // Clear form
       setEmail("");
       setPassword("");
+
       navigate("/");
-    } catch (error) {
-      console.error("Login Error:", error.message);
-    }
+    })
+    .catch((err) => {
+      console.log(err);
+      if(err.status === 404){
+        setError("User does not exist");
+      }
+      if(err.status === 401){
+        setError("Invalid Credentials");
+      }
+      if(err.status === 500){
+        setError(err.response.statusText);
+      }
+    })
+    .finally(() => {
+      setLoading(false);
+    })
+
   };
 
   const togglePassword = () => {
@@ -106,11 +116,12 @@ const Login = () => {
           <p className="mt-1 text-right cursor-pointer hover:text-emerald-300">
             Forgot Password ?
           </p>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
             type="submit"
             className="bg-emerald-600 hover:bg-emerald-500 cursor-pointer font-bold rounded mt-2 mb-4 py-2 text-center"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         <p className="text-center">

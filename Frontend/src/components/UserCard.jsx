@@ -1,7 +1,8 @@
 import React from "react";
 import UserIcon from "./UserIcon";
 import { RiUserLine, RiLogoutBoxRLine, RiCloseLine } from "@remixicon/react";
-import { Link } from "react-router";
+import { Link , useNavigate } from "react-router";
+import axios from "axios";
 
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
@@ -9,9 +10,20 @@ import { hideCard } from "../features/profileCard/profileCardSlice";
 
 const UserCard = ({ className = "" }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const showProfileCard = useSelector((state) => state.profileCard.show);
   const isLoggedIn = useSelector((state) => state.auth.status);
   const userData = useSelector((state) => state.auth.userData);
+
+  const logoutUser = () => {
+    axios.post("/api/v1/users/logout")
+    .then((res) => {
+      if(res.data.statusCode === 200){
+        dispatch(logout());
+        navigate("/");
+      }
+    })
+  }
 
   return (
     <div
@@ -31,7 +43,7 @@ const UserCard = ({ className = "" }) => {
           <p>Profile</p>
         </Link>
         <div
-          onClick={() => dispatch(logout())}
+          onClick={logoutUser}
           className="px-3 py-1.5 mt-2 rounded-md flex items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer"
         >
           <RiLogoutBoxRLine size={16} />

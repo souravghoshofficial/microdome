@@ -4,7 +4,23 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import bcrypt from  "bcrypt";
 import jwt from "jsonwebtoken"
 
+const isLoggedIn = async(req, res) => {
+    const token = req.cookies?.accessToken;
+    if(!token){
+        return
+    }
 
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const user = await User.findById(decodedToken?._id).select("-password")
+
+    if (!user) {
+        
+        throw new ApiError(401, "Invalid Access Token")
+    }
+
+    res.send(user)
+
+}
 
 const registerUser = async (req, res) => {
   // step1: get details from frontend
@@ -41,9 +57,7 @@ const registerUser = async (req, res) => {
     password,
   });
 
-   const createdUser = await User.findById(user._id).select(
-        "-password"
-    )
+   const createdUser = await User.findById(user._id).select("-password")
 
 
     if (!createdUser) {
@@ -141,4 +155,4 @@ const logoutUser = async (req,res) =>{
 
 }
 
-export { registerUser, loginUser, logoutUser};
+export { registerUser, loginUser, logoutUser , isLoggedIn};

@@ -9,7 +9,7 @@ const UserIcon = ({ className = "" }) => {
 
   return (
     <div className={`${isLoggedIn ? "block" : "hidden"} ${className} border-2 border-transparent ring-1 ring-black dark:ring-white  rounded-full overflow-hidden`} >
-      <img className="w-full" src={userData?.image || userImage} alt="user image" />
+      <img className="w-full" src={userData?.profileImage || userImage} alt="user image" />
     </div>
   );
 };

@@ -1,6 +1,9 @@
-import React , {useState} from "react";
+import React , {useEffect, useState} from "react";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router";
+
+import { useDispatch } from "react-redux";
+import { login , logout } from "./features/auth/authSlice";
 
 import Layout from "./Layout.jsx";
 import {
@@ -22,9 +25,21 @@ import {
   BScHonsBatch
 } from "./pages";
 import { Navbar, AuthenticatedRoute , Instructor, AuthLayout } from "./components";
+import axios from "axios";
 
 const App = () => {
 
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    axios.get("/api/v1/users/isloggedin")
+    .then((res) => {
+      dispatch(logout())
+      dispatch(login(res.data))
+    })
+
+  })
+  
   const [loader, setLoader] = useState(false)
  
   if(loader) return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;

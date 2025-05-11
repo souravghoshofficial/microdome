@@ -54,26 +54,38 @@ const Signup = () => {
 
     // const newUser = { name, email, password };
 
-    try {
+    
       axios.post("/api/v1/users/register", {
         name: name,
         email: email,
         password: password,
-      });
+      })
+      .then((res) => {
+        console.log(res.data.data.name);
+        // Clear form
+        setName("");
+        setEmail("");
+        setPassword("");
 
-      // dispatch(login(userData));
-      navigate("/login");
+        navigate("/login");
+      
+      })
+      .catch((err) => {
+        console.log(err);
 
-      // Clear form
-      setName("");
-      setEmail("");
-      setPassword("");
-    } catch (err) {
-      console.error(err.message);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+        if(err.status === 500){
+          setError(err.response.statusText);
+        }
+        
+        if(err.status === 409){
+            setError("User with this email already exists")
+        }
+
+        
+      })
+     .finally(() => {
+        setLoading(false);
+     })
   };
 
   return (
