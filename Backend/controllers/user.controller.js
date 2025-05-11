@@ -97,7 +97,7 @@ if (!email || !password) {
 
     const options = {
         httpOnly: true,
-        secure: true
+        secure: true,
     }
 
     return res
