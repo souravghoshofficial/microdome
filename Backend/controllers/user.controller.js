@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken"
 const isLoggedIn = async(req, res) => {
     const token = req.cookies?.accessToken;
     if(!token){
-        return
+        throw new ApiError(401, "Unauthorized Request")
     }
 
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);

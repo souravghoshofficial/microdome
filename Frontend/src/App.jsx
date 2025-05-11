@@ -37,6 +37,10 @@ const App = () => {
       dispatch(logout())
       dispatch(login(res.data))
     })
+    .catch((err) => {
+      console.log(err.message);
+      dispatch(logout());
+    })
 
   })
   
