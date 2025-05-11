@@ -32,7 +32,9 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    axios.get("/api/v1/users/isloggedin")
+    axios.get("/api/v1/users/isloggedin", {
+      withCredentials: true
+    })
     .then((res) => {
       dispatch(logout())
       dispatch(login(res.data))
