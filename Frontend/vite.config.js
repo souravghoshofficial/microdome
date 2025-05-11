@@ -14,7 +14,8 @@ export default defineConfig({
         target: 'https://microdome-backend.vercel.app',
         changeOrigin: true,
         secure: true,
-        rewrite: (path) => path.replace(/^\/api/, '') // Optional: strips `/api` if backend doesn't expect it
+        // DO NOT use rewrite if your backend expects `/api`
+        // rewrite: (path) => path.replace(/^\/api/, '') 
       }
     }
   }
