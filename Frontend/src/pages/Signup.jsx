@@ -56,7 +56,7 @@ const Signup = () => {
 
     axios
       .post(
-        "https://microdome-backend.vercel.app/api/v1/users/register",
+        "/api/v1/users/register",
         {
           name: name,
           email: email,
