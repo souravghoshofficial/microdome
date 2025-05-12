@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken"
 
 const isLoggedIn = async(req, res) => {
     const token = req.cookies?.accessToken;
+    console.log(req.cookies)
     if(!token){
         throw new ApiError(401, "Unauthorized Request")
     }
