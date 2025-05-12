@@ -98,7 +98,8 @@ if (!email || !password) {
     const options = {
         httpOnly: true,
         secure: true,
-        sameSite: 'None'
+        sameSite: 'None',
+        path: "/"
     }
 
     return res
