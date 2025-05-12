@@ -127,7 +127,8 @@ const logoutUser = async (req,res) =>{
 
   try {
         const token = req.cookies?.accessToken;
-
+        console.log(req.cookies);
+        
         if (!token) {
             throw new ApiError(401, "Unauthorized request");
         }
@@ -143,7 +144,9 @@ const logoutUser = async (req,res) =>{
 
         const options = {
         httpOnly: true,
-        secure: true
+        secure: true,
+        sameSite: 'None',
+        path: "/"
     }
 
     return res
