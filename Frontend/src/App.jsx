@@ -32,7 +32,7 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    axios.get("/api/v1/users/isloggedin", {
+    axios.get("https://microdome-backend.vercel.app/api/v1/users/isloggedin", {
       withCredentials: true
     })
     .then((res) => {
