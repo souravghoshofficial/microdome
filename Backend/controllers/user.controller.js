@@ -2,25 +2,16 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import bcrypt from  "bcrypt";
-import jwt from "jsonwebtoken"
 
-const isLoggedIn = async(req, res) => {
-    const token = req.cookies?.accessToken;
-    console.log(req.cookies)
-    if(!token){
-        throw new ApiError(401, "Unauthorized Request")
-    }
 
-    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const user = await User.findById(decodedToken?._id).select("-password")
-
-    if (!user) {
-        
-        throw new ApiError(401, "Invalid Access Token")
-    }
-
-    res.send(user)
-
+const getCurrentUser = async(req, res) => {
+    return res
+    .status(200)
+    .json(new ApiResponse(
+        200,
+        req.user,
+        "User fetched successfully"
+    ))
 }
 
 const registerUser = async (req, res) => {
@@ -99,8 +90,6 @@ if (!email || !password) {
     const options = {
         httpOnly: true,
         secure: true,
-        sameSite: 'None',
-        path: "/"
     }
 
     return res
@@ -123,42 +112,17 @@ if (!email || !password) {
 
 
 
-const logoutUser = async (req,res) =>{
+const logoutUser = async(req, res) => {
 
-  try {
-        const token = req.cookies?.accessToken;
-        console.log(req.cookies);
-        
-        if (!token) {
-            throw new ApiError(401, "Unauthorized request");
-        }
-    
-        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-        const user = await User.findById(decodedToken?._id)
-    
-        if (!user) {
-            
-            throw new ApiError(401, "Invalid Access Token")
-        }
-
-        const options = {
+    const options = {
         httpOnly: true,
-        secure: true,
-        sameSite: 'None',
-        path: "/"
+        secure: true
     }
 
     return res
     .status(200)
     .clearCookie("accessToken", options)
     .json(new ApiResponse(200, {}, "User logged Out"))
-
-
-    } catch (error) {
-        throw new ApiError(401, error?.message || "Invalid access token");
-    }
-
 }
 
-export { registerUser, loginUser, logoutUser , isLoggedIn};
+export { registerUser, loginUser, logoutUser , getCurrentUser};
