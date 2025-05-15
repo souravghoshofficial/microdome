@@ -116,7 +116,8 @@ const logoutUser = async(req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: true
+        secure: true,
+        domain: "https://microdome.vercel.app"
     }
 
     return res
