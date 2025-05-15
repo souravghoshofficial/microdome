@@ -37,7 +37,7 @@ const App = () => {
     })
     .then((res) => {
       dispatch(logout())
-      dispatch(login(res.data))
+      dispatch(login(res.data.data))
     })
     .catch((err) => {
       console.log(err.message);
