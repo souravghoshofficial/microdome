@@ -90,7 +90,9 @@ if (!email || !password) {
     const options = {
         httpOnly: true,
         secure: true,
-        domain: "https://microdome.vercel.app"
+        sameSite: "none",
+        maxAge: 10*24*60*60*1000,
+        path: "/"
     }
 
     return res
@@ -118,7 +120,8 @@ const logoutUser = async(req, res) => {
     const options = {
         httpOnly: true,
         secure: true,
-        domain: "https://microdome.vercel.app"
+        sameSite: "none",
+        path: "/"
     }
 
     return res
