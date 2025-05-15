@@ -90,6 +90,7 @@ if (!email || !password) {
     const options = {
         httpOnly: true,
         secure: true,
+        domain: "https://microdome.vercel.app"
     }
 
     return res
