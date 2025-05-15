@@ -92,7 +92,8 @@ if (!email || !password) {
         secure: true,
         sameSite: "none",
         maxAge: 10*24*60*60*1000,
-        path: "/"
+        path: "/",
+        domain: ".vercel.app"
     }
 
     return res
@@ -121,7 +122,8 @@ const logoutUser = async(req, res) => {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        path: "/"
+        path: "/",
+        domain: ".vercel.app"
     }
 
     return res
