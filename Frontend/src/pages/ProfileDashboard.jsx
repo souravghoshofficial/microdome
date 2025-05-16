@@ -40,8 +40,8 @@ const ProfileDashboard = () => {
               <p className="text-sm">{userData?.instituteName || "-"}</p>
             </div>
             <div className="mt-3 flex items-center gap-2">
-              <RiMapPinLine size={16} />
-              <p className="text-sm">{userData?.location || "-"}</p>
+                <RiGraduationCapLine size={16} />
+              <p className="text-sm">{userData?.presentCourseOfStudy || "-"}</p>
             </div>
           </div>
           <hr className="w-full h-0.5 my-5 text-gray-950/[.1] dark:text-gray-50/[.1]" />
