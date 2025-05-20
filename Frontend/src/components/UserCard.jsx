@@ -17,7 +17,7 @@ const UserCard = ({ className = "" }) => {
   const userData = useSelector((state) => state.auth.userData);
 
   const logoutUser = () => {
-    axios.post(`/api/v1/users/logout`,{}, {
+    axios.post(`${ApiUrl}/api/v1/users/logout`,{}, {
       withCredentials: true
     })
     .then((res) => {
