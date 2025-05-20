@@ -33,7 +33,7 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    axios.get(`https://microdome-backend.vercel.app/api/v1/users/current-user`, {
+    axios.get(`${ApiUrl}/api/v1/users/current-user`, {
       withCredentials: true
     })
     .then((res) => {
