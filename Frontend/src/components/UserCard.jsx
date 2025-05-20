@@ -3,6 +3,7 @@ import UserIcon from "./UserIcon";
 import { RiUserLine, RiLogoutBoxRLine, RiCloseLine } from "@remixicon/react";
 import { Link , useNavigate } from "react-router";
 import axios from "axios";
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice.js";
@@ -16,7 +17,7 @@ const UserCard = ({ className = "" }) => {
   const userData = useSelector((state) => state.auth.userData);
 
   const logoutUser = () => {
-    axios.post(`https://microdome-backend.vercel.app/api/v1/users/logout`,{}, {
+    axios.post(`/api/v1/users/logout`,{}, {
       withCredentials: true
     })
     .then((res) => {

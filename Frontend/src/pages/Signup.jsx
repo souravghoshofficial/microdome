@@ -1,24 +1,23 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { useState } from "react";
+import { Link} from "react-router";
 import eyeOpen from "../assets/eye-line.svg";
 import eyeClosed from "../assets/eye-off-line.svg";
-import { Logo } from "../components";
-import { useDispatch } from "react-redux";
-import { login } from "../features/auth/authSlice";
+import { Logo , OTPInput } from "../components";
+
 import axios from "axios";
 
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
 const Signup = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordErrors, setPasswordErrors] = useState([]);
-  // const [user, setUser] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showEyeIcon, setShowEyeIcon] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showOtpInput, setShowOtpInput] = useState(false)
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -52,11 +51,10 @@ const Signup = () => {
     setLoading(true);
     setError("");
 
-    // const newUser = { name, email, password };
 
     axios
       .post(
-        `https://microdome-backend.vercel.app/api/v1/users/register`,
+        `${ApiUrl}/api/v1/users/register`,
         {
           name: name,
           email: email,
@@ -67,13 +65,12 @@ const Signup = () => {
         }
       )
       .then((res) => {
-        console.log(res.data.data.name);
-        // Clear form
+        // dispatch(logout())
+        // dispatch(login(res.data.data.user));
         setName("");
-        setEmail("");
         setPassword("");
 
-        navigate("/login");
+        setShowOtpInput(true)
       })
       .catch((err) => {
         console.log(err);
@@ -93,7 +90,7 @@ const Signup = () => {
 
   return (
     <div className="bg-[url(./assets/login-bg-mobile.jpeg)] lg:bg-[url(./assets/login-bg-desktop.jpg)] bg-cover w-full h-screen flex justify-center items-center">
-      <div className="bg-white/5 backdrop-blur-md border border-white/20 md:w-[25%] w-[85%] p-4 lg:p-7 md:p-6 rounded-lg shadow-md text-white">
+      {!showOtpInput && (<div className="bg-white/5 backdrop-blur-md border border-white/20 md:w-[25%] w-[85%] p-4 lg:p-7 md:p-6 rounded-lg shadow-md text-white">
         <div className="flex items-center justify-center gap-2">
           <Logo className="w-12" />
           <h3 className="text-center font-bold text-3xl mt-2 gradiant-text">
@@ -169,7 +166,10 @@ const Signup = () => {
             Login
           </Link>
         </p>
-      </div>
+      </div>)}
+      {
+        showOtpInput && <OTPInput email = {email} />
+      }
     </div>
   );
 };

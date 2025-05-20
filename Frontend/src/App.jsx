@@ -26,13 +26,14 @@ import {
 } from "./pages";
 import { Navbar, AuthenticatedRoute , Instructor, AuthLayout } from "./components";
 import axios from "axios";
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
 
   const dispatch = useDispatch()
 
   useEffect(() => {
-    axios.get(`https://microdome-backend.vercel.app/api/v1/users/current-user`, {
+    axios.get(`${ApiUrl}/api/v1/users/current-user`, {
       withCredentials: true
     })
     .then((res) => {

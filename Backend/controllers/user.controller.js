@@ -1,18 +1,16 @@
 import { User } from "../models/user.model.js";
+import { TempUser } from "../models/tempUser.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import bcrypt from  "bcrypt";
+import { generateOTP } from "../utils/generateOTP.js";
+import { sendOtpEmail } from "../utils/sendOTPEmail.js";
+import bcrypt from "bcrypt";
 
-
-const getCurrentUser = async(req, res) => {
-    return res
+const getCurrentUser = async (req, res) => {
+  return res
     .status(200)
-    .json(new ApiResponse(
-        200,
-        req.user,
-        "User fetched successfully"
-    ))
-}
+    .json(new ApiResponse(200, req.user, "User fetched successfully"));
+};
 
 const registerUser = async (req, res) => {
   // step1: get details from frontend
@@ -22,110 +20,163 @@ const registerUser = async (req, res) => {
   // step5: send response to frontend
 
   const { name, email, password } = req.body;
-  // console.log(name,email,password);
-  // res.send("Successfully get the user details!");
 
   if (!name || !email || !password) {
-   throw new ApiError(400, "All fields are required");
+    throw new ApiError(400, "All fields are required");
   }
 
-  const existedUser = await User.findOne({ email });
+  try {
+    // Check if already a verified user
+    const existingUser = await User.findOne({ email });
+    if (existingUser)
+      return res.status(400).json({ message: "User already exists" });
 
-  if (existedUser) {
-    throw new ApiError(409, "User with email already exists");
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const otp = generateOTP(6);
+    const hashedOtp = await bcrypt.hash(otp, 10);
+    const expiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+    // Remove existing TempUser if any
+    await TempUser.findOneAndDelete({ email });
+
+    await TempUser.create({
+      name,
+      email,
+      password: hashedPassword,
+      otp: hashedOtp,
+      otpExpiry: expiry,
+    });
+
+    await sendOtpEmail(email , otp);
+   
+    res.status(200).json({ message: "OTP sent to email" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-
-  //  const hashedPassword = await bcrypt.hash(password,10)
-
-  //   const user = await User.create({
-  //     name,
-  //     email,
-  //     password:hashedPassword
-  // })
-
-  const user = await User.create({
-    name,
-    email,
-    password,
-  });
-
-   const createdUser = await User.findById(user._id).select("-password")
-
-
-    if (!createdUser) {
-        throw new ApiError(500, "Something went wrong while registering the user")
-    }
-
-    return res.status(201).json(
-        new ApiResponse(200, createdUser, "User registered Successfully")
-    )
-
 };
 
+const verifyOTP = async (req, res) => {
+  const { email, otp } = req.body;
+  try {
+    const tempUser = await TempUser.findOne({ email });
+    if (!tempUser)
+      return res.status(400).json({ message: "Invalid or expired OTP" });
 
+    const isValid = await bcrypt.compare(otp, tempUser.otp);
+    if (!isValid) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+    const isExpired = tempUser.otpExpiry < new Date();
 
-const loginUser = async (req,res) =>{
+    if (isExpired) {
+      return res.status(400).json({ message: "OTP has been expired" });
+    }
+
+    // Create permanent user
+    const createdUser = await User.create({
+      name: tempUser.name,
+      email: tempUser.email,
+      password: tempUser.password,
+    });
+
+    if (!createdUser) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong while registering user" });
+    }
+
+    await TempUser.deleteOne({ email });
+
+    const accessToken = createdUser.generateAccessToken();
+
+    const loggedInUser = await User.findById(createdUser._id).select(
+      "-password"
+    );
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 10 * 24 * 60 * 60 * 1000,
+    };
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .json(
+        new ApiResponse(
+          200,
+          {
+            user: loggedInUser,
+          },
+          "User verified and created successfully"
+        )
+      );
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-if (!email || !password) {
-   throw new ApiError(400, "All fields are required");
+  if (!email || !password) {
+    throw new ApiError(400, "All fields are required");
   }
 
   const user = await User.findOne({ email });
 
   if (!user) {
-        throw new ApiError(404, "User does not exist");
-    }
+    throw new ApiError(404, "User does not exist");
+  }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
-    if(!isPasswordCorrect){
-      throw new ApiError(401, "Invalid user credentials");
-    }
+  if (!isPasswordCorrect) {
+    throw new ApiError(401, "Invalid user credentials");
+  }
 
-    const accessToken = user.generateAccessToken();
+  const accessToken = user.generateAccessToken();
 
-     const loggedInUser = await User.findById(user._id).select("-password")
+  const loggedInUser = await User.findById(user._id).select("-password");
 
-    const options = {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: 10*24*60*60*1000,
-    }
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 10 * 24 * 60 * 60 * 1000,
+  };
 
-    return res
+  return res
     .status(200)
     .cookie("accessToken", accessToken, options)
     .json(
-        new ApiResponse(
-            200, 
-            {
-                user: loggedInUser,
-            },
-            "User logged In Successfully"
-        )
-    )
+      new ApiResponse(
+        200,
+        {
+          user: loggedInUser,
+        },
+        "User logged In Successfully"
+      )
+    );
 
-    // const isPasswordCorrect = async function(password){
-    // return await bcrypt.compare(password, this.password)
+  // const isPasswordCorrect = async function(password){
+  // return await bcrypt.compare(password, this.password)
+};
 
-}
+const logoutUser = async (req, res) => {
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  };
 
-
-
-const logoutUser = async(req, res) => {
-
-    const options = {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-    }
-
-    return res
+  return res
     .status(200)
     .clearCookie("accessToken", options)
-    .json(new ApiResponse(200, {}, "User logged Out"))
-}
+    .json(new ApiResponse(200, {}, "User logged Out"));
+};
 
-export { registerUser, loginUser, logoutUser , getCurrentUser};
+export { registerUser , verifyOTP , loginUser, logoutUser, getCurrentUser };

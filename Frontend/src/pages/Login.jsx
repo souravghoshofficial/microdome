@@ -7,7 +7,9 @@ import eyeClosed from "../assets/eye-off-line.svg";
 import axios from "axios";
 import { Logo } from "../components";
 import { useDispatch } from "react-redux";
-import { login } from "../features/auth/authSlice";
+import { login , logout } from "../features/auth/authSlice";
+
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -25,10 +27,9 @@ const Login = () => {
     setLoading(true);
     setError("");
 
-    // const user = { email, password };
     axios
       .post(
-        `https://microdome-backend.vercel.app/api/v1/users/login`,
+        `${ApiUrl}/api/v1/users/login`,
         {
           email: email,
           password: password,
@@ -39,6 +40,7 @@ const Login = () => {
       )
       .then((res) => {
         console.log(res.data.data.user);
+        dispatch(logout())
         dispatch(login(res.data.data.user));
         // Clear form
         setEmail("");

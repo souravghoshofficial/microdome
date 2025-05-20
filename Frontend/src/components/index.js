@@ -12,5 +12,6 @@ import ResourceTopic from "./ResourceTopic";
 import ResourceVideo from "./ResourceVideo";
 import FacultyCard from "./FacultyCard";
 import AuthLayout from "./AuthLayout";
+import OTPInput from "./OTPInput";
 
-export { Navbar , ContactItem , Footer , CourseCard , TestimonialCard , Logo , UserIcon , UserCard  , AuthenticatedRoute , Instructor, ResourceTopic, ResourceVideo , FacultyCard , AuthLayout };
+export { Navbar , ContactItem , Footer , CourseCard , TestimonialCard , Logo , UserIcon , UserCard  , AuthenticatedRoute , Instructor, ResourceTopic, ResourceVideo , FacultyCard , AuthLayout , OTPInput };
