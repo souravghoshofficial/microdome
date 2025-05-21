@@ -16,6 +16,9 @@ const OTPInput = ({email}) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [secondsLeft, setSecondsLeft] = useState(15);
+  const [showResendOTPText, setShowResendOTPText] = useState(false);
+
   const handleOnChange = (value, index) => {
     if (isNaN(value)) return;
 
@@ -34,6 +37,21 @@ const OTPInput = ({email}) => {
   useEffect(() => {
     refArr.current[0]?.focus();
   }, []);
+
+    useEffect(() => {
+    // Countdown timer logic
+    if (secondsLeft === 0) {
+      setShowResendOTPText(true);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setSecondsLeft(prev => prev - 1);
+    }, 1000);
+
+    // Cleanup
+    return () => clearInterval(timer);
+  }, [secondsLeft , setSecondsLeft]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,6 +93,24 @@ const OTPInput = ({email}) => {
       });
   };
 
+  const handleResendOTP = async => {
+    setError("")
+    setSecondsLeft(15);
+    setShowResendOTPText(false)
+
+     axios
+      .post(
+        `${ApiUrl}/api/v1/users/resend-otp`,
+        {
+          email: email,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then(() => alert("OTP send to your email"))
+  }
+
   return (
     <div className="bg-white/5 backdrop-blur-md border border-white/20 md:w-[25%] w-[85%] p-4 lg:p-7 md:p-6 rounded-lg shadow-md text-white">
       <h2 className="my-1 text-center text-lg font-bold">Validate Your OTP</h2>
@@ -104,9 +140,16 @@ const OTPInput = ({email}) => {
       </form>
       <p className="mt-4 text-center">
         Not recieved your code ?{" "}
-        <span className="font-bold hover:text-emerald-300 cursor-pointer">
+        {showResendOTPText && (
+          <span onClick={handleResendOTP}
+          className="font-bold hover:text-emerald-300 cursor-pointer">
           Resend Code
         </span>
+        )}
+
+        {!showResendOTPText && (
+          <span>00:{secondsLeft > 9 ? secondsLeft : `0${secondsLeft}` }</span>
+        )}
       </p>
     </div>
   );

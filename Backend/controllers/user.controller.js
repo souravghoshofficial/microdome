@@ -119,6 +119,32 @@ const verifyOTP = async (req, res) => {
   }
 };
 
+const resendOTP = async(req, res) => {
+  const {email} = req.body;
+  try {
+    const tempUser = await TempUser.findOne({ email });
+    if(!tempUser){
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const otp = generateOTP(6);
+    const hashedOtp = await bcrypt.hash(otp, 10);
+    const expiry = new Date(Date.now() + 5 * 60 * 1000);
+
+    tempUser.otp = hashedOtp;
+    tempUser.otpExpiry = expiry;
+    await tempUser.save();
+
+    await sendOtpEmail(email , otp);
+
+    res.status(200).json({ message: "New OTP sent successfully" });
+    
+  } catch (error) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -179,4 +205,4 @@ const logoutUser = async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged Out"));
 };
 
-export { registerUser , verifyOTP , loginUser, logoutUser, getCurrentUser };
+export { registerUser , verifyOTP , resendOTP , loginUser, logoutUser, getCurrentUser };
