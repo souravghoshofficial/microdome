@@ -3,6 +3,7 @@ import { Link} from "react-router";
 import eyeOpen from "../assets/eye-line.svg";
 import eyeClosed from "../assets/eye-off-line.svg";
 import { Logo , OTPInput } from "../components";
+import { ToastContainer, toast } from 'react-toastify';
 
 import axios from "axios";
 
@@ -18,6 +19,8 @@ const Signup = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showOtpInput, setShowOtpInput] = useState(false)
+
+   const notify = () => toast.success("OTP sent to your email");
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -70,6 +73,7 @@ const Signup = () => {
         setName("");
         setPassword("");
 
+        notify()
         setShowOtpInput(true)
       })
       .catch((err) => {
@@ -90,6 +94,7 @@ const Signup = () => {
 
   return (
     <div className="bg-[url(./assets/login-bg-mobile.jpeg)] lg:bg-[url(./assets/login-bg-desktop.jpg)] bg-cover w-full h-screen flex justify-center items-center">
+      <ToastContainer />
       {!showOtpInput && (<div className="bg-white/5 backdrop-blur-md border border-white/20 md:w-[25%] w-[85%] p-4 lg:p-7 md:p-6 rounded-lg shadow-md text-white">
         <div className="flex items-center justify-center gap-2">
           <Logo className="w-12" />

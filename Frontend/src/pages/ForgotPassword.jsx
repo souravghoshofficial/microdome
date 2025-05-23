@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import mailIcon from "../assets/mail-line.svg";
 import { OTPInput , ResetPassword } from "../components";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -12,6 +13,8 @@ const ForgotPassword = () => {
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+    const notify = () => toast.success("OTP sent to your email");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +33,7 @@ const ForgotPassword = () => {
         }
       )
       .then((res) => {
+        notify()
         setShowOtpInput(true)
       })
       .catch((err) => {
@@ -49,6 +53,7 @@ const ForgotPassword = () => {
 
   return (
     <div className="bg-[url(./assets/login-bg-mobile.jpeg)] lg:bg-[url(./assets/login-bg-desktop.jpg)] bg-cover w-full h-screen flex justify-center items-center">
+      <ToastContainer />
       {!(showOtpInput || showResetPassword) && (
         <div className="bg-white/5 backdrop-blur-md border border-white/20 md:w-[25%] w-[85%] p-4 lg:p-7 md:p-6 rounded-lg shadow-md text-white">
         <p className="my-2 text-center text-lg">Reset Your Password</p>
