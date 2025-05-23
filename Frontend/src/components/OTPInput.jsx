@@ -79,8 +79,10 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
       )
       .then((res) => {
         if(context === "signup"){
-        otpVerifyNotification("OTP verified")
-        otpVerifyNotification("Account created successfully")
+        () => {
+          otpVerifyNotification("OTP verified")
+          otpVerifyNotification("Account created successfully")
+        }
         dispatch(logout())
         dispatch(login(res.data.data.user));
         setTimeout(() => {
@@ -88,7 +90,9 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
         }, 3000);
         }
         if(context === "forgot-password"){
-          otpVerifyNotification("OTP verified successfully")
+          () => {
+            otpVerifyNotification("OTP verified successfully")
+          }
           setShowResetPassword(true)
           setShowOtpInput(false);
         }
@@ -118,7 +122,9 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
         }
       )
       .then(() => {
-        otpSendNotification("OTP resend to your email")
+        () => {
+          otpSendNotification("OTP resend to your email")
+        }
       })
   }
 

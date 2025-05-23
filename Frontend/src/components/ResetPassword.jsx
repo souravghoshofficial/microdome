@@ -76,7 +76,9 @@ const ResetPassword = ({email , resetPasswordNotification}) => {
         }
       )
       .then((res) => {
-        resetPasswordNotification("Password reset successfully")
+        () => {
+          resetPasswordNotification("Password reset successfully")
+        }
         setTimeout(() => {
            navigate("/login")
         },3000);
