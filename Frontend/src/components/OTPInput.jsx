@@ -82,9 +82,9 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
         if(context === "signup"){
         toast.success("OTP verified")
         toast.success("Account created successfully")
-        dispatch(logout())
-        dispatch(login(res.data.data.user));
         setTimeout(() => {
+          dispatch(logout())
+          dispatch(login(res.data.data.user));
           navigate("/");
         }, 3000);
         }
