@@ -80,13 +80,14 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
       )
       .then((res) => {
         if(context === "signup"){
+        setOTP([])
         toast.success("OTP verified")
         toast.success("Account created successfully")
         setTimeout(() => {
           dispatch(logout())
           dispatch(login(res.data.data.user));
           navigate("/");
-        }, 3000);
+        }, 5000);
         }
         if(context === "forgot-password"){
           toast.success("OTP verified successfully")
