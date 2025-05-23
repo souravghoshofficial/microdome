@@ -69,7 +69,7 @@ const ResetPassword = ({email}) => {
         `${ApiUrl}/api/v1/users/reset-password`,
         {
           email: email,
-          password: password,
+          newpassword: password,
         },
         {
           withCredentials: true,

@@ -8,7 +8,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const OtpLength = 6;
 
-const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint , setShowResetPassword = null}) => {
+const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint , setShowResetPassword = null , setShowOtpInput = null}) => {
   const navigate =  useNavigate()
   const dispatch =  useDispatch()
   const refArr = useRef([]);
@@ -86,6 +86,7 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
         }
         if(context === "forgot-password"){
           setShowResetPassword(true)
+          setShowOtpInput(false);
         }
       })
       .catch((err) => {
