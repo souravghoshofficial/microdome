@@ -8,7 +8,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const OtpLength = 6;
 
-const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint , setShowResetPassword = null , setShowOtpInput = null}) => {
+const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint , otpVerifyNotification, otpSendNotification, setShowResetPassword = null , setShowOtpInput = null}) => {
   const navigate =  useNavigate()
   const dispatch =  useDispatch()
   const refArr = useRef([]);
@@ -79,12 +79,16 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
       )
       .then((res) => {
         if(context === "signup"){
-        console.log(res.data.data.user);
+        otpVerifyNotification("OTP verified")
+        otpVerifyNotification("Account created successfully")
         dispatch(logout())
         dispatch(login(res.data.data.user));
-        navigate("/");
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
         }
         if(context === "forgot-password"){
+          otpVerifyNotification("OTP verified successfully")
           setShowResetPassword(true)
           setShowOtpInput(false);
         }
@@ -113,7 +117,9 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
           withCredentials: true,
         }
       )
-      .then(() => alert("OTP send to your email"))
+      .then(() => {
+        otpSendNotification("OTP resend to your email")
+      })
   }
 
   return (

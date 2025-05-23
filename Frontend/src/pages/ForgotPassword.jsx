@@ -14,7 +14,9 @@ const ForgotPassword = () => {
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-    const notify = () => toast.success("OTP sent to your email");
+  const otpSendNotification = (notifyTxt) => toast.success(notifyTxt);
+  const otpVerifyNotification = (notifyTxt) => toast.success(notifyTxt);
+  const resetPasswordNotification = (notifyTxt) => toast.success(notifyTxt);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +35,7 @@ const ForgotPassword = () => {
         }
       )
       .then((res) => {
-        notify()
+        otpSendNotification("OTP send to your email");
         setShowOtpInput(true)
       })
       .catch((err) => {
@@ -89,10 +91,10 @@ const ForgotPassword = () => {
       </div>
       )}
       {showOtpInput && (
-        <OTPInput email={email} context={"forgot-password"} verifyOtpApiEndpoint={"verify-forgot-password-otp"} resendOtpApiEndpoint={"resend-forgot-password-otp"} setShowResetPassword={setShowResetPassword} setShowOtpInput={setShowOtpInput} />
+        <OTPInput email={email} context={"forgot-password"} verifyOtpApiEndpoint={"verify-forgot-password-otp"} resendOtpApiEndpoint={"resend-forgot-password-otp"} otpSendNotification={otpSendNotification} otpVerifyNotification={otpVerifyNotification} setShowResetPassword={setShowResetPassword} setShowOtpInput={setShowOtpInput} />
       )}
       {showResetPassword && (
-        <ResetPassword email={email} />
+        <ResetPassword email={email} resetPasswordNotification={resetPasswordNotification} />
       )}
     </div>
   );

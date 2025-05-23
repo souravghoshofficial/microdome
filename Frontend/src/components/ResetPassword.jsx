@@ -7,7 +7,7 @@ import axios from "axios";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
-const ResetPassword = ({email}) => {
+const ResetPassword = ({email , resetPasswordNotification}) => {
   const navigate = useNavigate()
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -76,7 +76,10 @@ const ResetPassword = ({email}) => {
         }
       )
       .then((res) => {
-        navigate("/login")
+        resetPasswordNotification("Password reset successfully")
+        setTimeout(() => {
+           navigate("/login")
+        },3000);
       })
       .catch((err) => {
         setError(err.message)

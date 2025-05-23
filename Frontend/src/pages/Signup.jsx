@@ -18,9 +18,10 @@ const Signup = () => {
   const [showEyeIcon, setShowEyeIcon] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showOtpInput, setShowOtpInput] = useState(false)
+  const [showOtpInput, setShowOtpInput] = useState(false) 
 
-   const notify = () => toast.success("OTP sent to your email");
+  const otpSendNotification = (notifyTxt) => toast.success(notifyTxt);
+  const otpVerifyNotification = (notifyTxt) => toast.success(notifyTxt)
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -72,8 +73,7 @@ const Signup = () => {
         // dispatch(login(res.data.data.user));
         setName("");
         setPassword("");
-
-        notify()
+        otpSendNotification("OTP send to your email")
         setShowOtpInput(true)
       })
       .catch((err) => {
@@ -173,7 +173,7 @@ const Signup = () => {
         </p>
       </div>)}
       {
-        showOtpInput && <OTPInput email = {email} context={"signup"} verifyOtpApiEndpoint={"verify-otp"} resendOtpApiEndpoint={"resend-otp"} />
+        showOtpInput && <OTPInput email = {email} context={"signup"} verifyOtpApiEndpoint={"verify-otp"} resendOtpApiEndpoint={"resend-otp"} otpVerifyNotification={otpVerifyNotification} otpSendNotification={otpSendNotification} />
       }
     </div>
   );
