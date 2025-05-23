@@ -2,12 +2,13 @@ import { useState } from "react";
 import eyeOpen from "../assets/eye-line.svg";
 import eyeClosed from "../assets/eye-off-line.svg";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 import axios from "axios";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
-const ResetPassword = ({email , resetPasswordNotification}) => {
+const ResetPassword = ({email}) => {
   const navigate = useNavigate()
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -76,9 +77,7 @@ const ResetPassword = ({email , resetPasswordNotification}) => {
         }
       )
       .then((res) => {
-        () => {
-          resetPasswordNotification("Password reset successfully")
-        }
+        toast.success("Password reset successfully")
         setTimeout(() => {
            navigate("/login")
         },3000);

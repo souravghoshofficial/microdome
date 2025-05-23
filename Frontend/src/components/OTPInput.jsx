@@ -3,12 +3,13 @@ import { useDispatch } from "react-redux";
 import { login , logout } from "../features/auth/authSlice";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const OtpLength = 6;
 
-const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint , otpVerifyNotification, otpSendNotification, setShowResetPassword = null , setShowOtpInput = null}) => {
+const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint , setShowResetPassword = null , setShowOtpInput = null}) => {
   const navigate =  useNavigate()
   const dispatch =  useDispatch()
   const refArr = useRef([]);
@@ -79,10 +80,8 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
       )
       .then((res) => {
         if(context === "signup"){
-        () => {
-          otpVerifyNotification("OTP verified")
-          otpVerifyNotification("Account created successfully")
-        }
+        toast.success("OTP verified")
+        toast.success("Account created successfully")
         dispatch(logout())
         dispatch(login(res.data.data.user));
         setTimeout(() => {
@@ -90,9 +89,7 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
         }, 3000);
         }
         if(context === "forgot-password"){
-          () => {
-            otpVerifyNotification("OTP verified successfully")
-          }
+          toast.success("OTP verified successfully")
           setShowResetPassword(true)
           setShowOtpInput(false);
         }
@@ -122,9 +119,7 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
         }
       )
       .then(() => {
-        () => {
-          otpSendNotification("OTP resend to your email")
-        }
+        toast.success("OTP resend to your email")
       })
   }
 
