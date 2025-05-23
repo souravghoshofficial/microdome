@@ -2,13 +2,13 @@ import { useState } from "react";
 import eyeOpen from "../assets/eye-line.svg";
 import eyeClosed from "../assets/eye-off-line.svg";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
+
 
 import axios from "axios";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
-const ResetPassword = ({email}) => {
+const ResetPassword = ({email , toast}) => {
   const navigate = useNavigate()
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("")

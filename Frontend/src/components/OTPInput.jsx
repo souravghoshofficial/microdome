@@ -3,13 +3,13 @@ import { useDispatch } from "react-redux";
 import { login , logout } from "../features/auth/authSlice";
 import axios from "axios";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
+
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const OtpLength = 6;
 
-const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint , setShowResetPassword = null , setShowOtpInput = null}) => {
+const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint , setShowResetPassword = null , setShowOtpInput = null , toast}) => {
   const navigate =  useNavigate()
   const dispatch =  useDispatch()
   const refArr = useRef([]);

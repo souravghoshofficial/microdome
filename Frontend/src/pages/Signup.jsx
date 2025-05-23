@@ -171,7 +171,7 @@ const Signup = () => {
         </p>
       </div>)}
       {
-        showOtpInput && <OTPInput email = {email} context={"signup"} verifyOtpApiEndpoint={"verify-otp"} resendOtpApiEndpoint={"resend-otp"} />
+        showOtpInput && <OTPInput email = {email} context={"signup"} verifyOtpApiEndpoint={"verify-otp"} resendOtpApiEndpoint={"resend-otp"} toast={toast} />
       }
     </div>
   );

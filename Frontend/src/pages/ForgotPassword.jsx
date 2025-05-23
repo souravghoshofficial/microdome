@@ -88,10 +88,10 @@ const ForgotPassword = () => {
       </div>
       )}
       {showOtpInput && (
-        <OTPInput email={email} context={"forgot-password"} verifyOtpApiEndpoint={"verify-forgot-password-otp"} resendOtpApiEndpoint={"resend-forgot-password-otp"}  setShowResetPassword={setShowResetPassword} setShowOtpInput={setShowOtpInput} />
+        <OTPInput email={email} context={"forgot-password"} verifyOtpApiEndpoint={"verify-forgot-password-otp"} resendOtpApiEndpoint={"resend-forgot-password-otp"}  setShowResetPassword={setShowResetPassword} setShowOtpInput={setShowOtpInput} toast={toast} />
       )}
       {showResetPassword && (
-        <ResetPassword email={email} />
+        <ResetPassword email={email} toast={toast} />
       )}
     </div>
   );
