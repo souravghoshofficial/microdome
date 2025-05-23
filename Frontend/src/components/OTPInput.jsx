@@ -8,7 +8,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const OtpLength = 6;
 
-const OTPInput = ({email}) => {
+const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint , setShowResetPassword = null}) => {
   const navigate =  useNavigate()
   const dispatch =  useDispatch()
   const refArr = useRef([]);
@@ -68,7 +68,7 @@ const OTPInput = ({email}) => {
 
     axios
       .post(
-        `${ApiUrl}/api/v1/users/verify-otp`,
+        `${ApiUrl}/api/v1/users/${verifyOtpApiEndpoint}`,
         {
           email: email,
           otp: fullOTP,
@@ -78,14 +78,18 @@ const OTPInput = ({email}) => {
         }
       )
       .then((res) => {
+        if(context === "signup"){
         console.log(res.data.data.user);
         dispatch(logout())
         dispatch(login(res.data.data.user));
         navigate("/");
+        }
+        if(context === "forgot-password"){
+          setShowResetPassword(true)
+        }
       })
       .catch((err) => {
-        console.log(err);
-        
+        console.log(err); 
         setError(err.response.data.message)
       })
       .finally(() => {
@@ -100,7 +104,7 @@ const OTPInput = ({email}) => {
 
      axios
       .post(
-        `${ApiUrl}/api/v1/users/resend-otp`,
+        `${ApiUrl}/api/v1/users/${resendOtpApiEndpoint}`,
         {
           email: email,
         },
@@ -133,6 +137,7 @@ const OTPInput = ({email}) => {
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <button
           type="submit"
+          disabled={loading}
           className="block w-full bg-emerald-600 hover:bg-emerald-500 cursor-pointer font-bold rounded mt-2 py-2 text-center"
         >
            {loading ? "Verifying..." : "Verify"}

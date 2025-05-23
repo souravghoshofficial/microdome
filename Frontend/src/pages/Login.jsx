@@ -121,9 +121,9 @@ const Login = () => {
               onClick={togglePassword}
             />
           </div>
-          <p className="mt-1 text-right cursor-pointer hover:text-emerald-300">
+          <Link to="/forgot-password" className="mt-1 text-right cursor-pointer hover:text-emerald-300">
             Forgot Password ?
-          </p>
+          </Link>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
             type="submit"

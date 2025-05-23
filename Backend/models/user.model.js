@@ -22,19 +22,15 @@ const userSchema = new Schema(
     },
     mobileNumber: {
       type: Number,
-      default: null
     },
     profileImage: {
       type: String,
-      default: null
     },
     instituteName: {
       type: String,
-      default: null
     },
     presentCourseOfStudy: {
       type: String,
-      default: null
     },
     isPremiumMember: {
       type: Boolean,
@@ -43,6 +39,12 @@ const userSchema = new Schema(
     isAdmin: {
       type: Boolean,
       default: false
+    },
+    otp: {
+      type: String
+    },
+    otpExpiry: {
+      type: Date
     }
   },
   {

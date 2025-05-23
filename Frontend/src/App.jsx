@@ -9,6 +9,7 @@ import Layout from "./Layout.jsx";
 import {
   Signup,
   Login,
+  ForgotPassword,
   Courses,
   Landing,
   About,
@@ -85,6 +86,9 @@ const App = () => {
         </Route>
         <Route path="/login" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <Login />]} />
+        </Route>
+         <Route path="/forgot-password" element={<AuthLayout />}>
+          <Route path="" element={[<Navbar />, <ForgotPassword />]} />
         </Route>
       </Routes>
     </BrowserRouter>

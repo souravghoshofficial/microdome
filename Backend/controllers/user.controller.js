@@ -143,7 +143,7 @@ const resendOTP = async(req, res) => {
     console.error(err);
     res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -192,6 +192,116 @@ const loginUser = async (req, res) => {
   // return await bcrypt.compare(password, this.password)
 };
 
+const forgotPassword = async (req, res) => {
+  const {email} = req.body;
+  
+try {
+    const user = await User.findOne({email});
+  
+    if(!user){
+      return res.status(404).json({message: "User not found"})
+    }
+  
+    const otp = generateOTP(6);
+    const hashedOtp = await bcrypt.hash(otp, 10);
+    const expiry = new Date(Date.now() + 5 * 60 * 1000);
+  
+    user.otp = hashedOtp;
+    user.otpExpiry = expiry;
+    await user.save();
+  
+    await sendOtpEmail(email , otp);
+  
+    res.status(200).json({message: "OTP send successfully"})
+} catch (error) {
+  console.error(err);
+  res.status(500).json({ message: "Internal Server Error" });
+}
+
+};
+
+const verifyForgotPasswordOTP = async (req, res) => {
+  const {email , otp} = req.body;
+  try {
+    const user = await User.findOne({email});
+
+    if(!user){
+      return res.status(404).json({message: "User does not exist"})
+    }
+
+    const isValid = await bcrypt.compare(otp, user.otp);
+    if (!isValid) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    const isExpired = user.otpExpiry < new Date();
+    if (isExpired) {
+      return res.status(400).json({ message: "OTP has been expired" });
+    }
+
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+
+    await user.save()
+
+    res.status(200).json({message: "OTP verfied"})
+    
+  } catch (error) {
+    console.log(err.message);
+    res.status(500).json({message: "Internal Server Error"})
+  }
+};
+
+const resendForgotPasswordOTP = async (req , res) => {
+  const {email} = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if(!user){
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const otp = generateOTP(6);
+    const hashedOtp = await bcrypt.hash(otp, 10);
+    const expiry = new Date(Date.now() + 5 * 60 * 1000);
+
+    user.otp = hashedOtp;
+    user.otpExpiry = expiry;
+    await user.save();
+
+    await sendOtpEmail(email , otp);
+
+    res.status(200).json({ message: "New OTP sent successfully" });
+    
+  } catch (error) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const { email, newpassword } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User does not exist" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newpassword, 10);
+
+    user.password = hashedPassword;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 const logoutUser = async (req, res) => {
   const options = {
     httpOnly: true,
@@ -205,4 +315,4 @@ const logoutUser = async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged Out"));
 };
 
-export { registerUser , verifyOTP , resendOTP , loginUser, logoutUser, getCurrentUser };
+export { registerUser , verifyOTP , resendOTP , loginUser, forgotPassword, verifyForgotPasswordOTP, resendForgotPasswordOTP, resetPassword, logoutUser, getCurrentUser };

@@ -5,6 +5,7 @@ import Enroll from "./Enroll";
 import Testimonial from './Testimonial';
 import Signup from "./Signup";
 import Login from "./Login";
+import ForgotPassword from "./ForgotPassword";
 import Courses from "./Courses";
 import CourseLayout from "./CourseLayout";
 import AboutUs from "./AboutUs";
@@ -15,4 +16,4 @@ import EntranceBatchLive from "./EntranceBatchLive";
 import EntranceBatchRecorded from "./EntranceBatchRecorded";
 import BScHonsBatch from "./BScHonsBatch";
 
-export { Landing , About , Contact  , Enroll , Testimonial , Signup , Login , Courses , CourseLayout , AboutUs , ProfileDashboard , Resources , Faculties , EntranceBatchLive,  EntranceBatchRecorded , BScHonsBatch}
+export { Landing , About , Contact  , Enroll , Testimonial , Signup , Login , ForgotPassword, Courses , CourseLayout , AboutUs , ProfileDashboard , Resources , Faculties , EntranceBatchLive,  EntranceBatchRecorded , BScHonsBatch}
