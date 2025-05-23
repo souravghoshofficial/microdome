@@ -87,7 +87,7 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
           dispatch(logout())
           dispatch(login(res.data.data.user));
           navigate("/");
-        }, 3000);
+        }, 2000);
         }
         if(context === "forgot-password"){
           toast.success("OTP verified successfully")
