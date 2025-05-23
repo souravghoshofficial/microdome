@@ -18,7 +18,7 @@ const Signup = () => {
   const [showEyeIcon, setShowEyeIcon] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showOtpInput, setShowOtpInput] = useState(false) 
+  const [showOtpInput, setShowOtpInput] = useState(true) 
 
 
   const togglePassword = () => {

@@ -57,13 +57,14 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
-    setError("");
 
     if (OTP.includes("")) {
       setError("Please enter all digits of the OTP.");
       return;
     }
+
+    setLoading(true);
+    setError("");
 
     const fullOTP = OTP.join("");
 
@@ -86,7 +87,7 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
           dispatch(logout())
           dispatch(login(res.data.data.user));
           navigate("/");
-        }, 5000);
+        }, 3000);
         }
         if(context === "forgot-password"){
           toast.success("OTP verified successfully")
@@ -133,7 +134,7 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
           {OTP.map((item, index) => (
             <input
               key={index}
-              type="text"
+              type="number"
               ref={(input) => (refArr.current[index] = input)}
               value={OTP[index]}
               onChange={(e) => handleOnChange(e.target.value, index)}

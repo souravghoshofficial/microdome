@@ -82,7 +82,7 @@ const ResetPassword = ({email , toast}) => {
         toast.success("Password reset successfully")
         setTimeout(() => {
            navigate("/login")
-        },5000);
+        },3000);
       })
       .catch((err) => {
         setError(err.message)

@@ -51,6 +51,21 @@
 }
 
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"] {
+  appearance: textfield;
+}
+
+
 /* nav{
   bg-[rgba(244,242,242,0.85)] dark:bg-[rgba(8,_8,_8,_0.2)] border-b border-gray-950/[.1] dark:border-gray-50/[.1]
 
