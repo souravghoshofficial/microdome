@@ -10,6 +10,9 @@ import {
   RiCloseCircleFill,
 } from "@remixicon/react";
 import { useState } from "react";
+
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
 const ProfileDashboard = () => {
   const userData = useSelector((state) => state.auth.userData);
 
