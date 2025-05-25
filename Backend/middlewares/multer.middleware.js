@@ -1,14 +1,14 @@
-import multer from "multer";
+import multer from "multer";;
+import os from "os";
 
+// Disk storage using Vercel's temp directory
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./public/temp");
+    cb(null, os.tmpdir()); // /tmp
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
-export const upload = multer({
-  storage,
-});
+export const upload = multer({ storage });
