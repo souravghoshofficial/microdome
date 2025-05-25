@@ -46,7 +46,7 @@ const EditUserDetails = () => {
       })
       .then((res) => {
         setProfileImage(null);
-        toast.success("Profile Image Uploaded Successfully");
+        toast.success("Image Uploaded Successfully");
         dispatch(logout());
         dispatch(login(res.data.data));
         setImageSrc(res.data.data.profileImage);
@@ -105,7 +105,7 @@ const EditUserDetails = () => {
                   disabled={loading}
                   className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-lg cursor-pointer"
                 >
-                  {loading ? "Uploading" : "Upload"}
+                  {loading ? "Uploading..." : "Upload"}
                 </button>
               )}
             </div>
