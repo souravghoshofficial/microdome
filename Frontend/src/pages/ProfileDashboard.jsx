@@ -2,7 +2,7 @@ import React from "react";
 import { UserIcon } from "../components";
 import { RiEditBoxLine } from "@remixicon/react";
 import { useSelector , useDispatch } from "react-redux";
-import { login, logout } from "./features/auth/authSlice";
+import { login, logout } from "../features/auth/authSlice";
 import axios from "axios";
 import {
   RiGraduationCapLine,
