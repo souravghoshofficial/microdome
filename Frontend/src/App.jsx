@@ -24,6 +24,7 @@ import {
   EntranceBatchLive,
   EntranceBatchRecorded,
   BScHonsBatch,
+  EditUserDetails
 } from "./pages";
 import {
   Navbar,
@@ -91,6 +92,7 @@ const App = () => {
           <Route path="/faculties" element={<Faculties />} />
           <Route path="/profile" element={<AuthenticatedRoute />}>
             <Route path="" element={<ProfileDashboard />} />
+            <Route path="edit" element={<EditUserDetails />} />
           </Route>
         </Route>
         <Route path="/signup" element={<AuthLayout />}>

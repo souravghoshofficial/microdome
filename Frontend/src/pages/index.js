@@ -15,5 +15,6 @@ import Faculties from "./Faculties";
 import EntranceBatchLive from "./EntranceBatchLive";
 import EntranceBatchRecorded from "./EntranceBatchRecorded";
 import BScHonsBatch from "./BScHonsBatch";
+import EditUserDetails from "./EditUserDetails";
 
-export { Landing , About , Contact  , Enroll , Testimonial , Signup , Login , ForgotPassword, Courses , CourseLayout , AboutUs , ProfileDashboard , Resources , Faculties , EntranceBatchLive,  EntranceBatchRecorded , BScHonsBatch}
+export { Landing , About , Contact  , Enroll , Testimonial , Signup , Login , ForgotPassword, Courses , CourseLayout , AboutUs , ProfileDashboard , Resources , Faculties , EntranceBatchLive,  EntranceBatchRecorded , BScHonsBatch , EditUserDetails}
