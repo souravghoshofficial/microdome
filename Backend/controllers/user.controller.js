@@ -344,19 +344,6 @@ const updateUserAvatar = async (req, res) => {
     .json(new ApiResponse(200, user, "Profile image uploaded successfully"));
 };
 
-export {
-  registerUser,
-  verifyOTP,
-  resendOTP,
-  loginUser,
-  forgotPassword,
-  verifyForgotPasswordOTP,
-  resendForgotPasswordOTP,
-  resetPassword,
-  logoutUser,
-  getCurrentUser,
-  updateUserAvatar,
-};
 
 const updateAccountsDetails=async(req,res)=>{
   const {name,mobileNumber,instituteName,presentCourseOfStudy}=req.body;
@@ -423,5 +410,5 @@ const user = await User.findByIdAndUpdate(
 };
 
 
-export { registerUser , verifyOTP , resendOTP , loginUser, forgotPassword, verifyForgotPasswordOTP, resendForgotPasswordOTP, resetPassword, logoutUser, getCurrentUser , updateAccountsDetails };
+export { registerUser , verifyOTP , resendOTP , loginUser, forgotPassword, verifyForgotPasswordOTP, resendForgotPasswordOTP, resetPassword, logoutUser, getCurrentUser , updateAccountsDetails , updateUserAvatar };
 
