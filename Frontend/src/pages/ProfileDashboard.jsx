@@ -25,7 +25,7 @@ const ProfileDashboard = () => {
     formData.append("profileImage", profileImage);
 
     axios
-      .post(`/api/v1/users/update-user-profile-image`, formData, {
+      .post(`${ApiUrl}/api/v1/users/update-user-profile-image`, formData, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",

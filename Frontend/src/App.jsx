@@ -39,7 +39,7 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get(`/api/v1/users/current-user`, {
+      .get(`${ApiUrl}/api/v1/users/current-user`, {
         withCredentials: true,
       })
       .then((res) => {
