@@ -7,7 +7,7 @@ import eyeClosed from "../assets/eye-off-line.svg";
 import axios from "axios";
 import { Logo } from "../components";
 import { useDispatch } from "react-redux";
-import { login , logout } from "../features/auth/authSlice";
+import { login, logout } from "../features/auth/authSlice";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -29,7 +29,7 @@ const Login = () => {
 
     axios
       .post(
-        `${ApiUrl}/api/v1/users/login`,
+        `/api/v1/users/login`,
         {
           email: email,
           password: password,
@@ -40,7 +40,7 @@ const Login = () => {
       )
       .then((res) => {
         console.log(res.data.data.user);
-        dispatch(logout())
+        dispatch(logout());
         dispatch(login(res.data.data.user));
         // Clear form
         setEmail("");
@@ -121,7 +121,10 @@ const Login = () => {
               onClick={togglePassword}
             />
           </div>
-          <Link to="/forgot-password" className="mt-1 text-right cursor-pointer hover:text-emerald-300">
+          <Link
+            to="/forgot-password"
+            className="mt-1 text-right cursor-pointer hover:text-emerald-300"
+          >
             Forgot Password ?
           </Link>
           {error && <p className="text-red-500 text-sm">{error}</p>}

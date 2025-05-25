@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { generateOTP } from "../utils/generateOTP.js";
 import { sendOtpEmail } from "../utils/sendOTPEmail.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import bcrypt from "bcrypt";
 
 const getCurrentUser = async (req, res) => {
@@ -47,8 +48,8 @@ const registerUser = async (req, res) => {
       otpExpiry: expiry,
     });
 
-    await sendOtpEmail(email , otp);
-   
+    await sendOtpEmail(email, otp);
+
     res.status(200).json({ message: "OTP sent to email" });
   } catch (err) {
     console.error(err);
@@ -119,11 +120,11 @@ const verifyOTP = async (req, res) => {
   }
 };
 
-const resendOTP = async(req, res) => {
-  const {email} = req.body;
+const resendOTP = async (req, res) => {
+  const { email } = req.body;
   try {
     const tempUser = await TempUser.findOne({ email });
-    if(!tempUser){
+    if (!tempUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -135,10 +136,9 @@ const resendOTP = async(req, res) => {
     tempUser.otpExpiry = expiry;
     await tempUser.save();
 
-    await sendOtpEmail(email , otp);
+    await sendOtpEmail(email, otp);
 
     res.status(200).json({ message: "New OTP sent successfully" });
-    
   } catch (error) {
     console.error(err);
     res.status(500).json({ message: "Internal Server Error" });
@@ -193,40 +193,39 @@ const loginUser = async (req, res) => {
 };
 
 const forgotPassword = async (req, res) => {
-  const {email} = req.body;
-  
-try {
-    const user = await User.findOne({email});
-  
-    if(!user){
-      return res.status(404).json({message: "User not found"})
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  
+
     const otp = generateOTP(6);
     const hashedOtp = await bcrypt.hash(otp, 10);
     const expiry = new Date(Date.now() + 5 * 60 * 1000);
-  
+
     user.otp = hashedOtp;
     user.otpExpiry = expiry;
     await user.save();
-  
-    await sendOtpEmail(email , otp);
-  
-    res.status(200).json({message: "OTP send successfully"})
-} catch (error) {
-  console.error(err);
-  res.status(500).json({ message: "Internal Server Error" });
-}
 
+    await sendOtpEmail(email, otp);
+
+    res.status(200).json({ message: "OTP send successfully" });
+  } catch (error) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
 
 const verifyForgotPasswordOTP = async (req, res) => {
-  const {email , otp} = req.body;
+  const { email, otp } = req.body;
   try {
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
 
-    if(!user){
-      return res.status(404).json({message: "User does not exist"})
+    if (!user) {
+      return res.status(404).json({ message: "User does not exist" });
     }
 
     const isValid = await bcrypt.compare(otp, user.otp);
@@ -242,21 +241,20 @@ const verifyForgotPasswordOTP = async (req, res) => {
     user.otp = undefined;
     user.otpExpiry = undefined;
 
-    await user.save()
+    await user.save();
 
-    res.status(200).json({message: "OTP verfied"})
-    
+    res.status(200).json({ message: "OTP verfied" });
   } catch (error) {
     console.log(err.message);
-    res.status(500).json({message: "Internal Server Error"})
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-const resendForgotPasswordOTP = async (req , res) => {
-  const {email} = req.body;
+const resendForgotPasswordOTP = async (req, res) => {
+  const { email } = req.body;
   try {
     const user = await User.findOne({ email });
-    if(!user){
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -268,10 +266,9 @@ const resendForgotPasswordOTP = async (req , res) => {
     user.otpExpiry = expiry;
     await user.save();
 
-    await sendOtpEmail(email , otp);
+    await sendOtpEmail(email, otp);
 
     res.status(200).json({ message: "New OTP sent successfully" });
-    
   } catch (error) {
     console.error(err);
     res.status(500).json({ message: "Internal Server Error" });
@@ -295,7 +292,6 @@ const resetPassword = async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: "Password updated successfully" });
-
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Internal Server Error" });
@@ -315,4 +311,47 @@ const logoutUser = async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged Out"));
 };
 
-export { registerUser , verifyOTP , resendOTP , loginUser, forgotPassword, verifyForgotPasswordOTP, resendForgotPasswordOTP, resetPassword, logoutUser, getCurrentUser };
+const updateUserAvatar = async (req, res) => {
+  // const avatarLocalPath = req.file?.path;
+  const avatarLocalPath = req.files?.profileImage[0]?.path;
+
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Profile Image is missing");
+  }
+
+  //TODO: delete old image - assignment
+
+  const profileImage = await uploadOnCloudinary(avatarLocalPath);
+
+  if (!profileImage.url) {
+    throw new ApiError(400, "Error while uploading the profile image");
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        profileImage: profileImage.url,
+      },
+    },
+    { new: true }
+  ).select("-password");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Profile image uploaded successfully"));
+};
+
+export {
+  registerUser,
+  verifyOTP,
+  resendOTP,
+  loginUser,
+  forgotPassword,
+  verifyForgotPasswordOTP,
+  resendForgotPasswordOTP,
+  resetPassword,
+  logoutUser,
+  getCurrentUser,
+  updateUserAvatar,
+};

@@ -1,9 +1,9 @@
-import React , {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router";
 
 import { useDispatch } from "react-redux";
-import { login , logout } from "./features/auth/authSlice";
+import { login, logout } from "./features/auth/authSlice";
 
 import Layout from "./Layout.jsx";
 import {
@@ -19,38 +19,47 @@ import {
   CourseLayout,
   AboutUs,
   ProfileDashboard,
-  Resources, 
+  Resources,
   Faculties,
   EntranceBatchLive,
   EntranceBatchRecorded,
-  BScHonsBatch
+  BScHonsBatch,
 } from "./pages";
-import { Navbar, AuthenticatedRoute , Instructor, AuthLayout } from "./components";
+import {
+  Navbar,
+  AuthenticatedRoute,
+  Instructor,
+  AuthLayout,
+} from "./components";
 import axios from "axios";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    axios.get(`${ApiUrl}/api/v1/users/current-user`, {
-      withCredentials: true
-    })
-    .then((res) => {
-      dispatch(logout())
-      dispatch(login(res.data.data))
-    })
-    .catch((err) => {
-      console.log(err.message);
-      dispatch(logout());
-    })
+    axios
+      .get(`/api/v1/users/current-user`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        dispatch(logout());
+        dispatch(login(res.data.data));
+      })
+      .catch((err) => {
+        console.log(err.message);
+        dispatch(logout());
+      });
+  });
 
-  })
-  
-  const [loader, setLoader] = useState(false)
- 
-  if(loader) return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
+  const [loader, setLoader] = useState(false);
+
+  if (loader)
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
 
   return (
     <BrowserRouter>
@@ -70,16 +79,19 @@ const App = () => {
 
           <Route path="/courses" element={<CourseLayout />}>
             <Route path="" element={<Courses />} />
-            <Route path="entrance-batch-live" element = {<EntranceBatchLive />} />
-            <Route path="entrance-batch-recorded" element = {<EntranceBatchRecorded />} />
-            <Route path="bsc-hons-batch" element = {<BScHonsBatch />} />
+            <Route path="entrance-batch-live" element={<EntranceBatchLive />} />
+            <Route
+              path="entrance-batch-recorded"
+              element={<EntranceBatchRecorded />}
+            />
+            <Route path="bsc-hons-batch" element={<BScHonsBatch />} />
           </Route>
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/faculties" element={<Faculties />}/>
-            <Route path="/profile" element={<AuthenticatedRoute />}>
-                <Route path="" element={<ProfileDashboard />} />
-            </Route>
+          <Route path="/faculties" element={<Faculties />} />
+          <Route path="/profile" element={<AuthenticatedRoute />}>
+            <Route path="" element={<ProfileDashboard />} />
+          </Route>
         </Route>
         <Route path="/signup" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <Signup />]} />
@@ -87,7 +99,7 @@ const App = () => {
         <Route path="/login" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <Login />]} />
         </Route>
-         <Route path="/forgot-password" element={<AuthLayout />}>
+        <Route path="/forgot-password" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <ForgotPassword />]} />
         </Route>
       </Routes>
