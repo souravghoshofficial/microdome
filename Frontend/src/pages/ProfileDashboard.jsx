@@ -1,7 +1,8 @@
 import React from "react";
 import { UserIcon } from "../components";
 import { RiEditBoxLine } from "@remixicon/react";
-import { useSelector } from "react-redux";
+import { useSelector , useDispatch } from "react-redux";
+import { login, logout } from "./features/auth/authSlice";
 import axios from "axios";
 import {
   RiGraduationCapLine,
@@ -14,6 +15,7 @@ import { useState } from "react";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const ProfileDashboard = () => {
+  const dispatch = useDispatch()
   const userData = useSelector((state) => state.auth.userData);
 
   const [showPopUp, setShowPopUp] = useState(false);
@@ -35,6 +37,8 @@ const ProfileDashboard = () => {
         },
       })
       .then((res) => {
+        dispatch(logout());
+        dispatch(login(res.data.data));
         alert("Image uploaded successfully!");
         setShowPopUp(false);
       })
