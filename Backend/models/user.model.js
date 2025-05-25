@@ -9,7 +9,6 @@ const userSchema = new Schema(
       required: true,
       trim: true,
     },
-
     email: {
       type: String,
       required: true,
@@ -21,7 +20,7 @@ const userSchema = new Schema(
       required: true,
     },
     mobileNumber: {
-      type: Number,
+      type: String,
     },
     profileImage: {
       type: String,

@@ -65,6 +65,7 @@ const verifyOTP = async (req, res) => {
       return res.status(400).json({ message: "Invalid or expired OTP" });
 
     const isValid = await bcrypt.compare(otp, tempUser.otp);
+    
     if (!isValid) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
@@ -311,6 +312,7 @@ const logoutUser = async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged Out"));
 };
 
+
 const updateUserAvatar = async (req, res) => {
   // const avatarLocalPath = req.file?.path;
   const avatarLocalPath = req.files?.profileImage[0]?.path;
@@ -355,3 +357,71 @@ export {
   getCurrentUser,
   updateUserAvatar,
 };
+
+const updateAccountsDetails=async(req,res)=>{
+  const {name,mobileNumber,instituteName,presentCourseOfStudy}=req.body;
+
+  // if(!mobileNumber && !instituteName && !presentCourseOfStudy){
+  //   throw new ApiError(400,"Any of these fields are required");
+  // }
+
+  if(!(name || mobileNumber || instituteName || presentCourseOfStudy)){
+    throw new ApiError(400,"Any of these fields are required");
+  }
+
+
+  // const user =await User.findByIdAndUpdate(
+  //   req.user?._id,
+  //   {
+  //     if(mobileNumber){
+  //       $set: {
+  //       mobileNumber: mobileNumber
+  //     }
+  //     },
+  //     if(instituteName){
+  //       $set: {
+  //       instituteName: instituteName
+  //     }
+  //     },
+  //     if(presentCourseOfStudy){
+  //       $set: {
+  //       presentCourseOfStudy: presentCourseOfStudy
+  //     }
+  //     }
+  //   },
+  //   {new: true}
+  // ).select("-password")
+
+
+  const updateData = {};
+
+  if (name) {
+  updateData.name = name;
+}
+
+if (mobileNumber) {
+  updateData.mobileNumber = mobileNumber;
+}
+if (instituteName) {
+  updateData.instituteName = instituteName;
+}
+if (presentCourseOfStudy) {
+  updateData.presentCourseOfStudy = presentCourseOfStudy;
+}
+
+const user = await User.findByIdAndUpdate(
+  req.user?._id,
+  { $set: updateData },
+  { new: true }
+).select("-password");
+
+
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200,user,"Account details updated successfully"))
+};
+
+
+export { registerUser , verifyOTP , resendOTP , loginUser, forgotPassword, verifyForgotPasswordOTP, resendForgotPasswordOTP, resetPassword, logoutUser, getCurrentUser , updateAccountsDetails };
+
