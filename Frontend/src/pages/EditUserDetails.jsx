@@ -65,7 +65,7 @@ const EditUserDetails = () => {
         <ToastContainer />
         <Link
           to="/profile"
-          className="inline-block px-3 py-2 border rounded-md"
+          className="inline-block px-3 py-2 border border-gray-800/40 dark:border-gray-300/30 rounded-md"
         >
           <div className="flex items-center gap-1">
             <RiArrowLeftLine size={20} />
@@ -82,7 +82,7 @@ const EditUserDetails = () => {
                     src={imageSrc}
                     alt="Upload Profile Image"
                   />
-                  <div className="absolute w-full h-full top-0 left-0 bg-black/40 bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                  <div className="absolute w-full h-full top-0 left-0 bg-black/40 bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 group-active:opacity-100 flex items-center justify-center transition-opacity duration-300">
                     <Pencil className="text-white w-6 h-6 cursor-pointer" />
                   </div>
             
