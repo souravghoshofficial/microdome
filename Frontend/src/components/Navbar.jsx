@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { RiMenuFill, RiCloseLine } from "@remixicon/react";
 import Logo from "./Logo";
@@ -12,33 +11,52 @@ import { toogleCard } from "../features/profileCard/profileCardSlice";
 const navItems = [
   {
     navItemName: "Home",
-    linkAddress: "/"
+    linkAddress: "/",
   },
   {
     navItemName: "Courses",
-    linkAddress: "/courses"
+    linkAddress: "/courses",
   },
   {
     navItemName: "About Us",
-    linkAddress: "/about-us"
+    linkAddress: "/about-us",
   },
   {
     navItemName: "Our Faculties",
-    linkAddress: "/faculties"
+    linkAddress: "/faculties",
   },
   {
     navItemName: "Resources",
-    linkAddress: "/resources"
+    linkAddress: "/resources",
   },
-]
+];
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.status);
   const [showSideNav, setShowSideNav] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
+  const lastScrollYRef = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollYRef.current) {
+        setShowNavbar(false); // scrolling down
+      } else {
+        setShowNavbar(true); // scrolling up
+      }
+
+      lastScrollYRef.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full flex items-center justify-center z-50 backdrop-blur-2xl text-black dark:text-white">
+    <nav className={`fixed top-0 left-0 w-full transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"} flex items-center justify-center z-50 backdrop-blur-2xl text-black dark:text-white`}>
       <div className="w-[90%] py-4 flex items-center justify-between relative">
         <div>
           <a className="flex items-center gap-2" href="/">
@@ -47,21 +65,21 @@ const Navbar = () => {
           </a>
         </div>
         <ul className="hidden md:flex items-center gap-8">
-         {navItems.map((item) => (
-           <li key={item.linkAddress} className="relative group">
-            <NavLink
-              to={item.linkAddress}
-              className={({ isActive }) =>
-                `${
-                  isActive ? "text-highlighted font-semibold" : ""
-                } relative inline-block transition-colors duration-300`
-              }
-            >
-              {item.navItemName}
-               <span className="absolute left-0 bottom-0 h-[1.5px] w-full scale-x-0 bg-black dark:bg-white transition-transform duration-300 group-hover:scale-x-100 origin-left"></span>
-            </NavLink>
-          </li>
-         ))}
+          {navItems.map((item) => (
+            <li key={item.linkAddress} className="relative group">
+              <NavLink
+                to={item.linkAddress}
+                className={({ isActive }) =>
+                  `${
+                    isActive ? "text-highlighted font-semibold" : ""
+                  } relative inline-block transition-colors duration-300`
+                }
+              >
+                {item.navItemName}
+                <span className="absolute left-0 bottom-0 h-[1.5px] w-full scale-x-0 bg-black dark:bg-white transition-transform duration-300 group-hover:scale-x-100 origin-left"></span>
+              </NavLink>
+            </li>
+          ))}
           <div className="px-4 border-l border-r border-gray-400/50">
             <ThemeBtn />
           </div>
@@ -73,7 +91,7 @@ const Navbar = () => {
           {!isLoggedIn && (
             <NavLink
               to="/login"
-              className="px-4 py-1.5 bg-button text-white font-semibold rounded-sm"
+              className="px-5 py-1.5 bg-button text-white font-semibold rounded-sm"
             >
               Login
             </NavLink>

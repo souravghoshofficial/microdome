@@ -13,15 +13,13 @@
 
 }
 
+
 .gradiant-text{
   background: linear-gradient(to left, #DB3B7E, #3EB5A2 );
   background-clip: text;
   color: transparent;
 }
 
-.scrollbar-none{
-  scrollbar-width: none;
-}
 
 .highlighted-text{
   color: #3EB5A2;
@@ -72,4 +70,26 @@ input[type="number"] {
   dark:bg-[#232B38]
   text-[#2C7A7B]
 } */
+
+/* Hide scrollbar for Chrome, Safari and Edge */
+body::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* optional: just in case */
+}
+
+/* Hide scrollbar for Firefox */
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none; /* for IE and Edge */
+}
+
+/* Also hide scrollbar on html */
+html::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 
