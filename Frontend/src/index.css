@@ -13,6 +13,9 @@
 
 }
 
+.scrollbar-none{
+  scrollbar-width: none;
+}
 
 .gradiant-text{
   background: linear-gradient(to left, #DB3B7E, #3EB5A2 );
