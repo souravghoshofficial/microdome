@@ -8,6 +8,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 const ProfileUpdateForm = ({toast}) => {
   const dispatch =  useDispatch();
   const userData = useSelector((state) => state.auth.userData);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: userData?.name || "",
     mobileNumber: userData?.mobileNumber || "",
@@ -23,9 +24,7 @@ const ProfileUpdateForm = ({toast}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    
-    // You can integrate this with backend or APIs
+    setLoading(true)
     axios
       .post(`${ApiUrl}/api/v1/users/update-user-details`, formData, {
         withCredentials: true,
@@ -36,7 +35,8 @@ const ProfileUpdateForm = ({toast}) => {
         toast.success("User info updated")
       })
       .catch((err) => {console.log(err);
-      });
+      })
+      .finally(() => {setLoading(false)})
   };
 
   return (
@@ -114,9 +114,10 @@ const ProfileUpdateForm = ({toast}) => {
 
       <button
         type="submit"
+        disabled={loading}
         className="my-3 bg-blue-600 text-white py-3 px-5 cursor-pointer rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
       >
-        Update Profile
+        {loading ? " Updating..." : "Update Profile"}
       </button>
     </form>
   );
