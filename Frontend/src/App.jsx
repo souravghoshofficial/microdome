@@ -24,7 +24,7 @@ import {
   EntranceBatchLive,
   EntranceBatchRecorded,
   BScHonsBatch,
-  EditUserDetails
+  EditUserDetails,
 } from "./pages";
 import {
   Navbar,
@@ -40,7 +40,7 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get(`${ApiUrl}/api/v1/users/current-user`, {
+      .get(`/api/v1/users/current-user`, {
         withCredentials: true,
       })
       .then((res) => {

@@ -38,7 +38,7 @@ const EditUserDetails = () => {
     formData.append("profileImage", profileImage);
 
     axios
-      .post(`${ApiUrl}/api/v1/users/update-user-profile-image`, formData, {
+      .post(`/api/v1/users/update-user-profile-image`, formData, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -76,16 +76,14 @@ const EditUserDetails = () => {
           <form onSubmit={handleSubmit} className="flex items-center gap-4">
             <div className="relative w-24 h-24 group">
               <label htmlFor="profileImage">
-              
-                  <img
-                    className="w-full h-full rounded-full bg-center cursor-pointer"
-                    src={imageSrc}
-                    alt="Upload Profile Image"
-                  />
-                  <div className="absolute w-full h-full top-0 left-0 bg-black/40 bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 group-active:opacity-100 flex items-center justify-center transition-opacity duration-300">
-                    <Pencil className="text-white w-6 h-6 cursor-pointer" />
-                  </div>
-            
+                <img
+                  className="w-full h-full rounded-full bg-center cursor-pointer"
+                  src={imageSrc}
+                  alt="Upload Profile Image"
+                />
+                <div className="absolute w-full h-full top-0 left-0 bg-black/40 bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 group-active:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                  <Pencil className="text-white w-6 h-6 cursor-pointer" />
+                </div>
               </label>
               <input
                 className="hidden"
