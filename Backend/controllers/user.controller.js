@@ -7,6 +7,7 @@ import { sendOtpEmail } from "../utils/sendOTPEmail.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import bcrypt from "bcrypt";
 
+
 const getCurrentUser = async (req, res) => {
   return res
     .status(200)

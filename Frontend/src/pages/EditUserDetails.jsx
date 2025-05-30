@@ -8,7 +8,7 @@ import { Link } from "react-router";
 import userImage from "../assets/user-img.jpeg";
 import { ToastContainer, toast } from "react-toastify";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
-
+import ProfileUpdateForm from "../components/UpdateUserDetails";
 const EditUserDetails = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.userData);
@@ -110,6 +110,7 @@ const EditUserDetails = () => {
               )}
             </div>
           </form>
+          <ProfileUpdateForm/>
         </div>
       </div>
     </div>
