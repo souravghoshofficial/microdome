@@ -32,7 +32,7 @@ const ProfileUpdateForm = ({toast}) => {
       })
       .then((res) => {
         dispatch(logout());
-        dispatch(login(res.data.data.user));
+        dispatch(login(res.data.data));
         toast.success("User info updated")
       })
       .catch((err) => {console.log(err);
