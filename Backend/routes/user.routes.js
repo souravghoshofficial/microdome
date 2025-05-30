@@ -38,6 +38,6 @@ router
     updateUserAvatar
   );
 
-router.route("/updateaccountsdetails").post(verifyJWT,updateAccountsDetails);
+router.route("/update-user-details").post(verifyJWT, updateAccountsDetails);
 export default router;
 

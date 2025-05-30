@@ -7,6 +7,7 @@ import axios from "axios";
 import { Link } from "react-router";
 import userImage from "../assets/user-img.jpeg";
 import { ToastContainer, toast } from "react-toastify";
+import {ProfileUpdateForm} from "../components";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const EditUserDetails = () => {
@@ -72,8 +73,8 @@ const EditUserDetails = () => {
             <span>Back to profile</span>
           </div>
         </Link>
-        <div className="mt-16 border rounded-xl p-4">
-          <form onSubmit={handleSubmit} className="flex items-center gap-4">
+        <div className="mt-16 w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-gray-50/[.1] rounded-xl p-4 md:p-6 flex flex-col md:flex-row md:gap-4 items-start">
+          <form onSubmit={handleSubmit} className="w-full mt-4 flex items-center gap-4">
             <div className="relative w-24 h-24 group">
               <label htmlFor="profileImage">
               
@@ -103,13 +104,16 @@ const EditUserDetails = () => {
               {profileImage && (
                 <button
                   disabled={loading}
-                  className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-lg cursor-pointer"
+                  className="mt-2 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition duration-300"
                 >
                   {loading ? "Uploading..." : "Upload"}
                 </button>
               )}
             </div>
           </form>
+          <div className="w-full mt-4">
+            <ProfileUpdateForm toast={toast} />
+          </div>
         </div>
       </div>
     </div>
