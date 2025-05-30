@@ -30,7 +30,7 @@ const ProfileUpdateForm = ({toast}) => {
       .post(`${ApiUrl}/api/v1/users/update-user-details`, formData, {
         withCredentials: true,
       })
-      .then(() => {
+      .then((res) => {
         dispatch(logout());
         dispatch(login(res.data.data.user));
         toast.success("User info updated")
