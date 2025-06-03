@@ -9,7 +9,7 @@ import userImage from "../assets/user-img.jpeg";
 import { ToastContainer, toast } from "react-toastify";
 import {ProfileUpdateForm} from "../components";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
-import ProfileUpdateForm from "../components/UpdateUserDetails";
+
 const EditUserDetails = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.userData);

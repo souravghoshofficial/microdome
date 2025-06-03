@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { Section } from "../models/section.model.js";
 import { Lecture } from "../models/lecture.model.js";
 
-const addCourse = async (req,res)=>{
+const addCourse = async (req, res)=>{
   const { name, price } = req.body;
 
   const course = await Course.create({
@@ -94,4 +94,73 @@ res.status(200).json({
     updatedSection
   })
 }
-export {addCourse,getAllCourses,addSection,addLecture,addLectureToASection};
+
+const addNewCourse = async(req, res) => {
+  try {
+    const { name, price, sections } = req.body;
+
+    const sectionIds = [];
+
+    for (const sec of sections) {
+      const lectureIds = [];
+
+      for (const lec of sec.lectures) {
+        const newLecture = await Lecture.create({
+          title: lec.title,
+          videoURL: lec.videoURL,
+          noteTitle: lec.noteTitle,
+          noteURL: lec.noteURL
+        });
+        lectureIds.push(newLecture._id);
+      }
+
+      const newSection = await Section.create({
+        title: sec.title,
+        lectures: lectureIds
+      });
+
+      sectionIds.push(newSection._id);
+    }
+
+    const newCourse = await Course.create({
+      name,
+      price,
+      section: sectionIds
+    });
+
+    res.status(201).json({
+      message: 'Course created successfully',
+      course: newCourse
+    });
+  } catch (error) {
+    console.error('Error creating course:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+
+const getFullCourse = async (req, res) => {
+  const {courseId} = req.body;
+
+  try {
+    const course = await Course.findById(courseId)
+      .populate({
+        path: 'sections',
+        populate: {
+          path: 'lectures'
+        }
+      })
+      .lean();
+
+    if (!course) {
+      return res.status(404).json({ success: false, message: 'Course not found' });
+    }
+
+    return res.status(200).json({ success: true, course });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+export {addCourse, getAllCourses, addSection, addLecture, addLectureToASection,  addNewCourse , getFullCourse};

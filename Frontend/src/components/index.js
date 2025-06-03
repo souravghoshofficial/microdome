@@ -15,6 +15,8 @@ import AuthLayout from "./AuthLayout";
 import OTPInput from "./OTPInput";
 import ResetPassword from "./ResetPassword";
 import ProfileUpdateForm from "./UpdateUserDetails";
+import BuyNowCard from "./BuyNowCard";
+import CourseSyllabus from "./CourseSyllabus";
 
 
 export {
@@ -34,5 +36,7 @@ export {
   AuthLayout,
   OTPInput,
   ResetPassword,
-  ProfileUpdateForm
+  ProfileUpdateForm,
+  BuyNowCard,
+  CourseSyllabus
 };
