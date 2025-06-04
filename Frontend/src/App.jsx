@@ -25,6 +25,7 @@ import {
   EntranceBatchRecorded,
   BScHonsBatch,
   EditUserDetails,
+  CourseViewPage
 } from "./pages";
 import {
   Navbar,
@@ -108,6 +109,7 @@ const App = () => {
         <Route path="/forgot-password" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <ForgotPassword />]} />
         </Route>
+        <Route path="/my-course" element={<CourseViewPage />} />
       </Routes>
     </BrowserRouter>
   );

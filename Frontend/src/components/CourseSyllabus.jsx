@@ -64,9 +64,6 @@ const CourseSyllabus = () => {
     new Array(syllabus.length).fill(false)
   );
   const openMenu = (index) => {
-    console.log("hello");
-    console.log(index);
-
     const newMenu = [...showMenu];
     newMenu[index] = !newMenu[index];
     setshowMenu(newMenu);

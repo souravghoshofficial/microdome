@@ -17,6 +17,7 @@ import ResetPassword from "./ResetPassword";
 import ProfileUpdateForm from "./UpdateUserDetails";
 import BuyNowCard from "./BuyNowCard";
 import CourseSyllabus from "./CourseSyllabus";
+import CourseSection from "./CourseSection";
 
 
 export {
@@ -38,5 +39,6 @@ export {
   ResetPassword,
   ProfileUpdateForm,
   BuyNowCard,
-  CourseSyllabus
+  CourseSyllabus,
+  CourseSection
 };
