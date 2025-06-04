@@ -60,7 +60,7 @@ const createOrder = async (req, res) => {
 const verifyPayment = async (req, res) => {
   try {
     const body = JSON.stringify(req.body);
-    const signature = req.headers["x-razorpay-signature"];
+    const signature = req.headers['x-razorpay-signature'];
     console.log(body , signature);
     
 

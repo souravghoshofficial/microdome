@@ -24,7 +24,7 @@ import {
   EntranceBatchLive,
   EntranceBatchRecorded,
   BScHonsBatch,
-  EditUserDetails
+  EditUserDetails,
 } from "./pages";
 import {
   Navbar,

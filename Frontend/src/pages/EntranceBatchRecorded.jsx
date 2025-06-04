@@ -52,7 +52,6 @@ useEffect(() => {
     description: "Payment for M.Sc Entrance Batch",
     image: "http://res.cloudinary.com/deljukiyr/image/upload/v1748880241/qi2txlfzapvqkqle8baa.jpg",
     order_id: orderId, 
-    callback_url: `${ApiUrl}/api/v1/orders/verify-payment`, 
     prefill: {
       name: "Microdome Classes",
       email: "microdomeclasses@gmail.com",
@@ -69,8 +68,7 @@ useEffect(() => {
 
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="mt-8 w-full lg:w-[90%]  relative flex flex-col-reverse lg:flex-row justify-center lg:gap-10 lg:px-12 lg:py-6 mb-16">
-        <div className="w-[100vw] h-[108%] lg:h-96 absolute bg-slate-200/50 dark:bg-gray-800 z-10"></div>
+      <div className="mt-8 w-full lg:w-[90%] flex flex-col-reverse lg:flex-row justify-center lg:gap-10 lg:px-12 lg:py-6 mb-16">
         <div className="w-[90%] mx-auto lg:w-[60%] z-20 mt-16">
           <h3 className="mt-2 leading-10 text-2xl md:text-3xl font-bold">
             M.Sc. Entrance Mastery
