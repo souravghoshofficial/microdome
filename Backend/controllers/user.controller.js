@@ -9,7 +9,6 @@ import {
   deleteFromCloudinary,
 } from "../utils/cloudinary.js";
 import bcrypt from "bcrypt";
-import { v2 as cloudinary } from "cloudinary";
 
 const getCurrentUser = async (req, res) => {
   return res
@@ -317,6 +316,7 @@ const logoutUser = async (req, res) => {
 };
 
 const updateUserAvatar = async (req, res) => {
+  // const avatarLocalPath = req.file?.path;
   const avatarLocalPath = req.files?.profileImage[0]?.path;
 
   if (!avatarLocalPath) {
@@ -336,10 +336,9 @@ const updateUserAvatar = async (req, res) => {
     }
   }
 
-  // Upload new image
   const profileImage = await uploadOnCloudinary(avatarLocalPath);
 
-  if (!profileImage?.url) {
+  if (!profileImage.url) {
     throw new ApiError(400, "Error while uploading the profile image");
   }
 

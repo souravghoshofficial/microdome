@@ -14,5 +14,29 @@ import FacultyCard from "./FacultyCard";
 import AuthLayout from "./AuthLayout";
 import OTPInput from "./OTPInput";
 import ResetPassword from "./ResetPassword";
+import ProfileUpdateForm from "./UpdateUserDetails";
+import BuyNowCard from "./BuyNowCard";
+import CourseSyllabus from "./CourseSyllabus";
 
-export { Navbar , ContactItem , Footer , CourseCard , TestimonialCard , Logo , UserIcon , UserCard  , AuthenticatedRoute , Instructor, ResourceTopic, ResourceVideo , FacultyCard , AuthLayout , OTPInput, ResetPassword };
+
+export {
+  Navbar,
+  ContactItem,
+  Footer,
+  CourseCard,
+  TestimonialCard,
+  Logo,
+  UserIcon,
+  UserCard,
+  AuthenticatedRoute,
+  Instructor,
+  ResourceTopic,
+  ResourceVideo,
+  FacultyCard,
+  AuthLayout,
+  OTPInput,
+  ResetPassword,
+  ProfileUpdateForm,
+  BuyNowCard,
+  CourseSyllabus
+};
