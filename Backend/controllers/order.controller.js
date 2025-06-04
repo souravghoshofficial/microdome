@@ -96,7 +96,10 @@ const verifyPayment = async (req, res) => {
      });
     }
 
-        const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
+     const payment = event.payload.payment.entity
+
+
+    const order = await Order.findOne({ razorpayOrderId: payment.order_id });
     if (!order) {
       return res.status(404).json({
         success: false,
@@ -104,7 +107,7 @@ const verifyPayment = async (req, res) => {
       });
     }   
 
-    order.razorpayPaymentId = razorpay_payment_id;      
+    order.razorpayPaymentId = payment.id;      
     order.status = 'Completed';
     await order.save();
 
@@ -126,7 +129,7 @@ const verifyPayment = async (req, res) => {
       razorpay_order_id,
       razorpay_payment_id,
     });
-    
+
   } catch (error) {
     console.error('Error verifying payment:', error);
     res.status(500).json({
