@@ -9,7 +9,7 @@ const courseSchema = new Schema({
     type: Number,
     required: true
    },
-   section: [
+   sections: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Section"

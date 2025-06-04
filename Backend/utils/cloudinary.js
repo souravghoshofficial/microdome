@@ -1,9 +1,8 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-
 import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
 // Configuration
 cloudinary.config({
@@ -15,19 +14,33 @@ cloudinary.config({
 const uploadOnCloudinary = async (localFilePath) => {
   try {
     if (!localFilePath) return null;
-    // upload the file on cloudinary
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
-    // file has been uploaded successfully
-    // console.log("file is uploaded on cloudinary ", response.url);
-    fs.unlinkSync(localFilePath); // unlink after uploading to cloudinary
+    fs.unlinkSync(localFilePath);
     return response;
   } catch (error) {
-    fs.unlinkSync(localFilePath); // remove the locally saved temporary file
-    // as the upload operation got failed
+    fs.unlinkSync(localFilePath);
     return null;
   }
 };
 
-export { uploadOnCloudinary };
+const deleteFromCloudinary = async (imageUrl) => {
+  try {
+    if (!imageUrl) return null;
+
+    // Extract public ID from Cloudinary URL
+    const urlParts = imageUrl.split("/");
+    const publicIdWithExtension = urlParts.slice(-2).join("/").split(".")[0];
+    const publicId = publicIdWithExtension.split("/").slice(1).join("/");
+
+    // Delete the image
+    const result = await cloudinary.uploader.destroy(publicId);
+    return result;
+  } catch (error) {
+    console.error("Error deleting image from Cloudinary:", error);
+    throw error;
+  }
+};
+
+export { uploadOnCloudinary, deleteFromCloudinary };

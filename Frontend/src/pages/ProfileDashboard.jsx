@@ -50,6 +50,13 @@ const ProfileDashboard = () => {
             </div>
           </div>
           <hr className="w-full h-0.5 my-5 text-gray-950/[.1] dark:text-gray-50/[.1]" />
+          <div>
+            <h3 className="font-semibold">Enrolled Courses</h3>
+            <div className="mt-6 flex items-center gap-2">
+              <RiMailLine size={16} />
+              <p className="text-sm">{userData?.enrolledCourses.length > 0 ? userData?.enrolledCourses.map((item) => (<h5 key={item}>{item}</h5>)) : "You haven't enrolled in  any course"}</p>
+            </div>
+          </div>
         </div>
         <div className="w-full lg:w-[75%] h-screen px-4 py-6 border border-gray-950/[.1] dark:border-gray-50/[.1]  lg:border-l-0">
           {" "}

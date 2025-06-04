@@ -1,38 +1,77 @@
-import React from "react";
+import {useEffect, useState} from "react";
+import axios from "axios";
+import { BuyNowCard , CourseSyllabus } from "../components";
+import { loadRazorpayScript } from "../utils/razorpay";
 
-import { Link } from "react-router";
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
-import { RiArrowDropRightLine } from "@remixicon/react";
-
-import { CourseCard } from "../components";
-
-const courseDetails = {
-  id: 3,
-  courseTitle: "M.Sc Entrance Batch",
-  subTitle: "Ace IIT JAM, CUET PG & Beyond",
-  courseTag: "M.Sc Entrance",
-  type: "recorded",
-  language: "hinglish",
-  courseImg:
-    "https://i.pinimg.com/736x/cf/e3/32/cfe332e963458f410c8cb6157a14e92e.jpg",
-  actualPrice: 3600,
-  discountedPrice: 3000,
-  linkAddress: "entrance-batch-recorded",
-};
 
 const EntranceBatchRecorded = () => {
+
+  const [courseDetails, setCourseDetails] = useState(null)
+  const [orderId, setOrderId] = useState("")
+
+  
+useEffect(() => {
+  axios.get(`${ApiUrl}/api/v1/courses/get-all-courses`, {}, {withCredentials: true})
+  .then((res) => {
+    console.log(res.data.courses[0]);
+    setCourseDetails(res.data.courses[0]);
+  })
+  .catch(() => console.log("Error fetching course details"))
+}, [])
+
+  const handlePayment = async () => {
+
+  axios.post(`${ApiUrl}/api/v1/orders/create-order`, {
+    courseId: courseDetails?._id, 
+    amount: courseDetails?.price, 
+  }, {
+    withCredentials: true, 
+  })
+  .then((res) => {
+    setOrderId(res.data.order.id)
+  })
+  .catch((err) => {
+    console.log(err);
+    return
+  })
+
+
+  const isScriptLoaded = await loadRazorpayScript();
+  if (!isScriptLoaded) {
+    alert("Razorpay SDK failed to load. Please try again later.");
+    return;
+  }
+
+  const options = {
+    key: import.meta.env.VITE_RAZORPAY_KEY_ID, 
+    amount: 100*(courseDetails?.price), // Amount in smallest currency unit
+    currency: "INR",
+    name: "Microdome Classes",
+    description: "Payment for M.Sc Entrance Batch",
+    image: "http://res.cloudinary.com/deljukiyr/image/upload/v1748880241/qi2txlfzapvqkqle8baa.jpg",
+    order_id: orderId, 
+    callback_url: `${ApiUrl}/api/v1/orders/verify-payment`, 
+    prefill: {
+      name: "Microdome Classes",
+      email: "microdomeclasses@gmail.com",
+      contact: "8478805171", 
+    },
+    notes: {
+      courseId: 123, 
+      userId: "USER_ID", 
+    },
+  };
+  const razorpay = new window.Razorpay(options);
+  razorpay.open();
+};
+
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="mt-8 w-full lg:w-[90%]  relative flex flex-col lg:flex-row justify-center lg:gap-10 lg:px-12 lg:py-6 mb-16">
+      <div className="mt-8 w-full lg:w-[90%]  relative flex flex-col-reverse lg:flex-row justify-center lg:gap-10 lg:px-12 lg:py-6 mb-16">
         <div className="w-[100vw] h-[108%] lg:h-96 absolute bg-slate-200/50 dark:bg-gray-800 z-10"></div>
         <div className="w-[90%] mx-auto lg:w-[60%] z-20 mt-16">
-          <div className="flex items-center gap-2 text-sm font-normal text-gray-600 dark:text-gray-300">
-            <Link to="/">Home</Link>
-            <RiArrowDropRightLine size={30} fontWeight={100} color="gray" />
-            <Link to="/courses">Courses</Link>
-            <RiArrowDropRightLine size={30} fontWeight={100} color="gray" />
-            <Link to="#">M.Sc Entrance Mastery</Link>
-          </div>
           <h3 className="mt-2 leading-10 text-2xl md:text-3xl font-bold">
             M.Sc. Entrance Mastery
           </h3>
@@ -41,20 +80,14 @@ const EntranceBatchRecorded = () => {
             from basics to advanced strategies for cracking IIT JAM, CUET PG,
             and other M.Sc. entrance exams — perfect for self-paced preparation.
           </h5>
+          <div className="w-full mt-4">
+            <CourseSyllabus />
+          </div>
         </div>
-        <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto lg:w-[28%] z-20">
-          <CourseCard
-            courseTitle={courseDetails.courseTitle}
-            subTitle={courseDetails.subTitle}
-            courseImg={courseDetails.courseImg}
-            courseTag={courseDetails.courseTag.toUpperCase()}
-            actualPrice={courseDetails.actualPrice}
-            discountedPrice={courseDetails.discountedPrice}
-            type={courseDetails.type.toUpperCase()}
-            language={courseDetails.language.toUpperCase()}
-            btnText="Buy Now"
-          />
+        <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto md:w-[50%] lg:w-[30%] z-20">
+          <BuyNowCard actualPrice={courseDetails?.price} handlePayment={handlePayment}/>
         </div>
+        
       </div>
     </div>
   );
