@@ -59,8 +59,10 @@ const createOrder = async (req, res) => {
 
 const verifyPayment = async (req, res) => {
   try {
-    const body = JSON.stringify(req.body); // For webhook verification
+    const body = JSON.stringify(req.body);
     const signature = req.headers["x-razorpay-signature"];
+    console.log(body , signature);
+    
 
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
