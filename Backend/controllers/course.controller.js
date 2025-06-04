@@ -75,7 +75,6 @@ const addSection = async (req,res)=>{
 
 const addLectureToASection = async (req,res)=>{
   const { sectionId,lectureId }= req.body;
-
   
   const existedSection = await Section.findById(sectionId);
 
