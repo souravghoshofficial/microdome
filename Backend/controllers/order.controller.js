@@ -58,22 +58,45 @@ const createOrder = async (req, res) => {
 }
 
 const verifyPayment = async (req, res) => {
-  const {razorpay_order_id, razorpay_payment_id, razorpay_signature} = req.body;
-  console.log(razorpay_order_id , razorpay_signature);
+  // const {razorpay_order_id, razorpay_payment_id, razorpay_signature} = req.body;
+  // console.log(razorpay_order_id , razorpay_signature);
   
-  try{
-    const generatedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(razorpay_order_id + '|' + razorpay_payment_id)
-      .digest('hex');
+  // try{
+  //   const generatedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+  //     .update(razorpay_order_id + '|' + razorpay_payment_id)
+  //     .digest('hex');
 
-    if(generatedSignature !== razorpay_signature) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid signature',
-      });
+  //   if(generatedSignature !== razorpay_signature) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       message: 'Invalid signature',
+  //     });
+  //   }
+
+  
+  try {
+    const body = await req.text();
+    const signature = req.headers.get("x-razorpay-signature");
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
+      .update(body)
+      .digest("hex");
+
+    if (signature !== expectedSignature) {
+      return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
 
-    const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
+    const event = JSON.parse(body);
+
+    if (event.event !== "payment.captured"){
+      return res.status(400).json({
+      success: false,
+      message: 'Invalid signature',
+     });
+    }
+
+        const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
     if (!order) {
       return res.status(404).json({
         success: false,
@@ -103,6 +126,7 @@ const verifyPayment = async (req, res) => {
       razorpay_order_id,
       razorpay_payment_id,
     });
+    
   } catch (error) {
     console.error('Error verifying payment:', error);
     res.status(500).json({
