@@ -4,7 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { generateOTP } from "../utils/generateOTP.js";
 import { sendOtpEmail } from "../utils/sendOTPEmail.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { uploadOnCloudinary , deleteFromCloudinary } from "../utils/cloudinary.js";
 import bcrypt from "bcrypt";
 
 
@@ -321,7 +321,18 @@ const updateUserAvatar = async (req, res) => {
     throw new ApiError(400, "Profile Image is missing");
   }
 
-  //TODO: delete old image - assignment
+    // Get the current user to check for existing profile image
+  const currentUser = await User.findById(req.user?._id);
+
+  // Delete old image if it exists
+  if (currentUser.profileImage) {
+    try {
+      await deleteFromCloudinary(currentUser.profileImage);
+    } catch (error) {
+      console.error("Error deleting old image:", error);
+      // Continue with upload even if deletion fails
+    }
+  }
 
   const profileImage = await uploadOnCloudinary(avatarLocalPath);
 
