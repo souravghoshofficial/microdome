@@ -9,6 +9,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const EntranceBatchRecorded = () => {
   const isLoggedIn = useSelector((state) => state.auth.status);
+  const userData = useSelector((state) => state.auth.userData);
   const [courseDetails, setCourseDetails] = useState(null);
 
   useEffect(() => {
@@ -25,7 +26,12 @@ const EntranceBatchRecorded = () => {
       .catch(() => console.log("Error fetching course details"));
   }, []);
 
+  const isEnrolled = userData?.enrolledCourses.includes(courseDetails?._id)
+
   const handlePayment = async () => {
+    if(isEnrolled){
+      return;
+    }
     if(!isLoggedIn){
       toast.warn("Login to enroll");
       return;
@@ -88,6 +94,7 @@ const EntranceBatchRecorded = () => {
           <BuyNowCard
             actualPrice={courseDetails?.price}
             handlePayment={handlePayment}
+            isEnrolled={isEnrolled}
           />
         </div>
       </div>
