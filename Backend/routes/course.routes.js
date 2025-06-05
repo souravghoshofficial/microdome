@@ -10,20 +10,22 @@ import {
     getFullCourse
 } from "../controllers/course.controller.js";
 
+import { authorizeRoles } from "../middlewares/role.middleware.js";
+
 const router=Router();
 
-router.route("/add-course").post(addCourse);
+router.route("/add-course").post(authorizeRoles("admin"),addCourse);
 
-router.route("/get-all-courses").get(getAllCourses);
+router.route("/get-all-courses").get(authorizeRoles("admin"),getAllCourses);
 
-router.route("/add-section").post(addSection);
+router.route("/add-section").post(authorizeRoles("admin"),addSection);
 
-router.route("/add-lecture").post(addLecture);
+router.route("/add-lecture").post(authorizeRoles("admin"),addLecture);
 
-router.route("/update-section").post(addLectureToASection);
+router.route("/update-section").post(authorizeRoles("admin"),addLectureToASection);
 
-router.route("/add-new-course").post(addNewCourse);
+router.route("/add-new-course").post(authorizeRoles("admin"),addNewCourse);
 
-router.route("/get-full-course").get(getFullCourse);
+router.route("/get-full-course").get(authorizeRoles("admin"),getFullCourse);
 
 export default router;

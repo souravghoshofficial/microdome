@@ -17,18 +17,19 @@ import {
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
+import { authorizeRoles } from "../middlewares/role.middleware.js";
 const router = Router();
 
-router.route("/register").post(registerUser);
-router.route("/verify-otp").post(verifyOTP);
-router.route("/resend-otp").post(resendOTP);
-router.route("/login").post(loginUser);
+router.route("/register").post(authorizeRoles("admin","user"),registerUser);
+router.route("/verify-otp").post(authorizeRoles("admin","user"),verifyOTP);
+router.route("/resend-otp").post(authorizeRoles("admin","user"),resendOTP);
+router.route("/login").post(authorizeRoles("admin","user"),loginUser);
 router.route("/forgot-password").post(forgotPassword);
-router.route("/verify-forgot-password-otp").post(verifyForgotPasswordOTP);
-router.route("/resend-forgot-password-otp").post(resendForgotPasswordOTP);
-router.route("/reset-password").post(resetPassword);
-router.route("/logout").post(verifyJWT, logoutUser);
-router.route("/current-user").get(verifyJWT, getCurrentUser);
+router.route("/verify-forgot-password-otp").post(authorizeRoles("admin","user"),verifyForgotPasswordOTP);
+router.route("/resend-forgot-password-otp").post(authorizeRoles("admin","user"),resendForgotPasswordOTP);
+router.route("/reset-password").post(authorizeRoles("admin","user"),resetPassword);
+router.route("/logout").post(authorizeRoles("admin","user"),verifyJWT, logoutUser);
+router.route("/current-user").get(authorizeRoles("admin","user"),verifyJWT, getCurrentUser);
 
 router
   .route("/update-user-profile-image")

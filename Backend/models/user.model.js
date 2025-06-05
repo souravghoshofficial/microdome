@@ -42,10 +42,10 @@ const userSchema = new Schema(
         ref: "Course",
       },
     ],
-    
-    isAdmin: {
-      type: Boolean,
-      default: false,
+    role: {
+    type: String,
+    required: true,
+    enum : ["admin","user"]
     },
     otp: {
       type: String,
