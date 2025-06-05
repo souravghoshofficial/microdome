@@ -17,7 +17,19 @@ const Courses = () => {
     },
     {
       id: 2,
-      courseTitle: "B.Sc Hons. Microbiology",
+      courseTitle: "M.Sc Entrance Batch",
+      subTitle: "Ace IIT JAM, CUET PG & Beyond",
+      courseTag: "M.Sc Entrance",
+      type: "recorded",
+      language: "hinglish",
+      courseImg: "https://i.pinimg.com/736x/cf/e3/32/cfe332e963458f410c8cb6157a14e92e.jpg",
+      actualPrice: 3600,
+      discountedPrice: 3000,
+      linkAddress: "entrance-batch-recorded"
+    },
+    {
+      id: 3,
+      courseTitle: "B.Sc Hons. Microbiology - Sem I",
       subTitle: "Ultimate guide to excel in the Microbiology",
       courseTag: "B.Sc Hons.",
       type: "live",
@@ -28,16 +40,64 @@ const Courses = () => {
       linkAddress: "bsc-hons-batch"
     },
     {
-      id: 3,
-      courseTitle: "M.Sc Entrance Batch",
-      subTitle: "Ace IIT JAM, CUET PG & Beyond",
-      courseTag: "M.Sc Entrance",
-      type: "recorded",
+      id: 4,
+      courseTitle: "B.Sc Hons. Microbiology - Sem II",
+      subTitle: "Ultimate guide to excel in the Microbiology",
+      courseTag: "B.Sc Hons.",
+      type: "live",
       language: "hinglish",
-      courseImg: "https://i.pinimg.com/736x/cf/e3/32/cfe332e963458f410c8cb6157a14e92e.jpg",
+      courseImg: "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
       actualPrice: 3600,
       discountedPrice: 3000,
-      linkAddress: "entrance-batch-recorded"
+      linkAddress: "bsc-hons-batch"
+    },
+    {
+      id: 5,
+      courseTitle: "B.Sc Hons. Microbiology - Sem III",
+      subTitle: "Ultimate guide to excel in the Microbiology",
+      courseTag: "B.Sc Hons.",
+      type: "live",
+      language: "hinglish",
+      courseImg: "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
+      actualPrice: 3600,
+      discountedPrice: 3000,
+      linkAddress: "bsc-hons-batch"
+    },
+    {
+      id: 6,
+      courseTitle: "B.Sc Hons. Microbiology - Sem IV",
+      subTitle: "Ultimate guide to excel in the Microbiology",
+      courseTag: "B.Sc Hons.",
+      type: "live",
+      language: "hinglish",
+      courseImg: "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
+      actualPrice: 3600,
+      discountedPrice: 3000,
+      linkAddress: "bsc-hons-batch"
+    },
+    {
+      id: 7,
+      courseTitle: "B.Sc Hons. Microbiology - Sem V",
+      subTitle: "Ultimate guide to excel in the Microbiology",
+      courseTag: "B.Sc Hons.",
+      type: "live",
+      language: "hinglish",
+      courseImg: "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
+      actualPrice: 3600,
+      discountedPrice: 3000,
+      linkAddress: "bsc-hons-batch"
+    },
+    {
+      id: 8,
+      courseTitle: "B.Sc Hons. Microbiology - Sem VI",
+      subTitle: "Ultimate guide to excel in the Microbiology",
+      courseTag: "B.Sc Hons.",
+      type: "live",
+      language: "hinglish",
+      courseImg: "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
+      actualPrice: 3600,
+      discountedPrice: 3000,
+      linkAddress: "bsc-hons-batch"
     },
   ]
   return (
