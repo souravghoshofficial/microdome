@@ -8,7 +8,7 @@ const instance = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-const createOrder = async (req, res) => {
+const createOrder = async (req, res) => {  
     const {courseId, amount} = req.body;  
     try {
         const options = {
@@ -40,8 +40,7 @@ const createOrder = async (req, res) => {
             status: 'Pending',
         });
         await newOrder.save();
-       
-
+      
         res.status(200).json({
             success: true,
             order,
@@ -60,15 +59,17 @@ const createOrder = async (req, res) => {
 const verifyPayment = async (req, res) => {
   try {
     const body = JSON.stringify(req.body);
-    const signature = req.headers['x-razorpay-signature'];
-    console.log(body , signature);
+    const signature = req.headers["x-razorpay-signature"];
+    console.log(body);
+    console.log(signature);
     
 
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
       .update(body)
       .digest("hex");
-
+      
+      
     if (signature !== expectedSignature) {
       return res.status(400).json({ success: false, message: "Invalid signature" });
     }

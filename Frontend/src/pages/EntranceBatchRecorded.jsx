@@ -1,74 +1,76 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { BuyNowCard , CourseSyllabus } from "../components";
+import { BuyNowCard, CourseSyllabus } from "../components";
 import { loadRazorpayScript } from "../utils/razorpay";
+import { useSelector} from "react-redux";
+import {toast , ToastContainer} from "react-toastify"
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
-
 const EntranceBatchRecorded = () => {
+  const isLoggedIn = useSelector((state) => state.auth.status);
+  const [courseDetails, setCourseDetails] = useState(null);
 
-  const [courseDetails, setCourseDetails] = useState(null)
-  const [orderId, setOrderId] = useState("")
-
-  
-useEffect(() => {
-  axios.get(`${ApiUrl}/api/v1/courses/get-all-courses`, {}, {withCredentials: true})
-  .then((res) => {
-    console.log(res.data.courses[0]);
-    setCourseDetails(res.data.courses[0]);
-  })
-  .catch(() => console.log("Error fetching course details"))
-}, [])
+  useEffect(() => {
+    axios
+      .get(
+        `${ApiUrl}/api/v1/courses/get-all-courses`,
+        {},
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log(res.data.courses[0]);
+        setCourseDetails(res.data.courses[0]);
+      })
+      .catch(() => console.log("Error fetching course details"));
+  }, []);
 
   const handlePayment = async () => {
+    if(!isLoggedIn){
+      toast.warn("Login to enroll");
+      return;
+    }
+    try {
+      const res = await axios.post(
+        `${ApiUrl}/api/v1/orders/create-order`,
+        {
+          courseId: courseDetails?._id,
+          amount: courseDetails?.price,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
-  axios.post(`${ApiUrl}/api/v1/orders/create-order`, {
-    courseId: courseDetails?._id, 
-    amount: courseDetails?.price, 
-  }, {
-    withCredentials: true, 
-  })
-  .then((res) => {
-    setOrderId(res.data.order.id)
-  })
-  .catch((err) => {
-    console.log(err);
-    return
-  })
+      // console.log(res.data);
 
+      const isScriptLoaded = await loadRazorpayScript();
+      if (!isScriptLoaded) {
+        alert("Razorpay SDK failed to load. Please try again later.");
+        return;
+      }
 
-  const isScriptLoaded = await loadRazorpayScript();
-  if (!isScriptLoaded) {
-    alert("Razorpay SDK failed to load. Please try again later.");
-    return;
-  }
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: 100 * courseDetails?.price,
+        currency: "INR",
+        name: "Microdome Classes",
+        description: "Payment for M.Sc Entrance Batch",
+        image: "http://res.cloudinary.com/deljukiyr/image/upload/v1748880241/qi2txlfzapvqkqle8baa.jpg",
+        order_id: res.data.order.id,
+      };
 
-  const options = {
-    key: import.meta.env.VITE_RAZORPAY_KEY_ID, 
-    amount: 100*(courseDetails?.price), // Amount in smallest currency unit
-    currency: "INR",
-    name: "Microdome Classes",
-    description: "Payment for M.Sc Entrance Batch",
-    image: "http://res.cloudinary.com/deljukiyr/image/upload/v1748880241/qi2txlfzapvqkqle8baa.jpg",
-    order_id: orderId, 
-    prefill: {
-      name: "Microdome Classes",
-      email: "microdomeclasses@gmail.com",
-      contact: "8478805171", 
-    },
-    notes: {
-      courseId: 123, 
-      userId: "USER_ID", 
-    },
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (err) {
+      console.log(err);
+    }
   };
-  const razorpay = new window.Razorpay(options);
-  razorpay.open();
-};
 
   return (
     <div className="w-full flex items-center justify-center">
       <div className="mt-8 w-full lg:w-[90%] flex flex-col-reverse lg:flex-row justify-center lg:gap-10 lg:px-12 lg:py-6 mb-16">
+        <ToastContainer />
         <div className="w-[90%] mx-auto lg:w-[60%] z-20 mt-16">
           <h3 className="mt-2 leading-10 text-2xl md:text-3xl font-bold">
             M.Sc. Entrance Mastery
@@ -83,9 +85,11 @@ useEffect(() => {
           </div>
         </div>
         <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto md:w-[50%] lg:w-[30%] z-20">
-          <BuyNowCard actualPrice={courseDetails?.price} handlePayment={handlePayment}/>
+          <BuyNowCard
+            actualPrice={courseDetails?.price}
+            handlePayment={handlePayment}
+          />
         </div>
-        
       </div>
     </div>
   );
