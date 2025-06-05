@@ -102,8 +102,7 @@ const CourseViewPage = () => {
         <div className="w-full md:w-[60%] p-4 flex-col items-center justify-center">
           <div className="w-full flex flex-col items-center justify-center">
             <iframe
-              width="840"
-              height="472"
+              className="w-full h-[55vw] md:w-[90%] md:h-[30vw]"
               src={videoURL}
               title="YouTube video player"
               frameborder="0"
@@ -114,8 +113,8 @@ const CourseViewPage = () => {
           </div>
         </div>
         <div className="w-full md:w-[40%]">
-          <div className="w-[90%] mx-auto p-4">
-            <h2 className="text-lg font-semibold">Course Content</h2>
+          <div className="w-full md:w-[90%] mx-auto p-4">
+            <h2 className="text-lg font-bold">Course Content</h2>
             <CourseSection
               videoURL={videoURL}
               setVideoURL={setVideoURL}
