@@ -89,8 +89,7 @@ export const getCourse = async({courseId}) => {
   .catch((err) => console.log(err))
 }
 
-const CourseViewPage = () => {
-  const data = useLoaderData()
+const CourseViewPage = ({data}) => {
 //   useEffect(() => {
 //     const handleRightClick = (e) => e.preventDefault();
 //     document.addEventListener("contextmenu", handleRightClick);
