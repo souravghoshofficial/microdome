@@ -2,6 +2,7 @@ import React from "react";
 import { UserIcon } from "../components";
 import { RiEditBoxLine } from "@remixicon/react";
 import { useSelector} from "react-redux";
+import { Link } from "react-router";
 
 import {
   RiGraduationCapLine,
@@ -53,8 +54,7 @@ const ProfileDashboard = () => {
           <div>
             <h3 className="font-semibold">Enrolled Courses</h3>
             <div className="mt-6 flex items-center gap-2">
-              <RiMailLine size={16} />
-              <p className="text-sm">{userData?.enrolledCourses.length > 0 ? userData?.enrolledCourses.map((item) => (<h5 key={item}>{item}</h5>)) : "You haven't enrolled in  any course"}</p>
+              <div className="text-sm">{userData?.enrolledCourses.length > 0 ? userData?.enrolledCourses.map((item) => (<Link to={"/my-course"} key={item}>{item}</Link>)) : <p>You haven't enrolled in  any course</p>}</div>
             </div>
           </div>
         </div>
