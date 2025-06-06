@@ -17,6 +17,7 @@ import EntranceBatchRecorded from "./EntranceBatchRecorded";
 import BScHonsBatch from "./BScHonsBatch";
 import EditUserDetails from "./EditUserDetails";
 import CourseViewPage from "./CourseViewPage";
+import { getCourse } from "./CourseViewPage";
 
 export {
   Landing,
@@ -38,4 +39,5 @@ export {
   BScHonsBatch,
   EditUserDetails,
   CourseViewPage,
+  getCourse
 };

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Logo, CourseSection } from "../components";
-import {useLoaderData} from "react-router"
+import { useLoaderData } from "react-router";
+import axios from "axios";
 
 // const course = {
 //   _id: "6839c2db6a602d469a28c55e",
@@ -77,10 +78,23 @@ import {useLoaderData} from "react-router"
 //   ],
 // };
 
+export const getCourse = async ({ params }) => {
+  try {
+    const res = await axios.get(
+      `${ApiUrl}/api/v1/courses/get-full-course/${params.id}`,
+      {},
+      { withCredentials: true }
+    );
+
+    return res.data.course;
+  } catch (err) {
+    console.error("Error fetching course:", err);
+    throw new Response("Course not found", { status: 404 });
+  }
+};
 
 const CourseViewPage = () => {
-
-const course = useLoaderData();
+  const course = useLoaderData();
 
   const [videoURL, setVideoURL] = useState(
     course.sections[0].lectures[0].videoURL
