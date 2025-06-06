@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { Logo, CourseSection } from "../components";
-import { useLoaderData } from "react-router";
 import axios from "axios";
+import { useParams } from "react-router";
 
 // const course = {
 //   _id: "6839c2db6a602d469a28c55e",
@@ -78,33 +78,41 @@ import axios from "axios";
 //   ],
 // };
 
-export const getCourse = async ({ params }) => {
-  try {
-    const res = await axios.get(
-      `${ApiUrl}/api/v1/courses/get-full-course/${params.id}`,
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
+
+const CourseViewPage = () => {
+   const { id } = useParams();
+  const [course, setCourse] = useState(null);
+
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const res = await axios.get(
+      `${ApiUrl}/api/v1/courses/get-full-course/${id}`,
       {},
       { withCredentials: true }
     );
+        setCourse(res.data.course);
+      } catch (err) {
+        console.error("Failed to fetch course", err);
+      }
+    };
 
-    return res.data.course;
-  } catch (err) {
-    console.error("Error fetching course:", err);
-    throw new Response("Course not found", { status: 404 });
-  }
-};
-
-const CourseViewPage = () => {
-  const course = useLoaderData();
+    fetchCourse();
+  }, [id]);
 
   const [videoURL, setVideoURL] = useState(
-    course.sections[0].lectures[0].videoURL
+    course?.sections[0].lectures[0].videoURL
   );
+
+  if (!course) return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
 
   return (
     <div className="w-full min-h-screen ">
       <div className="w-full px-8 py-3 flex items-center gap-4">
         <Logo className={"w-12 h-12"} />
-        <h1 className="text-xl font-bold">{course.name}</h1>
+        <h1 className="text-xl font-bold">{course?.name}</h1>
       </div>
       <div className="w-full mt-2 flex flex-col md:flex-row">
         <div className="w-full md:w-[60%] p-4 flex-col items-center justify-center">
@@ -126,7 +134,7 @@ const CourseViewPage = () => {
             <CourseSection
               videoURL={videoURL}
               setVideoURL={setVideoURL}
-              sections={course.sections}
+              sections={course?.sections}
             />
           </div>
         </div>

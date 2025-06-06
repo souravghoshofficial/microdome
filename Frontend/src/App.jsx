@@ -26,7 +26,6 @@ import {
   BScHonsBatch,
   EditUserDetails,
   CourseViewPage,
-  getCourse
 } from "./pages";
 import {
   Navbar,
@@ -113,7 +112,6 @@ const App = () => {
         <Route
           path="/my-course/:id"
           element={<CourseViewPage />}
-          loader={getCourse}
         />
       </Routes>
     </BrowserRouter>
