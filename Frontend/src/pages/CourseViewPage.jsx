@@ -3,7 +3,7 @@ import { Logo, CourseSection } from "../components";
 
 import note from "../assets/pdfs/OperonPart1.pdf"
 
-import {useLoaderData} from "react-router"
+import {data, useLoaderData} from "react-router"
 import axios from "axios";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -89,7 +89,7 @@ export const getCourse = async({courseId}) => {
   .catch((err) => console.log(err))
 }
 
-const CourseViewPage = ({data}) => {
+const CourseViewPage = () => {
 //   useEffect(() => {
 //     const handleRightClick = (e) => e.preventDefault();
 //     document.addEventListener("contextmenu", handleRightClick);
@@ -98,6 +98,8 @@ const CourseViewPage = ({data}) => {
 //       document.removeEventListener("contextmenu", handleRightClick);
 //     };
 //   }, []);
+
+const data = useLoaderData()
 
   const [videoURL, setVideoURL] = useState(
     data.course.sections[0].lectures[0].videoURL
