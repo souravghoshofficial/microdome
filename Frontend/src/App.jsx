@@ -26,7 +26,6 @@ import {
   BScHonsBatch,
   EditUserDetails,
   CourseViewPage,
-  getCourse
 } from "./pages";
 import {
   Navbar,
@@ -110,7 +109,20 @@ const App = () => {
         <Route path="/forgot-password" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <ForgotPassword />]} />
         </Route>
-        <Route loader={() => getCourse({courseId: "6839c2db6a602d469a28c55e"})} path="/my-course" element={<CourseViewPage />} />
+        <Route
+          loader={axios
+            .get(
+              `${ApiUrl}/api/v1/courses/get-full-course`,
+              { courseId: "6839c2db6a602d469a28c55e" },
+              { withCredentials: true }
+            )
+            .then((res) => {
+              return res.data;
+            })
+            .catch((err) => console.log(err))}
+          path="/my-course"
+          element={<CourseViewPage />}
+        />
       </Routes>
     </BrowserRouter>
   );

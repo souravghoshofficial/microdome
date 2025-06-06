@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
 import { Logo, CourseSection } from "../components";
 
-import note from "../assets/pdfs/OperonPart1.pdf"
 
-import {data, useLoaderData} from "react-router"
-import axios from "axios";
-const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+import {useLoaderData} from "react-router"
 
 // const course = {
 //   _id: "6839c2db6a602d469a28c55e",
@@ -82,12 +79,6 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 //   ],
 // };
 
-export const getCourse = async({courseId}) => {
-  axios
-  .get(`${ApiUrl}/api/v1/courses/get-full-course` , {courseId} , {withCredentials: true,})
-  .then((res) => {return res.data})
-  .catch((err) => console.log(err))
-}
 
 const CourseViewPage = () => {
 //   useEffect(() => {
