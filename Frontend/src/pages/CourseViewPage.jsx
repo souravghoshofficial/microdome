@@ -84,6 +84,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 const CourseViewPage = () => {
    const { id } = useParams();
   const [course, setCourse] = useState(null);
+  const [videoURL, setVideoURL] = useState(null);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -94,6 +95,7 @@ const CourseViewPage = () => {
       { withCredentials: true }
     );
         setCourse(res.data.course);
+        setVideoURL(res.data.course.sections[0].lectures[0].videoURL);
       } catch (err) {
         console.error("Failed to fetch course", err);
       }
@@ -104,10 +106,8 @@ const CourseViewPage = () => {
 
   
   if (!course) return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
+
   
-  const [videoURL, setVideoURL] = useState(
-    course?.sections[0].lectures[0].videoURL
-  );
 
   return (
     <div className="w-full min-h-screen ">
