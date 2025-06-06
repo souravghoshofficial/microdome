@@ -9,7 +9,6 @@ import {
   RiMailLine,
 } from "@remixicon/react";
 
-import { Link } from "react-router";
 
 
 const ProfileDashboard = () => {
