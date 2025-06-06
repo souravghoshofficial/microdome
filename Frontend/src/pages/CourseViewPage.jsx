@@ -102,11 +102,12 @@ const CourseViewPage = () => {
     fetchCourse();
   }, [id]);
 
+  
+  if (!course) return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
+  
   const [videoURL, setVideoURL] = useState(
     course?.sections[0].lectures[0].videoURL
   );
-
-  if (!course) return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
 
   return (
     <div className="w-full min-h-screen ">
