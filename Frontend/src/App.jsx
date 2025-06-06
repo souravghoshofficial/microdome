@@ -114,7 +114,7 @@ const App = () => {
           element={<CourseViewPage />}
           loader={async ({ params }) => {
             try {
-              const res = await axios.post(
+              const res = await axios.get(
                 `${ApiUrl}/api/v1/courses/get-full-course/${params.id}`,
                 {},
                 { withCredentials: true }
