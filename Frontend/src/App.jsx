@@ -110,18 +110,22 @@ const App = () => {
           <Route path="" element={[<Navbar />, <ForgotPassword />]} />
         </Route>
         <Route
-          loader={axios
-            .get(
-              `${ApiUrl}/api/v1/courses/get-full-course`,
-              { courseId: "6839c2db6a602d469a28c55e" },
-              { withCredentials: true }
-            )
-            .then((res) => {
-              return res.data;
-            })
-            .catch((err) => console.log(err))}
-          path="/my-course"
+          path="/my-course/:id"
           element={<CourseViewPage />}
+          loader={async ({ params }) => {
+            try {
+              const res = await axios.post(
+                `${ApiUrl}/api/v1/courses/get-full-course/${params.id}`,
+                {},
+                { withCredentials: true }
+              );
+
+              return res.data.course;
+            } catch (err) {
+              console.error("Error fetching course:", err);
+              throw new Response("Course not found", { status: 404 });
+            }
+          }}
         />
       </Routes>
     </BrowserRouter>

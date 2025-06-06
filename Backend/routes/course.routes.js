@@ -24,6 +24,6 @@ router.route("/update-section").post(addLectureToASection);
 
 router.route("/add-new-course").post(addNewCourse);
 
-router.route("/get-full-course").get(getFullCourse);
+router.route("/get-full-course/:id").get(getFullCourse);
 
 export default router;

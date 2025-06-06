@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Logo, CourseSection } from "../components";
-
-
 import {useLoaderData} from "react-router"
 
 // const course = {
@@ -81,26 +79,18 @@ import {useLoaderData} from "react-router"
 
 
 const CourseViewPage = () => {
-//   useEffect(() => {
-//     const handleRightClick = (e) => e.preventDefault();
-//     document.addEventListener("contextmenu", handleRightClick);
 
-//     return () => {
-//       document.removeEventListener("contextmenu", handleRightClick);
-//     };
-//   }, []);
-
-const data = useLoaderData()
+const course = useLoaderData();
 
   const [videoURL, setVideoURL] = useState(
-    data.course.sections[0].lectures[0].videoURL
+    course.sections[0].lectures[0].videoURL
   );
 
   return (
     <div className="w-full min-h-screen ">
       <div className="w-full px-8 py-3 flex items-center gap-4">
         <Logo className={"w-12 h-12"} />
-        <h1 className="text-xl font-bold">{data.course.name}</h1>
+        <h1 className="text-xl font-bold">{course.name}</h1>
       </div>
       <div className="w-full mt-2 flex flex-col md:flex-row">
         <div className="w-full md:w-[60%] p-4 flex-col items-center justify-center">
@@ -122,7 +112,7 @@ const data = useLoaderData()
             <CourseSection
               videoURL={videoURL}
               setVideoURL={setVideoURL}
-              sections={data.course.sections}
+              sections={course.sections}
             />
           </div>
         </div>
