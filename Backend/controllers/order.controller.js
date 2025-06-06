@@ -9,7 +9,7 @@ const instance = new Razorpay({
 });
 
 const createOrder = async (req, res) => {  
-    const {courseId, amount} = req.body;  
+    const {courseId, amount} = req.body; 
     try {
         const options = {
             amount: Number(amount) * 100, // Amount in smallest currency unit
@@ -40,7 +40,7 @@ const createOrder = async (req, res) => {
             status: 'Pending',
         });
         await newOrder.save();
-      
+    
         res.status(200).json({
             success: true,
             order,
@@ -62,7 +62,6 @@ const verifyPayment = async (req, res) => {
     const signature = req.headers["x-razorpay-signature"];
     console.log(body);
     console.log(signature);
-    
 
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
@@ -83,6 +82,7 @@ const verifyPayment = async (req, res) => {
     const payment = event.payload.payment.entity;
 
     const order = await Order.findOne({ razorpayOrderId: payment.order_id });
+
     if (!order) {
       return res.status(404).json({ success: false, message: "Order not found" });
     }
