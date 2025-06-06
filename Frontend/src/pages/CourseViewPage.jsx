@@ -1,7 +1,7 @@
 import { useState , useEffect } from "react";
 import { Logo, CourseSection } from "../components";
 import axios from "axios";
-import { useParams } from "react-router";
+import { useParams , Link } from "react-router";
 
 // const course = {
 //   _id: "6839c2db6a602d469a28c55e",
@@ -112,7 +112,9 @@ const CourseViewPage = () => {
   return (
     <div className="w-full min-h-screen ">
       <div className="w-full px-8 py-3 flex items-center gap-4">
-        <Logo className={"w-12 h-12"} />
+        <Link to="/">
+         <Logo className={"w-12 h-12"} />
+        </Link>
         <h1 className="text-xl font-bold">{course?.name}</h1>
       </div>
       <div className="w-full mt-2 flex flex-col md:flex-row">
