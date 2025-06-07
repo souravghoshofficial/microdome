@@ -5,6 +5,10 @@ export const isEnrolledInCourse = async (req, res, next) => {
     const userId = req.user.id; 
     const courseId = req.params.courseId || req.body.courseId;
 
+    if(!userId){
+      return res.status(400).json({ message: 'User ID is required' })
+    }
+
     if (!courseId) {
       return res.status(400).json({ message: 'Course ID is required' });
     }
