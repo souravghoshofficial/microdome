@@ -11,8 +11,8 @@ const Courses = () => {
       type: "live",
       language: "hinglish",
       courseImg: "https://i.pinimg.com/736x/5a/81/fc/5a81fca747dbe4f7b10c8e1102a5db32.jpg",
-      actualPrice: 4200,
-      discountedPrice: 3600,
+      actualPrice: 1500,
+      discountedPrice: 1200,
       linkAddress: "entrance-batch-live"
     },
     {
@@ -23,8 +23,8 @@ const Courses = () => {
       type: "recorded",
       language: "hinglish",
       courseImg: "https://i.pinimg.com/736x/cf/e3/32/cfe332e963458f410c8cb6157a14e92e.jpg",
-      actualPrice: 3600,
-      discountedPrice: 3000,
+      actualPrice: 6000,
+      discountedPrice: 4999,
       linkAddress: "entrance-batch-recorded"
     },
     {
