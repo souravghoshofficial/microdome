@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError";
 
 export const isEnrolledInCourse = async (req, res, next) => {
   try {
-    const userId = req.user.id; 
+    const userId = req.user._id; 
     const courseId = req.params.courseId || req.body.courseId;
 
     if(!userId){
