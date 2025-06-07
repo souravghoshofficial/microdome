@@ -1,5 +1,5 @@
-import { User } from "../models/user.model";
-import { ApiError } from "../utils/ApiError";
+import { User } from "../models/user.model.js";
+import { ApiError } from "../utils/ApiError.js";
 
 export const isEnrolledInCourse = async (req, res, next) => {
   try {
@@ -29,3 +29,4 @@ export const isEnrolledInCourse = async (req, res, next) => {
     throw new ApiError(500,"Server error");
   }
 };
+
