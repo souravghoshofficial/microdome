@@ -37,5 +37,5 @@ export {
   EntranceBatchRecorded,
   BScHonsBatch,
   EditUserDetails,
-  CourseViewPage
+  CourseViewPage,
 };

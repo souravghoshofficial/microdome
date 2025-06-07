@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const MAX_LENGTH = 250;
+const MAX_LENGTH = 210;
 
 const TestimonialCard = ({ name, message, imageUrl, designation }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -32,8 +32,7 @@ const TestimonialCard = ({ name, message, imageUrl, designation }) => {
         {shouldTruncate && (
           <button
             onClick={toggleReadMore}
-            className="text-blue-500 ml-1 underline"
-          >
+            className="text-blue-500 ml-1 underline cursor-pointer">
             {isExpanded ? "View Less" : "View More"}
           </button>
         )}
@@ -43,6 +42,4 @@ const TestimonialCard = ({ name, message, imageUrl, designation }) => {
 };
 
 export default TestimonialCard;
-
-
 

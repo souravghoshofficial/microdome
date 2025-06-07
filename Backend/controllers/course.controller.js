@@ -139,7 +139,7 @@ const addNewCourse = async(req, res) => {
 
 
 const getFullCourse = async (req, res) => {
-  const {courseId} = req.body;
+  const courseId = req.params.id;
 
   try {
     const course = await Course.findById(courseId)

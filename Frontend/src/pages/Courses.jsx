@@ -24,19 +24,19 @@ const Courses = () => {
       language: "hinglish",
       courseImg: "https://i.pinimg.com/736x/cf/e3/32/cfe332e963458f410c8cb6157a14e92e.jpg",
       actualPrice: 6000,
-      discountedPrice: 5000,
+      discountedPrice: 4999,
       linkAddress: "entrance-batch-recorded"
     },
     {
       id: 3,
-      courseTitle: "B.Sc Hons. Microbiology - Sem I",
+      courseTitle: "B.Sc Hons. Microbiology",
       subTitle: "Ultimate guide to excel in the Microbiology",
       courseTag: "B.Sc Hons.",
       type: "live",
       language: "hinglish",
       courseImg: "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
       actualPrice: 1300,
-      discountedPrice: 1000,
+      discountedPrice: 999,
       linkAddress: "bsc-hons-batch"
     },
     {
@@ -48,7 +48,7 @@ const Courses = () => {
       language: "hinglish",
       courseImg: "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
       actualPrice: 1300,
-      discountedPrice: 1000,
+      discountedPrice: 999,
       linkAddress: "bsc-hons-batch"
     },
     {
@@ -60,7 +60,7 @@ const Courses = () => {
       language: "hinglish",
       courseImg: "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
       actualPrice: 1300,
-      discountedPrice: 1000,
+      discountedPrice: 999,
       linkAddress: "bsc-hons-batch"
     },
     {
@@ -72,7 +72,7 @@ const Courses = () => {
       language: "hinglish",
       courseImg: "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
       actualPrice: 1300,
-      discountedPrice: 1000,
+      discountedPrice: 999,
       linkAddress: "bsc-hons-batch"
     },
     {

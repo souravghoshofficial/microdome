@@ -1,102 +1,121 @@
-import { useState, useEffect } from "react";
+import { useState , useEffect } from "react";
 import { Logo, CourseSection } from "../components";
+import axios from "axios";
+import { useParams , Link } from "react-router";
 
-import note from "../assets/pdfs/OperonPart1.pdf"
+// const course = {
+//   _id: "6839c2db6a602d469a28c55e",
+//   name: "Fullstack Mastery",
+//   price: 999,
+//   __v: 0,
+//   sections: [
+//     {
+//       _id: "6839c2db6a602d469a28c556",
+//       title: "Frontend Basics",
+//       lectures: [
+//         {
+//           _id: "6839c2db6a602d469a28c550",
+//           title: "HTML One Shot",
+//           videoURL:
+//             "https://www.youtube.com/embed/HcOc7P5BMi4?si=iEOBbQUtb9LkgEwx",
+//           noteTitle: "HTML Notes",
+//           noteURL: note,
+//           __v: 0,
+//         },
+//         {
+//           _id: "6839c2db6a602d469a28c552",
+//           title: "CSS One Shot",
+//           videoURL:
+//             "https://www.youtube.com/embed/ESnrn1kAD4E?si=XLFbmJ5tpqMD53zV",
+//           __v: 0,
+//         },
+//         {
+//           _id: "6839c2db6a602d469a28c554",
+//           title: "JavaScript One Shot",
+//           videoURL:
+//             "https://www.youtube.com/embed/VlPiVmYuoqw?si=-s2NZpV-eHO1RlsO",
+//           noteTitle: "JavaScript Notes",
+//           noteURL: note,
+//           __v: 0,
+//         },
+//       ],
+//       __v: 0,
+//     },
+//     {
+//       _id: "6839c2db6a602d469a28c55c",
+//       title: "Backend Basics",
+//       lectures: [
+//         {
+//           _id: "6839c2db6a602d469a28c558",
+//           title: "Node.js One Shot",
+//           videoURL:
+//             "https://www.youtube.com/embed/TlB_eWDSMt4?si=BO2UNY_WDZby-cbK",
+//           noteTitle: "Node Js Notes",
+//           noteURL: note,
+//           __v: 0,
+//         },
+//         {
+//           _id: "6839c2db6a602d469a28c55a",
+//           title: "MongoDB One Shot",
+//           videoURL:
+//             "https://www.youtube.com/embed/c2M-rlkkT5o?si=D4kUmwourKAxcdb_",
+//           noteTitle: "MongoDB Notes",
+//           noteURL: note,
+//           __v: 0,
+//         },
+//         {
+//           _id: "6839cb31f936983c2d6da19f",
+//           title: "DevOps One Shot",
+//           videoURL:
+//             "https://www.youtube.com/embed/sSRaakd95Nk?si=JoPIIf1JV1IdhRU6",
+//           noteTitle: "DevOps Notes",
+//           noteURL: note,
+//           __v: 0,
+//         },
+//       ],
+//       __v: 0,
+//     },
+//   ],
+// };
 
-const course = {
-  _id: "6839c2db6a602d469a28c55e",
-  name: "Fullstack Mastery",
-  price: 999,
-  __v: 0,
-  sections: [
-    {
-      _id: "6839c2db6a602d469a28c556",
-      title: "Frontend Basics",
-      lectures: [
-        {
-          _id: "6839c2db6a602d469a28c550",
-          title: "HTML One Shot",
-          videoURL:
-            "https://www.youtube.com/embed/HcOc7P5BMi4?si=iEOBbQUtb9LkgEwx",
-          noteTitle: "HTML Notes",
-          noteURL: note,
-          __v: 0,
-        },
-        {
-          _id: "6839c2db6a602d469a28c552",
-          title: "CSS One Shot",
-          videoURL:
-            "https://www.youtube.com/embed/ESnrn1kAD4E?si=XLFbmJ5tpqMD53zV",
-          __v: 0,
-        },
-        {
-          _id: "6839c2db6a602d469a28c554",
-          title: "JavaScript One Shot",
-          videoURL:
-            "https://www.youtube.com/embed/VlPiVmYuoqw?si=-s2NZpV-eHO1RlsO",
-          noteTitle: "JavaScript Notes",
-          noteURL: note,
-          __v: 0,
-        },
-      ],
-      __v: 0,
-    },
-    {
-      _id: "6839c2db6a602d469a28c55c",
-      title: "Backend Basics",
-      lectures: [
-        {
-          _id: "6839c2db6a602d469a28c558",
-          title: "Node.js One Shot",
-          videoURL:
-            "https://www.youtube.com/embed/TlB_eWDSMt4?si=BO2UNY_WDZby-cbK",
-          noteTitle: "Node Js Notes",
-          noteURL: note,
-          __v: 0,
-        },
-        {
-          _id: "6839c2db6a602d469a28c55a",
-          title: "MongoDB One Shot",
-          videoURL:
-            "https://www.youtube.com/embed/c2M-rlkkT5o?si=D4kUmwourKAxcdb_",
-          noteTitle: "MongoDB Notes",
-          noteURL: note,
-          __v: 0,
-        },
-        {
-          _id: "6839cb31f936983c2d6da19f",
-          title: "DevOps One Shot",
-          videoURL:
-            "https://www.youtube.com/embed/sSRaakd95Nk?si=JoPIIf1JV1IdhRU6",
-          noteTitle: "DevOps Notes",
-          noteURL: note,
-          __v: 0,
-        },
-      ],
-      __v: 0,
-    },
-  ],
-};
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
 
 const CourseViewPage = () => {
-//   useEffect(() => {
-//     const handleRightClick = (e) => e.preventDefault();
-//     document.addEventListener("contextmenu", handleRightClick);
+   const { id } = useParams();
+  const [course, setCourse] = useState(null);
+  const [videoURL, setVideoURL] = useState(null);
 
-//     return () => {
-//       document.removeEventListener("contextmenu", handleRightClick);
-//     };
-//   }, []);
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const res = await axios.get(
+      `${ApiUrl}/api/v1/courses/get-full-course/${id}`,
+      {},
+      { withCredentials: true }
+    );
+        setCourse(res.data.course);
+        setVideoURL(res.data.course.sections[0].lectures[0].videoURL);
+      } catch (err) {
+        console.error("Failed to fetch course", err);
+      }
+    };
 
-  const [videoURL, setVideoURL] = useState(
-    course.sections[0].lectures[0].videoURL
-  );
+    fetchCourse();
+  }, [id]);
+
+  
+  if (!course) return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
+
+  
 
   return (
     <div className="w-full min-h-screen ">
       <div className="w-full px-8 py-3 flex items-center gap-4">
-        <Logo className={"w-12 h-12"} />
-        <h1 className="text-xl font-bold">{course.name}</h1>
+        <Link to="/">
+         <Logo className={"w-12 h-12"} />
+        </Link>
+        <h1 className="text-xl font-bold">{course?.name}</h1>
       </div>
       <div className="w-full mt-2 flex flex-col md:flex-row">
         <div className="w-full md:w-[60%] p-4 flex-col items-center justify-center">
@@ -118,7 +137,7 @@ const CourseViewPage = () => {
             <CourseSection
               videoURL={videoURL}
               setVideoURL={setVideoURL}
-              sections={course.sections}
+              sections={course?.sections}
             />
           </div>
         </div>
