@@ -8,7 +8,7 @@ const instance = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-const createOrder = async (req, res) => {
+const createOrder = async (req, res) => {  
     const {courseId, amount} = req.body;  
     try {
         const options = {
@@ -40,8 +40,7 @@ const createOrder = async (req, res) => {
             status: 'Pending',
         });
         await newOrder.save();
-       
-
+      
         res.status(200).json({
             success: true,
             order,
@@ -58,59 +57,66 @@ const createOrder = async (req, res) => {
 }
 
 const verifyPayment = async (req, res) => {
-  const {razorpay_order_id, razorpay_payment_id, razorpay_signature} = req.body;
-  console.log(razorpay_order_id , razorpay_signature);
-  
-  try{
-    const generatedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(razorpay_order_id + '|' + razorpay_payment_id)
-      .digest('hex');
+  try {
+    const body = JSON.stringify(req.body);
+    const signature = req.headers["x-razorpay-signature"];
+    console.log(body);
+    console.log(signature);
+    
 
-    if(generatedSignature !== razorpay_signature) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid signature',
-      });
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
+      .update(body)
+      .digest("hex");
+      
+      
+    if (signature !== expectedSignature) {
+      return res.status(400).json({ success: false, message: "Invalid signature" });
     }
 
-    const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found',
-      });
-    }   
+    const event = req.body;
 
-    order.razorpayPaymentId = razorpay_payment_id;      
-    order.status = 'Completed';
+    if (event.event !== "payment.captured") {
+      return res.status(400).json({ success: false, message: "Unexpected event type" });
+    }
+
+    const payment = event.payload.payment.entity;
+
+    const order = await Order.findOne({ razorpayOrderId: payment.order_id });
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    order.razorpayPaymentId = payment.id;
+    order.status = "Completed";
     await order.save();
 
     const user = await User.findById(order.user);
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
-      });
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
     user.isPremiumMember = true;
-    user.enrolledCourses.push(order.course);
+    if (!user.enrolledCourses.includes(order.course)) {
+      user.enrolledCourses.push(order.course);
+    }
     await user.save();
 
     res.status(200).json({
       success: true,
-      message: 'Payment verified successfully',
-      razorpay_order_id,
-      razorpay_payment_id,
+      message: "Payment verified successfully",
+      razorpay_order_id: payment.order_id,
+      razorpay_payment_id: payment.id,
     });
+
   } catch (error) {
-    console.error('Error verifying payment:', error);
+    console.error("Error verifying payment:", error);
     res.status(500).json({
       success: false,
-      message: 'Payment verification failed',
+      message: "Payment verification failed",
       error: error.message,
     });
   }
-}
+};
 
 export {createOrder , verifyPayment};

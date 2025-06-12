@@ -21,10 +21,12 @@ import {
   ProfileDashboard,
   Resources,
   Faculties,
-  EntranceBatchLive,
-  EntranceBatchRecorded,
+  EntranceBatch,
   BScHonsBatch,
   EditUserDetails,
+  CourseViewPage,
+  Admin,
+  SemesterCourseLayout,
 } from "./pages";
 import {
   Navbar,
@@ -84,12 +86,17 @@ const App = () => {
 
           <Route path="/courses" element={<CourseLayout />}>
             <Route path="" element={<Courses />} />
-            <Route path="entrance-batch-live" element={<EntranceBatchLive />} />
             <Route
-              path="entrance-batch-recorded"
-              element={<EntranceBatchRecorded />}
+              path="/courses/:id"
+              element={<EntranceBatch />}
             />
-            <Route path="bsc-hons-batch" element={<BScHonsBatch />} />
+            <Route path="bsc-hons-batch" element={<CourseLayout />}>
+              <Route path="" element={<BScHonsBatch />} />
+              <Route
+                path="/courses/bsc-hons-batch/:id"
+                element={<SemesterCourseLayout />}
+              />
+            </Route>
           </Route>
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
@@ -108,6 +115,8 @@ const App = () => {
         <Route path="/forgot-password" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <ForgotPassword />]} />
         </Route>
+        <Route path="/my-course/:id" element={<CourseViewPage />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );

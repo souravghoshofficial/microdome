@@ -1,18 +1,23 @@
 import { Router } from "express";
 
-import { 
-    addCourse,
-    getAllCourses,
-    addSection,
-    addLecture,
-    addLectureToASection,
-    addNewCourse,
-    getFullCourse
+import {
+  createCourse,
+  getAllCourses,
+  addSection,
+  addLecture,
+  addLectureToASection,
+  addNewCourse,
+  getFullCourse,
+  getCourseDetails,
 } from "../controllers/course.controller.js";
 
-const router=Router();
+import { upload } from "../middlewares/multer.middleware.js";
 
-router.route("/add-course").post(addCourse);
+const router = Router();
+
+router
+  .route("/create-course")
+  .post(upload.fields([{ name: "courseImage", maxCount: 1 }]), createCourse);
 
 router.route("/get-all-courses").get(getAllCourses);
 
@@ -24,6 +29,6 @@ router.route("/update-section").post(addLectureToASection);
 
 router.route("/add-new-course").post(addNewCourse);
 
-router.route("/get-full-course").get(getFullCourse);
-
+router.route("/get-full-course/:id").get(getFullCourse);
+router.route("/get-course-details").post(getCourseDetails);
 export default router;

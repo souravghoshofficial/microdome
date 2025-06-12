@@ -12,7 +12,7 @@ import {
   logoutUser,
   getCurrentUser,
   updateUserAvatar,
-  updateAccountsDetails
+  updateAccountsDetails,
 } from "../controllers/user.controller.js";
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -39,5 +39,5 @@ router
   );
 
 router.route("/update-user-details").post(verifyJWT, updateAccountsDetails);
-export default router;
 
+export default router;

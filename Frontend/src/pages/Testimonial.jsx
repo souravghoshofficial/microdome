@@ -1,32 +1,38 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { TestimonialCard } from "../components";
-
+import Microdome from '../assets/microdome.jpg';
+import RoshniBanerjee from '../assets/RoshniBanerjee.webp';
+import DeeptakBiswas from '../assets/DeeptakBiswas.png';
 const studentsReview = [
   {
-    name: "Sourav Ghosh",
-    message: '"The Microdome classes transformed my preparation journey! Their resources and support were invaluable in my success."',
-    designation: "M.Sc in Biotechnology , IIT Delhi",
-    imageUrl : "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    name: "Shrestha Mandal",
+    message: '"Microdome changed the way I look at this subject — what once felt hard now feels easy,I always thought this subject was tough, but thanks to my mentor’s way of teaching, everything feels so much easier now! Their learning skills and the way they simplify even complex topics are truly inspiring.There’s no fear or hesitation when asking questions — it feels like talking to an elder sibling who genuinely cares.Thanks to Sayan Da n Akash da!"',
+    designation: "B.Sc in Microbiology , Kalyani Mahavidyalaya",
+    imageUrl : Microdome
   },
   {
-    name: "Abhijit Rabidas",
-    message: '"Microdome classes played a crucial role in my success! Their well-structured resources and dedicated support made my preparation journey smooth and effective. Highly recommended!"',
-    designation: "M.Sc in Microbiology , Banaras Hindu University",
-    imageUrl : "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    name: "Roshni Banerjee",
+    message: '"Microdome is a great experience......    The mentors at Microdome consistently support us by explaining concepts, providing detailed notes, and sharing class recordings. They also help us by informing us about entrance exam notices and guiding us through the process. Moreover, they patiently explain things as many times as needed until we fully understand......"',
+    designation: "B.Sc. in Microbiology, Kalyani Mahavidyalaya",
+    imageUrl : RoshniBanerjee
   },
   {
-    name: "Rohit Gupta",
-    message: '"An absolute game-changer! The Microdome classes provided exceptional guidance and top-notch resources that significantly boosted my confidence and performance."',
-    designation: "M.Sc in Biotechnology , Delhi University",
-    imageUrl : "https://images.pexels.com/photos/1121796/pexels-photo-1121796.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    name: "Mouli Sarma",
+    message: '"The experience is awesome till now...The mentors are so friendly and they are helping us in every way they can Quality of the online classes are increasing day by day and many more to come I wish "',
+    designation: "B.Sc in Microbiology , Kalyani Mahavidyalaya ",
+    imageUrl : Microdome
   },
   {
-    name: "Sayan Ganguly",
-    message: '"An absolute game-changer! The Microdome classes provided exceptional guidance and top-notch resources that significantly boosted my confidence and performance."',
-    designation: "M.Sc in Biotechnology , Delhi University",
-    imageUrl : "https://images.pexels.com/photos/1861594/pexels-photo-1861594.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+    name: "Deeptak Biswas",
+    message: '"My experience with MicroDome has been truly fantastic and inspiring. It is not all about making it through the syllabus—it is about actually understanding the subject and learning how to think like a scientist. The atmosphere is relaxed but intense, and it really inspires me to do better without stressing me out.The mentors, particularly Sayan Da, have assisted me in many ways that extend far beyond the mere act of teaching. They deconstruct abstract subjects into straightforward concepts and ensure that we know the ""why"" behind things and not merely the "what". They have always been present and willing to listen, and their commitment makes me want to remain strong, to obey them, and devoted to my ambitions.My theoretical knowledge has increased significantly since I have joined MicroDome. I have become more analytical in approach to questions, and I feel more confident in theoretical and practical subjects. I am much better equipped for competitive examinations and classworks. Above all, I have become more interested in molecular biology, microbiology and more systematic, consistent in approach to studying in general."',
+    designation: "B.Sc in Microbiology , Kalyani Mahavidyalaya ",
+    imageUrl : DeeptakBiswas
   },
+  {
+    name: "Simran Chowdhury",
+    message: '"Great!! Mentors are skilled, approachable, and teach with precision."',
+    designation: "B.Sc in Microbiology , Kalyani Mahavidyalaya ",
+    imageUrl : Microdome
+  }
 ];
 
 
