@@ -17,6 +17,8 @@ import EntranceBatchRecorded from "./EntranceBatchRecorded";
 import BScHonsBatch from "./BScHonsBatch";
 import EditUserDetails from "./EditUserDetails";
 import CourseViewPage from "./CourseViewPage";
+import Admin from "./Admin";
+import SemesterCourseLayout from "./SemesterCourseLayout"
 
 export {
   Landing,
@@ -38,4 +40,6 @@ export {
   BScHonsBatch,
   EditUserDetails,
   CourseViewPage,
+  Admin,
+  SemesterCourseLayout
 };

@@ -1,7 +1,3 @@
-import React from 'react'
-import { Link } from 'react-router'
-
-import {RiArrowDropRightLine} from "@remixicon/react"
 
 import { BuyNowCard, CourseSyllabus } from "../components";
 

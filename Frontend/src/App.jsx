@@ -26,6 +26,8 @@ import {
   BScHonsBatch,
   EditUserDetails,
   CourseViewPage,
+  Admin,
+  SemesterCourseLayout
 } from "./pages";
 import {
   Navbar,
@@ -38,6 +40,8 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
   const dispatch = useDispatch();
+
+  
 
   useEffect(() => {
     axios
@@ -85,12 +89,15 @@ const App = () => {
 
           <Route path="/courses" element={<CourseLayout />}>
             <Route path="" element={<Courses />} />
-            <Route path="entrance-batch-live" element={<EntranceBatchLive />} />
+            <Route path="m.sc-entrance-batch-live" element={<EntranceBatchLive />} />
             <Route
-              path="entrance-batch-recorded"
+              path="m.sc-entrance-batch-recorded"
               element={<EntranceBatchRecorded />}
             />
-            <Route path="bsc-hons-batch" element={<BScHonsBatch />} />
+            <Route path="bsc-hons-batch" element={<CourseLayout />}  >
+              <Route path="" element={<BScHonsBatch /> } />
+              <Route path="/courses/bsc-hons-batch/:id" element={<SemesterCourseLayout />} />
+            </Route>
           </Route>
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
@@ -113,6 +120,7 @@ const App = () => {
           path="/my-course/:id"
           element={<CourseViewPage />}
         />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );
