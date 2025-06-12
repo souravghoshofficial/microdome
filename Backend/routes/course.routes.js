@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { 
-    addCourse,
+    createCourse,
     getAllCourses,
     addSection,
     addLecture,
@@ -10,9 +10,11 @@ import {
     getFullCourse
 } from "../controllers/course.controller.js";
 
-const router=Router();
+import { upload } from "../middlewares/multer.middleware.js";
 
-router.route("/add-course").post(addCourse);
+const router = Router();
+
+router.route("/create-course").post(upload.fields([{name: "courseImage" , maxCount: 1}]) , createCourse);
 
 router.route("/get-all-courses").get(getAllCourses);
 

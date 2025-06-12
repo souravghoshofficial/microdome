@@ -1,12 +1,39 @@
 import mongoose , {Schema} from "mongoose"
 
 const courseSchema = new Schema({
-   name: {
+   title: {
      type: String,
      required: true
    },
-   price: {
+   subTitle: {
+     type: String,
+     required: true
+   },
+   courseTag: {
+    type: String
+   },
+   mode: {
+    type: String,
+    required: true
+   },
+   language: {
+    type: String,
+    required: true
+   },
+   courseImage: {
+    type: String,
+    required: true
+   },
+   actualPrice: {
     type: Number,
+    required: true
+   },
+   discountedPrice: {
+    type: Number,
+    required: true
+   },
+   linkAddress: {
+    type: String,
     required: true
    },
    sections: [

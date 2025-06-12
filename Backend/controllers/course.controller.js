@@ -3,18 +3,42 @@ import { ApiError } from "../utils/ApiError.js";
 import { Section } from "../models/section.model.js";
 import { Lecture } from "../models/lecture.model.js";
 
-const addCourse = async (req, res)=>{
-  const { name, price } = req.body;
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
-  const course = await Course.create({
-    name,price
+const createCourse = async (req, res)=>{
+  const {title , subTitle , courseTag , mode , language , actualPrice , discountedPrice} = req.body;
+  if(!(title && subTitle && mode && language && courseTag && actualPrice && discountedPrice)){
+    throw new ApiError(400 , "All fields are required")
+  }
+  const courseImageLocalPath = req.files?.courseImage[0]?.path;
 
+  if (!courseImageLocalPath) {
+    throw new ApiError(400, "Course Image is missing");
+  }
+
+  const uploadedcourseImage = await uploadOnCloudinary(courseImageLocalPath);
+
+  if (!uploadedcourseImage?.url) {
+    throw new ApiError(400, "Error while uploading the course image");
+  }
+
+  const linkAddress = title.trim().toLowerCase().replace(/\s+/g, '-')
+
+  try {
+
+      const course = await Course.create({
+        title , subTitle , courseTag , mode , language , actualPrice , discountedPrice , courseImage: uploadedcourseImage.url , linkAddress
   })
 
   res.status(200).json({
     message: "Course created successfully",
     course
   })
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong while creating course")
+  }
+
+
 }
 
 const getAllCourses = async (req,res)=>{
@@ -163,4 +187,4 @@ const getFullCourse = async (req, res) => {
   }
 };
 
-export {addCourse, getAllCourses, addSection, addLecture, addLectureToASection,  addNewCourse , getFullCourse};
+export {createCourse, getAllCourses, addSection, addLecture, addLectureToASection,  addNewCourse , getFullCourse};
