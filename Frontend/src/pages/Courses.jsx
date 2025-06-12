@@ -28,7 +28,7 @@ const Courses = () => {
   const SemesterCourse = [
     {
       id: 3,
-      title: "B.Sc Hons. Microbiology",
+      cardTitle: "B.Sc Hons. Microbiology",
       subTitle: "Ultimate guide to excel in the Microbiology",
       courseTag: "B.Sc Hons.",
       mode: "live",
@@ -55,7 +55,7 @@ const Courses = () => {
             <CourseCard
               key={course.id}
               imageHeight="h-65"
-              courseTitle={course.title}
+              courseTitle={course.cardTitle}
               subTitle={course.subTitle}
               type={course.mode.toUpperCase()}
               language={course.language.toUpperCase()}
@@ -70,7 +70,7 @@ const Courses = () => {
             <CourseCard
               key={course.id}
               imageHeight="h-65"
-              courseTitle={course.title}
+              courseTitle={course.cardTitle}
               subTitle={course.subTitle}
               type={course.mode.toUpperCase()}
               language={course.language.toUpperCase()}

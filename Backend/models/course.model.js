@@ -1,14 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
 const courseSchema = new Schema({
-  title: {
+  cardTitle: {  
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
   subTitle: {
     type: String,
-    required: true,
+    required: true
   },
   courseTag: {
     type: String,
@@ -37,6 +37,15 @@ const courseSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+  },
+  courseTitle: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  courseDescription: {
+    type: String,
+    required: true
   },
   sections: [
     {

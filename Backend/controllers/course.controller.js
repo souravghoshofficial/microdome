@@ -7,23 +7,27 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const createCourse = async (req, res) => {
   const {
-    title,
+    cardTitle,
     subTitle,
     courseTag,
     mode,
     language,
     actualPrice,
     discountedPrice,
+    courseTitle,
+    courseDescription
   } = req.body;
   if (
     !(
-      title &&
+      cardTitle &&
       subTitle &&
       mode &&
       language &&
       courseTag &&
       actualPrice &&
-      discountedPrice
+      discountedPrice &&
+      courseTitle &&
+      courseDescription
     )
   ) {
     throw new ApiError(400, "All fields are required");
@@ -41,11 +45,11 @@ const createCourse = async (req, res) => {
     throw new ApiError(400, "Error while uploading the course image");
   }
 
-  const linkAddress = title.trim().toLowerCase().replace(/\s+/g, "-");
+  const linkAddress = cardTitle.trim().toLowerCase().replace(/\s+/g, "-");
 
   try {
     const course = await Course.create({
-      title,
+      cardTitle,
       subTitle,
       courseTag,
       mode,
@@ -54,6 +58,8 @@ const createCourse = async (req, res) => {
       discountedPrice,
       courseImage: uploadedcourseImage.url,
       linkAddress,
+      courseTitle,
+      courseDescription
     });
 
     res.status(200).json({
