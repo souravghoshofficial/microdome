@@ -2,7 +2,15 @@ import React from 'react'
 
 const PremiumUsers = () => {
   return (
-    <div>PremiumUsers</div>
+    <div className='min-h-screen w-full '>
+
+      <header className="mb-8">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold text-blue-800">Premium Users</h1>
+          </div>
+        </header>
+
+    </div>
   )
 }
 

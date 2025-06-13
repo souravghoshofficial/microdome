@@ -67,6 +67,7 @@ const createCourse = async (req, res) => {
       course,
     });
   } catch (error) {
+    console.log(error);
     throw new ApiError(500, "Something went wrong while creating course");
   }
 };

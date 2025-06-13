@@ -2,6 +2,7 @@ import express from "express"
 import cookieParser from "cookie-parser";
 import cors from "cors"
 
+
 const app = express();
 
 app.use(cors({
@@ -30,12 +31,12 @@ app.get("/" , (req,res) => {
 import userRouter from "./routes/user.routes.js";
 import courseRouter from "./routes/course.routes.js"
 import orderRouter from "./routes/order.routes.js";
-
+import adminRouter from "./routes/admin.routes.js";
 //route declaration
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/courses",courseRouter);
 app.use("/api/v1/orders", orderRouter);
-
+app.use("/api/v1/admin",adminRouter);
 export { app }
 
 

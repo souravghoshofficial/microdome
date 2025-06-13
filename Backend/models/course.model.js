@@ -4,7 +4,7 @@ const courseSchema = new Schema({
   cardTitle: {  
     type: String,
     required: true,
-    unique: true
+    // unique: true
   },
   subTitle: {
     type: String,
@@ -36,12 +36,12 @@ const courseSchema = new Schema({
   linkAddress: {
     type: String,
     required: true,
-    unique: true,
+    // unique: true,
   },
   courseTitle: {
     type: String,
     required: true,
-    unique: true
+    // unique: true
   },
   courseDescription: {
     type: String,

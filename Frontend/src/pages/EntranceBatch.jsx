@@ -69,12 +69,29 @@ const liveBatch = {
   title: "M.Sc Entrance Examination Batch - Crack IIT JAM , CUET PG and More",
   description:
     "The most updated comprehensive course covering from basics to advanced levels for M.Sc. entrances including IIT JAM, CUET PG, and more. Perfect for students and aspirants aiming to crack top exams and secure admission to leading institutes.",
+
+  courseFeatures: [
+  "Live interactive classes led by top educators.",
+  "Unlimited access to recorded lectures after each live session.",
+  "Dedicated doubt-clearing sessions and personalized mentoring.",
+  "Detailed, well-structured notes provided for every topic.",
+  "Practice with previous year questions and full-length mock tests.",
+],
 };
+
 
 const recordedBatch = {
   title: "M.Sc. Entrance Mastery",
   description:
     " The most updated comprehensive recorded course covering everything from basics to advanced strategies for cracking IIT JAM, CUET PG, and other M.Sc. entrance exams — perfect for self-paced preparation.",
+
+  courseFeatures: [
+  "High-quality recorded lectures by top educators.",
+  "Access videos anytime, anywhere at your own pace.",
+  "Comprehensive coverage from basics to advance.",
+  "Detailed, well-structured notes provided for every topic.",
+  "Includes previous year questions and mock tests.",
+]
 };
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -111,7 +128,7 @@ const EntranceBatch = () => {
     }
     try {
       const res = await axios.post(
-        `${ApiUrl}/api/v1/orders/create-order`,
+        `/api/v1/orders/create-order`,
         {
           courseId: courseDetails?._id,
           amount: courseDetails?.discountedPrice,
@@ -149,16 +166,16 @@ const EntranceBatch = () => {
 
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="mt-8 w-full lg:w-[90%] flex flex-col-reverse lg:flex-row justify-center lg:gap-10 lg:px-12 lg:py-6 mb-16">
+      <div className="mt-8 w-full lg:w-[92%] flex flex-col-reverse lg:flex-row justify-center lg:gap-10 lg:px-12 lg:py-6 mb-16">
         <ToastContainer />
         <div className="w-[90%] mx-auto lg:w-[60%] z-20 mt-16">
           <h3 className="mt-2 leading-10 text-2xl md:text-3xl font-bold">
-            {id === "m.sc-entrance-batch-live"
-              ? liveBatch.title
-              : recordedBatch.title}
+            {id === "msc-entrance-batch-live" 
+            ? liveBatch.title
+            : recordedBatch.title}
           </h3>
           <h5 className="mt-2 w-[95%] text-[17px]">
-            {id === "m.sc-entrance-batch-live"
+            {id === "msc-entrance-batch-live"
               ? liveBatch.description
               : recordedBatch.description}
           </h5>
@@ -166,8 +183,11 @@ const EntranceBatch = () => {
             <CourseSyllabus syllabus={syllabus} />
           </div>
         </div>
-        <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto md:w-[50%] lg:w-[30%] z-20">
+        <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto md:w-[50%] lg:w-[36%] z-20">
           <BuyNowCard
+          courseFeatures={id === "msc-entrance-batch-live"
+              ? liveBatch.courseFeatures
+              : recordedBatch.courseFeatures}
             actualPrice={courseDetails?.actualPrice}
             discountedPrice={courseDetails?.discountedPrice}
             imageUrl={courseDetails?.courseImage}

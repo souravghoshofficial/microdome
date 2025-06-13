@@ -6,109 +6,508 @@ import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { useParams } from "react-router";
 
-const syllabus = [
+
+const syllabus = {
+  semester_i: [
   {
-    subject: "Biology",
-    topics: [
-      "Cell Biology",
-      "Biochemistry",
-      "Genetics",
-      "Molecular Biology",
-      "Evolution",
-      "Microbiology",
-      "Plant Biology",
-      "Animal Biology",
-      "Ecology",
-      "Biotechnology",
-      "Methods in Biology",
-      "Molecular biology techniques",
-    ],
+    subject: "Programming Fundamentals and Object Oriented Concepts",
+    
+      topics: [
+        "Procedural Programming Using C: Arrays, Functions, Pointers",
+        "Structures and IO Handling",
+        "File Operations and Pre-processing",
+        "Introduction to Object Oriented Programming and C++",
+        "Classes, Objects, Inheritance, Polymorphism",
+        "File Handling, Exception Handling, Templates and Namespaces",
+        "Introduction to STL and Case Studies"
+      ]
   },
   {
-    subject: "Chemistry",
+    subject: "Mathematical Foundations",
     topics: [
-      "Structure and properties of Atoms",
-      "Chemical kinetics, thermodynamics, and equilibrium",
-      "Chemistry of organic compounds",
-      "Instrumental techniques",
-    ],
+        "Procedural Programming Using C: Arrays, Functions, Pointers",
+        "Structures and IO Handling",
+        "File Operations and Pre-processing",
+        "Introduction to Object Oriented Programming and C++",
+        "Classes, Objects, Inheritance, Polymorphism",
+        "File Handling, Exception Handling, Templates and Namespaces",
+        "Introduction to STL and Case Studies"
+      ]
   },
   {
-    subject: "Mathematics",
+    subject: "Management Information Systems",
     topics: [
-      "Sets, Relations and Functions",
-      "Mathematical Induction",
-      "Complex numbers",
-      "Linear and Quadratic equations",
-      "Sequences and Series",
-      "Cartesian System of Rectangular Coordinates",
-      "Three-Dimensional Geometry",
-      "Permutations and Combinations",
-      "Binomial Theorem",
-      "Matrices and Determinants",
-      "Limits and Continuity",
-      "Differentiation and Integration",
-      "Probability and Statistics",
-    ],
+        "Procedural Programming Using C: Arrays, Functions, Pointers",
+        "Structures and IO Handling",
+        "File Operations and Pre-processing",
+        "Introduction to Object Oriented Programming and C++",
+        "Classes, Objects, Inheritance, Polymorphism",
+        "File Handling, Exception Handling, Templates and Namespaces",
+        "Introduction to STL and Case Studies"
+      ]
   },
   {
-    subject: "Physics",
+    subject: "Digital Systems",
     topics: [
-      "Motion in one and two dimensions",
-      "Laws of motion",
-      "Conservation of energy",
-      "System of particles and rotational motion",
-      "Thermal properties of matter",
-      "Heat and laws of thermodynamics",
-      "Kinetic theory of gases",
-    ],
+        "Procedural Programming Using C: Arrays, Functions, Pointers",
+        "Structures and IO Handling",
+        "File Operations and Pre-processing",
+        "Introduction to Object Oriented Programming and C++",
+        "Classes, Objects, Inheritance, Polymorphism",
+        "File Handling, Exception Handling, Templates and Namespaces",
+        "Introduction to STL and Case Studies"
+      ]
   },
-];
+],
 
-const semester1 = {
-  title: "B.Sc Hons Semester I",
-  description:
-    "This course is designed for Bsc hons students that will add no value to their life",
-};
+semester_ii: [
+  {
+    subject: "Data Structures and Algorithms",
+    topics: [
+      "Introduction, elementary data structures and their applications",
+      "Lists: ordered lists, representation of arrays, singly, doubly and circular linked lists, stacks, queues, dequeues, multiple stacks and queues, generalized lists",
+      "Applications: polynomial arithmetic, infix, postfix and prefix arithmetic expression conversion and evaluations",
+      "Trees: General and binary trees, traversals, threaded binary tree, Binary Search Trees, AVL trees, B Tree, B+ tree",
+      "Searching & Sorting: Linear Search, Hashing, Internal and External sort, Insertion sort, Bubble sort, Selection sort",
+      "Complexity Analysis: Complexity measures, Worst, Best and Average Case, Upper and Lower bounds, Order Notations",
+      "Divide and Conquer: Binary Search, Merge Sort, Quick Sort, Multiplication of Large Integers",
+      "Greedy Algorithms: Minimum spanning tree, Dijkstra’s Algorithm, Fractional Knapsack Problem, Scheduling problems",
+      "Dynamic Programming: Making change problem, 0-1 Knapsack Problem, Floyd’s algorithm, Chained Matrix Multiplication",
+      "NP-Completeness: Space and Time Complexity, P, NP, NP-hard, NP-complete, Concept of Reduction"
+    ]
+  },
+  {
+    subject: "Advanced Programming (JAVA and Python)",
+    topics: [
+      "Java: Properties of Java, JVM",
+      "OOP in Java: Classes, Objects, Methods, Constructors, Inheritance, Polymorphism, Packages, Interfaces, Wrapper Classes",
+      "Java Exception Handling",
+      "Java Threads and Synchronization",
+      "Java File Handling",
+      "Java GUI: Buttons, text fields, radio button, checkbox, list, event handling",
+      "Java Collection Classes",
+      "Python: Variables, Operators, Conditionals",
+      "Python Loops and Functions: While, For, Break, Recursion, Scope",
+      "Python Data Structures: List, Tuple, Set, Dictionary",
+      "Python String Operations",
+      "Python Modules: Importing, Standard Libraries, Namespaces, Packages",
+      "Python File and Exception Handling, System Commands (os, shutil, glob, etc.)",
+      "Python OOP: Class, Attributes, Methods, Inheritance, Overloading, Data Hiding",
+      "Python Regular Expressions",
+      "Python for Data Analysis: NumPy, Pandas, Matplotlib"
+    ]
+  },
+  {
+    subject: "Computer Organization and Architecture",
+    topics: [
+      "Basic structures and operational concepts, Instruction formats and execution, Addressing modes, Stacks, Queues, Subroutines",
+      "Control unit: Fetch/store, Register transfers, Hardwired and microprogrammed control, Pipelining",
+      "Fixed point and Floating point Arithmetic, Bit-slice processors, Emulation",
+      "Memory: RAM, ROM, Cache, Memory hierarchy, Virtual memory, Address translation, Secondary memories",
+      "I/O organization: Memory mapped and isolated I/O, DMA, Interrupts, Buses",
+      "RISC processors and Parallel processing"
+    ]
+  },
+  {
+    subject: "Operating Systems",
+    topics: [
+      "Introduction to Operating Systems",
+      "Batch-processing, Multiprogramming, Time sharing, Real-time systems",
+      "Process Management: PCB, Process states, Scheduling algorithms (FCFS, SJF, RR, etc.)",
+      "Threads: Kernel vs User threads, Multithreading models",
+      "Inter-process Communication (IPC): Shared memory, message passing, FIFO, semaphore, monitor",
+      "Process Synchronization: Critical section, Semaphores, Monitors, Deadlocks, Banker’s algorithm",
+      "Memory Management: Paging, Segmentation, Virtual memory, Page replacement (FIFO, LRU, Optimal), Thrashing",
+      "File Management: File operations, Allocation, Directory structures, File protection",
+      "Device Management: Disk scheduling (FCFS, SSTF, SCAN, etc.), RAID concepts",
+      "Protection and Security: Domains, Access control, Cryptography, User authentication",
+      "Case Studies"
+    ]
+  },
+  {
+    subject: "Database Management Systems",
+    topics: [
+      "Introduction: DBMS advantages, Data abstraction levels, Data independence",
+      "Database Models and Functional Components",
+      "Relational Model: Relations, Keys, Constraints",
+      "ER and EER Diagram Design",
+      "Relational Algebra and Relational Calculus",
+      "Structured Query Language (SQL)",
+      "Functional Dependencies and Normalization",
+      "Storage: Fixed/Variable records, File operations",
+      "Indexing: Primary, Clustering, Secondary, Multilevel, B/B+ Trees, Hashing",
+      "Query Optimization: Search strategies, Join strategies",
+      "Database Security",
+      "Oracle Architecture: PL/SQL, Triggers",
+      "Transaction and Recovery: Logging, Checkpoints",
+      "Concurrency Control: Locking, Timestamp protocols, Scheduling",
+      "Advanced DB Concepts: OODBMS, Other Query Languages"
+    ]
+  }
+],
 
-const semester2 = {
-  title: "B.Sc Hons Semester II",
-  description:
-    "This course is designed for Bsc hons students that will add no value to their life",
-};
+semester_iii: [
+  {
+    subject: "Data Structures and Algorithms",
+    topics: [
+      "Introduction, elementary data structures and their applications",
+      "Lists: ordered lists, representation of arrays, singly, doubly and circular linked lists, stacks, queues, dequeues, multiple stacks and queues, generalized lists",
+      "Applications: polynomial arithmetic, infix, postfix and prefix arithmetic expression conversion and evaluations",
+      "Trees: General and binary trees, traversals, threaded binary tree, Binary Search Trees, AVL trees, B Tree, B+ tree",
+      "Searching & Sorting: Linear Search, Hashing, Internal and External sort, Insertion sort, Bubble sort, Selection sort",
+      "Complexity Analysis: Complexity measures, Worst, Best and Average Case, Upper and Lower bounds, Order Notations",
+      "Divide and Conquer: Binary Search, Merge Sort, Quick Sort, Multiplication of Large Integers",
+      "Greedy Algorithms: Minimum spanning tree, Dijkstra’s Algorithm, Fractional Knapsack Problem, Scheduling problems",
+      "Dynamic Programming: Making change problem, 0-1 Knapsack Problem, Floyd’s algorithm, Chained Matrix Multiplication",
+      "NP-Completeness: Space and Time Complexity, P, NP, NP-hard, NP-complete, Concept of Reduction"
+    ]
+  },
+  {
+    subject: "Advanced Programming (JAVA and Python)",
+    topics: [
+      "Java: Properties of Java, JVM",
+      "OOP in Java: Classes, Objects, Methods, Constructors, Inheritance, Polymorphism, Packages, Interfaces, Wrapper Classes",
+      "Java Exception Handling",
+      "Java Threads and Synchronization",
+      "Java File Handling",
+      "Java GUI: Buttons, text fields, radio button, checkbox, list, event handling",
+      "Java Collection Classes",
+      "Python: Variables, Operators, Conditionals",
+      "Python Loops and Functions: While, For, Break, Recursion, Scope",
+      "Python Data Structures: List, Tuple, Set, Dictionary",
+      "Python String Operations",
+      "Python Modules: Importing, Standard Libraries, Namespaces, Packages",
+      "Python File and Exception Handling, System Commands (os, shutil, glob, etc.)",
+      "Python OOP: Class, Attributes, Methods, Inheritance, Overloading, Data Hiding",
+      "Python Regular Expressions",
+      "Python for Data Analysis: NumPy, Pandas, Matplotlib"
+    ]
+  },
+  {
+    subject: "Computer Organization and Architecture",
+    topics: [
+      "Basic structures and operational concepts, Instruction formats and execution, Addressing modes, Stacks, Queues, Subroutines",
+      "Control unit: Fetch/store, Register transfers, Hardwired and microprogrammed control, Pipelining",
+      "Fixed point and Floating point Arithmetic, Bit-slice processors, Emulation",
+      "Memory: RAM, ROM, Cache, Memory hierarchy, Virtual memory, Address translation, Secondary memories",
+      "I/O organization: Memory mapped and isolated I/O, DMA, Interrupts, Buses",
+      "RISC processors and Parallel processing"
+    ]
+  },
+  {
+    subject: "Operating Systems",
+    topics: [
+      "Introduction to Operating Systems",
+      "Batch-processing, Multiprogramming, Time sharing, Real-time systems",
+      "Process Management: PCB, Process states, Scheduling algorithms (FCFS, SJF, RR, etc.)",
+      "Threads: Kernel vs User threads, Multithreading models",
+      "Inter-process Communication (IPC): Shared memory, message passing, FIFO, semaphore, monitor",
+      "Process Synchronization: Critical section, Semaphores, Monitors, Deadlocks, Banker’s algorithm",
+      "Memory Management: Paging, Segmentation, Virtual memory, Page replacement (FIFO, LRU, Optimal), Thrashing",
+      "File Management: File operations, Allocation, Directory structures, File protection",
+      "Device Management: Disk scheduling (FCFS, SSTF, SCAN, etc.), RAID concepts",
+      "Protection and Security: Domains, Access control, Cryptography, User authentication",
+      "Case Studies"
+    ]
+  },
+  {
+    subject: "Database Management Systems",
+    topics: [
+      "Introduction: DBMS advantages, Data abstraction levels, Data independence",
+      "Database Models and Functional Components",
+      "Relational Model: Relations, Keys, Constraints",
+      "ER and EER Diagram Design",
+      "Relational Algebra and Relational Calculus",
+      "Structured Query Language (SQL)",
+      "Functional Dependencies and Normalization",
+      "Storage: Fixed/Variable records, File operations",
+      "Indexing: Primary, Clustering, Secondary, Multilevel, B/B+ Trees, Hashing",
+      "Query Optimization: Search strategies, Join strategies",
+      "Database Security",
+      "Oracle Architecture: PL/SQL, Triggers",
+      "Transaction and Recovery: Logging, Checkpoints",
+      "Concurrency Control: Locking, Timestamp protocols, Scheduling",
+      "Advanced DB Concepts: OODBMS, Other Query Languages"
+    ]
+  }
+],
 
-const semester3 = {
-  title: "B.Sc Hons Semester III",
-  description:
-    "This course is designed for Bsc hons students that will add no value to their life",
-};
+semester_iv: [
+  {
+    subject: "Data Structures and Algorithms",
+    topics: [
+      "Introduction, elementary data structures and their applications",
+      "Lists: ordered lists, representation of arrays, singly, doubly and circular linked lists, stacks, queues, dequeues, multiple stacks and queues, generalized lists",
+      "Applications: polynomial arithmetic, infix, postfix and prefix arithmetic expression conversion and evaluations",
+      "Trees: General and binary trees, traversals, threaded binary tree, Binary Search Trees, AVL trees, B Tree, B+ tree",
+      "Searching & Sorting: Linear Search, Hashing, Internal and External sort, Insertion sort, Bubble sort, Selection sort",
+      "Complexity Analysis: Complexity measures, Worst, Best and Average Case, Upper and Lower bounds, Order Notations",
+      "Divide and Conquer: Binary Search, Merge Sort, Quick Sort, Multiplication of Large Integers",
+      "Greedy Algorithms: Minimum spanning tree, Dijkstra’s Algorithm, Fractional Knapsack Problem, Scheduling problems",
+      "Dynamic Programming: Making change problem, 0-1 Knapsack Problem, Floyd’s algorithm, Chained Matrix Multiplication",
+      "NP-Completeness: Space and Time Complexity, P, NP, NP-hard, NP-complete, Concept of Reduction"
+    ]
+  },
+  {
+    subject: "Advanced Programming (JAVA and Python)",
+    topics: [
+      "Java: Properties of Java, JVM",
+      "OOP in Java: Classes, Objects, Methods, Constructors, Inheritance, Polymorphism, Packages, Interfaces, Wrapper Classes",
+      "Java Exception Handling",
+      "Java Threads and Synchronization",
+      "Java File Handling",
+      "Java GUI: Buttons, text fields, radio button, checkbox, list, event handling",
+      "Java Collection Classes",
+      "Python: Variables, Operators, Conditionals",
+      "Python Loops and Functions: While, For, Break, Recursion, Scope",
+      "Python Data Structures: List, Tuple, Set, Dictionary",
+      "Python String Operations",
+      "Python Modules: Importing, Standard Libraries, Namespaces, Packages",
+      "Python File and Exception Handling, System Commands (os, shutil, glob, etc.)",
+      "Python OOP: Class, Attributes, Methods, Inheritance, Overloading, Data Hiding",
+      "Python Regular Expressions",
+      "Python for Data Analysis: NumPy, Pandas, Matplotlib"
+    ]
+  },
+  {
+    subject: "Computer Organization and Architecture",
+    topics: [
+      "Basic structures and operational concepts, Instruction formats and execution, Addressing modes, Stacks, Queues, Subroutines",
+      "Control unit: Fetch/store, Register transfers, Hardwired and microprogrammed control, Pipelining",
+      "Fixed point and Floating point Arithmetic, Bit-slice processors, Emulation",
+      "Memory: RAM, ROM, Cache, Memory hierarchy, Virtual memory, Address translation, Secondary memories",
+      "I/O organization: Memory mapped and isolated I/O, DMA, Interrupts, Buses",
+      "RISC processors and Parallel processing"
+    ]
+  },
+  {
+    subject: "Operating Systems",
+    topics: [
+      "Introduction to Operating Systems",
+      "Batch-processing, Multiprogramming, Time sharing, Real-time systems",
+      "Process Management: PCB, Process states, Scheduling algorithms (FCFS, SJF, RR, etc.)",
+      "Threads: Kernel vs User threads, Multithreading models",
+      "Inter-process Communication (IPC): Shared memory, message passing, FIFO, semaphore, monitor",
+      "Process Synchronization: Critical section, Semaphores, Monitors, Deadlocks, Banker’s algorithm",
+      "Memory Management: Paging, Segmentation, Virtual memory, Page replacement (FIFO, LRU, Optimal), Thrashing",
+      "File Management: File operations, Allocation, Directory structures, File protection",
+      "Device Management: Disk scheduling (FCFS, SSTF, SCAN, etc.), RAID concepts",
+      "Protection and Security: Domains, Access control, Cryptography, User authentication",
+      "Case Studies"
+    ]
+  },
+  {
+    subject: "Database Management Systems",
+    topics: [
+      "Introduction: DBMS advantages, Data abstraction levels, Data independence",
+      "Database Models and Functional Components",
+      "Relational Model: Relations, Keys, Constraints",
+      "ER and EER Diagram Design",
+      "Relational Algebra and Relational Calculus",
+      "Structured Query Language (SQL)",
+      "Functional Dependencies and Normalization",
+      "Storage: Fixed/Variable records, File operations",
+      "Indexing: Primary, Clustering, Secondary, Multilevel, B/B+ Trees, Hashing",
+      "Query Optimization: Search strategies, Join strategies",
+      "Database Security",
+      "Oracle Architecture: PL/SQL, Triggers",
+      "Transaction and Recovery: Logging, Checkpoints",
+      "Concurrency Control: Locking, Timestamp protocols, Scheduling",
+      "Advanced DB Concepts: OODBMS, Other Query Languages"
+    ]
+  }
+],
 
-const semester4 = {
-  title: "B.Sc Hons Semester IV",
-  description:
-    "This course is designed for Bsc hons students that will add no value to their life",
-};
+semester_v: [
+  {
+    subject: "Data Structures and Algorithms",
+    topics: [
+      "Introduction, elementary data structures and their applications",
+      "Lists: ordered lists, representation of arrays, singly, doubly and circular linked lists, stacks, queues, dequeues, multiple stacks and queues, generalized lists",
+      "Applications: polynomial arithmetic, infix, postfix and prefix arithmetic expression conversion and evaluations",
+      "Trees: General and binary trees, traversals, threaded binary tree, Binary Search Trees, AVL trees, B Tree, B+ tree",
+      "Searching & Sorting: Linear Search, Hashing, Internal and External sort, Insertion sort, Bubble sort, Selection sort",
+      "Complexity Analysis: Complexity measures, Worst, Best and Average Case, Upper and Lower bounds, Order Notations",
+      "Divide and Conquer: Binary Search, Merge Sort, Quick Sort, Multiplication of Large Integers",
+      "Greedy Algorithms: Minimum spanning tree, Dijkstra’s Algorithm, Fractional Knapsack Problem, Scheduling problems",
+      "Dynamic Programming: Making change problem, 0-1 Knapsack Problem, Floyd’s algorithm, Chained Matrix Multiplication",
+      "NP-Completeness: Space and Time Complexity, P, NP, NP-hard, NP-complete, Concept of Reduction"
+    ]
+  },
+  {
+    subject: "Advanced Programming (JAVA and Python)",
+    topics: [
+      "Java: Properties of Java, JVM",
+      "OOP in Java: Classes, Objects, Methods, Constructors, Inheritance, Polymorphism, Packages, Interfaces, Wrapper Classes",
+      "Java Exception Handling",
+      "Java Threads and Synchronization",
+      "Java File Handling",
+      "Java GUI: Buttons, text fields, radio button, checkbox, list, event handling",
+      "Java Collection Classes",
+      "Python: Variables, Operators, Conditionals",
+      "Python Loops and Functions: While, For, Break, Recursion, Scope",
+      "Python Data Structures: List, Tuple, Set, Dictionary",
+      "Python String Operations",
+      "Python Modules: Importing, Standard Libraries, Namespaces, Packages",
+      "Python File and Exception Handling, System Commands (os, shutil, glob, etc.)",
+      "Python OOP: Class, Attributes, Methods, Inheritance, Overloading, Data Hiding",
+      "Python Regular Expressions",
+      "Python for Data Analysis: NumPy, Pandas, Matplotlib"
+    ]
+  },
+  {
+    subject: "Computer Organization and Architecture",
+    topics: [
+      "Basic structures and operational concepts, Instruction formats and execution, Addressing modes, Stacks, Queues, Subroutines",
+      "Control unit: Fetch/store, Register transfers, Hardwired and microprogrammed control, Pipelining",
+      "Fixed point and Floating point Arithmetic, Bit-slice processors, Emulation",
+      "Memory: RAM, ROM, Cache, Memory hierarchy, Virtual memory, Address translation, Secondary memories",
+      "I/O organization: Memory mapped and isolated I/O, DMA, Interrupts, Buses",
+      "RISC processors and Parallel processing"
+    ]
+  },
+  {
+    subject: "Operating Systems",
+    topics: [
+      "Introduction to Operating Systems",
+      "Batch-processing, Multiprogramming, Time sharing, Real-time systems",
+      "Process Management: PCB, Process states, Scheduling algorithms (FCFS, SJF, RR, etc.)",
+      "Threads: Kernel vs User threads, Multithreading models",
+      "Inter-process Communication (IPC): Shared memory, message passing, FIFO, semaphore, monitor",
+      "Process Synchronization: Critical section, Semaphores, Monitors, Deadlocks, Banker’s algorithm",
+      "Memory Management: Paging, Segmentation, Virtual memory, Page replacement (FIFO, LRU, Optimal), Thrashing",
+      "File Management: File operations, Allocation, Directory structures, File protection",
+      "Device Management: Disk scheduling (FCFS, SSTF, SCAN, etc.), RAID concepts",
+      "Protection and Security: Domains, Access control, Cryptography, User authentication",
+      "Case Studies"
+    ]
+  },
+  {
+    subject: "Database Management Systems",
+    topics: [
+      "Introduction: DBMS advantages, Data abstraction levels, Data independence",
+      "Database Models and Functional Components",
+      "Relational Model: Relations, Keys, Constraints",
+      "ER and EER Diagram Design",
+      "Relational Algebra and Relational Calculus",
+      "Structured Query Language (SQL)",
+      "Functional Dependencies and Normalization",
+      "Storage: Fixed/Variable records, File operations",
+      "Indexing: Primary, Clustering, Secondary, Multilevel, B/B+ Trees, Hashing",
+      "Query Optimization: Search strategies, Join strategies",
+      "Database Security",
+      "Oracle Architecture: PL/SQL, Triggers",
+      "Transaction and Recovery: Logging, Checkpoints",
+      "Concurrency Control: Locking, Timestamp protocols, Scheduling",
+      "Advanced DB Concepts: OODBMS, Other Query Languages"
+    ]
+  }
+],
 
-const semester5 = {
-  title: "B.Sc Hons Semester V",
-  description:
-    "This course is designed for Bsc hons students that will add no value to their life",
-};
+semester_vi: [
+  {
+    subject: "Data Structures and Algorithms",
+    topics: [
+      "Introduction, elementary data structures and their applications",
+      "Lists: ordered lists, representation of arrays, singly, doubly and circular linked lists, stacks, queues, dequeues, multiple stacks and queues, generalized lists",
+      "Applications: polynomial arithmetic, infix, postfix and prefix arithmetic expression conversion and evaluations",
+      "Trees: General and binary trees, traversals, threaded binary tree, Binary Search Trees, AVL trees, B Tree, B+ tree",
+      "Searching & Sorting: Linear Search, Hashing, Internal and External sort, Insertion sort, Bubble sort, Selection sort",
+      "Complexity Analysis: Complexity measures, Worst, Best and Average Case, Upper and Lower bounds, Order Notations",
+      "Divide and Conquer: Binary Search, Merge Sort, Quick Sort, Multiplication of Large Integers",
+      "Greedy Algorithms: Minimum spanning tree, Dijkstra’s Algorithm, Fractional Knapsack Problem, Scheduling problems",
+      "Dynamic Programming: Making change problem, 0-1 Knapsack Problem, Floyd’s algorithm, Chained Matrix Multiplication",
+      "NP-Completeness: Space and Time Complexity, P, NP, NP-hard, NP-complete, Concept of Reduction"
+    ]
+  },
+  {
+    subject: "Advanced Programming (JAVA and Python)",
+    topics: [
+      "Java: Properties of Java, JVM",
+      "OOP in Java: Classes, Objects, Methods, Constructors, Inheritance, Polymorphism, Packages, Interfaces, Wrapper Classes",
+      "Java Exception Handling",
+      "Java Threads and Synchronization",
+      "Java File Handling",
+      "Java GUI: Buttons, text fields, radio button, checkbox, list, event handling",
+      "Java Collection Classes",
+      "Python: Variables, Operators, Conditionals",
+      "Python Loops and Functions: While, For, Break, Recursion, Scope",
+      "Python Data Structures: List, Tuple, Set, Dictionary",
+      "Python String Operations",
+      "Python Modules: Importing, Standard Libraries, Namespaces, Packages",
+      "Python File and Exception Handling, System Commands (os, shutil, glob, etc.)",
+      "Python OOP: Class, Attributes, Methods, Inheritance, Overloading, Data Hiding",
+      "Python Regular Expressions",
+      "Python for Data Analysis: NumPy, Pandas, Matplotlib"
+    ]
+  },
+  {
+    subject: "Computer Organization and Architecture",
+    topics: [
+      "Basic structures and operational concepts, Instruction formats and execution, Addressing modes, Stacks, Queues, Subroutines",
+      "Control unit: Fetch/store, Register transfers, Hardwired and microprogrammed control, Pipelining",
+      "Fixed point and Floating point Arithmetic, Bit-slice processors, Emulation",
+      "Memory: RAM, ROM, Cache, Memory hierarchy, Virtual memory, Address translation, Secondary memories",
+      "I/O organization: Memory mapped and isolated I/O, DMA, Interrupts, Buses",
+      "RISC processors and Parallel processing"
+    ]
+  },
+  {
+    subject: "Operating Systems",
+    topics: [
+      "Introduction to Operating Systems",
+      "Batch-processing, Multiprogramming, Time sharing, Real-time systems",
+      "Process Management: PCB, Process states, Scheduling algorithms (FCFS, SJF, RR, etc.)",
+      "Threads: Kernel vs User threads, Multithreading models",
+      "Inter-process Communication (IPC): Shared memory, message passing, FIFO, semaphore, monitor",
+      "Process Synchronization: Critical section, Semaphores, Monitors, Deadlocks, Banker’s algorithm",
+      "Memory Management: Paging, Segmentation, Virtual memory, Page replacement (FIFO, LRU, Optimal), Thrashing",
+      "File Management: File operations, Allocation, Directory structures, File protection",
+      "Device Management: Disk scheduling (FCFS, SSTF, SCAN, etc.), RAID concepts",
+      "Protection and Security: Domains, Access control, Cryptography, User authentication",
+      "Case Studies"
+    ]
+  },
+  {
+    subject: "Database Management Systems",
+    topics: [
+      "Introduction: DBMS advantages, Data abstraction levels, Data independence",
+      "Database Models and Functional Components",
+      "Relational Model: Relations, Keys, Constraints",
+      "ER and EER Diagram Design",
+      "Relational Algebra and Relational Calculus",
+      "Structured Query Language (SQL)",
+      "Functional Dependencies and Normalization",
+      "Storage: Fixed/Variable records, File operations",
+      "Indexing: Primary, Clustering, Secondary, Multilevel, B/B+ Trees, Hashing",
+      "Query Optimization: Search strategies, Join strategies",
+      "Database Security",
+      "Oracle Architecture: PL/SQL, Triggers",
+      "Transaction and Recovery: Logging, Checkpoints",
+      "Concurrency Control: Locking, Timestamp protocols, Scheduling",
+      "Advanced DB Concepts: OODBMS, Other Query Languages"
+    ]
+  }
+],
+}
 
-const semester6 = {
-  title: "B.Sc Hons Semester VI",
-  description:
-    "This course is designed for Bsc hons students that will add no value to their life",
-};
+const courseFeatures = [
+  "Live interactive classes led by top educators.",
+  "Unlimited access to recorded lectures after each live session.",
+  "Dedicated doubt-clearing sessions and personalized mentoring.",
+  "Detailed, well-structured notes provided for every topic.",
+  "Practice with previous year questions and full-length mock tests.",
+]
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const SemesterCourseLayout = () => {
   const { id } = useParams();
+  const semester = id.replace(/-/g, '_');
+  console.log(semester);
   const isLoggedIn = useSelector((state) => state.auth.status);
   const userData = useSelector((state) => state.auth.userData);
   const [courseDetails, setCourseDetails] = useState(null);
-  const [semesterDatils, setSemesterDetails] = useState(null);
 
   useEffect(() => {
     axios
@@ -136,7 +535,7 @@ const SemesterCourseLayout = () => {
     }
     try {
       const res = await axios.post(
-        `${ApiUrl}/api/v1/orders/create-order`,
+        `/api/v1/orders/create-order`,
         {
           courseId: courseDetails?._id,
           amount: courseDetails?.discountedPrice,
@@ -174,25 +573,22 @@ const SemesterCourseLayout = () => {
 
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="mt-8 w-full lg:w-[90%] flex flex-col-reverse lg:flex-row justify-center lg:gap-10 lg:px-12 lg:py-6 mb-16">
+      <div className="mt-8 w-full lg:w-[92%] flex flex-col-reverse lg:flex-row justify-center lg:gap-10 lg:px-12 lg:py-6 mb-16">
         <ToastContainer />
         <div className="w-[90%] mx-auto lg:w-[60%] z-20 mt-16">
           <h3 className="mt-2 leading-10 text-2xl md:text-3xl font-bold">
-            {id === "m.sc-entrance-batch-live"
-              ? liveBatch.title
-              : recordedBatch.title}
+          {courseDetails?.courseTitle}
           </h3>
           <h5 className="mt-2 w-[95%] text-[17px]">
-            {id === "m.sc-entrance-batch-live"
-              ? liveBatch.description
-              : recordedBatch.description}
+            {courseDetails?.courseDescription}
           </h5>
           <div className="w-full mt-4">
-            <CourseSyllabus syllabus={syllabus} />
+            <CourseSyllabus syllabus={syllabus[semester]} />
           </div>
         </div>
-        <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto md:w-[50%] lg:w-[30%] z-20">
+        <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto md:w-[50%] lg:w-[36%] z-20">
           <BuyNowCard
+          courseFeatures={courseFeatures}
             actualPrice={courseDetails?.actualPrice}
             discountedPrice={courseDetails?.discountedPrice}
             imageUrl={courseDetails?.courseImage}

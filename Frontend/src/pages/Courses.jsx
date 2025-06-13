@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { CourseCard } from "../components";
-
+import demo_pic from "../assets/demo_pic.jpg";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const Courses = () => {
@@ -33,8 +33,7 @@ const Courses = () => {
       courseTag: "B.Sc Hons.",
       mode: "live",
       language: "hinglish",
-      courseImage:
-        "https://i.pinimg.com/736x/83/64/94/836494e86b6a554fa71fb47e858cf32c.jpg",
+      courseImage: demo_pic,
       actualPrice: 1200,
       discountedPrice: 999,
       linkAddress: "bsc-hons-batch",

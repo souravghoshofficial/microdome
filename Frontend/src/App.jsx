@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { login, logout } from "./features/auth/authSlice";
 
 import Layout from "./Layout.jsx";
+import { Dashboard,AddCourse,AddLecture,AddSection,AllUsers,PremiumUsers } from "./components/Admin";
 import {
   Signup,
   Login,
@@ -46,7 +47,7 @@ const App = () => {
       //   withCredentials: true,
       // })
 
-      .get(`${ApiUrl}/api/v1/users/current-user`, {
+      .get(`/api/v1/users/current-user`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -116,7 +117,18 @@ const App = () => {
           <Route path="" element={[<Navbar />, <ForgotPassword />]} />
         </Route>
         <Route path="/my-course/:id" element={<CourseViewPage />} />
-        <Route path="/admin" element={<Admin />} />
+
+        <Route path="/admin" element={<Admin />}>
+
+        <Route path="dashboard" element={<Dashboard />} />
+
+        <Route path="create-a-course" element={< AddCourse/>} />
+        <Route path="add-lecture" element={< AddLecture />} />
+        <Route path="add-section" element={< AddSection />} />
+
+        <Route path="all-users" element={< AllUsers/>} />
+        <Route path="premium-users" element={< PremiumUsers />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

@@ -70,7 +70,7 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
 
     axios
       .post(
-        `${ApiUrl}/api/v1/users/${verifyOtpApiEndpoint}`,
+        `/api/v1/users/${verifyOtpApiEndpoint}`,
         {
           email: email,
           otp: fullOTP,
@@ -111,7 +111,7 @@ const OTPInput = ({email , context, verifyOtpApiEndpoint , resendOtpApiEndpoint 
 
      axios
       .post(
-        `${ApiUrl}/api/v1/users/${resendOtpApiEndpoint}`,
+        `/api/v1/users/${resendOtpApiEndpoint}`,
         {
           email: email,
         },

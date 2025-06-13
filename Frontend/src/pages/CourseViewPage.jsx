@@ -115,7 +115,7 @@ const CourseViewPage = () => {
         <Link to="/">
          <Logo className={"w-12 h-12"} />
         </Link>
-        <h1 className="text-xl font-bold">{course?.name}</h1>
+        <h1 className="text-xl font-bold">{course?.cardTitle}</h1>
       </div>
       <div className="w-full mt-2 flex flex-col md:flex-row">
         <div className="w-full md:w-[60%] p-4 flex-col items-center justify-center">
