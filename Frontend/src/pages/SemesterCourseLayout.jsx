@@ -512,7 +512,7 @@ const SemesterCourseLayout = () => {
   useEffect(() => {
     axios
       .post(
-        `/api/v1/courses/get-course-details`,
+        `${ApiUrl}/api/v1/courses/get-course-details`,
         { linkAddress: id },
         { withCredentials: true }
       )
@@ -535,7 +535,7 @@ const SemesterCourseLayout = () => {
     }
     try {
       const res = await axios.post(
-        `/api/v1/orders/create-order`,
+        `${ApiUrl}/api/v1/orders/create-order`,
         {
           courseId: courseDetails?._id,
           amount: courseDetails?.discountedPrice,
@@ -544,8 +544,6 @@ const SemesterCourseLayout = () => {
           withCredentials: true,
         }
       );
-
-      // console.log(res.data);
 
       const isScriptLoaded = await loadRazorpayScript();
       if (!isScriptLoaded) {

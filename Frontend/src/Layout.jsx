@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./index.css";
 import { Outlet } from "react-router";
 import { Navbar, Footer } from "./components";
@@ -29,8 +29,6 @@ const Layout = () => {
             Join Now
         </a>
       </div>
-
-
       
       <div
         onClick={() => setShowMessage((prev) => !prev)}

@@ -2,6 +2,7 @@ import { TestimonialCard } from "../components";
 import Microdome from '../assets/microdome.jpg';
 import RoshniBanerjee from '../assets/RoshniBanerjee.webp';
 import DeeptakBiswas from '../assets/DeeptakBiswas.png';
+
 const studentsReview = [
   {
     name: "Shrestha Mandal",
@@ -36,18 +37,8 @@ const studentsReview = [
 ];
 
 
-const Enroll = () => {
+const Testimonial = () => {
  
-  // const [studentsReview, setStudentsReview] = useState([])
-  
-  // useEffect(() => {
-  //   axios.get('/api/testimonial')
-  //   .then((response) => {setStudentsReview(response.data)})
-  //   .catch((error) => {console.log(error);
-  //   })
-  // }, [])
-  
-
   return (
     <div id="testimonial" className="my-8 md:my-16 w-full flex items-center justify-center">
      <div className="w-[90%]">
@@ -66,4 +57,4 @@ const Enroll = () => {
   );
 };
  
-export default Enroll;
+export default Testimonial;

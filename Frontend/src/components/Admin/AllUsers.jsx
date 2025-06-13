@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import userImage from "../../assets/user-img.jpeg";
 import axios from "axios";
 
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
 
 export default function AllUsers() {
+
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 
   useEffect(() => {
-    axios.get(`/api/v1/admin/get-all-users`, { withCredentials: true })
+    axios.get(`${ApiUrl}/api/v1/admin/get-all-users`, { withCredentials: true })
       .then((res) => setUsers(res.data.users))
       .catch((err) => console.log(err));
   }, []);

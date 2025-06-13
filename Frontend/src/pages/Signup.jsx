@@ -54,7 +54,7 @@ const Signup = () => {
 
     axios
       .post(
-        `/api/v1/users/register`,
+        `${ApiUrl}/api/v1/users/register`,
         {
           name: name,
           email: email,
@@ -65,8 +65,6 @@ const Signup = () => {
         }
       )
       .then((res) => {
-        // dispatch(logout())
-        // dispatch(login(res.data.data.user));
         setName("");
         setPassword("");
         toast.success("OTP send to your email");

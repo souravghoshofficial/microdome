@@ -1,4 +1,3 @@
-import React from "react";
 import { UserIcon } from "../components";
 import { RiEditBoxLine } from "@remixicon/react";
 import { useSelector} from "react-redux";
@@ -53,7 +52,7 @@ const ProfileDashboard = () => {
           <div>
             <h3 className="font-semibold">Enrolled Courses</h3>
             <div className="mt-6 flex items-center gap-2">
-              <div className="text-sm">{userData?.enrolledCourses.length > 0 ? userData?.enrolledCourses.map((item) => (<Link to={`/my-course/${item}`} key={item}>{item}</Link>)) : <p>You haven't enrolled in  any course</p>}</div>
+              <div className="text-sm">{userData?.enrolledCourses.length > 0 ? userData?.enrolledCourses.map((item) => (<Link className="block mt-1" to={`/my-course/${item}`} key={item}>{item}</Link>)) : <p>You haven't enrolled in  any course</p>}</div>
             </div>
           </div>
         </div>
