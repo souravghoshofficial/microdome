@@ -5,6 +5,8 @@ import { loadRazorpayScript } from "../utils/razorpay";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { useParams, useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { login } from "../features/auth/authSlice";
 
 const syllabus = {
   semester_i: [
@@ -503,6 +505,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 const SemesterCourseLayout = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const semester = id.replace(/-/g, "_");
   console.log(semester);
   const isLoggedIn = useSelector((state) => state.auth.status);

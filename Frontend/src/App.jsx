@@ -55,7 +55,7 @@ const App = () => {
         console.log(err.message);
         dispatch(logout());
       });
-  });
+  }, []);
 
   const [loader, setLoader] = useState(false);
 
