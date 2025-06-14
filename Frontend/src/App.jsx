@@ -112,7 +112,7 @@ const App = () => {
         <Route path="/forgot-password" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <ForgotPassword />]} />
         </Route>
-        <Route path="/my-course/:id" element={<CourseViewPage />} />
+        <Route path="/my-courses/:id" element={<CourseViewPage />} />
 
         <Route path="/admin" element={<Admin />}>
 

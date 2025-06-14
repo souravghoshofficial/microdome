@@ -1,7 +1,9 @@
 import Razorpay from 'razorpay';
 import { Order } from '../models/order.model.js';
 import { User } from '../models/user.model.js';
+import { Course } from "../models/course.model.js"
 import crypto from 'crypto';
+import { sendCourseConfirmationEmail } from '../utils/sendEmail.js';
 
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -101,6 +103,16 @@ const verifyPayment = async (req, res) => {
       user.enrolledCourses.push(order.course);
     }
     await user.save();
+
+    const courseDetails = await Course.findById(order.course)
+    
+
+    await sendCourseConfirmationEmail({
+      to: user.email,
+      studentName: user.name,
+      courseTitle: courseDetails.courseTitle,
+      accessLink: `https://microdomeclasses.in/my-courses/${courseDetails._id}`
+    })
 
     res.status(200).json({
       success: true,

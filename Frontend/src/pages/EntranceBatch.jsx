@@ -66,10 +66,6 @@ const syllabus = [
 ];
 
 const liveBatch = {
-  title: "M.Sc Entrance Examination Batch - Crack IIT JAM , CUET PG and More",
-  description:
-    "The most updated comprehensive course covering from basics to advanced levels for M.Sc. entrances including IIT JAM, CUET PG, and more. Perfect for students and aspirants aiming to crack top exams and secure admission to leading institutes.",
-
   courseFeatures: [
   "Live interactive classes led by top educators.",
   "Unlimited access to recorded lectures after each live session.",
@@ -81,10 +77,6 @@ const liveBatch = {
 
 
 const recordedBatch = {
-  title: "M.Sc. Entrance Mastery",
-  description:
-    " The most updated comprehensive recorded course covering everything from basics to advanced strategies for cracking IIT JAM, CUET PG, and other M.Sc. entrance exams — perfect for self-paced preparation.",
-
   courseFeatures: [
   "High-quality recorded lectures by top educators.",
   "Access videos anytime, anywhere at your own pace.",
@@ -169,14 +161,10 @@ const EntranceBatch = () => {
         <ToastContainer />
         <div className="w-[90%] mx-auto lg:w-[60%] z-20 mt-16">
           <h3 className="mt-2 leading-10 text-2xl md:text-3xl font-bold">
-            {id === "msc-entrance-batch-live" 
-            ? liveBatch.title
-            : recordedBatch.title}
+            {courseDetails?.courseTitle}
           </h3>
           <h5 className="mt-2 w-[95%] text-[17px]">
-            {id === "msc-entrance-batch-live"
-              ? liveBatch.description
-              : recordedBatch.description}
+            {courseDetails?.courseDescription}
           </h5>
           <div className="w-full mt-4">
             <CourseSyllabus syllabus={syllabus} />

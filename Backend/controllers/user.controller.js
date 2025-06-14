@@ -3,7 +3,7 @@ import { TempUser } from "../models/tempUser.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { generateOTP } from "../utils/generateOTP.js";
-import { sendOtpEmail } from "../utils/sendOTPEmail.js";
+import { sendOtpEmail } from "../utils/sendEmail.js";
 import {
   uploadOnCloudinary,
   deleteFromCloudinary,
