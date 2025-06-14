@@ -18,6 +18,7 @@ import ProfileUpdateForm from "./UpdateUserDetails";
 import BuyNowCard from "./BuyNowCard";
 import CourseSyllabus from "./CourseSyllabus";
 import CourseSection from "./CourseSection";
+import PaymentSuccess from "./PaymentSucess";
 
 
 export {
@@ -40,5 +41,6 @@ export {
   ProfileUpdateForm,
   BuyNowCard,
   CourseSyllabus,
-  CourseSection
+  CourseSection,
+  PaymentSuccess
 };

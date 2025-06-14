@@ -4,7 +4,7 @@ import { BuyNowCard, CourseSyllabus } from "../components";
 import { loadRazorpayScript } from "../utils/razorpay";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import { useParams , useNavigate } from "react-router";
+import { useParams, useNavigate } from "react-router";
 
 const syllabus = [
   {
@@ -67,23 +67,22 @@ const syllabus = [
 
 const liveBatch = {
   courseFeatures: [
-  "Live interactive classes led by top educators.",
-  "Unlimited access to recorded lectures after each live session.",
-  "Dedicated doubt-clearing sessions and personalized mentoring.",
-  "Detailed, well-structured notes provided for every topic.",
-  "Practice with previous year questions and full-length mock tests.",
-],
+    "Live interactive classes led by top educators.",
+    "Unlimited access to recorded lectures after each live session.",
+    "Dedicated doubt-clearing sessions and personalized mentoring.",
+    "Detailed, well-structured notes provided for every topic.",
+    "Practice with previous year questions and full-length mock tests.",
+  ],
 };
-
 
 const recordedBatch = {
   courseFeatures: [
-  "High-quality recorded lectures by top educators.",
-  "Access videos anytime, anywhere at your own pace.",
-  "Comprehensive coverage from basics to advance.",
-  "Detailed, well-structured notes provided for every topic.",
-  "Includes previous year questions and mock tests.",
-]
+    "High-quality recorded lectures by top educators.",
+    "Access videos anytime, anywhere at your own pace.",
+    "Comprehensive coverage from basics to advance.",
+    "Detailed, well-structured notes provided for every topic.",
+    "Includes previous year questions and mock tests.",
+  ],
 };
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -113,7 +112,7 @@ const EntranceBatch = () => {
 
   const handlePayment = async () => {
     if (isEnrolled) {
-      navigate(`/my-courses/${courseDetails?._id}`)
+      navigate(`/my-courses/${courseDetails?._id}`);
       return;
     }
     if (!isLoggedIn) {
@@ -132,7 +131,6 @@ const EntranceBatch = () => {
         }
       );
 
-
       const isScriptLoaded = await loadRazorpayScript();
       if (!isScriptLoaded) {
         alert("Razorpay SDK failed to load. Please try again later.");
@@ -144,10 +142,23 @@ const EntranceBatch = () => {
         amount: 100 * courseDetails?.discountedPrice,
         currency: "INR",
         name: "Microdome Classes",
-        description: "Payment for M.Sc Entrance Batch",
+        description: `Payment for ${courseDetails.courseTitle}`,
         image:
           "http://res.cloudinary.com/deljukiyr/image/upload/v1748880241/qi2txlfzapvqkqle8baa.jpg",
         order_id: res.data.order.id,
+        handler: async function (response) {
+          try {
+            const res = await axios.get(`${ApiUrl}/api/v1/users/current-user`, {
+              withCredentials: true,
+            });
+            dispatch(login(res.data.data));
+            navigate("/payment-success", {
+              state: { paymentId: response.razorpay_payment_id },
+            });
+          } catch (err) {
+            console.log("Failed to refresh user:", err.message);
+          }
+        },
       };
 
       const razorpay = new window.Razorpay(options);
@@ -174,9 +185,11 @@ const EntranceBatch = () => {
         </div>
         <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto md:w-[50%] lg:w-[36%] z-20">
           <BuyNowCard
-          courseFeatures={id === "msc-entrance-batch-live"
-              ? liveBatch.courseFeatures
-              : recordedBatch.courseFeatures}
+            courseFeatures={
+              id === "msc-entrance-batch-live"
+                ? liveBatch.courseFeatures
+                : recordedBatch.courseFeatures
+            }
             actualPrice={courseDetails?.actualPrice}
             discountedPrice={courseDetails?.discountedPrice}
             imageUrl={courseDetails?.courseImage}

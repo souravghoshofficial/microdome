@@ -34,6 +34,7 @@ import {
   AuthenticatedRoute,
   Instructor,
   AuthLayout,
+  PaymentSuccess
 } from "./components";
 import axios from "axios";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -125,6 +126,7 @@ const App = () => {
         <Route path="all-users" element={< AllUsers/>} />
         <Route path="premium-users" element={< PremiumUsers />} />
         </Route>
+        <Route path="/payment-success" element={<PaymentSuccess />} />
       </Routes>
     </BrowserRouter>
   );
