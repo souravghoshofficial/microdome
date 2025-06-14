@@ -4,7 +4,7 @@ import { Rocket, BookOpen, Video } from "lucide-react";
 const Enroll = () => {
   return (
     <div className="my-16 w-full flex items-center justify-center">
-      <div className="w-[90%] md:w-[81%]">
+      <div className="w-[90%]">
         <h4 className="text-center text-sm font-semibold text-gray-400 dark:text-gray-500">Enroll</h4>
         <h2 className="mt-2 text-3xl md:text-4xl text-center font-bold">
           Join Our Learning <span className="text-highlighted">Journey</span>
