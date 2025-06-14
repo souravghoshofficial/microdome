@@ -4,7 +4,7 @@ import { BuyNowCard, CourseSyllabus } from "../components";
 import { loadRazorpayScript } from "../utils/razorpay";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import { useParams } from "react-router";
+import { useParams , useNavigate } from "react-router";
 
 const syllabus = [
   {
@@ -90,6 +90,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const EntranceBatch = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.status);
   const userData = useSelector((state) => state.auth.userData);
   const [courseDetails, setCourseDetails] = useState(null);
@@ -112,6 +113,7 @@ const EntranceBatch = () => {
 
   const handlePayment = async () => {
     if (isEnrolled) {
+      navigate(`/my-courses/${courseDetails?._id}`)
       return;
     }
     if (!isLoggedIn) {
