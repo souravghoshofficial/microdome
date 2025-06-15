@@ -234,6 +234,12 @@ const getFullCourse = async (req, res) => {
   }
 };
 
+const getEnrolledCourses = async (req, res) => {
+  const { courseIds } = req.body;
+  const courses = await Course.find({ _id: { $in: courseIds } }).select("_id courseTitle");
+  res.json({ courses });
+};
+
 export {
   createCourse,
   getAllCourses,
@@ -243,4 +249,5 @@ export {
   addNewCourse,
   getFullCourse,
   getCourseDetails,
+  getEnrolledCourses
 };

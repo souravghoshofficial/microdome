@@ -9,6 +9,7 @@ import {
   addNewCourse,
   getFullCourse,
   getCourseDetails,
+  getEnrolledCourses
 } from "../controllers/course.controller.js";
 
 import { upload } from "../middlewares/multer.middleware.js";
@@ -31,4 +32,7 @@ router.route("/add-new-course").post(addNewCourse);
 
 router.route("/get-full-course/:id").get(getFullCourse);
 router.route("/get-course-details").post(getCourseDetails);
+
+router.route("/get-enrolled-courses").post(getEnrolledCourses);
+
 export default router;

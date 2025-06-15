@@ -7,7 +7,8 @@ import axios from "axios";
 import { Link } from "react-router";
 import userImage from "../assets/user-img.jpeg";
 import { ToastContainer, toast } from "react-toastify";
-import {ProfileUpdateForm} from "../components";
+import { ProfileUpdateForm } from "../components";
+
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const EditUserDetails = () => {
@@ -38,78 +39,86 @@ const EditUserDetails = () => {
     const formData = new FormData();
     formData.append("profileImage", profileImage);
 
-    axios
-      .post(`${ApiUrl}/api/v1/users/update-user-profile-image`, formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        setProfileImage(null);
-        toast.success("Image Uploaded Successfully");
-        dispatch(logout());
-        dispatch(login(res.data.data));
-        setImageSrc(res.data.data.profileImage);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const res = await axios.post(
+        `${ApiUrl}/api/v1/users/update-user-profile-image`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Image Uploaded Successfully");
+      dispatch(logout());
+      dispatch(login(res.data.data));
+      setImageSrc(res.data.data.profileImage);
+      setProfileImage(null);
+    } catch (err) {
+      console.log(err);
+      toast.error("Upload failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="w-full min-h-screen pt-32">
-      <div className=" w-[90%] mx-auto ">
-        <ToastContainer />
+    <div className="min-h-screen pt-24 bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
+      <ToastContainer />
+      <div className="max-w-5xl mx-auto px-4">
+        {/* Back button */}
         <Link
           to="/profile"
-          className="inline-block px-3 py-2 border border-gray-800/40 dark:border-gray-300/30 rounded-md"
+          className="inline-flex items-center gap-1 text-sm border border-gray-300 dark:border-gray-700 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
         >
-          <div className="flex items-center gap-1">
-            <RiArrowLeftLine size={20} />
-            <span>Back to profile</span>
-          </div>
+          <RiArrowLeftLine size={20} />
+          Back to profile
         </Link>
-        <div className="mt-16 w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-gray-50/[.1] rounded-xl p-4 md:p-6 flex flex-col md:flex-row md:gap-4 items-start">
-          <form onSubmit={handleSubmit} className="w-full mt-4 flex items-center gap-4">
-            <div className="relative w-24 h-24 group">
+
+        {/* Content card */}
+        <div className="mt-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-2xl shadow-xl p-6 md:p-10 flex flex-col md:flex-row gap-10">
+          {/* Image upload section */}
+          <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full md:w-1/3">
+            <div className="relative w-28 h-28 group">
               <label htmlFor="profileImage">
                 <img
-                  className="w-full h-full rounded-full bg-center cursor-pointer"
+                  className="w-full h-full rounded-full object-cover border-4 border-white shadow-md cursor-pointer"
                   src={imageSrc}
-                  alt="Upload Profile Image"
+                  alt="Upload Profile"
                 />
-                <div className="absolute w-full h-full top-0 left-0 bg-black/40 bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 group-active:opacity-100 flex items-center justify-center transition-opacity duration-300">
-                  <Pencil className="text-white w-6 h-6 cursor-pointer" />
+                <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer">
+                  <Pencil className="text-white w-6 h-6" />
                 </div>
               </label>
               <input
-                className="hidden"
-                id="profileImage"
                 type="file"
+                id="profileImage"
                 name="profileImage"
                 accept="image/*"
+                className="hidden"
                 onChange={handleImageChange}
               />
             </div>
 
-            <div>
-              <h5>Profile Photo</h5>
-              <h6 className="mt-1">PNG, JPG or JPEG (Max. 1MB)</h6>
+            <div className="text-center">
+              <h5 className="font-semibold">Profile Photo</h5>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">PNG, JPG, JPEG (Max. 1MB)</p>
               {profileImage && (
                 <button
                   disabled={loading}
-                  className="mt-2 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition duration-300"
+                  type="submit"
+                  className="mt-3 px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
                 >
                   {loading ? "Uploading..." : "Upload"}
                 </button>
               )}
             </div>
           </form>
-          <div className="w-full mt-4">
+
+          {/* Profile Update Form */}
+          <div className="w-full">
+            <h3 className="text-lg font-semibold mb-4">Edit Your Details</h3>
             <ProfileUpdateForm toast={toast} />
           </div>
         </div>

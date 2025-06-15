@@ -99,14 +99,14 @@ const App = () => {
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/faculties" element={<Faculties />} />
-          <Route path="/profile" element={<AuthenticatedRoute />}>
-            <Route path="" element={<ProfileDashboard />} />
-            <Route path="edit" element={<EditUserDetails />} />
-          </Route>
         </Route>
         <Route path="/signup" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <Signup />]} />
         </Route>
+        <Route path="/profile" element={<AuthenticatedRoute />}>
+            <Route path="" element={[<ProfileDashboard /> , <Navbar />]} />
+            <Route path="edit" element={[<EditUserDetails /> , <Navbar />]} />
+          </Route>
         <Route path="/login" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <Login />]} />
         </Route>

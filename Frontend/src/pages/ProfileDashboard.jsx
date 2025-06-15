@@ -1,63 +1,106 @@
-import { UserIcon } from "../components";
-import { RiEditBoxLine } from "@remixicon/react";
-import { useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router";
-
 import {
-  RiGraduationCapLine,
-  RiMailLine,
+  RiShieldUserLine,
+  RiEditBoxLine,
+  RiBookOpenLine,
+  RiExternalLinkLine,
 } from "@remixicon/react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-
+import userImg from "../assets/user-img.jpeg";
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const ProfileDashboard = () => {
   const userData = useSelector((state) => state.auth.userData);
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchCourseDetails = async () => {
+      try {
+        const courseIds = userData?.enrolledCourses || [];
+        if (courseIds.length === 0) return;
+
+        const { data } = await axios.post(`${ApiUrl}/api/v1/courses/get-enrolled-courses`, {
+          courseIds,
+        });
+
+        setCourses(data?.courses || []);
+      } catch (error) {
+        console.error("Failed to fetch course titles", error);
+      }
+    };
+
+    fetchCourseDetails();
+  }, [userData]);
+
   return (
-    <div className="w-full pt-24 flex items-center justify-center relative">
-      <div className="w-[90%] flex flex-col md:flex-row gap-8 lg:gap-0">
-        <div className="w-full lg:w-[25%] h-screen px-4 py-6 border border-gray-950/[.1] dark:border-gray-50/[.1]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <UserIcon className="w-16 h-16" />
-              <div className="flex flex-col">
-                <h3 className="text-xl">{userData?.name || "User Name"}</h3>
-                <p className="text-sm font-light mt-1">
-                  {userData?.email || "user email"}
-                </p>
-              </div>
-            </div>
-            <Link to ="edit"
-              className="p-1 cursor-pointer"
-            >
-              <RiEditBoxLine size={20} />
-            </Link>
-          </div>
-          <hr className="w-full h-0.5 my-5 text-gray-950/[.1] dark:text-gray-50/[.1]" />
-          <div>
-            <h3 className="font-semibold">Personal Information</h3>
-            <div className="mt-6 flex items-center gap-2">
-              <RiMailLine size={16} />
-              <p className="text-sm">{userData?.email || "user email"}</p>
-            </div>
-            <div className="mt-3 flex items-center gap-2">
-              <RiGraduationCapLine size={16} />
-              <p className="text-sm">{userData?.instituteName || "-"}</p>
-            </div>
-            <div className="mt-3 flex items-center gap-2">
-              <RiGraduationCapLine size={16} />
-              <p className="text-sm">{userData?.presentCourseOfStudy || "-"}</p>
-            </div>
-          </div>
-          <hr className="w-full h-0.5 my-5 text-gray-950/[.1] dark:text-gray-50/[.1]" />
-          <div>
-            <h3 className="font-semibold">Enrolled Courses</h3>
-            <div className="mt-6 flex items-center gap-2">
-              <div className="text-sm">{userData?.enrolledCourses.length > 0 ? userData?.enrolledCourses.map((item) => (<Link className="block mt-1" to={`/my-courses/${item}`} key={item}>{item}</Link>)) : <p>You haven't enrolled in  any course</p>}</div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-white dark:bg-gray-950 flex justify-center items-center px-4 py-12 text-black dark:text-white transition-colors duration-300">
+      <div className="w-full max-w-5xl bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row">
+
+        {/* Left: Profile Section */}
+        <div className="bg-blue-600 text-white p-10 md:w-1/3 flex flex-col items-center justify-center relative">
+          <img
+            src={userData?.profileImage || userImg}
+            alt="Profile"
+            className="w-36 h-36 rounded-full border-4 border-white"
+          />
+          <h2 className="text-2xl font-semibold mt-6">{userData?.name || "User Name"}</h2>
+          <p className="text-sm opacity-80 mt-2">
+            Member since {userData?.createdAt ? new Date(userData.createdAt).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : "N/A"}
+          </p>
+          <Link
+            to="edit"
+            className="absolute top-4 right-4 bg-white text-blue-600 p-2 rounded-full shadow hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          >
+            <RiEditBoxLine size={20} />
+          </Link>
         </div>
-        <div className="w-full lg:w-[75%] h-screen px-4 py-6 border border-gray-950/[.1] dark:border-gray-50/[.1]  lg:border-l-0">
-          {" "}
+
+        {/* Right: Info Cards */}
+        <div className="flex-1 p-8 grid grid-cols-1 gap-6">
+
+          {/* Personal Info */}
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
+            <div className="flex items-center gap-2 mb-4 text-blue-600 font-semibold">
+              <RiShieldUserLine size={20} />
+              Personal Information
+            </div>
+            <div className="text-sm space-y-2">
+              <p><span className="font-medium">Full Name:</span> {userData?.name || "-"}</p>
+              <p><span className="font-medium">Email:</span> {userData?.email || "-"}</p>
+              <p><span className="font-medium">Mobile:</span> {userData?.mobile || "-"}</p>
+              <p><span className="font-medium">Institute Name:</span> {userData?.instituteName || "-"}</p>
+              <p><span className="font-medium">Present Course of Study:</span> {userData?.presentCourseOfStudy || "-"}</p>
+            </div>
+          </div>
+
+          {/* Enrolled Courses */}
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
+            <div className="flex items-center gap-2 mb-4 text-green-600 font-semibold">
+              <RiBookOpenLine size={20} />
+              Enrolled Courses
+            </div>
+            <div className="text-sm space-y-2">
+              {courses.length > 0 ? (
+                courses.map((course) => (
+                  <p key={course._id}>
+                    <Link
+                      to={`/my-courses/${course._id}`}
+                      className="text-blue-600 hover:underline flex items-center gap-1"
+                    >
+                      <RiExternalLinkLine size={14} />
+                      {course.courseTitle}
+                    </Link>
+                  </p>
+                ))
+              ) : (
+                <p className="text-gray-500">You haven't enrolled in any course</p>
+              )}
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
