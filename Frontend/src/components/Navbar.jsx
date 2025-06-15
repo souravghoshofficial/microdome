@@ -42,6 +42,8 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const lastScrollYRef = useRef(0);
 
+  const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -211,7 +213,7 @@ const Navbar = () => {
             logoutUser()
             setShowSideNav(false)
           }}
-          className="px-3 py-1.5 mt-2 rounded-md flex items-center gap-2 w-full cursor-pointer"
+          className="mt-8 rounded-md flex items-center gap-2 w-full cursor-pointer"
         >
           <RiLogoutBoxRLine size={16} />
           <p>Sign Out</p>
