@@ -70,7 +70,7 @@ const ProfileDashboard = () => {
             <div className="text-sm space-y-2">
               <p><span className="font-medium">Full Name:</span> {userData?.name || "-"}</p>
               <p><span className="font-medium">Email:</span> {userData?.email || "-"}</p>
-              <p><span className="font-medium">Mobile:</span> {userData?.mobile || "-"}</p>
+              <p><span className="font-medium">Mobile:</span> {userData?.mobileNumber || "-"}</p>
               <p><span className="font-medium">Institute Name:</span> {userData?.instituteName || "-"}</p>
               <p><span className="font-medium">Present Course of Study:</span> {userData?.presentCourseOfStudy || "-"}</p>
             </div>
