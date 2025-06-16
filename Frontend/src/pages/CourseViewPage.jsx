@@ -2,81 +2,7 @@ import { useState , useEffect } from "react";
 import { Logo, CourseSection } from "../components";
 import axios from "axios";
 import { useParams , Link } from "react-router";
-
-// const course = {
-//   _id: "6839c2db6a602d469a28c55e",
-//   name: "Fullstack Mastery",
-//   price: 999,
-//   __v: 0,
-//   sections: [
-//     {
-//       _id: "6839c2db6a602d469a28c556",
-//       title: "Frontend Basics",
-//       lectures: [
-//         {
-//           _id: "6839c2db6a602d469a28c550",
-//           title: "HTML One Shot",
-//           videoURL:
-//             "https://www.youtube.com/embed/HcOc7P5BMi4?si=iEOBbQUtb9LkgEwx",
-//           noteTitle: "HTML Notes",
-//           noteURL: note,
-//           __v: 0,
-//         },
-//         {
-//           _id: "6839c2db6a602d469a28c552",
-//           title: "CSS One Shot",
-//           videoURL:
-//             "https://www.youtube.com/embed/ESnrn1kAD4E?si=XLFbmJ5tpqMD53zV",
-//           __v: 0,
-//         },
-//         {
-//           _id: "6839c2db6a602d469a28c554",
-//           title: "JavaScript One Shot",
-//           videoURL:
-//             "https://www.youtube.com/embed/VlPiVmYuoqw?si=-s2NZpV-eHO1RlsO",
-//           noteTitle: "JavaScript Notes",
-//           noteURL: note,
-//           __v: 0,
-//         },
-//       ],
-//       __v: 0,
-//     },
-//     {
-//       _id: "6839c2db6a602d469a28c55c",
-//       title: "Backend Basics",
-//       lectures: [
-//         {
-//           _id: "6839c2db6a602d469a28c558",
-//           title: "Node.js One Shot",
-//           videoURL:
-//             "https://www.youtube.com/embed/TlB_eWDSMt4?si=BO2UNY_WDZby-cbK",
-//           noteTitle: "Node Js Notes",
-//           noteURL: note,
-//           __v: 0,
-//         },
-//         {
-//           _id: "6839c2db6a602d469a28c55a",
-//           title: "MongoDB One Shot",
-//           videoURL:
-//             "https://www.youtube.com/embed/c2M-rlkkT5o?si=D4kUmwourKAxcdb_",
-//           noteTitle: "MongoDB Notes",
-//           noteURL: note,
-//           __v: 0,
-//         },
-//         {
-//           _id: "6839cb31f936983c2d6da19f",
-//           title: "DevOps One Shot",
-//           videoURL:
-//             "https://www.youtube.com/embed/sSRaakd95Nk?si=JoPIIf1JV1IdhRU6",
-//           noteTitle: "DevOps Notes",
-//           noteURL: note,
-//           __v: 0,
-//         },
-//       ],
-//       __v: 0,
-//     },
-//   ],
-// };
+import { TriangleAlert } from "lucide-react";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -85,19 +11,22 @@ const CourseViewPage = () => {
    const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [videoURL, setVideoURL] = useState(null);
-
+  const [loadingText,setLoadingText] = useState("Loading...");
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         const res = await axios.get(
-      `${ApiUrl}/api/v1/courses/get-full-course/${id}`,
+      `/api/v1/courses/get-full-course/${id}`,
       {},
       { withCredentials: true }
     );
         setCourse(res.data.course);
         setVideoURL(res.data.course.sections[0].lectures[0].videoURL);
       } catch (err) {
-        console.error("Failed to fetch course", err);
+        console.error("Failed to fetch course",err);
+        if(err.status==401){
+          setLoadingText("Unauthorized to access the course");
+        }
       }
     };
 
@@ -105,9 +34,13 @@ const CourseViewPage = () => {
   }, [id]);
 
   
-  if (!course) return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
+  if (!course) return <div className="w-full h-screen flex items-center justify-center">
+    {
+      loadingText!=="Loading..."? (<TriangleAlert className="text-yellow-600 h-15 w-15 mr-1"/>):" "
+    }
 
-  
+    <h1 className="text-lg">{loadingText}</h1>
+    </div>;
 
   return (
     <div className="w-full h-screen">

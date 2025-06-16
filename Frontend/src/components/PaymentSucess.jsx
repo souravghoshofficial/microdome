@@ -34,7 +34,7 @@ const PaymentSuccess = () => {
 
         <button
           onClick={() => navigate("/profile")}
-          className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition"
+          className="cursor-pointer bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition"
         >
           Start Learning
         </button>

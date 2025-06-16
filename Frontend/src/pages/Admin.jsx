@@ -3,7 +3,6 @@ import {
   Home,
   Users,
   Star,
-  BookOpen,
   Layers,
   Video,
 } from "lucide-react";
@@ -14,7 +13,6 @@ const menuItems = [
   { name: "Dashboard", icon: <Home size={20} />, href: "/admin/dashboard" },
   { name: "All Users", icon: <Users size={20} />, href: "/admin/all-users" },
   { name: "Premium Users", icon: <Star size={20} />, href: "/admin/premium-users" },
-  { name: "Create a Course", icon: <BookOpen size={20} />, href: "/admin/create-a-course" },
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
 ];

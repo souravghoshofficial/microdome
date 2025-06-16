@@ -5,6 +5,7 @@ import { Lecture } from "../models/lecture.model.js";
 
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
+
 const createCourse = async (req, res) => {
   const {
     cardTitle,
@@ -82,50 +83,123 @@ const getAllCourses = async (req, res) => {
 };
 
 const addLecture = async (req, res) => {
-  const { title, videoURL, noteURL, noteTitle } = req.body;
+  try {
+    const { title, videoURL, noteURL, noteTitle, sectionId } = req.body;
+  
+    if(!sectionId){
+      throw new ApiError(400, "sectionId is required");
+    }
+    const section = await Section.findById(sectionId);
+  
+    if(!section){
+      throw new ApiError(400, "section not found");
+    }
+  
+    if (!videoURL && !title) {
+      throw new ApiError(400, "video title and video url is required");
+    }
+  
+    const noteURLlocalPath = req.files?.noteURL[0]?.path;
+    
+      if (!noteURLlocalPath) {
+        throw new ApiError(400, "Note is missing");
+      }
+    
+      const uploadedNoteURL = await uploadOnCloudinary(noteURLlocalPath);
+    
+      if (!uploadedNoteURL?.url) {
+        throw new ApiError(400, "Error while uploading the note");
+      }
+    
+      const lecture = await Lecture.create({
+        title,
+        videoURL,
+        noteTitle,
+        noteURL: uploadedNoteURL.url
+      })
+  
+      if(!lecture){
+        throw new ApiError(400,"Error while creating lecture");
+      }
+  
+      section.lectures.push(lecture._id);
 
-  if (!videoURL && !title) {
-    throw new ApiError(400, "video title and video url is required");
+      section.save();
+      
+      res.status(201).json({
+        message: "Lecture added successfully"
+      })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Something went wrong"
+    })
   }
 
-  const lecture = {};
 
-  lecture.videoURL = videoURL;
-  lecture.title = title;
-
-  if (noteURL) {
-    lecture.noteURL = noteURL;
-  }
-
-  if (noteTitle) {
-    lecture.noteTitle = noteTitle;
-  }
-
-  const createdLecture = await Lecture.create(lecture);
-
-  res.status(200).json({
-    message: "new lecture added successfully",
-    createdLecture,
-  });
 };
 
 const addSection = async (req, res) => {
-  const { title, lectures } = req.body;
-
-  if (!lectures && !title) {
-    throw new ApiError(400, "lectures and title are required");
+  try {
+    const { sectionTitle, lectureTitle,videoURL,noteTitle,noteURL,courseId } = req.body;
+    
+    if(!(sectionTitle && lectureTitle && videoURL && courseId)){
+      res.status(400).json({
+        message: "All of these fields are required"
+      });
+    }
+    const course = await Course.findById(courseId);
+  
+    if(!course){
+      throw new ApiError(400,"Error while creating section");
+    }
+    const noteURLlocalPath = req.files?.noteURL[0]?.path;
+  
+    if (!noteURLlocalPath) {
+      throw new ApiError(400, "Note is missing");
+    }
+  
+    const uploadedNoteURL = await uploadOnCloudinary(noteURLlocalPath);
+  
+    if (!uploadedNoteURL?.url) {
+      throw new ApiError(400, "Error while uploading the note");
+    }
+  
+    const lecture = await Lecture.create({
+      title: lectureTitle,
+      videoURL,
+      noteTitle,
+      noteURL: uploadedNoteURL.url
+    })
+  
+    if(!lecture){
+      throw new ApiError(400,"Error while creating lecture");
+    }
+  
+    const section = await Section.create({
+      title: sectionTitle,
+      lectures: [lecture._id]
+    });
+  
+     if(!section){
+      throw new ApiError(400,"Error while creating section");
+    }
+    course.sections.push(section._id);
+  
+    course.save();
+  
+    res.status(200).json({
+      message: "section created successfully"
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Something went wrong"
+    })
   }
-
-  const createdSection = await Section.create({
-    title,
-    lectures,
-  });
-
-  res.status(200).json({
-    message: "section added",
-    createdSection,
-  });
 };
+
+
 
 const getCourseDetails = async (req, res) => {
   const { linkAddress } = req.body;

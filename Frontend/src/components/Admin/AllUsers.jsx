@@ -13,7 +13,7 @@ export default function AllUsers() {
   const usersPerPage = 10;
 
   useEffect(() => {
-    axios.get(`${ApiUrl}/api/v1/admin/get-all-users`, { withCredentials: true })
+    axios.get(`/api/v1/admin/get-all-users`, { withCredentials: true })
       .then((res) => setUsers(res.data.users))
       .catch((err) => console.log(err));
   }, []);
