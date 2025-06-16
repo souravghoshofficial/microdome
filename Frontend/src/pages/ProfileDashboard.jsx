@@ -22,7 +22,7 @@ const ProfileDashboard = () => {
         const courseIds = userData?.enrolledCourses || [];
         if (courseIds.length === 0) return;
 
-        const { data } = await axios.post(`${ApiUrl}/api/v1/courses/get-enrolled-courses`, {
+        const { data } = await axios.post(`${ApiUrl}/courses/get-enrolled-courses`, {
           courseIds,
         });
 

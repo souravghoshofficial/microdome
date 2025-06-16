@@ -12,7 +12,7 @@ export default function PremiumUsers() {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 useEffect(() => {
-  axios.get(`/api/v1/admin/get-all-users`, { withCredentials: true })
+  axios.get(`${ApiUrl}/admin/get-all-users`, { withCredentials: true })
     .then((res) => {
       const premiumUsers = res.data.users.filter(user => user.isPremiumMember);
       setUsers(premiumUsers);

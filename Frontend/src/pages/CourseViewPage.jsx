@@ -16,7 +16,7 @@ const CourseViewPage = () => {
     const fetchCourse = async () => {
       try {
         const res = await axios.get(
-      `/api/v1/courses/get-full-course/${id}`,
+      `${ApiUrl}/courses/get-full-course/${id}`,
       {},
       { withCredentials: true }
     );
@@ -36,7 +36,7 @@ const CourseViewPage = () => {
   
   if (!course) return <div className="w-full h-screen flex items-center justify-center">
     {
-      loadingText!=="Loading..."? (<TriangleAlert className="text-yellow-600 h-15 w-15 mr-1"/>):" "
+      loadingText !== "Loading..." ? (<TriangleAlert className="text-yellow-600 h-15 w-15 mr-1"/>):" "
     }
 
     <h1 className="text-lg">{loadingText}</h1>

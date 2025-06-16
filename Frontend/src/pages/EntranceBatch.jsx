@@ -100,7 +100,7 @@ const EntranceBatch = () => {
   useEffect(() => {
     axios
       .post(
-        `${ApiUrl}/api/v1/courses/get-course-details`,
+        `${ApiUrl}/courses/get-course-details`,
         { linkAddress: id },
         { withCredentials: true }
       )
@@ -124,7 +124,7 @@ const EntranceBatch = () => {
     }
     try {
       const res = await axios.post(
-        `${ApiUrl}/api/v1/orders/create-order`,
+        `${ApiUrl}/orders/create-order`,
         {
           courseId: courseDetails?._id,
           amount: courseDetails?.discountedPrice,
@@ -151,7 +151,7 @@ const EntranceBatch = () => {
         order_id: res.data.order.id,
         handler: async function (response) {
           try {
-            const res = await axios.get(`${ApiUrl}/api/v1/users/current-user`, {
+            const res = await axios.get(`${ApiUrl}/users/current-user`, {
               withCredentials: true,
             });
             dispatch(login(res.data.data));

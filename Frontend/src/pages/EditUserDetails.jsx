@@ -41,7 +41,7 @@ const EditUserDetails = () => {
 
     try {
       const res = await axios.post(
-        `${ApiUrl}/api/v1/users/update-user-profile-image`,
+        `${ApiUrl}/users/update-user-profile-image`,
         formData,
         {
           withCredentials: true,
