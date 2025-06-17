@@ -31,8 +31,12 @@ export const isEnrolledInCourse = async (req, res, next) => {
     //   course => course.toString() === courseId
     // );
 
-    const isEnrolled = (user.enrolledCourses || []).some(
-      (enrolledCourseId) => String(enrolledCourseId) === String(courseId)
+    // const isEnrolled = (user.enrolledCourses || []).some(
+    //   (enrolledCourseId) => String(enrolledCourseId) === String(courseId)
+    // );
+
+    const isEnrolled = (user.enrolledCourses || []).some((enrolledCourseId) =>
+      mongoose.Types.ObjectId(enrolledCourseId).equals(courseId)
     );
 
     if (!isEnrolled) {
