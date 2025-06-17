@@ -11,10 +11,14 @@ export const isEnrolledInCourse = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid course ID" });
     }
 
-    const user = await User.findById(userId).select("isPremiumMember enrolledCourses").lean();
+    const user = await User.findById(userId)
+      .select("isPremiumMember enrolledCourses")
+      .lean();
 
     if (!user?.isPremiumMember) {
-      return res.status(401).json({ message: "Unauthorized to access the course" });
+      return res
+        .status(401)
+        .json({ message: "Unauthorized to access the course" });
     }
 
     const course = await Course.findById(courseId).lean();
@@ -23,12 +27,18 @@ export const isEnrolledInCourse = async (req, res, next) => {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    const isEnrolled = user.enrolledCourses.some(
-      course => course.toString() === courseId
+    // const isEnrolled = await user.enrolledCourses.some(
+    //   course => course.toString() === courseId
+    // );
+
+    const isEnrolled = (user.enrolledCourses || []).some(
+      (enrolledCourseId) => String(enrolledCourseId) === String(courseId)
     );
 
     if (!isEnrolled) {
-      return res.status(401).json({ message: "Unauthorized to access the course" });
+      return res
+        .status(401)
+        .json({ message: "Unauthorized to access the course" });
     }
 
     next();
