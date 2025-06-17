@@ -27,11 +27,9 @@ export const isEnrolledInCourse = async (req, res, next) => {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    const isEnrolled = user?.enrolledCourses?.includes(courseId);
-
-    // const isEnrolled = (user.enrolledCourses || []).some(
-    //   (enrolledCourseId) => String(enrolledCourseId) === String(courseId)
-    // );
+    const isEnrolled = user?.enrolledCourses?.some(
+      (enrolledCourseId) => String(enrolledCourseId) === String(courseId)
+    );
 
     if (!isEnrolled) {
       return res
