@@ -27,17 +27,13 @@ export const isEnrolledInCourse = async (req, res, next) => {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    // const isEnrolled = await user.enrolledCourses.some(
-    //   course => course.toString() === courseId
-    // );
+    const isEnrolled = user.enrolledCourses.some(
+      (course) => course.toString() === courseId
+    );
 
     // const isEnrolled = (user.enrolledCourses || []).some(
     //   (enrolledCourseId) => String(enrolledCourseId) === String(courseId)
     // );
-
-    const isEnrolled = (user.enrolledCourses || []).some((enrolledCourseId) =>
-      mongoose.Types.ObjectId(enrolledCourseId).equals(courseId)
-    );
 
     if (!isEnrolled) {
       return res
