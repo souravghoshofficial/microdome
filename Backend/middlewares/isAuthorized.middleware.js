@@ -11,9 +11,9 @@ export const isEnrolledInCourse = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid course ID" });
     }
 
-    const user = await User.findById(userId)
-      .select("isPremiumMember enrolledCourses")
-      .lean();
+    const user = await User.findById(userId).select(
+      "isPremiumMember enrolledCourses"
+    );
 
     if (!user?.isPremiumMember) {
       return res
@@ -21,7 +21,7 @@ export const isEnrolledInCourse = async (req, res, next) => {
         .json({ message: "Unauthorized to access the course" });
     }
 
-    const course = await Course.findById(courseId).lean();
+    const course = await Course.findById(courseId);
 
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
