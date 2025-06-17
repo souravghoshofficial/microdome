@@ -17,7 +17,6 @@ const CourseViewPage = () => {
       try {
         const res = await axios.get(
       `${ApiUrl}/courses/get-full-course/${id}`,
-      {},
       { withCredentials: true }
     );
         setCourse(res.data.course);
