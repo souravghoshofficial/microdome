@@ -21,6 +21,7 @@
     "@splinetool/react-spline": "^4.0.0",
     "@tailwindcss/vite": "^4.0.1",
     "@uidotdev/usehooks": "^2.4.1",
+    "aos": "^2.3.4",
     "axios": "^1.9.0",
     "html-react-parser": "^5.2.3",
     "lucide-react": "^0.511.0",
