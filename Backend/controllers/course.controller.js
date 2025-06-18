@@ -89,6 +89,7 @@ const addLecture = async (req, res) => {
     if(!sectionId){
       throw new ApiError(400, "sectionId is required");
     }
+    
     const section = await Section.findById(sectionId);
   
     if(!section){
@@ -125,7 +126,7 @@ const addLecture = async (req, res) => {
       section.lectures.push(lecture._id);
 
       section.save();
-      
+
       res.status(201).json({
         message: "Lecture added successfully"
       })
