@@ -67,7 +67,7 @@ const ResetPassword = ({email , toast}) => {
 
     axios
       .post(
-        `${ApiUrl}/api/v1/users/reset-password`,
+        `${ApiUrl}/users/reset-password`,
         {
           email: email,
           newpassword: password,

@@ -23,7 +23,7 @@ const ForgotPassword = () => {
 
     axios
       .post(
-        `${ApiUrl}/api/v1/users/forgot-password`,
+        `${ApiUrl}/users/forgot-password`,
         {
           email: email,
         },

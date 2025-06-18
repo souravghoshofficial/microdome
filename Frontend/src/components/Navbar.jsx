@@ -63,7 +63,7 @@ const Navbar = () => {
 
 
    const logoutUser = () => {
-    axios.post(`${ApiUrl}/api/v1/users/logout`,{}, {
+    axios.post(`${ApiUrl}/users/logout`,{}, {
       withCredentials: true
     })
     .then((res) => {

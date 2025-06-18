@@ -11,7 +11,7 @@ const BScHonsBatch = () => {
 
   useEffect(() => {
     axios
-      .get(`${ApiUrl}/api/v1/courses/get-all-courses`)
+      .get(`${ApiUrl}/courses/get-all-courses`)
       .then((res) => {
         console.log(res.data);
         setCourses(res.data.courses);

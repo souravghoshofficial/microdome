@@ -32,7 +32,7 @@ const TestimonialCard = ({ name, message, imageUrl, designation }) => {
         {shouldTruncate && (
           <button
             onClick={toggleReadMore}
-            className="text-blue-500 ml-1 underline cursor-pointer"
+            className="text-blue-500 ml-1 cursor-pointer"
           >
             {isExpanded ? "View Less" : "View More"}
           </button>

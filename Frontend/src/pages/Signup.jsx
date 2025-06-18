@@ -54,7 +54,7 @@ const Signup = () => {
 
     axios
       .post(
-        `${ApiUrl}/api/v1/users/register`,
+        `${ApiUrl}/users/register`,
         {
           name: name,
           email: email,
