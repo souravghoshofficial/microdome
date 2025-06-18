@@ -69,11 +69,11 @@ const Faculties = () => {
   }, []);
 
   return (
-    <div className="w-full flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#e5f6f5] dark:from-gray-900 dark:to-gray-800 transition-all duration-500">
+    <div className="w-full flex items-center justify-center bg-white dark:bg-slate-900 dark:from-gray-900 dark:to-gray-800 transition-all duration-500">
       <div className="my-24 md:my-32 w-[90%] space-y-16">
         <div data-aos="fade-down">
-          <h4 className="text-center text-sm font-bold text-white">Meet</h4>
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-white">Our Faculties</h2>
+          <h4 className="text-center text-sm font-bold text-black dark:text-white">Meet</h4>
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-black dark:text-white">Our Faculties</h2>
         </div>
 
         <div className="w-full flex flex-col gap-12">
@@ -93,7 +93,7 @@ const Faculties = () => {
         </div>
 
         <div className="mt-16 space-y-8" data-aos="fade-up">
-          <h3 className='text-2xl md:text-3xl font-bold text-center text-white'>
+          <h3 className='text-2xl md:text-3xl font-bold text-center text-black dark:text-white'>
             Adjunct Faculty
           </h3>
           {adjunctFactulties.map((faculty, index) => (

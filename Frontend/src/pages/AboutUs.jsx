@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Microdome from '../assets/microdome.jpg';
-
+import { Link } from "react-router";
 const AboutUs = () => {
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
 
   return (
-    <section className="py-20 px-6 md:px-20 bg-gradient-to-br from-[#e0f7fa] via-[#f1f8ff] to-[#e3fcec] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500">
+    <section className="py-20 px-6 md:px-20 bg-white dark:bg-slate-900 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-500">
       <div className="max-w-7xl mx-auto text-center space-y-20">
 
         <h2 className="text-5xl font-extrabold text-[#0f766e] dark:text-white tracking-wide" data-aos="fade-up">
@@ -97,9 +97,10 @@ const AboutUs = () => {
         </div>
 
         <div className="mt-10" data-aos="zoom-in-up">
-          <button className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-lg px-8 py-4 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
-            Join Microdome Today!
-          </button>
+          
+          <Link  className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-lg px-8 py-4 rounded-full shadow-lg transition duration-300 transform hover:scale-105 cursor-pointer" to="/login">
+            Join Microdome Today!</Link>
+          
         </div>
       </div>
     </section>

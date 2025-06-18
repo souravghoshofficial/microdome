@@ -10,11 +10,12 @@ const Footer = () => {
         <hr className="w-full" />
         <div className="my-8 md:my-16 w-full px-2 md:px-8 flex flex-col md:flex-row justify-between">
           <div className="w-full md:w-[40%] flex flex-col justify-center">
-            <div>
+            <span>
             <a className="flex items-center gap-2" href="/">
-            <Logo className="w-16 md:w-18" />
+            <Logo className="w-16 md:w-18 cursor-pointer"/>
             </a>
-            </div>
+
+            </span>
             <p className="mt-2">Let's connect with our socials</p>
             <div className="mt-4 w-full flex items-center gap-4">
               <a target="_blank" href="https://www.facebook.com/profile.php?id=100014111567971&ref=ig_profile_ac">
