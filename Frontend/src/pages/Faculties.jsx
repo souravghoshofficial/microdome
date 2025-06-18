@@ -73,7 +73,7 @@ const Faculties = () => {
       <div className="my-24 md:my-32 w-[90%] space-y-16">
         <div data-aos="fade-down">
           <h4 className="text-center text-sm font-bold text-white">Meet</h4>
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-white">Our Faculties</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-white">Our Faculties</h2>
         </div>
 
         <div className="w-full flex flex-col gap-12">
@@ -93,7 +93,7 @@ const Faculties = () => {
         </div>
 
         <div className="mt-16 space-y-8" data-aos="fade-up">
-          <h3 className='text-xl md:text-2xl font-semibold text-white text-center'>
+          <h3 className='text-2xl md:text-3xl font-bold text-center text-white'>
             Adjunct Faculty
           </h3>
           {adjunctFactulties.map((faculty, index) => (
