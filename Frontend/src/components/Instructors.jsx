@@ -11,6 +11,7 @@ import { Autoplay, Navigation } from "swiper/modules";
 
 import { RiArrowRightSLine, RiArrowLeftSLine } from "@remixicon/react";
 
+
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/bundle";
@@ -55,7 +56,9 @@ const mentors = [
   },
 ];
 
+
 const Instructors = () => {
+
   const swiperRef = useRef(null);
   return (
     <section className="w-[90%] mx-auto my-8 md:my-16">
