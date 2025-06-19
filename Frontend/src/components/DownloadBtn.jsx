@@ -1,9 +1,13 @@
-import React from 'react'
+import React from 'react';
+import { Download } from 'lucide-react';
 
-const DownloadBtn = ({url}) =>{
+const DownloadBtn = ({ url }) => {
   return (
     <div>
-      <a href={url}  target='_blank'  className='text-center px-3 py-1.5 bg-button rounded-2xl' >Download</a>
+      <a href={url} download={true} className='flex items-center justify-center px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg'>
+        <Download className='block lg:hidden w-4 h-3' />
+        <span className='hidden lg:block'>Download</span>
+      </a>
     </div>
   );
 };
