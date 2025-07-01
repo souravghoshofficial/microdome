@@ -17,7 +17,9 @@ const AddSection = () => {
   // Fetch all courses on mount
   useEffect(() => {
     axios
-      .get(`${ApiUrl}/courses/get-all-courses`)
+      .get(`${ApiUrl}/courses/get-all-courses`, {
+      withCredentials: true
+    })
       .then((res) => setCourses(res.data.courses))
       .catch((err) => console.error(err));
   }, []);
@@ -44,7 +46,9 @@ const AddSection = () => {
     data.append('noteURL', formData.noteURL);
 
     axios
-      .post(`${ApiUrl}/courses/add-section`, data)
+      .post(`${ApiUrl}/courses/add-section`, data , {
+      withCredentials: true
+    })
       .then(() => {
         alert('Section added successfully!');
         setFormData({

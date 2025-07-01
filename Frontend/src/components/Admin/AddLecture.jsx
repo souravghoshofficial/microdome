@@ -16,14 +16,18 @@ const AddLecture = () => {
   });
 
   useEffect(() => {
-    axios.get(`${ApiUrl}/courses/get-all-courses`)
+    axios.get(`${ApiUrl}/courses/get-all-courses` , {
+      withCredentials: true
+    })
       .then(res => setCourses(res.data.courses))
       .catch(err => console.error(err));
   }, []);
 
   const fetchSections = (courseId) => {
     setSelectedCourse(courseId);
-    axios.get(`${ApiUrl}/courses/get-all-sections/${courseId}`)
+    axios.get(`${ApiUrl}/courses/get-all-sections/${courseId}` , {
+      withCredentials: true
+    })
       .then(res => setSections(res.data.sections))
       .catch(err => console.error(err));
   };
@@ -45,7 +49,9 @@ const AddLecture = () => {
     data.append('noteTitle', formData.noteTitle);
     data.append('noteURL', formData.noteURL);
 
-    axios.post(`${ApiUrl}/courses/add-lecture`, data)
+    axios.post(`${ApiUrl}/courses/add-lecture`, data , {
+      withCredentials: true
+    })
       .then(() => {
         alert('Lecture added!');
         setSelectedCourse(null);
