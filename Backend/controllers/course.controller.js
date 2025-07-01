@@ -315,6 +315,30 @@ const getEnrolledCourses = async (req, res) => {
   res.json({ courses });
 };
 
+const getAllSections = async (req,res) => {
+  const courseId = req.params.id;
+
+  try {
+    const course = await Course.findById(courseId)
+      .populate({
+        path: "sections",
+      })
+      .lean();
+
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
+    }
+    const sections=course.sections;
+    return res.status(200).json({ success: true, sections });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+
+}
+
 export {
   createCourse,
   getAllCourses,
@@ -324,5 +348,6 @@ export {
   addNewCourse,
   getFullCourse,
   getCourseDetails,
-  getEnrolledCourses
+  getEnrolledCourses,
+  getAllSections
 };
