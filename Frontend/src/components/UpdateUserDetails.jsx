@@ -26,7 +26,7 @@ const ProfileUpdateForm = ({toast}) => {
     e.preventDefault();
     setLoading(true)
     axios
-      .post(`${ApiUrl}/api/v1/users/update-user-details`, formData, {
+      .post(`${ApiUrl}/users/update-user-details`, formData, {
         withCredentials: true,
       })
       .then((res) => {
