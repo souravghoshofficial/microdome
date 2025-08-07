@@ -19,6 +19,7 @@ import BuyNowCard from "./BuyNowCard";
 import CourseSyllabus from "./CourseSyllabus";
 import CourseSection from "./CourseSection";
 import PaymentSuccess from "./PaymentSucess";
+import AdminLayout from "./AdminLayout";
 
 
 export {
@@ -42,5 +43,6 @@ export {
   BuyNowCard,
   CourseSyllabus,
   CourseSection,
-  PaymentSuccess
+  PaymentSuccess,
+  AdminLayout
 };

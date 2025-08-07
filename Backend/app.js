@@ -2,6 +2,9 @@ import express from "express"
 import cookieParser from "cookie-parser";
 import cors from "cors"
 
+import { verifyJWT } from "./middlewares/auth.middleware.js";
+import { isAdmin } from "./middlewares/admin.middleware.js";
+
 
 const app = express();
 
@@ -36,7 +39,7 @@ import adminRouter from "./routes/admin.routes.js";
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/courses",courseRouter);
 app.use("/api/v1/orders", orderRouter);
-app.use("/api/v1/admin",adminRouter);
+app.use("/api/v1/admin", verifyJWT, isAdmin, adminRouter);
 export { app }
 
 

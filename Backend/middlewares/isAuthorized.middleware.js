@@ -7,9 +7,6 @@ export const isEnrolledInCourse = async (req, res, next) => {
     const userId = req.user?._id;
     const courseId = req.params.id;
 
-    console.log("REQ.USER:", req.user);
-    console.log("COURSE ID:", courseId);
-
     if (!mongoose.Types.ObjectId.isValid(courseId)) {
       return res.status(400).json({ message: "Invalid course ID" });
     }
@@ -19,8 +16,6 @@ export const isEnrolledInCourse = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    console.log("USER ENROLLED COURSES:", user.enrolledCourses);
 
     if (!user.isPremiumMember) {
       return res.status(401).json({ message: "Not a premium user" });

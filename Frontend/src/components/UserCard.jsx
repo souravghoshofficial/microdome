@@ -45,6 +45,14 @@ const UserCard = ({ className = "" }) => {
           <RiUserLine size={16} className="border rounded-full" />
           <p>Profile</p>
         </Link>
+        <Link
+          to="/admin"
+          onClick={() => dispatch(hideCard())}
+          className={`${userData?.role === "admin" ? "flex" : "hidden"} mt-2 px-3 py-1.5 rounded-md items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800`}
+        >
+          <RiUserLine size={16} className="border rounded-full" />
+          <p>Admin Dashboard</p>
+        </Link>
         <div
           onClick={logoutUser}
           className="px-3 py-1.5 mt-2 rounded-md flex items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer"

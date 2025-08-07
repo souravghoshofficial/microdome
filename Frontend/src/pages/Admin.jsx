@@ -21,8 +21,8 @@ export default function Admin() {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-xl hidden md:flex flex-col">
-        <div className="px-6 py-5 flex items-center gap-2 border-b border-gray-200">
+      <aside className="w-64 bg-white shadow-xl hidden md:flex flex-col"> 
+         <div className="px-6 py-5 flex items-center gap-2 border-b border-gray-200">
          <Logo className={"w-7 md:w-9"} />
          <p className="text-lg font-bold gradiant-text">MicroDome</p>
         </div>
@@ -65,8 +65,8 @@ export default function Admin() {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 p-6 md:p-10">
-        <div className="w-full p-4">
+      <main className="flex-1 p-6 mb-24 md:mb-2">
+        <div className="w-full">
             <Outlet />
         </div>
       </main>
