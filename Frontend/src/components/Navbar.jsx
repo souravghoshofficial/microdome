@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
-import { RiMenuFill, RiCloseLine , RiLogoutBoxRLine } from "@remixicon/react";
+import { RiMenuFill, RiCloseLine, RiLogoutBoxRLine } from "@remixicon/react";
 import Logo from "./Logo";
 import ThemeBtn from "./ThemeBtn";
 import UserCard from "./UserCard";
@@ -33,11 +33,10 @@ const navItems = [
   },
 ];
 
-
-
 const Navbar = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.status);
+  const role = useSelector((state) => state.auth?.userData?.role);
   const [showSideNav, setShowSideNav] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const lastScrollYRef = useRef(0);
@@ -61,22 +60,29 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-
-   const logoutUser = () => {
-    axios.post(`${ApiUrl}/users/logout`,{}, {
-      withCredentials: true
-    })
-    .then((res) => {
-      if(res.data.statusCode === 200){
-        dispatch(logout());
-        navigate("/");
-      }
-    })
-  }
-
+  const logoutUser = () => {
+    axios
+      .post(
+        `${ApiUrl}/users/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        if (res.data.statusCode === 200) {
+          dispatch(logout());
+          navigate("/");
+        }
+      });
+  };
 
   return (
-    <nav className={`fixed top-0 left-0 w-full transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"} flex items-center justify-center z-50 backdrop-blur-2xl text-black dark:text-white`}>
+    <nav
+      className={`fixed top-0 left-0 w-full transition-transform duration-300 ${
+        showNavbar ? "translate-y-0" : "-translate-y-full"
+      } flex items-center justify-center z-50 backdrop-blur-2xl text-black dark:text-white`}
+    >
       <div className="w-[90%] py-4 flex items-center justify-between relative">
         <div>
           <a className="flex items-center gap-2" href="/">
@@ -122,6 +128,9 @@ const Navbar = () => {
         </div>
         <UserCard className="absolute top-16 right-0" />
       </div>
+
+      {/* Mobile Side Nav */}
+
       <div
         className={`md:hidden ${
           showSideNav ? "block" : "hidden"
@@ -199,25 +208,38 @@ const Navbar = () => {
           )}
           {isLoggedIn && (
             <div>
-               <NavLink
-            onClick={() => setShowSideNav(false)}
-            to="/profile"
-            className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg block`
-            }
-          >
-            Profile
-          </NavLink>
-            <div
-          onClick={() => {
-            logoutUser()
-            setShowSideNav(false)
-          }}
-          className="mt-8 rounded-md flex items-center gap-2 w-full cursor-pointer"
-        >
-          <RiLogoutBoxRLine size={16} />
-          <p>Sign Out</p>
-        </div>
+              <NavLink
+                onClick={() => setShowSideNav(false)}
+                to="/profile"
+                className={({ isActive }) =>
+                  `${
+                    isActive ? "text-highlighted font-semibold" : ""
+                  } text-lg block`
+                }
+              >
+                Profile
+              </NavLink>
+              <NavLink
+                onClick={() => setShowSideNav(false)}
+                to="/admin"
+                className={({ isActive }) =>
+                  `${role === "admin" ? "block" : "hidden"} ${
+                    isActive ? "text-highlighted font-semibold" : ""
+                  } text-lg`
+                }
+              >
+                Admin Dashboard
+              </NavLink>
+              <div
+                onClick={() => {
+                  logoutUser();
+                  setShowSideNav(false);
+                }}
+                className="mt-8 rounded-md flex items-center gap-2 w-full cursor-pointer"
+              >
+                <RiLogoutBoxRLine size={16} />
+                <p>Sign Out</p>
+              </div>
             </div>
           )}
         </div>

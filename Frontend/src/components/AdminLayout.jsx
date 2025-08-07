@@ -6,7 +6,7 @@ const AdminLayout = () => {
   const role = useSelector((state) => state.auth?.userData?.role);
 
   
-  if (isLoggedIn === undefined || role === undefined) {
+  if (role === undefined) {
     return <div>Loading...</div>; 
   }
 
