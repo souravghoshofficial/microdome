@@ -1,6 +1,7 @@
-import React from "react";
 import UserIcon from "./UserIcon";
-import { RiUserLine, RiLogoutBoxRLine, RiCloseLine } from "@remixicon/react";
+
+import { CircleUserRound, ShieldUser, LogOut, X }  from "lucide-react"
+
 import { Link , useNavigate } from "react-router";
 import axios from "axios";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -40,27 +41,27 @@ const UserCard = ({ className = "" }) => {
         <Link
           to="/profile"
           onClick={() => dispatch(hideCard())}
-          className="mt-4 px-3 py-1.5 rounded-md flex items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 "
+          className="mt-4 px-3 py-1.5 rounded-md flex items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-highlighted cursor-pointer  transition-all duration-300"
         >
-          <RiUserLine size={16} className="border rounded-full" />
+          <CircleUserRound size={20} strokeWidth={1} />
           <p>Profile</p>
         </Link>
         <Link
-          to="/admin"
+          to="/admin/dashboard"
           onClick={() => dispatch(hideCard())}
-          className={`${userData?.role === "admin" ? "flex" : "hidden"} mt-2 px-3 py-1.5 rounded-md items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800`}
+          className={`${userData?.role === "admin" ? "flex" : "hidden"} mt-2 px-3 py-1.5 rounded-md items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-highlighted cursor-pointer  transition-all duration-300`}
         >
-          <RiUserLine size={16} className="border rounded-full" />
+          <ShieldUser size={20} strokeWidth={1} />
           <p>Admin Dashboard</p>
         </Link>
         <div
           onClick={logoutUser}
-          className="px-3 py-1.5 mt-2 rounded-md flex items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer"
+          className="px-3 py-1.5 mt-2 rounded-md flex items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-highlighted cursor-pointer  transition-all duration-300"
         >
-          <RiLogoutBoxRLine size={16} />
+          <LogOut size={20} strokeWidth={1} />
           <p>Sign Out</p>
         </div>
-        <RiCloseLine
+        <X
           onClick={() => dispatch(hideCard())}
           size={20}
           className="absolute top-3 right-3 cursor-pointer"

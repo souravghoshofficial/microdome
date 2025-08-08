@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { RiMenuFill, RiCloseLine, RiLogoutBoxRLine } from "@remixicon/react";
+import { LogOut } from "lucide-react"
 import Logo from "./Logo";
 import ThemeBtn from "./ThemeBtn";
 import UserCard from "./UserCard";
@@ -193,7 +194,7 @@ const Navbar = () => {
           >
             Resources
           </NavLink>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 text-lg">
             <span>Theme : </span>
             <ThemeBtn />
           </div>
@@ -221,11 +222,11 @@ const Navbar = () => {
               </NavLink>
               <NavLink
                 onClick={() => setShowSideNav(false)}
-                to="/admin"
+                to="/admin/dashboard"
                 className={({ isActive }) =>
                   `${role === "admin" ? "block" : "hidden"} ${
                     isActive ? "text-highlighted font-semibold" : ""
-                  } text-lg`
+                  } text-lg mt-4`
                 }
               >
                 Admin Dashboard
@@ -235,9 +236,9 @@ const Navbar = () => {
                   logoutUser();
                   setShowSideNav(false);
                 }}
-                className="mt-8 rounded-md flex items-center gap-2 w-full cursor-pointer"
+                className="mt-8 rounded-md flex items-center gap-2 w-full cursor-pointer text-lg"
               >
-                <RiLogoutBoxRLine size={16} />
+                <LogOut size={16} />
                 <p>Sign Out</p>
               </div>
             </div>

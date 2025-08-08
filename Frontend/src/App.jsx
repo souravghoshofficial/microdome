@@ -12,6 +12,7 @@ import {
   AddSection,
   AllUsers,
   PremiumUsers,
+  AllCourses
 } from "./components/Admin";
 import {
   Signup,
@@ -128,6 +129,7 @@ const App = () => {
             <Route path="add-section" element={<AddSection />} />
 
             <Route path="all-users" element={<AllUsers />} />
+            <Route path="all-courses" element={<AllCourses />} />
             <Route path="premium-users" element={<PremiumUsers />} />
           </Route>
         </Route>

@@ -85,7 +85,7 @@ const AddSection = () => {
 
             <button
               onClick={() => setShowFormFor(course._id)}
-              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
             >
               Add Section
             </button>

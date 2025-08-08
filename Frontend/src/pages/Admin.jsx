@@ -1,10 +1,11 @@
-import { NavLink, Outlet } from "react-router";
+import { Link, NavLink, Outlet } from "react-router";
 import {
   Home,
   Users,
   Star,
   Layers,
   Video,
+  BookOpen
 } from "lucide-react";
 
 import { Logo } from '../components'
@@ -13,6 +14,7 @@ const menuItems = [
   { name: "Dashboard", icon: <Home size={20} />, href: "/admin/dashboard" },
   { name: "All Users", icon: <Users size={20} />, href: "/admin/all-users" },
   { name: "Premium Users", icon: <Star size={20} />, href: "/admin/premium-users" },
+  { name: "All Courses", icon: <BookOpen size={20} />, href: "/admin/all-courses" },
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
 ];
@@ -22,10 +24,10 @@ export default function Admin() {
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Sidebar */}
       <aside className="w-64 bg-white shadow-xl hidden md:flex flex-col"> 
-         <div className="px-6 py-5 flex items-center gap-2 border-b border-gray-200">
+         <Link to="/" className="px-6 py-5 flex items-center gap-2 border-b border-gray-200">
          <Logo className={"w-7 md:w-9"} />
          <p className="text-lg font-bold gradiant-text">MicroDome</p>
-        </div>
+        </Link>
         <nav className="flex-1 px-4 py-6 space-y-2">
           {menuItems.map((item) => (
             <NavLink

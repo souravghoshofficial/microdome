@@ -1,6 +1,6 @@
-import mongoose from "mongoose"
-import {User} from "../models/user.model.js"
-import {Course} from "../models/course.model.js"
+import mongoose from "mongoose";
+import { User } from "../models/user.model.js";
+import { Course } from "../models/course.model.js";
 
 export const isEnrolledInCourse = async (req, res, next) => {
   try {
@@ -11,23 +11,31 @@ export const isEnrolledInCourse = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid course ID" });
     }
 
-    const user = await User.findById(userId).select("isPremiumMember enrolledCourses");
+
+    const user = await User.findById(userId).select("role isPremiumMember enrolledCourses");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (!user.isPremiumMember) {
-      return res.status(401).json({ message: "Not a premium user" });
+
+    if (user.role === "admin") {
+      return next();
     }
+
 
     const course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    const isEnrolled = user.enrolledCourses.some(id => id.equals(courseId));
 
+    if (!user.isPremiumMember) {
+      return res.status(401).json({ message: "Not a premium user" });
+    }
+
+    
+    const isEnrolled = user.enrolledCourses.some(id => id.equals(courseId));
     if (!isEnrolled) {
       return res.status(401).json({ message: "Not enrolled in course" });
     }

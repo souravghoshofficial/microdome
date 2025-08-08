@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
-import { RiArrowRightSLine } from "@remixicon/react";
+import { ChevronRight } from "lucide-react"
 
 
 const Landing = () => {
@@ -31,9 +31,9 @@ const Landing = () => {
           >
             Enroll
           </Link>
-          <Link className="px-4 py-2 border rounded-sm flex items-center">
-            <Link to="/about-us">Learn More</Link>
-            <RiArrowRightSLine size={24} />
+          <Link to="/about-us" className="px-4 py-2 border rounded-sm flex items-center hover:text-highlighted transition-all duration-300">
+            Learn More
+            <ChevronRight size={20} />
           </Link>
         </div>
         <div className="w-full mt-16">

@@ -1,0 +1,49 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router"
+import axios from "axios";
+
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
+const AllCourses = () => {
+  const [courses, setCourses] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`${ApiUrl}/courses/get-all-courses`, {
+        withCredentials: true,
+      })
+      .then((res) => setCourses(res.data.courses))
+      .catch((err) => console.error(err));
+  }, []);
+  return (
+    <div className="min-h-screen w-full ">
+      <header className="mb-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-blue-800">All Courses</h1>
+        </div>
+      </header>
+         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {courses.map((course) => (
+          <div
+            key={course._id}
+            className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center"
+          >
+            <img
+              src={course.courseImage}
+              alt={course.courseTitle}
+              className="h-40 w-full object-cover rounded-md"
+            />
+            <h2 className="text-xl font-semibold text-center mt-4">{course.courseTitle}</h2>
+
+            <Link to={`/my-courses/${course._id}`}
+              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              View Course
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default AllCourses;
