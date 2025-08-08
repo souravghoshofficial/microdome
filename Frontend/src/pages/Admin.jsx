@@ -21,7 +21,7 @@ const menuItems = [
 
 export default function Admin() {
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="flex h-screen">
       {/* Sidebar */}
       <aside className="w-64 bg-white shadow-xl hidden md:flex flex-col"> 
          <Link to="/" className="px-6 py-5 flex items-center gap-2 border-b border-gray-200">
@@ -67,7 +67,7 @@ export default function Admin() {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 p-6 mb-24 md:mb-2">
+      <main className="flex-1 h-screen overflow-hidden p-6 mb-24 md:mb-2 bg-gray-100">
         <div className="w-full">
             <Outlet />
         </div>

@@ -67,10 +67,10 @@ const AddSection = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-gray-100">
       <h1 className="text-3xl font-bold text-blue-800 mb-6">Add Section</h1>
 
-      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-6 h-[80vh] overflow-y-scroll scrollbar-none">
         {courses.map((course) => (
           <div
             key={course._id}
@@ -85,7 +85,7 @@ const AddSection = () => {
 
             <button
               onClick={() => setShowFormFor(course._id)}
-              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer w-full"
             >
               Add Section
             </button>

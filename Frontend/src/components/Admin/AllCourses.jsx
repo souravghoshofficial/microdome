@@ -21,7 +21,7 @@ const AllCourses = () => {
           <h1 className="text-3xl font-bold text-blue-800">All Courses</h1>
         </div>
       </header>
-         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-scroll p-4 scrollbar-none">
         {courses.map((course) => (
           <div
             key={course._id}
@@ -35,7 +35,7 @@ const AllCourses = () => {
             <h2 className="text-xl font-semibold text-center mt-4">{course.courseTitle}</h2>
 
             <Link to={`/my-courses/${course._id}`}
-              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="mt-4 bg-blue-600 text-white text-center py-2 rounded hover:bg-blue-700 w-full"
             >
               View Course
             </Link>
