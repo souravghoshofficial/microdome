@@ -5,7 +5,8 @@ import {
   Star,
   Layers,
   Video,
-  BookOpen
+  BookOpen,
+  Plus
 } from "lucide-react";
 
 import { Logo } from '../components'
@@ -17,6 +18,7 @@ const menuItems = [
   { name: "All Courses", icon: <BookOpen size={20} />, href: "/admin/all-courses" },
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
+  { name: "Create Quiz", icon: <Plus size={20} />, href: "/admin/create-quiz" },
 ];
 
 export default function Admin() {

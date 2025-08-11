@@ -1,4 +1,6 @@
 import { User } from "../models/user.model.js";
+import { Quiz } from "../models/quiz.model.js";
+import { Question } from "../models/question.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
@@ -15,6 +17,52 @@ const getAllUsers = async (req,res)=>{
     throw new ApiError(500,"Failed to fetch the users");
   }
 }
+
+
+
+// ------ quiz controllers ------- //
+
+// Create Quiz
+export const createQuiz = async (req, res) => {
+  try {
+    const { title, description, timeLimit, questions } = req.body;
+
+    
+    if (!title || !description || !questions || questions.length === 0) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+   
+    for (let q of questions) {
+      if (
+        !q.questionText ||
+        !q.options ||
+        q.correctOption === undefined
+      ) {
+        return res.status(400).json({ message: "Invalid question format" });
+      }
+    }
+
+    // Step 1: Create all questions
+    const createdQuestions = await Question.insertMany(questions);
+
+    // Step 2: Create quiz with references to created questions
+    const quiz = await Quiz.create({
+      title,
+      description,
+      timeLimit,
+      questions: createdQuestions.map((q) => q._id),
+    });
+
+    res.status(201).json({
+      message: "Quiz created successfully",
+      quiz,
+    });
+  } catch (error) {
+    console.error("Error creating quiz:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 export {getAllUsers};
 

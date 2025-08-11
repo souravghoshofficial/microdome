@@ -1,12 +1,7 @@
 import mongoose , {Schema} from "mongoose";
 
 const questionSchema = new Schema({
-    question: {
-        type: String,
-        trim: true,
-        required: true
-    },
-    correctAnswer: {
+    questionText: {
         type: String,
         trim: true,
         required: true
@@ -15,7 +10,11 @@ const questionSchema = new Schema({
         type: String,
         trim: true,
         required: true
-    }]
+    }],
+    correctOption: {
+        type: Number,
+        required: true
+    }
 });
 
 export const Question = mongoose.model("Question", questionSchema);

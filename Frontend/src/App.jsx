@@ -12,7 +12,8 @@ import {
   AddSection,
   AllUsers,
   PremiumUsers,
-  AllCourses
+  AllCourses,
+  CreateQuiz
 } from "./components/Admin";
 import {
   Signup,
@@ -131,6 +132,7 @@ const App = () => {
             <Route path="all-users" element={<AllUsers />} />
             <Route path="all-courses" element={<AllCourses />} />
             <Route path="premium-users" element={<PremiumUsers />} />
+            <Route path="create-quiz" element={<CreateQuiz />} />
           </Route>
         </Route>
         <Route path="/payment-success" element={<PaymentSuccess />} />
