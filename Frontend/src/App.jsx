@@ -37,6 +37,7 @@ import {
   SemesterCourseLayout,
   QuizList,
   QuizLayout,
+  LoadingScreen
 } from "./pages";
 
 import {
@@ -60,8 +61,8 @@ const App = () => {
 
 
   if (loading) {
-    return <div className="w-full h-screen flex items-center justify-center bg-gray-950 text-white text-lg">
-      Loading...
+    return <div className="w-full">
+      <LoadingScreen />
     </div>;
   }
 

@@ -20,6 +20,7 @@ import Admin from "./Admin";
 import SemesterCourseLayout from "./SemesterCourseLayout"
 import QuizList from "./QuizList";
 import QuizLayout from "./QuizLayout";
+import LoadingScreen from "./LoadingScreen";
 
 export {
   Landing,
@@ -43,5 +44,6 @@ export {
   Admin,
   SemesterCourseLayout,
   QuizList,
-  QuizLayout
+  QuizLayout,
+  LoadingScreen
 };
