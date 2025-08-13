@@ -70,7 +70,7 @@ const CreateQuiz = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-4 bg-white shadow-lg rounded">
+    <div className="max-w-3xl mx-auto px-6 py-4 bg-white shadow-lg rounded-xl">
       <Toaster position="top-right"/>
       <h2 className="text-2xl font-bold mb-4">Create New Quiz</h2>
       <form onSubmit={handleSubmit} className="space-y-4 h-[82vh] overflow-y-scroll scrollbar-none">
