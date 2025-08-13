@@ -1,25 +1,13 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useSelector } from "react-redux";
 import { CourseCard } from "../components";
 import demo_pic from "../assets/demo_pic.jpg";
-const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const Courses = () => {
-  const [Loading, setLoading] = useState(true);
-  const [courses, setCourses] = useState([]);
+  const courses = useSelector((state) => state.courses.courses);
 
-  useEffect(() => {
-    axios
-      .get(`${ApiUrl}/courses/get-all-courses`)
-      .then((res) => {
-        console.log(res.data);
-        setCourses(res.data.courses);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  if (!courses) {
+    return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   const entranceCourses = courses.filter(
     (course) => course.courseTag.toLowerCase() === "m.sc entrance"
@@ -39,8 +27,6 @@ const Courses = () => {
       linkAddress: "bsc-hons-batch",
     },
   ];
-
-  if (Loading) return <div className="w-full h-screen ">Loading...</div>;
 
   return (
     <div className="w-full flex items-center justify-center transition-colors duration-300">

@@ -1,33 +1,19 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useSelector } from "react-redux";
 import { CourseCard } from "../components";
-
-const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const BScHonsBatch = () => {
   
-  const [Loading, setLoading] = useState(true);
-  const [courses, setCourses] = useState([]);
+  const courses = useSelector((state) => state.courses.courses);
 
-  useEffect(() => {
-    axios
-      .get(`${ApiUrl}/courses/get-all-courses`)
-      .then((res) => {
-        console.log(res.data);
-        setCourses(res.data.courses);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  if (!courses) {
+    return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   const semesterCourses = courses.filter(
     (course) => course.courseTag.toLowerCase() === "b.sc hons."
   );
 
-  if (Loading) return <div className="w-full h-screen ">Loading...</div>;
-
+ 
   return (
     <div className="w-full flex items-center justify-center transition-colors duration-300">
       <div className="my-24 md:my-32 w-[90%]">

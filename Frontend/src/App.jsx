@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router";
 
-import { useDispatch } from "react-redux";
-import { login, logout } from "./features/auth/authSlice";
-
 import Layout from "./Layout.jsx";
+
 import {
   Dashboard,
   AddLecture,
@@ -16,6 +13,7 @@ import {
   CreateQuiz,
   CreateCourse
 } from "./components/Admin";
+
 import {
   Signup,
   Login,
@@ -40,6 +38,7 @@ import {
   QuizList,
   QuizLayout,
 } from "./pages";
+
 import {
   Navbar,
   AuthenticatedRoute,
@@ -48,36 +47,25 @@ import {
   PaymentSuccess,
   AdminLayout,
 } from "./components";
-import axios from "axios";
-const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
+
+import { useCourses } from "./hooks/courses.js";
+import { useAuth } from "./hooks/auth.js";
+
 
 const App = () => {
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    axios
-      .get(`${ApiUrl}/users/current-user`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        dispatch(logout());
-        dispatch(login(res.data.data));
-      })
-      .catch((err) => {
-        console.log(err.message);
-        dispatch(logout());
-      });
-  }, []);
+ const { loading } = useAuth();
+  useCourses();
 
-  const [loader, setLoader] = useState(false);
 
-  if (loader)
-    return (
-      <div className="w-full h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
+  if (loading) {
+    return <div className="w-full h-screen flex items-center justify-center bg-gray-950 text-white text-lg">
+      Loading...
+    </div>;
+  }
 
+  
   return (
     <BrowserRouter>
       <Routes>
