@@ -13,7 +13,7 @@ import {
   AllUsers,
   PremiumUsers,
   AllCourses,
-  CreateQuiz
+  CreateQuiz,
 } from "./components/Admin";
 import {
   Signup,
@@ -36,6 +36,8 @@ import {
   CourseViewPage,
   Admin,
   SemesterCourseLayout,
+  QuizList,
+  QuizLayout,
 } from "./pages";
 import {
   Navbar,
@@ -50,7 +52,6 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
   const dispatch = useDispatch();
-
 
   useEffect(() => {
     axios
@@ -103,6 +104,7 @@ const App = () => {
               />
             </Route>
           </Route>
+
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/faculties" element={<Faculties />} />
@@ -136,6 +138,8 @@ const App = () => {
           </Route>
         </Route>
         <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/quiz" element={[<QuizList />, <Navbar/>]} />
+        <Route path="/quiz/:quizId" element={<QuizLayout />} />
       </Routes>
     </BrowserRouter>
   );

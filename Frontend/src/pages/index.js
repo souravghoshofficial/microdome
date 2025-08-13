@@ -18,6 +18,8 @@ import EditUserDetails from "./EditUserDetails";
 import CourseViewPage from "./CourseViewPage";
 import Admin from "./Admin";
 import SemesterCourseLayout from "./SemesterCourseLayout"
+import QuizList from "./QuizList";
+import QuizLayout from "./QuizLayout";
 
 export {
   Landing,
@@ -39,5 +41,7 @@ export {
   EditUserDetails,
   CourseViewPage,
   Admin,
-  SemesterCourseLayout
+  SemesterCourseLayout,
+  QuizList,
+  QuizLayout
 };
