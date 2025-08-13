@@ -9,11 +9,11 @@ const LoadingScreen = () => {
 
       {/* Logo in center */}
       <div>
-        <Logo className={"w-40 md:w-52 lg:w-64"} />
+        <Logo className={"w-48 md:w-56 lg:w-64"} />
       </div>
 
       {/* Spinner near bottom */}
-      <div className="mb-10">
+      <div className="mb-20 md:mb-10">
         <div className="w-8 h-8 border-4 border-purple-300 border-t-transparent rounded-full animate-spin"></div>
       </div>
     </div>
