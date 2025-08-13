@@ -25,10 +25,10 @@ const getAllUsers = async (req,res)=>{
 // Create Quiz
 export const createQuiz = async (req, res) => {
   try {
-    const { title, description, timeLimit, questions } = req.body;
+    const { title, description, category, timeLimit, questions } = req.body;
 
     
-    if (!title || !description || !questions || questions.length === 0) {
+    if (!title || !description ||!category || !questions || questions.length === 0) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -51,6 +51,7 @@ export const createQuiz = async (req, res) => {
       title,
       description,
       timeLimit,
+      category,
       questions: createdQuestions.map((q) => q._id),
     });
 

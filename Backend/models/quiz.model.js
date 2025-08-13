@@ -12,6 +12,11 @@ const quizSchema = new Schema(
       trim: true,
       required: true,
     },
+    category: {
+      type: String,
+      required: true,
+      emun: ["paid", "free"],
+    },
     questions: [
       {
         type: mongoose.Schema.Types.ObjectId,
