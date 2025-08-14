@@ -2,35 +2,62 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme{
-  --color-button : #3EB5A2;
-  --color-highlighted: #3EB5A2;
-  --color-light-pink: #F4CCCC;
-  --color-mint-green: #A8E6CF;
-  --color-warm-salmon: #EA9999;
-  --color-light-lilac: #E0BBE4;
-  --color-baby-blue: #BFEFFF;
-
+@theme {
+  --color-button: #3eb5a2;
+  --color-highlighted: #3eb5a2;
+  --color-light-pink: #f4cccc;
+  --color-mint-green: #a8e6cf;
+  --color-warm-salmon: #ea9999;
+  --color-light-lilac: #e0bbe4;
+  --color-baby-blue: #bfefff;
 }
 
-.scrollbar-none{
+@utility scrollbar {
+  &::-webkit-scrollbar {
+    width: 0.6rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 50px;
+    border: 1.5px solid var(--scrollbar-track);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+}
+
+.scrollbar-none {
   scrollbar-width: none;
 }
 
-.gradiant-text{
-  background: linear-gradient(to left, #DB3B7E, #3EB5A2 );
+.gradiant-text {
+  background: linear-gradient(to left, #db3b7e, #3eb5a2);
   background-clip: text;
   color: transparent;
 }
 
-
-.highlighted-text{
-  color: #3EB5A2;
+.highlighted-text {
+  color: #3eb5a2;
 }
-
 
 :root {
   --gap: 32px;
+  --scrollbar-track: #e5e7eb; /* gray-200 */
+  --scrollbar-thumb: #3b82f6; /* blue-500 */
+  --scrollbar-thumb-hover: #2563eb; /* blue-600 */
+}
+
+.dark {
+  --scrollbar-track: #1f2937; /* gray-800 */
+  --scrollbar-thumb: #60a5fa; /* blue-400 */
+  --scrollbar-thumb-hover: #3b82f6; /* blue-500 */
 }
 
 #marquee {
@@ -51,11 +78,9 @@
   }
 }
 
-
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
-
 }
 
 input[type="number"] {
@@ -65,7 +90,6 @@ input[type="number"] {
 input[type="number"] {
   appearance: textfield;
 }
-
 
 /* nav{
   bg-[rgba(244,242,242,0.85)] dark:bg-[rgba(8,_8,_8,_0.2)] border-b border-gray-950/[.1] dark:border-gray-50/[.1]
@@ -95,6 +119,3 @@ html {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-
-
-

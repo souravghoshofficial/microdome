@@ -33,7 +33,7 @@ const CourseViewPage = () => {
   }, [id]);
 
   
-  if (!course) return <div className="w-full h-screen flex items-center justify-center">
+  if (!course) return <div className="w-full h-screen flex items-center justify-center bg-white text-black dark:bg-black dark:text-white">
     {
       loadingText !== "Loading..." ? (<TriangleAlert className="text-yellow-600 h-15 w-15 mr-1"/>):" "
     }
@@ -42,7 +42,7 @@ const CourseViewPage = () => {
     </div>;
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen overflow-hidden bg-white dark:bg-zinc-900 text-black dark:text-gray-100">
       <div className="w-full px-8 py-3 flex items-center gap-4">
         <Link to="/">
          <Logo className={"w-12 h-12"} />
@@ -63,9 +63,9 @@ const CourseViewPage = () => {
             ></iframe>
           </div>
         </div>
-        <div className="w-full overflow-y-scroll md:w-[40%]">
+        <div className="w-full md:w-[40%]">
           <div className="w-full md:w-[90%] mx-auto p-4">
-            <h2 className="text-lg font-bold">Course Content</h2>
+            <h2 className="text-lg font-bold pb-1 border-b-2 border-b-highlighted inline-block">Course Content</h2>
             <CourseSection
               videoURL={videoURL}
               setVideoURL={setVideoURL}

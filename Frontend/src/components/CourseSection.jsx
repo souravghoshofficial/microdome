@@ -11,10 +11,10 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
     setshowMenu(newMenu);
   };
   return (
-    <div className="w-full">
+    <div className="w-full h-[50vh] md:h-[64vh] overflow-y-scroll mt-2 pb-6 md:px-2 md:scrollbar">
       <div className="mt-4">
         {sections.map((section, index) => (
-          <div className="w-full mb-4">
+          <div className="w-full mb-1">
             <div
               key={index}
               onClick={() => openMenu(index)}
@@ -41,7 +41,7 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
             >
               <ul>
                 {section.lectures.map((lecture, idx) => (
-                  <div key={lecture} onClick={() => setVideoURL(lecture.videoURL)}  className={`${lecture.videoURL === videoURL ? "bg-gray-200" : ""} p-4 hover:bg-gray-200 cursor-pointer`}>
+                  <div key={lecture} onClick={() => setVideoURL(lecture.videoURL)}  className={`${lecture.videoURL === videoURL ? "bg-gray-200 dark:bg-zinc-800" : ""} p-4 hover:bg-gray-200 dark:hover:bg-zinc-800 cursor-pointer`}>
                     <li>
                       <span className="mr-1">{idx + 1}.</span>
                       {lecture.title}
