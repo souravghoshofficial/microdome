@@ -3,9 +3,10 @@ import { Quiz } from "../models/quiz.model.js";
 import { Question } from "../models/question.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { CourseEnrollment } from "../models/courseEnrollment.model.js";
+import { Course } from "../models/course.model.js";
 
-
-const getAllUsers = async (req,res)=>{
+export const getAllUsers = async (req,res)=>{
   try {
     const users = await User.find({}).select("-password");
     res.status(200).json({
@@ -65,115 +66,147 @@ export const createQuiz = async (req, res) => {
   }
 };
 
-export {getAllUsers};
+export const getUserDetailsByCourseId = async (req, res) => {
+  try {
+    const courseId = req.params.id;
 
+    // Find all enrollments for this course and populate user details
+    const enrollments = await CourseEnrollment.find({ courseId })
+      .populate(
+        "userId",
+        "name email mobileNumber profileImage instituteName createdAt"
+      )
+      .lean();
 
-// const isPremium = async (req,res)=>{
-// try {
-//     const { userId } = req.body;
+    if (!enrollments || enrollments.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No users found for this course",
+      });
+    }
 
-//     // const user = await User.findById(req.user?._id);
+    // Map to extract only the necessary details
+    const users = enrollments.map((enrollment) => ({
+      userId: enrollment.userId._id,
+      name: enrollment.userId.name,
+      email: enrollment.userId.email,
+      mobileNumber: enrollment.userId.mobileNumber,
+      profileImage: enrollment.userId.profileImage,
+      instituteName: enrollment.userId.instituteName,
+      createdAt: enrollment.userId.createdAt,
+      isActive: enrollment.isActive,
+    }));
 
-//     if(!userId){
-//       throw new ApiError(400,"User id is required");
-//     }
-
-//     const user = await User.findById(userId);
-
-//     if(!user){
-//       throw new ApiError(400,"User doesn't exist");
-//     }
-  
-//     if(user.isPremiumMember){
-//       return res.status(200).json({ 
-//         message: "User is a premium member",
-//         isPremiumMember: true,
-//         user
-//       });
-//     }
-//     else{
-//       return res.status(200).json({
-//         message: "User is not a premium member",
-//         isPremiumMember: false
-//       })
-//     }
-// } catch (error) {
-//   console("Error occurred in checking isPremium or not: ",error);
-//   throw new ApiError(400,"Something went wrong");
-// }
-// }
-
-// const removeUser = async (req,res) => {
-//   try {
-//     const { userId } = req.body;
-//     // const { email } = req.body;
-  
-//       if(!userId){
-//         throw new ApiError(400,"User id is required");
-//       }
-  
-//       // const user = await User.findById(userId);
-
-//       // const user = await User.findByIdAndUpdate(req.user?._id);
-
-//       const user = await User.findById(userId);
-
-//       if (!user) {
-//       throw new ApiError(404,"User not found");
-//       }
-
-//       if (!user.isPremiumMember) {
-//       return res.status(200).json({ message: "User is already removed" });
-//     }
-
-//     const updatedUser = await User.findByIdAndUpdate(
-//     userId, 
-//     { $set: { isPremiumMember: false } },
-//     { new: true }
-//   ).select("-password");
-  
-//   return res.status(200).json(new ApiResponse(200,updatedUser,"User is removed successfully"));
-
-//   } catch (error) {
-//     console.log("Error occurred to delete a user: ", error);
-//     throw new ApiError(500,"Internal server error");
-//   }
-// }
-
-// const upgradeToPremium = async (req, res) => {
-//   try {
-//     const { userId } = req.body;
-
-//     if (!userId) {
-//       throw new ApiError(400,"User id is required");
-//     }
-
-//     const user = await User.findById(userId);
-
-//     if (!user) {
-//       throw new ApiError(404,"User not found");
-//     }
-
-//     if (user.isPremiumMember) {
-//       res.status(200).json({ message: "User is already a premium member" });
-//     }
-
-//     const updatedUser = await User.findByIdAndUpdate(
-//       userId,
-//       { $set: { isPremiumMember: true } },
-//       { new: true }
-//     ).select("-password");
-
-//     res.status(200).json({
-//       message: "User upgraded to premium successfully",
-//       updatedUser
-//     });
-//   } catch (error) {
-//     console.error("Error upgrading user to premium:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      courseId,
+      totalUsers: users.length,
+      users,
+    });
+  } catch (error) {
+    console.error("Error fetching users by courseId:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
 
 
 
-// export {checkUsers,isPremium,removeUser,upgradeToPremium,getAllUsers};
+export const revokeAccess = async (req, res) => {
+  try {
+    const { userId, courseId } = req.body;
+
+    const updatedEnrollment = await CourseEnrollment.findOneAndUpdate(
+      { userId, courseId },
+      { $set: { isActive: false } },
+      { new: true }
+    );
+
+    if (!updatedEnrollment) {
+      return res.status(404).json({
+        success: false,
+        message: "User is not enrolled in this course",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Access revoked successfully",
+      enrollment: updatedEnrollment,
+    });
+  } catch (error) {
+    console.error("Error revoking access:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export const grantAccess = async (req, res) => {
+  try {
+    const { userId, courseId } = req.body;
+
+    const updatedEnrollment = await CourseEnrollment.findOneAndUpdate(
+      { userId, courseId },
+      { $set: { isActive: true } },
+      { new: true }
+    );
+
+    if (!updatedEnrollment) {
+      return res.status(404).json({
+        success: false,
+        message: "User is not enrolled in this course",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Access granted successfully",
+      enrollment: updatedEnrollment,
+    });
+  } catch (error) {
+    console.error("Error granting access:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getCourseDetailsWithUserCounts = async (req, res) => {
+  try {
+    const coursesWithCounts = await Course.aggregate([
+      {
+        $lookup: {
+          from: "courseenrollments", // MongoDB will pluralize the model name
+          localField: "_id",
+          foreignField: "courseId",
+          as: "enrollments"
+        }
+      },
+      {
+        $addFields: {
+          studentCount: { $size: "$enrollments" } // count ALL enrollments
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          cardTitle: 1,
+          studentCount: 1,
+          courseImage: 1
+        }
+      }
+    ]);
+
+    res.status(200).json({
+      success: true,
+      courses: coursesWithCounts
+    });
+  } catch (error) {
+    console.error("Error fetching course details with user counts:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+

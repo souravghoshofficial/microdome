@@ -11,7 +11,8 @@ import {
   PremiumUsers,
   AllCourses,
   CreateQuiz,
-  CreateCourse
+  CreateCourse,
+  PremiumUserDetails
 } from "./components/Admin";
 
 import {
@@ -127,6 +128,7 @@ const App = () => {
             <Route path="all-users" element={<AllUsers />} />
             <Route path="all-courses" element={<AllCourses />} />
             <Route path="premium-users" element={<PremiumUsers />} />
+            <Route path="premium-users/:id" element={< PremiumUserDetails/>} />
             <Route path="create-quiz" element={<CreateQuiz />} />
             <Route path="create-course" element={<CreateCourse />} />
           </Route>
