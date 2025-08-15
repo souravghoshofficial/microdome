@@ -21,7 +21,6 @@ import CourseSection from "./CourseSection";
 import PaymentSuccess from "./PaymentSucess";
 import AdminLayout from "./AdminLayout";
 
-
 export {
   Navbar,
   ContactItem,
@@ -44,5 +43,5 @@ export {
   CourseSyllabus,
   CourseSection,
   PaymentSuccess,
-  AdminLayout
+  AdminLayout,
 };
