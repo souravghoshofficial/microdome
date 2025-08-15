@@ -6,11 +6,15 @@ const Courses = () => {
   const courses = useSelector((state) => state.courses.courses);
 
   if (!courses) {
-    return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   const entranceCourses = courses.filter(
-    (course) => course.courseTag.toLowerCase() === "m.sc entrance"
+    (course) => course.courseTag.toLowerCase() !== "b.sc hons."
   );
 
   const SemesterCourse = [

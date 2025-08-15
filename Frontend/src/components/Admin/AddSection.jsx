@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -7,10 +8,10 @@ const AddSection = () => {
   const [courses, setCourses] = useState([]);
   const [showFormFor, setShowFormFor] = useState(null);
   const [formData, setFormData] = useState({
-    sectionTitle: '',
-    lectureTitle: '',
-    videoURL: '',
-    noteTitle: '',
+    sectionTitle: "",
+    lectureTitle: "",
+    videoURL: "",
+    noteTitle: "",
     noteURL: null,
   });
 
@@ -18,8 +19,8 @@ const AddSection = () => {
   useEffect(() => {
     axios
       .get(`${ApiUrl}/courses/get-all-courses`, {
-      withCredentials: true
-    })
+        withCredentials: true,
+      })
       .then((res) => setCourses(res.data.courses))
       .catch((err) => console.error(err));
   }, []);
@@ -38,36 +39,37 @@ const AddSection = () => {
     e.preventDefault();
 
     const data = new FormData();
-    data.append('courseId', courseId);
-    data.append('sectionTitle', formData.sectionTitle);
-    data.append('lectureTitle', formData.lectureTitle);
-    data.append('videoURL', formData.videoURL);
-    data.append('noteTitle', formData.noteTitle);
-    data.append('noteURL', formData.noteURL);
+    data.append("courseId", courseId);
+    data.append("sectionTitle", formData.sectionTitle);
+    data.append("lectureTitle", formData.lectureTitle);
+    data.append("videoURL", formData.videoURL);
+    data.append("noteTitle", formData.noteTitle);
+    data.append("noteURL", formData.noteURL);
 
     axios
-      .post(`${ApiUrl}/courses/add-section`, data , {
-      withCredentials: true
-    })
+      .post(`${ApiUrl}/courses/add-section`, data, {
+        withCredentials: true,
+      })
       .then(() => {
-        alert('Section added successfully!');
+        toast.success("Section added successfully!");
         setFormData({
-          sectionTitle: '',
-          lectureTitle: '',
-          videoURL: '',
-          noteTitle: '',
+          sectionTitle: "",
+          lectureTitle: "",
+          videoURL: "",
+          noteTitle: "",
           noteURL: null,
         });
         setShowFormFor(null);
       })
       .catch((err) => {
         console.error(err);
-        alert('Failed to add section');
+        toast.error("Failed to add section");
       });
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
+      <Toaster position="top-right" />
       <h1 className="text-3xl font-bold text-blue-800 mb-6">Add Section</h1>
 
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-6 h-[80vh] overflow-y-scroll scrollbar-none">
@@ -81,7 +83,9 @@ const AddSection = () => {
               alt={course.courseTitle}
               className="h-40 w-full object-cover rounded-md"
             />
-            <h2 className="text-xl font-semibold text-center mt-4">{course.courseTitle}</h2>
+            <h2 className="text-xl font-semibold text-center mt-4">
+              {course.courseTitle}
+            </h2>
 
             <button
               onClick={() => setShowFormFor(course._id)}
@@ -97,8 +101,13 @@ const AddSection = () => {
       {showFormFor && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-            <h2 className="text-2xl font-bold mb-4 text-center text-blue-700">Add Section</h2>
-            <form onSubmit={(e) => handleSubmit(e, showFormFor)} className="space-y-4">
+            <h2 className="text-2xl font-bold mb-4 text-center text-blue-700">
+              Add Section
+            </h2>
+            <form
+              onSubmit={(e) => handleSubmit(e, showFormFor)}
+              className="space-y-4"
+            >
               <input
                 type="text"
                 name="sectionTitle"
