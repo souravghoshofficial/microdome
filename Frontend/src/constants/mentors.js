@@ -5,6 +5,9 @@ import Subhadeep from "../assets/subhadip.png";
 import Akash from "../assets/Akash.png";
 import KrishnenduPicNew from "../assets/new-img3.png";
 
+
+// all mentors
+
 export const mentors = [
   {
     name: "Sayan Ganguly",
