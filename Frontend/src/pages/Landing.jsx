@@ -40,7 +40,7 @@ const Landing = () => {
         <div className="w-full mt-16">
           <iframe
             className="mx-auto w-full h-[55vw] md:w-[70%] md:h-[36vw] rounded-xl"
-            src="https://www.youtube.com/embed/ZB2dCrJD0uY?si=6pc5iNPWx3Eekw3P&amp;controls=0"
+            src="https://www.youtube.com/embed/rYvVQlKzIbA?si=XB_QI-UaNcVpTlUe&amp;controls=0"
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
