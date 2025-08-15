@@ -4,7 +4,7 @@ import { User } from '../models/user.model.js';
 import { Course } from "../models/course.model.js"
 import crypto from 'crypto';
 import { sendCourseConfirmationEmail } from '../utils/sendEmail.js';
-
+import { CourseEnrollment } from '../models/courseEnrollment.model.js';
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
@@ -103,9 +103,13 @@ const verifyPayment = async (req, res) => {
       user.enrolledCourses.push(order.course);
     }
     await user.save();
-
-    const courseDetails = await Course.findById(order.course)
     
+    const courseDetails = await Course.findById(order.course)
+
+    await CourseEnrollment.create({
+      courseId: courseDetails._id,
+      userId: user._id
+    });
 
     await sendCourseConfirmationEmail({
       to: user.email,

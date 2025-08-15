@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { User } from "../models/user.model.js";
 import { Course } from "../models/course.model.js";
-
+import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 export const isEnrolledInCourse = async (req, res, next) => {
   try {
     const userId = req.user?._id;
@@ -38,6 +38,19 @@ export const isEnrolledInCourse = async (req, res, next) => {
     const isEnrolled = user.enrolledCourses.some(id => id.equals(courseId));
     if (!isEnrolled) {
       return res.status(401).json({ message: "Not enrolled in course" });
+    }
+
+    const enrollment = await CourseEnrollment.findOne({
+      userId: user._id,
+      courseId: course._id
+    });
+
+    if(!enrollment){
+      return res.status(401).json({ message: "Not enrolled in course" });
+    }
+
+    if(!enrollment.isActive){
+      return res.status(401).json({ message: "Access is revoked" });
     }
 
     next();
