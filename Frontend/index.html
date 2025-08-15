@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="src/assets/microdomeLogo.png" />
+  <link rel="icon" type="image/svg+xml" href="public/microdomeLogo.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Title -->
@@ -13,7 +13,7 @@
   <meta name="description"
     content="Microdome Classes offers expert online coaching for M.Sc, M.Tech, and B.Sc Hons entrance exams, including IIT JAM, GATE, CUET PG, and more. Master biology with our comprehensive courses." />
 
-  <!-- Keywords -->
+  <!-- Meta Keywords (low SEO impact but harmless) -->
   <meta name="keywords"
     content="Microdome Classes, IIT JAM coaching, GATE biology coaching, CUET PG preparation, B.Sc Hons biology, M.Sc entrance coaching, online biology classes, M.Tech entrance coaching" />
 
@@ -36,17 +36,36 @@
     content="Crack M.Sc, M.Tech, and B.Sc Hons biology entrance exams with Microdome Classes' expert online coaching." />
   <meta name="twitter:image" content="https://www.microdomeclasses.in/preview-image.jpg" />
 
-  <!-- Canonical -->
+  <!-- Canonical URL -->
   <link rel="canonical" href="https://www.microdomeclasses.in/" />
 
-  <!-- Favicons -->
-  <link rel="apple-touch-icon" sizes="180x180" href="src/assets/microdomeLogo.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="src/assets/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="src/assets/favicon-16x16.png" />
+  <!-- Favicons (should be placed in public/ folder) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="public/microdomeLogo.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="public/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="public/favicon-16x16.png" />
+
+  <!-- Web App Manifest (make sure this file exists in public/) -->
   <link rel="manifest" href="/site.webmanifest" />
 
-  <!-- Theme Color -->
+  <!-- Theme Color for Mobile -->
   <meta name="theme-color" content="#0f172a" />
+
+  <!-- Structured Data (Schema.org JSON-LD) -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "Microdome Classes",
+      "url": "https://www.microdomeclasses.in/",
+      "logo": "https://www.microdomeclasses.in/logo.png",
+      "description": "Expert online coaching for M.Sc, M.Tech, and B.Sc Hons entrance exams, including IIT JAM, GATE, CUET PG.",
+      "sameAs": [
+        "https://www.facebook.com/microdomeclasses",
+        "https://www.instagram.com/microdomeclasses"
+      ]
+    }
+  </script>
+
 </head>
 
 <body class="select-none">
