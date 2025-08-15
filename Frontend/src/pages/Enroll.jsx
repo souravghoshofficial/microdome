@@ -29,7 +29,7 @@ const Enroll = () => {
               <Link to="signup" className="px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-800">
                 Signup
               </Link>
-              <Link to="courses" className="px-4 py-2 rounded-md text-sm border border-highlighted bg-highlighted text-white">
+              <Link to="courses" className="px-4 py-2 rounded-md text-sm border border-highlighted bg-highlighted hover:bg-highlighted-hover hover:border-highlighted-hover text-white">
                 Enroll
               </Link>
             </div>

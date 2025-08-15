@@ -37,7 +37,7 @@ const TestimonialCard = ({ name, message, imageUrl, presentCourseOfStudy , insti
             onClick={toggleReadMore}
             className="text-blue-500 ml-1 cursor-pointer"
           >
-            {isExpanded ? "View Less" : "View More"}
+            {isExpanded ? "See less" : "See more"}
           </button>
         )}
       </h3>

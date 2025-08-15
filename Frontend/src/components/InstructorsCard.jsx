@@ -3,7 +3,7 @@ import React from 'react'
 
 const InstructorsCard = ({name, image , subject , description , bgColor}) => {
   return (
-    <div className='w-[96%] mx-auto flex flex-col bg-white dark:bg-gray-50/[.10] rounded-xl overflow-hidden justify-center items-center border border-zinc-900/15 dark:border-gray-700/25 hover:border-blue-500/50 '>
+    <div className='w-[96%] mx-auto flex flex-col bg-white dark:bg-gray-50/[.10] rounded-xl overflow-hidden justify-center items-center border border-zinc-900/15 dark:border-gray-700/25 hover:border-blue-500/50'>
         <div className={` ${bgColor} w-full flex items-center justify-center`}>
           <img className='h-72' src={image} alt="image" />
         </div>

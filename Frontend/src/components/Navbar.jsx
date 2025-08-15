@@ -118,7 +118,7 @@ const Navbar = () => {
           {!isLoggedIn && (
             <NavLink
               to="/login"
-              className="px-5 py-1.5 bg-button text-white font-semibold rounded-sm"
+              className="px-5 py-1.5 bg-button hover:bg-highlighted-hover text-white font-semibold rounded-sm"
             >
               Login
             </NavLink>
@@ -202,7 +202,7 @@ const Navbar = () => {
             <NavLink
               onClick={() => setShowSideNav(false)}
               to="/login"
-              className=" w-full py-2 text-center text-lg bg-highlighted text-white font-semibold rounded-sm"
+              className=" w-full py-2 text-center text-lg bg-highlighted hover:bg-highlighted-hover text-white font-semibold rounded-sm"
             >
               Login
             </NavLink>

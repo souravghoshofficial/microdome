@@ -1,10 +1,6 @@
 import React, { useRef } from "react";
 import InstructorsCard from "./InstructorsCard";
-import Sayan from "../assets/sayan.png";
-import Rupayan from "../assets/Rupayan.png";
-import Subhadeep from "../assets/subhadip.png";
-import Akash from "../assets/Akash.png";
-import KrishnenduPicNew from "../assets/new-img3.png";
+
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
@@ -16,45 +12,7 @@ import { RiArrowRightSLine, RiArrowLeftSLine } from "@remixicon/react";
 import "swiper/css";
 import "swiper/css/bundle";
 
-const mentors = [
-  {
-    name: "Sayan Ganguly",
-    image: Sayan,
-    subject: "Founder of Microdome Classes",
-    description: "M.Sc. in Virology from ICMR-National Institute of Virology, Pune.",
-    backgroundColor: "bg-light-pink",
-  },
-  {
-    name: "Rupayan Bhattacharjee",
-    image: Rupayan,
-    subject: "Actogen Batch Mentor",
-    description: "M.Sc. in Virology from ICMR-National Institute of Virology, Pune.",
-    backgroundColor: "bg-mint-green",
-  },
-  {
-    name: "Subhadeep Podder",
-    image: Subhadeep,
-    subject: "Actogen Batch Mentor",
-    description: "M.Sc.in Virology from ICMR-National Institute of Virology, Pune.",
-    backgroundColor: "bg-warm-salmon",
-  },
-
-  {
-    name: "Akash Biswas",
-    image: Akash,
-    subject: "Semester Batch Mentor",
-    description: "M.Sc.in Biotechnology from Gujrat Biotechnology University, Gandhinagar.",
-    backgroundColor: "bg-light-lilac",
-  },
-
-  {
-    name: "Krishnendu Das",
-    image: KrishnenduPicNew,
-    subject: "Actogen Batch Mentor (Adjunct Faculty)",
-    description: "M.Sc. in Virology from ICMR-National Institute of Virology, Pune.",
-    backgroundColor: "bg-baby-blue",
-  },
-];
+import { mentors } from "../constants/mentors.js";
 
 
 const Instructors = () => {
@@ -106,13 +64,13 @@ const Instructors = () => {
       </Swiper>
       <div className="mt-4 mx-auto w-full md:w-[90%] flex items-center gap-5 justify-center md:justify-end text-white">
         <button
-          className="w-12 h-12 bg-highlighted rounded-full flex items-center justify-center cursor-pointer"
+          className="w-12 h-12 bg-highlighted rounded-full flex items-center justify-center cursor-pointer hover:bg-highlighted-hover"
           onClick={() => swiperRef.current?.slidePrev()}
         >
           <RiArrowLeftSLine size={28} />
         </button>
         <button
-          className="w-12 h-12 bg-highlighted rounded-full flex items-center justify-center cursor-pointer"
+          className="w-12 h-12 bg-highlighted rounded-full flex items-center justify-center cursor-pointer hover:bg-highlighted-hover"
           onClick={() => swiperRef.current?.slideNext()}
         >
           <RiArrowRightSLine size={28} />

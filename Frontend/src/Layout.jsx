@@ -31,7 +31,7 @@ const Layout = () => {
         <a
           href="https://chat.whatsapp.com/LepMbONA6YlF95IGOITe8h"
           target="_blank"
-          className="mt-2 md:mt-4 inline-block rounded-sm w-full py-2 bg-highlighted text-white text-center font-semibold cursor-pointer"
+          className="mt-2 md:mt-4 inline-block rounded-sm w-full py-2 bg-highlighted hover:bg-highlighted-hover text-white text-center font-semibold cursor-pointer"
         >
           Join Now
         </a>
@@ -44,12 +44,11 @@ const Layout = () => {
       >
         {/* WhatsApp Icon (when hidden) */}
         <div
-          className={`flex items-center gap-2 px-3 py-1 ${
+          className={`flex items-center gap-2 p-2 ${
             showMessage ? "hidden" : "block"
           } w-12 md:w-auto`}
         >
           <RiWhatsappLine className="size-8 md:size-10" />
-          <p className="hidden md:block font-bold">Let's Connect</p>
         </div>
 
         {/* Close Icon (when visible) */}

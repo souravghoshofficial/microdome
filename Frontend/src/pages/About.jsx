@@ -16,7 +16,7 @@ const About = () => {
             <h2 className="text-3xl md:text-4xl font-bold">Empowering Your Journey to Success in <span className="highlighted-text">Biology</span></h2>
           </div>
           <div className="mt-4">
-            <p>
+            <p  className="text-base">
               At Microdome Classes, we are dedicated to providing top-notch
               coaching for M.Sc entrance examinations, focusing on biology. Our
               mission is to equip students with the knowledge and skills they
@@ -25,8 +25,8 @@ const About = () => {
             </p>
           </div>
           <div className="flex mt-4 gap-4">
-            <Link to="/about-us" className="px-4 py-2 border rounded-sm">Learn More</Link>
-            <Link to="signup" className="px-4 py-2 border rounded-sm border-highlighted bg-highlighted text-white">Join Us</Link>
+            <Link to="/about-us" className="px-4 py-2 border rounded-sm font-semibold hover:text-highlighted">Learn More</Link>
+            <Link to="signup" className="px-4 py-2 border rounded-sm border-highlighted bg-highlighted hover:bg-highlighted-hover hover:border-highlighted-hover text-white font-semibold">Join Us</Link>
           </div>
         </div>
         <div className="w-full md:w-[50%] overflow-hidden">
