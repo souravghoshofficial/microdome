@@ -15,7 +15,10 @@ const courseEnrollmentSchema = new Schema({
       type: Boolean,
       required: true,
       default: true
-    }
+    },
+},
+{
+  timestamps: true
 })
 
 export const CourseEnrollment = mongoose.model("CourseEnrollment", courseEnrollmentSchema)

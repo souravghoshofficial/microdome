@@ -93,7 +93,7 @@ export const getUserDetailsByCourseId = async (req, res) => {
       mobileNumber: enrollment.userId.mobileNumber,
       profileImage: enrollment.userId.profileImage,
       instituteName: enrollment.userId.instituteName,
-      createdAt: enrollment.userId.createdAt,
+      createdAt: enrollment.createdAt,
       isActive: enrollment.isActive,
     }));
 
