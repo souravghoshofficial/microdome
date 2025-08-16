@@ -35,7 +35,7 @@ const CourseViewPage = () => {
       } catch (err) {
         console.error("Failed to fetch course", err);
         if (err.status == 401) {
-          setLoadingText("Unauthorized to access the course");
+          setLoadingText(err.response.data.message);
         }
       }
     };
@@ -45,14 +45,14 @@ const CourseViewPage = () => {
 
   if (!course)
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-white text-black dark:bg-black dark:text-white">
+      <div className="w-full h-screen flex items-center justify-center bg-white text-black dark:bg-black dark:text-white flex-col md:flex-row p-6">
         {loadingText !== "Loading..." ? (
           <TriangleAlert className="text-yellow-600 h-15 w-15 mr-1" />
         ) : (
           " "
         )}
 
-        <h1 className="text-lg">{loadingText}</h1>
+        <h1 className="text-lg md:text-2xl">{loadingText}</h1>
       </div>
     );
 

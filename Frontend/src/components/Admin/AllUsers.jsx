@@ -1,126 +1,200 @@
-import { useState, useEffect } from "react";
-import userImage from "../../assets/user-img.jpeg";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import userImage from "../../assets/user-img.jpeg";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
-
-export default function AllUsers() {
-
+const AllUsers = () => {
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 10;
+  const [usersPerPage] = useState(5);
 
   useEffect(() => {
-    axios.get(`${ApiUrl}/admin/get-all-users`, { withCredentials: true })
-      .then((res) => setUsers(res.data.users))
-      .catch((err) => console.log(err));
+    axios
+      .get(`${ApiUrl}/admin/get-all-users`, { withCredentials: true })
+      .then((res) => {
+        console.log("API response:", res.data);
+
+        if (res.data.users && Array.isArray(res.data.users)) {
+          setUsers(
+            res.data.users.map((u) => ({
+              id: u._id,
+              name: u.name,
+              email: u.email,
+              profilePic: u?.profileImage || userImage,
+              dateJoined: new Date(u.createdAt).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              }),
+              mobile: u?.mobileNumber || "---",
+              university: u?.instituteName || "---",
+              role: u.role,
+              isPremium: u.isPremiumMember ? "Yes" : "---",
+            }))
+          );
+          toast.success(res.data.message || "Users fetched successfully");
+        } else {
+          toast.error("No users found from backend");
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching all users:", err);
+        if (err.response?.data?.message) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Failed to load users");
+        }
+      });
   }, []);
 
-  const totalPages = Math.ceil(users.length / usersPerPage);
-  const paginatedUsers = users.slice(
-    (currentPage - 1) * usersPerPage,
-    currentPage * usersPerPage
+  // Filter users by search query
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handlePageChange = (page) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
-  };
-
-  const handleCloseModal = () => setSelectedUser(null);
+  // Pagination calculations
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   return (
-    <div className="relative min-h-screen w-full bg-gray-50">
-      
-      {/* Blur wrapper */}
-      <div className={`${selectedUser ? "blur-sm pointer-events-none select-none" : ""}`}>
-        <header className="mb-8 px-6 pt-6">
-          <h1 className="text-3xl font-bold text-blue-800">All Users</h1>
-        </header>
+    <div className="h-full flex flex-col bg-white rounded-lg shadow-md">
+      <Toaster position="top-right" />
 
-        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-          {paginatedUsers.map((user) => (
-            <div
-              key={user._id}
-              className="flex items-center justify-between border p-4 rounded-lg mb-4 flex-wrap gap-4"
-            >
-              <div className="flex items-center gap-4">
-                <img
-                  src={user.profileImage || userImage}
-                  alt={user.name}
-                  className="w-12 h-12 rounded-full object-cover border"
-                />
-                <div>
-                  <p className="text-lg font-semibold">{user.name}</p>
-                  <p className="text-sm text-gray-500">{user.email}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedUser(user)}
-                className="px-4 py-2 text-sm border border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition cursor-pointer"
-              >
-                Get All Details
-              </button>
-            </div>
-          ))}
+      {/* Header with search */}
+      <div className="flex flex-col md:flex-row justify-between items-center px-4 md:px-6 py-4 border-b gap-3">
+        <h2 className="text-base md:text-lg font-semibold">All Users</h2>
 
-          {/* Pagination */}
-          <div className="flex justify-center items-center gap-2 mt-6 flex-wrap">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              className="px-3 py-1 border rounded hover:bg-gray-100 cursor-pointer"
-            >
-              Prev
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`px-3 py-1 border rounded hover:bg-blue-100 cursor-pointer ${
-                  currentPage === page ? "bg-blue-500 text-white" : ""
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              className="px-3 py-1 border rounded hover:bg-gray-100 cursor-pointer"
-            >
-              Next
-            </button>
-          </div>
+        {/* Search Input */}
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      {/* Table */}
+      <div className="flex-1 overflow-auto">
+        <div className="overflow-x-auto">
+          <table className="min-w-[800px] w-full border-collapse">
+            <thead className="bg-gray-100 sticky top-0 z-10">
+              <tr className="text-left text-gray-600 border-b text-sm md:text-base">
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2 text-center">Role</th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">
+                  Mobile No.
+                </th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">
+                  Date Joined
+                </th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">
+                  Is Premium
+                </th>
+                <th className="px-4 py-2 text-center">Institute Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentUsers.length > 0 ? (
+                currentUsers.map((user) => (
+                  <tr
+                    key={user.id}
+                    className="border-b hover:bg-gray-50 text-xs md:text-sm"
+                  >
+                    {/* Name + Email + Image */}
+                    <td className="px-4 py-3 flex items-center gap-3 whitespace-nowrap">
+                      <img
+                        src={user.profilePic}
+                        alt={user.name}
+                        className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
+                      />
+                      <div className="min-w-[150px]">
+                        <p className="font-medium">{user.name}</p>
+                        <p className="text-[11px] md:text-xs text-gray-500 truncate">
+                          {user.email}
+                        </p>
+                      </div>
+                    </td>
+
+                    {/* Role */}
+                    <td className="px-4 py-3 text-center">{user.role}</td>
+
+                    {/* Mobile */}
+                    <td className="px-4 py-3 text-center">{user.mobile}</td>
+
+                    {/* Date Joined */}
+                    <td className="px-4 py-3 text-center">{user.dateJoined}</td>
+
+                    {/* Is Premium */}
+                    <td className="px-4 py-3 text-center">{user.isPremium}</td>
+
+                    {/* Institute */}
+                    <td className="px-4 py-3 text-center">
+                      {user.university}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="text-center py-6 text-gray-500 text-sm"
+                  >
+                    No users found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* Modal Popup */}
-      {selectedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center animate-fadeIn">
-            <img
-              src={selectedUser.profileImage}
-              alt={selectedUser.name}
-              className="w-20 h-20 rounded-full mx-auto mb-4"
-            />
-            <h2 className="text-xl font-semibold mb-2">{selectedUser.name}</h2>
-            <p className="text-sm text-gray-600 mb-1">{selectedUser.email}</p>
-            <p className="text-sm mb-1">
-              Premium Member: {selectedUser.isPremiumMember ? "Yes" : "No"}
-            </p>
-            <p className="text-sm mb-4">
-              Enrolled Courses: {selectedUser.enrolledCourses.join(", ")}
-            </p>
+      {/* Pagination Controls */}
+      {filteredUsers.length > usersPerPage && (
+        <div className="flex justify-center items-center gap-2 py-4 border-t">
+          <button
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+          >
+            Prev
+          </button>
+
+          {[...Array(totalPages)].map((_, i) => (
             <button
-              onClick={handleCloseModal}
-              className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 rounded cursor-pointer ${
+                currentPage === i + 1
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
             >
-              Close
+              {i + 1}
             </button>
-          </div>
+          ))}
+
+          <button
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+          >
+            Next
+          </button>
         </div>
       )}
     </div>
   );
-}
+};
+
+export default AllUsers;

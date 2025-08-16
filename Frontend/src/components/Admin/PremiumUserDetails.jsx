@@ -9,13 +9,16 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 const PremiumUserDetails = () => {
   const { id } = useParams();
   const [users, setUsers] = useState([]);
-  const [confirmUser, setConfirmUser] = useState(null); // store user to confirm
+  const [courseName, setCourseName] = useState("Course Name");
+  const [confirmUser, setConfirmUser] = useState(null);
+
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(5); // change this to show more/less per page
+  const [usersPerPage] = useState(5);
 
-  // Fetch user details on load
   useEffect(() => {
     axios
       .get(`${ApiUrl}/admin/get-user-details/${id}`, { withCredentials: true })
@@ -24,19 +27,22 @@ const PremiumUserDetails = () => {
           setUsers(
             res.data.users.map((u) => ({
               id: u.userId,
-              name: u.name,
-              email: u.email,
+              name: u.name || "---",
+              email: u.email || "---",
               profilePic: u?.profileImage || userImage,
-              dateJoined: new Date(u.createdAt).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              }),
-              mobile: u?.mobileNumber || '_____________',
-              university: u?.instituteName || '__________________',
+              dateJoined: u.createdAt
+                ? new Date(u.createdAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })
+                : "---",
+              mobile: u?.mobileNumber || "---",
+              university: u?.instituteName || "---",
               access: u.isActive,
             }))
           );
+          setCourseName(res.data.courseName || "---");
         }
       })
       .catch((err) => {
@@ -45,7 +51,6 @@ const PremiumUserDetails = () => {
       });
   }, [id]);
 
-  // Call API for toggling access
   const toggleAccess = async (userId, currentAccess) => {
     try {
       const endpoint = currentAccess
@@ -74,21 +79,36 @@ const PremiumUserDetails = () => {
     }
   };
 
-  // Pagination calculations
+  // Filter users by search query
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Pagination calculations (apply on filtered list)
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   return (
     <div className="h-full flex flex-col bg-white rounded-lg shadow-md">
       <Toaster position="top-right" />
 
-      {/* Header */}
-      <div className="flex justify-between items-center px-4 md:px-6 py-4 border-b">
-        <h2 className="text-base md:text-lg font-semibold">
-          Account Registration Requests
-        </h2>
+      {/* Header with search */}
+      <div className="flex flex-col md:flex-row justify-between items-center px-4 md:px-6 py-4 border-b gap-3">
+        <h2 className="text-base md:text-lg font-semibold">{courseName}</h2>
+
+        {/* Search Input */}
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentPage(1); // reset to first page on search
+          }}
+          className="border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
       </div>
 
       {/* Scrollable + Responsive Table */}
@@ -98,78 +118,93 @@ const PremiumUserDetails = () => {
             <thead className="bg-gray-100 sticky top-0 z-10">
               <tr className="text-left text-gray-600 border-b text-sm md:text-base">
                 <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2 whitespace-nowrap">Date Joined</th>
-                <th className="px-4 py-2 whitespace-nowrap">Mobile No.</th>
-                <th className="px-4 py-2">Institute Name</th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">
+                  Date Joined
+                </th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">
+                  Mobile No.
+                </th>
+                <th className="px-4 py-2 text-center">Institute Name</th>
                 <th className="px-4 py-2 text-center">Action</th>
               </tr>
             </thead>
             <tbody>
-              {currentUsers.map((user) => (
-                <tr
-                  key={user.id}
-                  className="border-b hover:bg-gray-50 text-xs md:text-sm"
-                >
-                  {/* Name + Email */}
-                  <td className="px-4 py-3 flex items-center gap-3 whitespace-nowrap">
-                    <img
-                      src={user.profilePic}
-                      alt={user.name}
-                      className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
-                    />
-                    <div className="min-w-[150px]">
-                      <p className="font-medium">{user.name}</p>
-                      <p className="text-[11px] md:text-xs text-gray-500 truncate">
-                        {user.email}
-                      </p>
-                    </div>
-                  </td>
-
-                  {/* Date Joined */}
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    {user.dateJoined}
-                  </td>
-
-                  {/* Mobile */}
-                  <td className="px-4 py-3 whitespace-nowrap">{user.mobile}</td>
-
-                  {/* University */}
-                  <td className="px-4 py-3">{user.university}</td>
-
-                  {/* Toggle Button */}
-                  <td className="px-4 py-3 text-center">
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        className="sr-only"
-                        checked={user.access}
-                        onChange={() => setConfirmUser(user)} // open confirm modal
+              {currentUsers.length > 0 ? (
+                currentUsers.map((user) => (
+                  <tr
+                    key={user.id}
+                    className="border-b hover:bg-gray-50 text-xs md:text-sm"
+                  >
+                    {/* Name + Email (left aligned) */}
+                    <td className="px-4 py-3 flex items-center gap-3 whitespace-nowrap">
+                      <img
+                        src={user.profilePic}
+                        alt={user.name}
+                        className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
                       />
-                      <div
-                        className={`w-11 h-6 flex items-center rounded-full p-1 duration-300 ${
-                          user.access ? "bg-green-500" : "bg-gray-300"
-                        }`}
-                      >
-                        <div
-                          className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ${
-                            user.access ? "translate-x-5" : ""
-                          }`}
-                        ></div>
+                      <div className="min-w-[150px]">
+                        <p className="font-medium">{user.name || "---"}</p>
+                        <p className="text-[11px] md:text-xs text-gray-500 truncate">
+                          {user.email || "---"}
+                        </p>
                       </div>
-                    </label>
+                    </td>
+
+                    {/* Centered fields */}
+                    <td className="px-4 py-3 text-center whitespace-nowrap">
+                      {user.dateJoined || "---"}
+                    </td>
+                    <td className="px-4 py-3 text-center whitespace-nowrap">
+                      {user.mobile || "---"}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {user.university || "---"}
+                    </td>
+
+                    {/* Action */}
+                    <td className="px-4 py-3 text-center">
+                      <label className="inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="sr-only"
+                          checked={user.access}
+                          onChange={() => setConfirmUser(user)}
+                        />
+                        <div
+                          className={`w-11 h-6 flex items-center rounded-full p-1 duration-300 ${
+                            user.access ? "bg-green-500" : "bg-gray-300"
+                          }`}
+                        >
+                          <div
+                            className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ${
+                              user.access ? "translate-x-5" : ""
+                            }`}
+                          ></div>
+                        </div>
+                      </label>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="text-center py-6 text-gray-500 text-sm"
+                  >
+                    No users found
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
       {/* Pagination Controls */}
-      {users.length > usersPerPage && (
+      {filteredUsers.length > usersPerPage && (
         <div className="flex justify-center items-center gap-2 py-4 border-t">
           <button
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+            className="px-3 py-1 bg-gray-200 rounded cursor-pointer disabled:opacity-50"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((prev) => prev - 1)}
           >
@@ -180,7 +215,7 @@ const PremiumUserDetails = () => {
             <button
               key={i}
               onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 rounded ${
+              className={`px-3 py-1 rounded cursor-pointer ${
                 currentPage === i + 1
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200 hover:bg-gray-300"
@@ -191,7 +226,7 @@ const PremiumUserDetails = () => {
           ))}
 
           <button
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+            className="px-3 py-1 bg-gray-200 rounded cursor-pointer disabled:opacity-50"
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((prev) => prev + 1)}
           >
@@ -216,13 +251,13 @@ const PremiumUserDetails = () => {
             </p>
             <div className="flex justify-end gap-3">
               <button
-                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 cursor-pointer"
                 onClick={() => setConfirmUser(null)}
               >
                 No
               </button>
               <button
-                className={`px-4 py-2 rounded text-white ${
+                className={`cursor-pointer px-4 py-2 rounded text-white ${
                   confirmUser.access
                     ? "bg-red-500 hover:bg-red-600"
                     : "bg-green-500 hover:bg-green-600"

@@ -5,10 +5,10 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Course } from "../models/course.model.js";
-
+import { sendAccessRevokedEmail,sendAccessGrantedEmail } from "../utils/sendEmail.js";
 export const getAllUsers = async (req,res)=>{
   try {
-    const users = await User.find({}).select("-password");
+    const users = await User.find({}).select("-password -__v -updatedAt -enrolledCourses -presentCourseOfStudy");
     res.status(200).json({
       message: "All users are fetched successfully",
       users
@@ -84,6 +84,7 @@ export const getUserDetailsByCourseId = async (req, res) => {
         message: "No users found for this course",
       });
     }
+    const course = await Course.findById(courseId).select("cardTitle");
 
     // Map to extract only the necessary details
     const users = enrollments.map((enrollment) => ({
@@ -102,6 +103,7 @@ export const getUserDetailsByCourseId = async (req, res) => {
       courseId,
       totalUsers: users.length,
       users,
+      courseName: course.cardTitle
     });
   } catch (error) {
     console.error("Error fetching users by courseId:", error);
@@ -128,6 +130,18 @@ export const revokeAccess = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: "User is not enrolled in this course",
+      });
+    }
+
+    // Fetch user and course for email
+    const user = await User.findById(userId).select("name email");
+    const course = await Course.findById(courseId).select("cardTitle");
+
+    if (user && course) {
+      await sendAccessRevokedEmail({
+        to: user.email,
+        studentName: user.name,
+        courseTitle: course.cardTitle,
       });
     }
 
@@ -160,6 +174,19 @@ export const grantAccess = async (req, res) => {
       });
     }
 
+    // Fetch user and course for email
+    const user = await User.findById(userId).select("name email");
+    const course = await Course.findById(courseId).select("cardTitle linkAddress");
+
+    if (user && course) {
+      await sendAccessGrantedEmail({
+        to: user.email,
+        studentName: user.name,
+        courseTitle: course.cardTitle,
+        accessLink: `https://microdomeclasses.in/my-courses/${courseId}`, // direct link to course
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: "Access granted successfully",
@@ -170,6 +197,8 @@ export const grantAccess = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
 
 export const getCourseDetailsWithUserCounts = async (req, res) => {
   try {

@@ -11,7 +11,6 @@ export const isEnrolledInCourse = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid course ID" });
     }
 
-
     const user = await User.findById(userId).select("role isPremiumMember enrolledCourses");
 
     if (!user) {
@@ -31,13 +30,13 @@ export const isEnrolledInCourse = async (req, res, next) => {
 
 
     if (!user.isPremiumMember) {
-      return res.status(401).json({ message: "Not a premium user" });
+      return res.status(401).json({ message: "Unauthorized to access the course" });
     }
 
     
     const isEnrolled = user.enrolledCourses.some(id => id.equals(courseId));
     if (!isEnrolled) {
-      return res.status(401).json({ message: "Not enrolled in course" });
+      return res.status(401).json({ message: "Unauthorized to access the course" });
     }
 
     const enrollment = await CourseEnrollment.findOne({
@@ -46,11 +45,11 @@ export const isEnrolledInCourse = async (req, res, next) => {
     });
 
     if(!enrollment){
-      return res.status(401).json({ message: "Not enrolled in course" });
+      return res.status(401).json({ message: "Unauthorized to access the course" });
     }
 
     if(!enrollment.isActive){
-      return res.status(401).json({ message: "Access is revoked" });
+      return res.status(401).json({ message: "Access has been revoked by the admin, contact admin." });
     }
 
     next();
