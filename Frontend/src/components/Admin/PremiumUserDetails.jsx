@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import userImage from "../../assets/user-img.jpeg";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -25,14 +26,14 @@ const PremiumUserDetails = () => {
               id: u.userId,
               name: u.name,
               email: u.email,
-              profilePic: u.profileImage,
+              profilePic: u?.profileImage || userImage,
               dateJoined: new Date(u.createdAt).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
                 year: "numeric",
               }),
-              mobile: u.mobileNumber,
-              university: u.instituteName,
+              mobile: u?.mobileNumber || '_____________',
+              university: u?.instituteName || '__________________',
               access: u.isActive,
             }))
           );
@@ -99,7 +100,7 @@ const PremiumUserDetails = () => {
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2 whitespace-nowrap">Date Joined</th>
                 <th className="px-4 py-2 whitespace-nowrap">Mobile No.</th>
-                <th className="px-4 py-2">University</th>
+                <th className="px-4 py-2">Institute Name</th>
                 <th className="px-4 py-2 text-center">Action</th>
               </tr>
             </thead>
