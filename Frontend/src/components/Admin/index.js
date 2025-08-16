@@ -7,5 +7,6 @@ import PremiumUsers from "./PremiumUsers";
 import AllCourses from "./AllCourses";
 import CreateQuiz from "./CreateQuiz";
 import CreateCourse from "./CreateCourse";
+import PremiumUserDetails from "./PremiumUserDetails";
 
-export {Dashboard , AddSection , AddLecture , AllUsers , PremiumUsers, AllCourses, CreateQuiz, CreateCourse}
+export {Dashboard , AddSection , AddLecture , AllUsers , PremiumUsers, AllCourses, CreateQuiz, CreateCourse,PremiumUserDetails};
