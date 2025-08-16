@@ -13,6 +13,11 @@ const AllUsers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(5);
 
+  function capitalizeFirst(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+
   useEffect(() => {
     axios
       .get(`${ApiUrl}/admin/get-all-users`, { withCredentials: true })
@@ -34,7 +39,7 @@ const AllUsers = () => {
               mobile: u?.mobileNumber || "---",
               university: u?.instituteName || "---",
               role: u.role,
-              isPremium: u.isPremiumMember ? "Yes" : "---",
+              isPremium: u.isPremiumMember ? "Yes" : "No",
             }))
           );
           toast.success(res.data.message || "Users fetched successfully");
@@ -127,7 +132,7 @@ const AllUsers = () => {
                     </td>
 
                     {/* Role */}
-                    <td className="px-4 py-3 text-center">{user.role}</td>
+                    <td className="px-4 py-3 text-center">{capitalizeFirst(user.role)}</td>
 
                     {/* Mobile */}
                     <td className="px-4 py-3 text-center">{user.mobile}</td>

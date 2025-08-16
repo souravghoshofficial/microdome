@@ -14,6 +14,7 @@ const Footer = () => {
     <div className="w-full mt-8 pb-8 md:pb-16 flex items-center justify-center">
       <div className="w-[90%]">
         <hr className="w-full" />
+
         <div className="my-8 md:my-16 w-full px-2 md:px-8 flex flex-col md:flex-row justify-between">
           <div className="w-full md:w-[40%] flex flex-col justify-center">
             <span>
@@ -27,10 +28,7 @@ const Footer = () => {
                 target="_blank"
                 href="https://www.facebook.com/profile.php?id=100014111567971&ref=ig_profile_ac"
               >
-                <RiFacebookCircleFill
-                  size={24}
-                  className="hover:text-blue-500"
-                />
+                <RiFacebookCircleFill size={24} className="hover:text-blue-500" />
               </a>
               <a
                 target="_blank"
@@ -39,7 +37,7 @@ const Footer = () => {
                 <RiInstagramFill size={24} className="hover:text-pink-500" />
               </a>
               <a target="_blank" href="https://x.com">
-                <RiTwitterXFill size={24} className="" />
+                <RiTwitterXFill size={24} />
               </a>
               <a
                 target="_blank"
@@ -55,6 +53,7 @@ const Footer = () => {
               </a>
             </div>
           </div>
+
           <div className="w-full md:w-[20%] mt-8 md:mt-0 px-0 md:px-8">
             <h3 className="text-xl font-bold">Company</h3>
             <ul className="mt-2">
@@ -69,6 +68,7 @@ const Footer = () => {
               <li>Pricing and Refund</li>
             </ul>
           </div>
+
           <div className="w-full md:w-[20%] mt-4 md:mt-0 px-o md:px-8">
             <h3 className="text-xl font-bold">Quick Links</h3>
             <ul className="mt-2 flex flex-col">
@@ -85,6 +85,7 @@ const Footer = () => {
               <li>FAQs</li>
             </ul>
           </div>
+
           <div className="w-full md:w-[20%] mt-4 md:mt-0 px-0 md:px-8">
             <h3 className="text-xl font-bold">Community</h3>
             <ul className="mt-2">
@@ -93,6 +94,16 @@ const Footer = () => {
             </ul>
           </div>
         </div>
+
+        {/* Centered Button */}
+        <div className="flex justify-center mb-6">
+          <a href="https://microdomeclasses.in/developers">
+            <button className="cursor-pointer px-3 py-2 bg-highlighted text-white font-semibold rounded-xl shadow-md hover:bg-highlighted-hover transition duration-300">
+              Meet Our Developers
+            </button>
+          </a>
+        </div>
+
         <hr className="w-full" />
         <p className="mt-1 text-sm text-center">
           Copyright &copy; {new Date().getFullYear()} Microdome Classes.
@@ -104,3 +115,6 @@ const Footer = () => {
 };
 
 export default Footer;
+
+
+

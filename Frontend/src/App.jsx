@@ -38,7 +38,9 @@ import {
   SemesterCourseLayout,
   QuizList,
   QuizLayout,
-  LoadingScreen
+  LoadingScreen,
+  Developers,
+  LandingPageCourses
 } from "./pages";
 
 import {
@@ -78,6 +80,7 @@ const App = () => {
               <Landing />,
               <About />,
               <Enroll />,
+              // <LandingPageCourses />,
               <Instructor />,
               <Testimonial />,
               <Contact />,
@@ -99,6 +102,7 @@ const App = () => {
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/faculties" element={<Faculties />} />
+          <Route path="/developers" element={<Developers />} />
         </Route>
         <Route path="/signup" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <Signup />]} />

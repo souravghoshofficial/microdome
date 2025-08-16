@@ -75,16 +75,16 @@ const CourseViewPage = () => {
               frameborder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture;"
               referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen
+              allowfullscreen="1"
             ></iframe>
 
             {/* The Overlay to hide top-right buttons */}
-            <div className="absolute top-0 right-0 w-full h-[100px] bg-transparent hidden md:block"></div>
-            <div className="absolute bottom-0 right-0 w-[120px] h-[40px] bg-transparent hidden md:block"></div>
-            <div className="absolute bottom-0 left-0 w-[200px] h-[60px] bg-transparent hidden md:block"></div>
+            {/* <div className="absolute top-0 right-0 w-full h-[100px] bg-transparent hidden md:block"></div>
+            <div className="absolute bottom-0 right-12 w-[70px] h-[40px] bg-transparent hidden md:block"></div>
+            <div className="absolute bottom-0 left-0 w-[200px] h-[60px] bg-transparent hidden md:block"></div> */}
 
-            <div className="absolute top-0 right-0 w-full h-[50px] bg-transparent block md:hidden"></div>
-            <div className="absolute bottom-0 left-0 w-full h-[40px] bg-transparent block md:hidden"></div>
+            {/* <div className="absolute top-0 right-0 w-full h-[50px] bg-transparent block md:hidden"></div>
+            <div className="absolute bottom-0 left-0 w-full h-[40px] bg-transparent block md:hidden"></div> */}
           </div>
         </div>
         <div className="w-full md:w-[40%]">

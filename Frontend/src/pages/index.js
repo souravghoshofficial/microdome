@@ -21,7 +21,8 @@ import SemesterCourseLayout from "./SemesterCourseLayout"
 import QuizList from "./QuizList";
 import QuizLayout from "./QuizLayout";
 import LoadingScreen from "./LoadingScreen";
-
+import Developers from "./Developers";
+import LandingPageCourses from "./LandingPageCourses";
 export {
   Landing,
   About,
@@ -45,5 +46,7 @@ export {
   SemesterCourseLayout,
   QuizList,
   QuizLayout,
-  LoadingScreen
+  LoadingScreen,
+  Developers,
+  LandingPageCourses
 };
