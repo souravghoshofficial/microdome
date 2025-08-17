@@ -217,6 +217,7 @@ const CreateCourse = () => {
     courseTitle: "",
     courseDescription: "",
     courseImage: null,
+    whatsappLink: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -258,6 +259,7 @@ const CreateCourse = () => {
         courseTitle: "",
         courseDescription: "",
         courseImage: null,
+        whatsappLink: "",
       });
 
       document.querySelector('input[name="courseImage"]').value = "";
@@ -301,6 +303,7 @@ const CreateCourse = () => {
             value={formData.subTitle}
             onChange={handleChange}
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
           />
         </div>
 
@@ -314,6 +317,7 @@ const CreateCourse = () => {
             value={formData.courseTag}
             onChange={handleChange}
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
           />
         </div>
 
@@ -327,9 +331,25 @@ const CreateCourse = () => {
             value={formData.mode}
             onChange={handleChange}
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
           />
         </div>
 
+        {/* Whatsapp Link */}
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Whatsapp Link
+          </label>
+          <input
+            type="text"
+            name="whatsappLink"
+            placeholder="Enter Whatsapp group join link"
+            value={formData.whatsappLink}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
         {/* Language */}
         <div>
           <label className="block text-sm font-medium mb-1">Language</label>
@@ -340,6 +360,7 @@ const CreateCourse = () => {
             value={formData.language}
             onChange={handleChange}
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
           />
         </div>
 
@@ -353,6 +374,7 @@ const CreateCourse = () => {
             value={formData.actualPrice}
             onChange={handleChange}
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
           />
         </div>
 
@@ -368,6 +390,7 @@ const CreateCourse = () => {
             value={formData.discountedPrice}
             onChange={handleChange}
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
           />
         </div>
 
@@ -381,6 +404,7 @@ const CreateCourse = () => {
             value={formData.courseTitle}
             onChange={handleChange}
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
           />
         </div>
 
@@ -396,6 +420,7 @@ const CreateCourse = () => {
             onChange={handleChange}
             rows={4}
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            required
           ></textarea>
         </div>
 
@@ -408,6 +433,7 @@ const CreateCourse = () => {
             accept="image/*"
             onChange={handleChange}
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 file:bg-blue-500 hover:file:bg-blue-600 file:cursor-pointer file:px-2 file:py-1 file:text-white file:rounded"
+            required
           />
         </div>
 

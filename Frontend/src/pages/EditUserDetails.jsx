@@ -6,7 +6,7 @@ import { login, logout } from "../features/auth/authSlice";
 import axios from "axios";
 import { Link } from "react-router";
 import userImage from "../assets/user-img.jpeg";
-import { ToastContainer, toast } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import { ProfileUpdateForm } from "../components";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -65,7 +65,7 @@ const EditUserDetails = () => {
 
   return (
     <div className="min-h-screen pt-24 bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
-      <ToastContainer />
+      <Toaster position="top-right" />
       <div className="max-w-5xl mx-auto px-4">
         {/* Back button */}
         <Link
@@ -79,7 +79,10 @@ const EditUserDetails = () => {
         {/* Content card */}
         <div className="mt-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-2xl shadow-xl p-6 md:p-10 flex flex-col md:flex-row gap-10">
           {/* Image upload section */}
-          <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full md:w-1/3">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col items-center gap-4 w-full md:w-1/3"
+          >
             <div className="relative w-28 h-28 group">
               <label htmlFor="profileImage">
                 <img
@@ -103,7 +106,9 @@ const EditUserDetails = () => {
 
             <div className="text-center">
               <h5 className="font-semibold">Profile Photo</h5>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">PNG, JPG, JPEG (Max. 1MB)</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                PNG, JPG, JPEG (Max. 1MB)
+              </p>
               {profileImage && (
                 <button
                   disabled={loading}

@@ -5,21 +5,24 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Course } from "../models/course.model.js";
-import { sendAccessRevokedEmail,sendAccessGrantedEmail } from "../utils/sendEmail.js";
-export const getAllUsers = async (req,res)=>{
+import {
+  sendAccessRevokedEmail,
+  sendAccessGrantedEmail,
+} from "../utils/sendEmail.js";
+export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select("-password -__v -updatedAt -enrolledCourses -presentCourseOfStudy");
+    const users = await User.find({}).select(
+      "-password -__v -updatedAt -enrolledCourses -presentCourseOfStudy"
+    );
     res.status(200).json({
       message: "All users are fetched successfully",
-      users
-    })
+      users,
+    });
   } catch (error) {
     console.log("Error for fetching users: ", error);
-    throw new ApiError(500,"Failed to fetch the users");
+    throw new ApiError(500, "Failed to fetch the users");
   }
-}
-
-
+};
 
 // ------ quiz controllers ------- //
 
@@ -28,18 +31,18 @@ export const createQuiz = async (req, res) => {
   try {
     const { title, description, category, timeLimit, questions } = req.body;
 
-    
-    if (!title || !description ||!category || !questions || questions.length === 0) {
+    if (
+      !title ||
+      !description ||
+      !category ||
+      !questions ||
+      questions.length === 0
+    ) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-   
     for (let q of questions) {
-      if (
-        !q.questionText ||
-        !q.options ||
-        q.correctOption === undefined
-      ) {
+      if (!q.questionText || !q.options || q.correctOption === undefined) {
         return res.status(400).json({ message: "Invalid question format" });
       }
     }
@@ -66,12 +69,61 @@ export const createQuiz = async (req, res) => {
   }
 };
 
+// export const getUserDetailsByCourseId = async (req, res) => {
+//   try {
+//     const courseId = req.params.id;
+
+//     // Find all enrollments for this course and populate user details
+//     const enrollments = await CourseEnrollment.find({ courseId })
+//       .populate(
+//         "userId",
+//         "name email mobileNumber profileImage instituteName createdAt"
+//       )
+//       .lean();
+
+//     if (!enrollments || enrollments.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No users found for this course",
+//       });
+//     }
+//     const course = await Course.findById(courseId).select("cardTitle");
+
+//     // Map to extract only the necessary details
+//     const users = enrollments.map((enrollment) => ({
+//       userId: enrollment.userId._id,
+//       name: enrollment.userId.name,
+//       email: enrollment.userId.email,
+//       mobileNumber: enrollment.userId.mobileNumber,
+//       profileImage: enrollment.userId.profileImage,
+//       instituteName: enrollment.userId.instituteName,
+//       createdAt: enrollment.createdAt,
+//       isActive: enrollment.isActive,
+//     }));
+
+//     res.status(200).json({
+//       success: true,
+//       courseId,
+//       totalUsers: users.length,
+//       users,
+//       courseName: course.cardTitle
+//     });
+//   } catch (error) {
+//     console.error("Error fetching users by courseId:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal Server Error",
+//     });
+//   }
+// };
+
 export const getUserDetailsByCourseId = async (req, res) => {
   try {
     const courseId = req.params.id;
 
     // Find all enrollments for this course and populate user details
     const enrollments = await CourseEnrollment.find({ courseId })
+      .sort({ createdAt: -1 }) // ✅ Sort by newest first
       .populate(
         "userId",
         "name email mobileNumber profileImage instituteName createdAt"
@@ -84,6 +136,7 @@ export const getUserDetailsByCourseId = async (req, res) => {
         message: "No users found for this course",
       });
     }
+
     const course = await Course.findById(courseId).select("cardTitle");
 
     // Map to extract only the necessary details
@@ -103,7 +156,7 @@ export const getUserDetailsByCourseId = async (req, res) => {
       courseId,
       totalUsers: users.length,
       users,
-      courseName: course.cardTitle
+      courseName: course.cardTitle,
     });
   } catch (error) {
     console.error("Error fetching users by courseId:", error);
@@ -113,8 +166,6 @@ export const getUserDetailsByCourseId = async (req, res) => {
     });
   }
 };
-
-
 
 export const revokeAccess = async (req, res) => {
   try {
@@ -156,7 +207,6 @@ export const revokeAccess = async (req, res) => {
   }
 };
 
-
 export const grantAccess = async (req, res) => {
   try {
     const { userId, courseId } = req.body;
@@ -176,7 +226,9 @@ export const grantAccess = async (req, res) => {
 
     // Fetch user and course for email
     const user = await User.findById(userId).select("name email");
-    const course = await Course.findById(courseId).select("cardTitle linkAddress");
+    const course = await Course.findById(courseId).select(
+      "cardTitle linkAddress"
+    );
 
     if (user && course) {
       await sendAccessGrantedEmail({
@@ -198,8 +250,6 @@ export const grantAccess = async (req, res) => {
   }
 };
 
-
-
 export const getCourseDetailsWithUserCounts = async (req, res) => {
   try {
     const coursesWithCounts = await Course.aggregate([
@@ -208,34 +258,33 @@ export const getCourseDetailsWithUserCounts = async (req, res) => {
           from: "courseenrollments", // MongoDB will pluralize the model name
           localField: "_id",
           foreignField: "courseId",
-          as: "enrollments"
-        }
+          as: "enrollments",
+        },
       },
       {
         $addFields: {
-          studentCount: { $size: "$enrollments" } // count ALL enrollments
-        }
+          studentCount: { $size: "$enrollments" }, // count ALL enrollments
+        },
       },
       {
         $project: {
           _id: 1,
           cardTitle: 1,
           studentCount: 1,
-          courseImage: 1
-        }
-      }
+          courseImage: 1,
+        },
+      },
     ]);
 
     res.status(200).json({
       success: true,
-      courses: coursesWithCounts
+      courses: coursesWithCounts,
     });
   } catch (error) {
     console.error("Error fetching course details with user counts:", error);
     res.status(500).json({
       success: false,
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 };
-

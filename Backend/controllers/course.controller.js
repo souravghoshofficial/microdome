@@ -16,7 +16,8 @@ const createCourse = async (req, res) => {
     actualPrice,
     discountedPrice,
     courseTitle,
-    courseDescription
+    courseDescription,
+    whatsappLink,
   } = req.body;
   if (
     !(
@@ -28,7 +29,8 @@ const createCourse = async (req, res) => {
       actualPrice &&
       discountedPrice &&
       courseTitle &&
-      courseDescription
+      courseDescription && 
+      whatsappLink
     )
   ) {
     throw new ApiError(400, "All fields are required");
@@ -60,7 +62,8 @@ const createCourse = async (req, res) => {
       courseImage: uploadedcourseImage.url,
       linkAddress,
       courseTitle,
-      courseDescription
+      courseDescription,
+      whatsappLink,
     });
 
     res.status(200).json({

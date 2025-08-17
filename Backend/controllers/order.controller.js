@@ -67,12 +67,92 @@ const createOrder = async (req, res) => {
   }
 };
 
+// const verifyPayment = async (req, res) => {
+//   try {
+//     const body = JSON.stringify(req.body);
+//     const signature = req.headers["x-razorpay-signature"];
+//     console.log(body);
+//     console.log(signature);
+
+//     const expectedSignature = crypto
+//       .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
+//       .update(body)
+//       .digest("hex");
+
+//     if (signature !== expectedSignature) {
+//       return res
+//         .status(400)
+//         .json({ success: false, message: "Invalid signature" });
+//     }
+
+//     const event = req.body;
+
+//     if (event.event !== "payment.captured") {
+//       return res
+//         .status(400)
+//         .json({ success: false, message: "Unexpected event type" });
+//     }
+
+//     const payment = event.payload.payment.entity;
+
+//     const order = await Order.findOne({ razorpayOrderId: payment.order_id });
+//     if (!order) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "Order not found" });
+//     }
+
+//     order.razorpayPaymentId = payment.id;
+//     order.status = "Completed";
+//     await order.save();
+
+//     const user = await User.findById(order.user);
+//     if (!user) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "User not found" });
+//     }
+
+//     user.isPremiumMember = true;
+//     if (!user.enrolledCourses.includes(order.course)) {
+//       user.enrolledCourses.push(order.course);
+//     }
+//     await user.save();
+
+//     const courseDetails = await Course.findById(order.course);
+
+//     await CourseEnrollment.create({
+//       courseId: courseDetails._id,
+//       userId: user._id,
+//     });
+
+//     await sendCourseConfirmationEmail({
+//       to: user.email,
+//       studentName: user.name,
+//       courseTitle: courseDetails.courseTitle,
+//       accessLink: `https://microdomeclasses.in/my-courses/${courseDetails._id}`,
+//     });
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Payment verified successfully",
+//       razorpay_order_id: payment.order_id,
+//       razorpay_payment_id: payment.id,
+//     });
+//   } catch (error) {
+//     console.error("Error verifying payment:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Payment verification failed",
+//       error: error.message,
+//     });
+//   }
+// };
+
 const verifyPayment = async (req, res) => {
   try {
     const body = JSON.stringify(req.body);
     const signature = req.headers["x-razorpay-signature"];
-    console.log(body);
-    console.log(signature);
 
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
@@ -126,11 +206,13 @@ const verifyPayment = async (req, res) => {
       userId: user._id,
     });
 
+    // Send email with course details + WhatsApp link
     await sendCourseConfirmationEmail({
       to: user.email,
       studentName: user.name,
       courseTitle: courseDetails.courseTitle,
       accessLink: `https://microdomeclasses.in/my-courses/${courseDetails._id}`,
+      whatsappLink: courseDetails.whatsappLink, // added here
     });
 
     res.status(200).json({

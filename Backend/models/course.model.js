@@ -1,14 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
 const courseSchema = new Schema({
-  cardTitle: {  
+  cardTitle: {
     type: String,
     required: true,
     // unique: true
   },
   subTitle: {
     type: String,
-    required: true
+    required: true,
   },
   courseTag: {
     type: String,
@@ -45,7 +45,11 @@ const courseSchema = new Schema({
   },
   courseDescription: {
     type: String,
-    required: true
+    required: true,
+  },
+  whatsappLink: {
+    type: String,
+    required: true,
   },
   sections: [
     {
