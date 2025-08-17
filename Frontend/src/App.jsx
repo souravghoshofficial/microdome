@@ -88,7 +88,6 @@ const App = () => {
           <Route path="/courses" element={<CourseLayout />}>
             <Route path="" element={<Courses />} />
             <Route path="/courses/:id" element={<EntranceBatch />} />
-            <Route path="/courses/:id/checkout" element={<CheckOut />} />
             <Route path="bsc-hons-batch" element={<CourseLayout />}>
               <Route path="" element={<BScHonsBatch />} />
               <Route
@@ -96,10 +95,6 @@ const App = () => {
                 element={<SemesterCourseLayout />}
               />
             </Route>
-            <Route
-              path="/courses/bsc-hons-batch/:id/checkout"
-              element={<CheckOut />}
-            />
           </Route>
 
           <Route path="/resources" element={<Resources />} />
@@ -142,6 +137,7 @@ const App = () => {
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/quiz" element={[<QuizList />, <Navbar />]} />
         <Route path="/quiz/:quizId" element={<QuizLayout />} />
+        <Route path="/checkout/:id" element = {<CheckOut/>}/>
       </Routes>
     </BrowserRouter>
   );

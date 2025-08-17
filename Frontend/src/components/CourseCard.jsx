@@ -33,14 +33,14 @@ const CourseCard = ({
         <div className="mt-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h3 className="text-lg md:text-xl font-semibold">₹ {discountedPrice}</h3>
-            <h3 className={`${actualPrice === discountedPrice ? "hidden" : "block"} text-sm md:text-lg line-through`}>
+            <h3 className={`${actualPrice === discountedPrice ? "hidden" : "block"} text-sm line-through`}>
               ₹ {actualPrice}
               
             </h3>
             <h3 className="text-sm -ml-1.5 text-gray-700 dark:text-gray-400">{type === "LIVE" ? "/monthly" : ""}</h3>
           </div>
           <div>
-            <h4 className={`${discount ? "block" : "hidden"} text-right px-2 py-0.5 text-sm font-semibold bg-slate-200 dark:bg-white rounded-md text-black`}>{discount}% OFF</h4>
+            <h4 className={`${discount ? "block" : "hidden"} text-right px-2 py-0.5 text-sm font-semibold bg-green-100 dark:bg-gray-100 rounded-md text-green-600 dark:text-black`}>{discount}% OFF</h4>
           </div>
         </div>
         <Link to={linkAddress} className="mt-4 block w-full px-3 py-2 text-center text-lg font-semibold cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-md">
