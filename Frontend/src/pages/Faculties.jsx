@@ -69,7 +69,7 @@ const Faculties = () => {
   }, []);
 
   return (
-    <div className="w-full flex items-center justify-center bg-white dark:bg-slate-900 dark:from-gray-900 dark:to-gray-800 transition-all duration-500">
+    <div className="w-full flex items-center justify-center bg-white dark:bg-black transition-all duration-500">
       <div className="my-24 md:my-32 w-[90%] space-y-16">
         <div data-aos="fade-down">
           <h4 className="text-center text-sm font-bold text-black dark:text-white">Meet</h4>

@@ -2,7 +2,7 @@ import { TestimonialCard } from "../components";
 import Microdome from "../assets/microdome.jpg";
 import RoshniBanerjee from "../assets/RoshniBanerjee.webp";
 import DeeptakBiswas from "../assets/DeeptakBiswas.png";
-
+import SumiChakraborty from "../assets/Sumi_Chakraborty.jpg";
 const studentsReview = [
   {
     name: "Shrestha Mandal",
@@ -40,6 +40,31 @@ const studentsReview = [
     name: "Simran Chowdhury",
     message:
       '"Great!! Mentors are skilled, approachable, and teach with precision."',
+    presentCourseOfStudy: "B.Sc in Microbiology",
+    instituteName: "Kalyani Mahavidyalaya",
+    imageUrl: Microdome,
+  },
+  {
+    name: "Sayantika Pal",
+    message:
+      '"I am grateful to my two mentors at Microdome for their clear explanations and patience. The PDF notes are extremely helpful and easy to remember, and I have improved a lot since joining Microdome."',
+    presentCourseOfStudy: "B.Sc in Microbiology",
+    instituteName: "Kalyani Mahavidyalaya",
+    imageUrl: Microdome,
+  },
+  {
+    name: "Sumi Chakraborty",
+    message:
+      '"I am really happy to join MicroDome..mentors are truly awesome ,so helpful and friendly,  I am improving my knowledge through it and Microdome is also truly inspiring✨️✨️😇"',
+    presentCourseOfStudy: "B.Sc in Microbiology",
+    instituteName: "Kalyani Mahavidyalaya",
+    imageUrl: SumiChakraborty,
+  },
+   {
+    name: "SHUVAM ROY",
+    message:
+      '"Three Mentors-                                                                                             1) Sayan Da 2) Subhadeep Da 3) Rupayan Da.                                                               Deadly Combination of trios. Everyone especially My Lovable Sayan Da not Only a teacher, mentor but also    Friend, philosopher and Guide remaining to me Always. Concepts are learned from scratch. You choosed an Applied Subject but they decreased its toughness to us. Also Competitive Batch, there is Strictly Followed schedule. And Also there, Concepts are given. The Result Will Give the answer I Hope."',
+
     presentCourseOfStudy: "B.Sc in Microbiology",
     instituteName: "Kalyani Mahavidyalaya",
     imageUrl: Microdome,
