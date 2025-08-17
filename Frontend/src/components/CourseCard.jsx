@@ -12,12 +12,13 @@ const CourseCard = ({
   courseTag,
   linkAddress = "#",
   btnText = "View Details",
-  imageHeight="h-72"
+  imageHeight="h-72",
+  className="w-full"
 }) => {
 
   const discount = Math.trunc(((actualPrice - discountedPrice) / actualPrice) * 100)
   return (
-    <Link to={linkAddress} className="w-full cursor-pointer hover:-translate-y-3 transition-all duration-300 flex flex-col overflow-hidden text-black dark:bg-zinc-900 dark:text-white rounded-xl border border-zinc-900/10 dark:border-gray-700/25 bg-white shadow-lg shadow-gray-300 dark:shadow-[0_4px_12px_rgba(0,0,0,0.6)_0_1px_3px_rgba(255,255,255,0.05)]">
+    <Link to={linkAddress} className={`cursor-pointer hover:-translate-y-3 transition-all duration-300 flex flex-col overflow-hidden text-black dark:bg-zinc-900 dark:text-white rounded-xl border border-zinc-900/10 dark:border-gray-700/25 bg-white shadow-lg shadow-gray-300 dark:shadow-[0_4px_12px_rgba(0,0,0,0.6)_0_1px_3px_rgba(255,255,255,0.05)] ${className}`}>
       <div className="w-full relative">
         <h5 className={`${courseTag ? "block" : "hidden"} absolute top-3 right-3 text-[9px] font-bold tracking-wide px-2 py-0.5 rounded-sm bg-slate-100 text-black`}>{courseTag}</h5>
         <img className={`w-full object-cover object-center ${imageHeight}`} src={courseImg} alt={courseTitle} />

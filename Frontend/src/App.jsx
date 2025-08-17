@@ -80,7 +80,7 @@ const App = () => {
               <Landing />,
               <About />,
               <Enroll />,
-              // <LandingPageCourses />,
+              <LandingPageCourses />,
               <Instructor />,
               <Testimonial />,
               <Contact />,
