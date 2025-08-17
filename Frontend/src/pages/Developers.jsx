@@ -47,7 +47,7 @@ const Developers = () => {
         className="text-4xl md:text-5xl font-bold text-center text-gray-800 dark:text-gray-100 mb-12 mt-10"
         data-aos="fade-down"
       >
-        Meet Our Developers
+        Meet Our <span className="text-highlighted">Developers</span>
       </h1>
 
       <div className="grid gap-10 md:grid-cols-3 max-w-6xl mx-auto mt-23">
@@ -60,7 +60,7 @@ const Developers = () => {
             <img
               src={founder.img}
               alt={founder.name}
-              className="w-40 h-40 object-cover rounded-full border-4 border-purple-300 shadow-md"
+              className="w-40 h-40 object-cover rounded-full border-4 border-highlighted shadow-md"
             />
             <h2 className="mt-4 text-2xl font-semibold text-gray-800 dark:text-gray-200">
               {founder.name}
@@ -68,7 +68,7 @@ const Developers = () => {
             <p className="text-gray-500 dark:text-gray-400">{founder.role}</p>
             <a
               href={`mailto:${founder.email}`}
-              className="mt-2 text-sm text-purple-600 dark:text-purple-400 flex items-center gap-2 hover:underline"
+              className="mt-2 text-sm text-highlighted dark:text-highlighted flex items-center gap-2 hover:underline"
             >
               <FaEnvelope /> {founder.email}
             </a>
