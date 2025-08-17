@@ -16,7 +16,7 @@ const LandingPageCourses = () => {
   }
 
   const entranceCourses = courses.filter(
-    (course) => course.courseTag.toLowerCase() !== "b.sc hons."
+    (course) => course.courseTag.toLowerCase() !== "b.sc hons." && course.courseTag.toLowerCase() === "m.sc entrance"
   );
 
   const SemesterCourse = [
@@ -88,6 +88,11 @@ const LandingPageCourses = () => {
             />
           ))}
         </div>
+       <div className="w-full flex justify-center">
+ <Link to="/courses" className="bg-highlighted hover:bg-highlighted-hover text-gray-200 dark:text-white font-semibold px-5 py-2 rounded-md mt-2 text-base md:text-lg">
+        View All Courses
+        </Link>
+       </div>
       </div>
     </div>
   );

@@ -35,11 +35,10 @@ const Courses = () => {
   return (
     <div className="w-full flex items-center justify-center transition-colors duration-300">
       <div className="my-24 md:my-32 w-[90%]">
-        <h4 className="text-center text-sm font-bold">Courses</h4>
         <h2 className="text-3xl md:text-4xl font-bold text-center">
           Courses Offered
         </h2>
-        <div className="mt-8 w-full lg:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 lg:gap-8">
+        <div className="mt-10 w-full lg:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 lg:gap-8">
           {entranceCourses.map((course) => (
             <CourseCard
               key={course.id}

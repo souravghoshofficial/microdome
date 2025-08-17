@@ -13,7 +13,7 @@ const Footer = () => {
   return (
     <div className="w-full mt-8 pb-8 md:pb-16 flex items-center justify-center">
       <div className="w-[90%]">
-        <hr className="w-full" />
+        <hr className="w-full text-gray-600" />
 
         <div className="my-8 md:my-16 w-full px-2 md:px-8 flex flex-col md:flex-row justify-between">
           <div className="w-full md:w-[40%] flex flex-col justify-center">
@@ -98,13 +98,13 @@ const Footer = () => {
         {/* Centered Button */}
         <div className="flex justify-center mb-6">
           <a href="https://microdomeclasses.in/developers">
-            <button className="cursor-pointer px-3 py-2 bg-highlighted text-white font-semibold rounded-xl shadow-md hover:bg-highlighted-hover transition duration-300">
+            <button className="cursor-pointer px-4 py-1.5 bg-highlighted text-white text-sm font-semibold rounded-xl shadow-md hover:bg-highlighted-hover transition duration-300">
               Meet Our Developers
             </button>
           </a>
         </div>
 
-        <hr className="w-full" />
+        <hr className="w-full text-gray-600" />
         <p className="mt-1 text-sm text-center">
           Copyright &copy; {new Date().getFullYear()} Microdome Classes.
         </p>
