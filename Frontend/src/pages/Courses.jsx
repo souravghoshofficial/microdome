@@ -33,7 +33,7 @@ const Courses = () => {
   ];
 
   return (
-    <div className="w-full flex items-center justify-center transition-colors duration-300">
+    <div className="w-full flex items-center justify-center bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
       <div className="my-24 md:my-32 w-[90%]">
         <h2 className="text-3xl md:text-4xl font-bold text-center">
           Courses Offered
