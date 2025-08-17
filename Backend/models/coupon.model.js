@@ -3,7 +3,9 @@ import mongoose, { Schema } from "mongoose";
 const couponSchema = new Schema({
     couponCode: {
         type: String,
-        required: true
+        required: true,
+        lowercase: true, 
+        trim: true
     },
     discount: {
         type: Number,

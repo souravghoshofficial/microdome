@@ -9,6 +9,9 @@ import {
   sendAccessRevokedEmail,
   sendAccessGrantedEmail,
 } from "../utils/sendEmail.js";
+
+import { Coupon } from "../models/coupon.model.js";
+
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({}).select(
@@ -69,53 +72,6 @@ export const createQuiz = async (req, res) => {
   }
 };
 
-// export const getUserDetailsByCourseId = async (req, res) => {
-//   try {
-//     const courseId = req.params.id;
-
-//     // Find all enrollments for this course and populate user details
-//     const enrollments = await CourseEnrollment.find({ courseId })
-//       .populate(
-//         "userId",
-//         "name email mobileNumber profileImage instituteName createdAt"
-//       )
-//       .lean();
-
-//     if (!enrollments || enrollments.length === 0) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "No users found for this course",
-//       });
-//     }
-//     const course = await Course.findById(courseId).select("cardTitle");
-
-//     // Map to extract only the necessary details
-//     const users = enrollments.map((enrollment) => ({
-//       userId: enrollment.userId._id,
-//       name: enrollment.userId.name,
-//       email: enrollment.userId.email,
-//       mobileNumber: enrollment.userId.mobileNumber,
-//       profileImage: enrollment.userId.profileImage,
-//       instituteName: enrollment.userId.instituteName,
-//       createdAt: enrollment.createdAt,
-//       isActive: enrollment.isActive,
-//     }));
-
-//     res.status(200).json({
-//       success: true,
-//       courseId,
-//       totalUsers: users.length,
-//       users,
-//       courseName: course.cardTitle
-//     });
-//   } catch (error) {
-//     console.error("Error fetching users by courseId:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Internal Server Error",
-//     });
-//   }
-// };
 
 export const getUserDetailsByCourseId = async (req, res) => {
   try {
@@ -285,6 +241,97 @@ export const getCourseDetailsWithUserCounts = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Internal server error",
+    });
+  }
+};
+
+export const createCouponCode = async (req,res)=>{
+  try {
+    const {couponCode,courseId,discount}=req.body;
+    if(!couponCode || !courseId || !discount){
+      return res.status(400).json({
+          success: false,
+          message: "All fields are required.",
+        });
+    }
+    const coupon=await Coupon.create({couponCode,courseId,discount});
+    if(!coupon){
+      return res.status(400).json({
+          success: false,
+          message: "Error while creating coupon",
+        });
+    }
+  
+    res.status(200).json({
+      success: true,
+      message: "Coupon created successfully.",
+      coupon
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server error."
+    })
+  }
+}
+
+
+export const getAllCoupons = async (_,res) => {
+  try {
+    const coupons=await Coupon.find({});
+    if(!coupons){
+      res.status(404).json({
+        success: false,
+        message: "Something went wrong"
+      })
+     }
+
+     res.status(200).json({
+      success: true,
+      message: "All coupons fetched successfully.",
+      coupons
+     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server error."
+    });
+  }
+}
+
+export const deleteCoupon = async (req, res) => {
+  try {
+    const { couponId } = req.body;
+
+    // check if couponId is provided
+    if (!couponId) {
+      return res.status(400).json({
+        success: false,
+        message: "Coupon ID is required",
+      });
+    }
+
+    // find and delete coupon
+    const deletedCoupon = await Coupon.findByIdAndDelete(couponId);
+
+    if (!deletedCoupon) {
+      return res.status(404).json({
+        success: false,
+        message: "Coupon not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Coupon deleted successfully",
+      deletedCoupon,
+    });
+  } catch (error) {
+    // console.error("Error deleting coupon:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
     });
   }
 };

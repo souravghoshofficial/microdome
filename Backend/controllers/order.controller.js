@@ -5,6 +5,7 @@ import { Course } from "../models/course.model.js";
 import crypto from "crypto";
 import { sendCourseConfirmationEmail } from "../utils/sendEmail.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
+import { Coupon } from "../models/coupon.model.js";
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
@@ -226,6 +227,50 @@ const verifyPayment = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Payment verification failed",
+      error: error.message,
+    });
+  }
+};
+
+
+
+export const validateCouponCode = async (req, res) => {
+  try {
+    const { courseId, couponCode } = req.body;
+
+    if (!courseId || !couponCode) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required.",
+      });
+    }
+
+    // Convert to lowercase before checking
+    const normalizedCode = couponCode.toLowerCase();
+
+    // Find coupon by courseId and normalized couponCode
+    const coupon = await Coupon.findOne({ 
+      courseId, 
+      couponCode: normalizedCode 
+    });
+
+    if (!coupon) {
+      return res.status(404).json({
+        success: false,
+        message: "Invalid coupon code or coupon not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Coupon applied successfully.",
+      discount: coupon.discount,
+    });
+  } catch (error) {
+    console.error("Error validating coupon:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
       error: error.message,
     });
   }
