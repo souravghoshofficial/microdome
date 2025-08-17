@@ -17,12 +17,13 @@ import BScHonsBatch from "./BScHonsBatch";
 import EditUserDetails from "./EditUserDetails";
 import CourseViewPage from "./CourseViewPage";
 import Admin from "./Admin";
-import SemesterCourseLayout from "./SemesterCourseLayout"
+import SemesterCourseLayout from "./SemesterCourseLayout";
 import QuizList from "./QuizList";
 import QuizLayout from "./QuizLayout";
 import LoadingScreen from "./LoadingScreen";
 import Developers from "./Developers";
 import LandingPageCourses from "./LandingPageCourses";
+import CheckOut from "./CheckOut";
 export {
   Landing,
   About,
@@ -48,5 +49,6 @@ export {
   QuizLayout,
   LoadingScreen,
   Developers,
-  LandingPageCourses
+  LandingPageCourses,
+  CheckOut,
 };

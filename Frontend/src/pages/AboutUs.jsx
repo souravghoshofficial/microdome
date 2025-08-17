@@ -1,100 +1,142 @@
-import React, { useEffect } from 'react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import Microdome from '../assets/microdome.jpg';
+import React, { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import Microdome from "../assets/microdome.jpg";
 import { Link } from "react-router";
 
 const AboutUs = () => {
   useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
+    AOS.init({ duration: 1000, once: true, offset: 120 });
   }, []);
 
   return (
-    <section className="py-20 px-6 md:px-20 bg-white dark:bg-black transition-all duration-500">
-      <div className="max-w-7xl mx-auto text-center space-y-20">
+    <section className="py-1 px-6 md:px-16 lg:px-2 transition-all duration-500">
+      <div className="max-w-7xl mx-auto space-y-24 my-24 md:my-32">
+        {/* Heading */}
+        <div className="text-center space-y-4" data-aos="fade-down">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-black dark:text-white">
+            About Us
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+            Learn about{" "}
+            <span className="font-semibold text-highlighted">Microdome</span>, a
+            coaching institute dedicated to shaping future biologists with
+            expert mentorship, innovative learning methods, and proven success
+            strategies.
+          </p>
+        </div>
 
-        <h2 className="text-5xl font-extrabold text-[#0f766e] dark:text-white tracking-wide" data-aos="fade-up">
-          About Us
-        </h2>
-
-        <div className="flex flex-col md:flex-row items-center gap-16 md:gap-20" data-aos="fade-up">
-          <div className="w-full md:w-1/2 flex justify-center" data-aos="zoom-in">
+        {/* Image + Content */}
+        <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+          {/* Image */}
+          <div
+            className="w-full md:w-1/2 flex justify-center items-center"
+            data-aos="zoom-in"
+          >
             <img
               src={Microdome}
               alt="Microdome Biology Coaching"
-              className="rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.2)] w-80 md:w-96 object-contain hover:scale-105 transform transition duration-300 border-4 border-pink-200 dark:border-pink-700"
+              className="rounded-2xl shadow-xl object-cover transition duration-300 transform hover:scale-105
+                         w-56 h-56 md:w-72 md:h-72 lg:w-80 lg:h-80"
             />
           </div>
 
-          {/* About Microdome Box */}
-          <div className="w-full md:w-1/2 bg-white dark:bg-[#111827] rounded-[2rem] shadow-2xl p-10 md:p-12 text-left space-y-6 border-l-4 border-[#0f766e]" data-aos="fade-left">
-            <h3 className="text-3xl font-extrabold text-[#0f766e] dark:text-white mb-4">
-              About Microdome
+          {/* About Box */}
+          <div
+            className=" border w-full bg-white dark:bg-[#1e293b] rounded-2xl shadow-lg p-8 sm:p-10 md:p-12 space-y-6  border-zinc-900/20 dark:border-gray-700/25"
+            data-aos="fade-left"
+          >
+            <h3 className="text-2xl md:text-3xl font-bold text-black dark:text-white">
+              Who We Are
             </h3>
-            <p className="text-black dark:text-white text-lg leading-relaxed">
-              <span className="font-semibold text-pink-600">Microdome</span> is a premier biology coaching institute dedicated to nurturing future biologists and curious minds passionate about life sciences. We believe learning biology should be exciting, insightful, and deeply conceptual.
+            <p className="text-gray-700 dark:text-gray-200 leading-relaxed">
+              <span className="font-semibold text-highlighted">Microdome</span>{" "}
+              is a premier biology coaching institute nurturing future
+              scientists with a strong foundation in life sciences. Our mission
+              is to make biology learning engaging, conceptual, and
+              career-focused.
             </p>
-            <p className="text-black dark:text-white text-lg leading-relaxed">
-              We prepare students for M.Sc entrance exams like IIT JAM, GAT-B, CUET-PG and offer academic support for BSc Microbiology (Hons.) from Kalyani and Calcutta University.
+            <p className="text-gray-700 dark:text-gray-200 leading-relaxed">
+              We guide students for{" "}
+              <span className="font-semibold">IIT JAM, GAT-B, CUET-PG</span> and
+              provide specialized academic support for{" "}
+              <span className="font-semibold">B.Sc Microbiology (Hons.)</span>.
             </p>
-            <p className="text-black dark:text-white text-lg leading-relaxed">
-              With expert mentors, structured content, and a student-centric approach, Microdome is the perfect ecosystem for serious learners.
-            </p>
-            <p className="text-black dark:text-white text-lg leading-relaxed">
-              Join the Microdome family — where science meets mentorship, and dreams find direction.
+            <p className="text-gray-700 dark:text-gray-200 leading-relaxed">
+              With expert mentors, interactive learning, and student-first
+              strategies, we help learners achieve their academic and career
+              aspirations.
             </p>
           </div>
         </div>
 
-        {/* Why Join Box */}
-        <div className="bg-white dark:bg-[#111827] rounded-[2rem] shadow-2xl p-10 md:p-14 text-left space-y-10 border-t-4 border-[#0f766e]" data-aos="fade-up">
-          <h3 className="text-4xl font-bold text-center text-[#0f766e] dark:text-white">
-            Why Should You Join Microdome?
+        {/* Why Join Section */}
+        <div
+          className="border bg-white dark:bg-[#1e293b] rounded-2xl shadow-xl p-10 md:p-14 space-y-12 border-zinc-900/20 dark:border-gray-700/25"
+          data-aos="fade-up"
+        >
+          <h3 className="text-3xl md:text-4xl font-bold text-center text-black dark:text-white ">
+            Why Join Microdome?
           </h3>
 
-          <div className="grid md:grid-cols-2 gap-10 text-black dark:text-white text-lg">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {[
               {
                 title: "Expert Mentorship",
-                points: ["Highly qualified mentors guide B.Sc students in biology and microbiology."]
+                points: [
+                  "Guidance from top-qualified mentors in biology & microbiology.",
+                ],
               },
               {
                 title: "Proven Success",
-                points: ["Mentors who’ve cracked top exams like IIT JAM, GAT-B, and CUET-PG."]
+                points: [
+                  "Trainers who’ve cracked IIT JAM, GAT-B, and CUET-PG.",
+                ],
               },
               {
                 title: "Interactive Learning",
-                points: ["Students present topics for deeper understanding and engagement."]
+                points: [
+                  "Engaging sessions where students present & collaborate.",
+                ],
               },
               {
                 title: "Structured Classes",
-                points: ["3 Biology classes weekly", "Additional PCM support for academic clarity"]
+                points: [
+                  "3 weekly Biology classes",
+                  "Extra PCM support for clarity.",
+                ],
               },
               {
                 title: "Flexible Learning",
-                points: ["Recorded sessions on Telegram", "YouTube & Microdome website access"]
+                points: ["Recorded sessions", "Access via Telegram & YouTube."],
               },
               {
                 title: "Online Convenience",
-                points: ["Live online classes via Google Meet—learn from home or hostel!"]
+                points: ["Live online classes via Google Meet."],
               },
               {
                 title: "Affordable Fees",
-                points: ["First class is FREE!", "₹500 for first month", "₹1200/month afterwards"]
+                points: [
+                  "First class FREE",
+                  "₹500 first month",
+                  "₹1200/month.",
+                ],
               },
               {
                 title: "Financial Support",
-                points: ["We offer help to students in need. Just reach out—we care!"]
-              }
+                points: ["Scholarships & support for deserving students."],
+              },
             ].map((item, idx) => (
-              <div 
-                key={idx} 
-                className="space-y-2 bg-white dark:bg-[#1e293b] p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300" 
-                data-aos="fade-up" 
-                data-aos-delay={idx * 100}
+              <div
+                key={idx}
+                className="border bg-gray-50 dark:bg-[#0f172a] rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1  border-zinc-900/10 dark:border-gray-700/25"
+                data-aos="fade-up"
+                data-aos-delay={idx * 120}
               >
-                <h4 className="text-2xl font-semibold text-pink-600 dark:text-pink-400">{item.title}</h4>
-                <ul className="list-disc list-inside space-y-1 ml-4">
+                <h4 className="text-xl font-semibold text-highlighted mb-3">
+                  {item.title}
+                </h4>
+                <ul className="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
                   {item.points.map((point, i) => (
                     <li key={i}>{point}</li>
                   ))}
@@ -104,9 +146,10 @@ const AboutUs = () => {
           </div>
         </div>
 
-        <div className="mt-10" data-aos="zoom-in-up">
-          <Link  
-            className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-lg px-8 py-4 rounded-full shadow-lg transition duration-300 transform hover:scale-105 cursor-pointer" 
+        {/* CTA */}
+        <div className="text-center" data-aos="zoom-in-up">
+          <Link
+            className="inline-block bg-gradient-to-r from-[#3eb5a2] to-[#db3b7e] hover:from-[#34a08f] hover:to-[#c83270] text-white font-semibold text-lg md:text-xl px-10 py-4 md:px-12 md:py-5 rounded-full shadow-lg transition duration-300 transform hover:scale-105"
             to="/login"
           >
             Join Microdome Today!

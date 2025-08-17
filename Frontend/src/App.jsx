@@ -12,7 +12,7 @@ import {
   AllCourses,
   CreateQuiz,
   CreateCourse,
-  PremiumUserDetails
+  PremiumUserDetails,
 } from "./components/Admin";
 
 import {
@@ -40,7 +40,8 @@ import {
   QuizLayout,
   LoadingScreen,
   Developers,
-  LandingPageCourses
+  LandingPageCourses,
+  CheckOut,
 } from "./pages";
 
 import {
@@ -52,24 +53,21 @@ import {
   AdminLayout,
 } from "./components";
 
-
 import { useCourses } from "./hooks/courses.js";
 import { useAuth } from "./hooks/auth.js";
 
-
 const App = () => {
-
- const { loading } = useAuth();
+  const { loading } = useAuth();
   useCourses();
 
-
   if (loading) {
-    return <div className="w-full">
-      <LoadingScreen />
-    </div>;
+    return (
+      <div className="w-full">
+        <LoadingScreen />
+      </div>
+    );
   }
 
-  
   return (
     <BrowserRouter>
       <Routes>
@@ -90,6 +88,7 @@ const App = () => {
           <Route path="/courses" element={<CourseLayout />}>
             <Route path="" element={<Courses />} />
             <Route path="/courses/:id" element={<EntranceBatch />} />
+            <Route path="/courses/:id/checkout" element={<CheckOut />} />
             <Route path="bsc-hons-batch" element={<CourseLayout />}>
               <Route path="" element={<BScHonsBatch />} />
               <Route
@@ -97,6 +96,10 @@ const App = () => {
                 element={<SemesterCourseLayout />}
               />
             </Route>
+            <Route
+              path="/courses/bsc-hons-batch/:id/checkout"
+              element={<CheckOut />}
+            />
           </Route>
 
           <Route path="/resources" element={<Resources />} />
@@ -119,7 +122,6 @@ const App = () => {
         </Route>
         <Route path="/my-courses/:id" element={<CourseViewPage />} />
 
-
         {/* Admin Routes */}
 
         <Route path="/admin" element={<AdminLayout />}>
@@ -132,13 +134,13 @@ const App = () => {
             <Route path="all-users" element={<AllUsers />} />
             <Route path="all-courses" element={<AllCourses />} />
             <Route path="premium-users" element={<PremiumUsers />} />
-            <Route path="premium-users/:id" element={< PremiumUserDetails/>} />
+            <Route path="premium-users/:id" element={<PremiumUserDetails />} />
             <Route path="create-quiz" element={<CreateQuiz />} />
             <Route path="create-course" element={<CreateCourse />} />
           </Route>
         </Route>
         <Route path="/payment-success" element={<PaymentSuccess />} />
-        <Route path="/quiz" element={[<QuizList />, <Navbar/>]} />
+        <Route path="/quiz" element={[<QuizList />, <Navbar />]} />
         <Route path="/quiz/:quizId" element={<QuizLayout />} />
       </Routes>
     </BrowserRouter>
