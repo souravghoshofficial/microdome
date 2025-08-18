@@ -97,7 +97,7 @@ const Coupons = () => {
                     key={coupon.id}
                     className="border-b hover:bg-gray-50 text-xs md:text-sm"
                   >
-                    <td className="px-4 py-3 font-medium">{coupon.code}</td>
+                    <td className="px-4 py-3 font-medium">{coupon.code.toUpperCase()}</td>
                     <td className="px-4 py-3 text-center">
                       {coupon.discount}%
                     </td>
