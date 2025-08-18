@@ -47,7 +47,7 @@ const Courses = () => {
           className="text-3xl md:text-4xl font-bold text-center"
           data-aos="fade-up"
         >
-          Courses Offered
+          Courses <span className="text-highlighted">Offered</span>
         </h2>
 
         <div

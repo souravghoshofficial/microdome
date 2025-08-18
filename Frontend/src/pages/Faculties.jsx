@@ -118,9 +118,9 @@ const Faculties = () => {
         <h2
           data-aos="zoom-in"
           data-aos-delay="400"
-          className="text-3xl md:text-5xl font-extrabold text-[#3eb5a2]"
+          className="text-3xl md:text-5xl font-extrabold"
         >
-          Our Faculties
+          Our <span className="text-highlighted">Faculties</span>
         </h2>
         <p
           data-aos="fade-up"
@@ -142,9 +142,9 @@ const Faculties = () => {
       <div className="mt-20">
         <h3
           data-aos="fade-up"
-          className="text-2xl md:text-4xl font-bold text-center text-[#3eb5a2]"
+          className="text-2xl md:text-4xl font-bold text-center"
         >
-          Adjunct Faculty
+          Adjunct <span className="text-highlighted">Faculty</span>
         </h3>
         <p
           data-aos="fade-up"

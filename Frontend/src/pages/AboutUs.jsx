@@ -14,11 +14,11 @@ const AboutUs = () => {
       <div className="max-w-7xl mx-auto space-y-20">
         {/* Heading */}
         <div className="text-center space-y-3" data-aos="fade-down">
-          <h2 className="text-sm uppercase tracking-wide text-green-600 font-semibold">
+          <h2 className="text-sm uppercase tracking-wide  font-semibold text-gray-500 dark:text-gray-300">
             About
           </h2>
           <h3 className="text-3xl md:text-4xl font-bold text-black dark:text-white">
-            About <span className="text-green-600">Microdome</span>
+            About <span className="text-highlighted">Microdome</span>
           </h3>
           <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
             We are a premier coaching institute dedicated to shaping{" "}
@@ -37,7 +37,7 @@ const AboutUs = () => {
             <img
               src={Microdome}
               alt="Microdome Biology Coaching"
-              className="w-60 h-60 object-cover rounded-full shadow-md border-4 border-green-600 
+              className="w-60 h-60 object-cover rounded-full shadow-md border-4 border-highlighted 
               transition-transform duration-500 ease-in-out hover:scale-105"
             />
           </div>
@@ -50,7 +50,7 @@ const AboutUs = () => {
               Who We Are
             </h3>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-              <span className="font-semibold text-green-600">Microdome</span> is
+              <span className="font-semibold text-highlighted">Microdome</span> is
               a premier biology coaching institute nurturing students in{" "}
               <span className="font-semibold">Life Sciences</span>. We focus on
               conceptual clarity, career readiness, and interactive learning.
@@ -65,7 +65,7 @@ const AboutUs = () => {
         {/* Why Join Section */}
         <div data-aos="fade-up" className="space-y-12">
           <h3 className="text-3xl md:text-4xl font-bold text-center text-black dark:text-white">
-            Why Join <span className="text-green-600">Microdome?</span>
+            Why Join <span className="text-highlighted">Microdome?</span>
           </h3>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -111,7 +111,7 @@ const AboutUs = () => {
                 data-aos="fade-up"
                 data-aos-delay={idx * 120}
               >
-                <h4 className="text-xl font-semibold text-green-600 mb-2">
+                <h4 className="text-xl font-semibold text-highlighted mb-2">
                   {item.title}
                 </h4>
                 <p className="text-gray-700 dark:text-gray-300">{item.desc}</p>
@@ -123,7 +123,7 @@ const AboutUs = () => {
         {/* CTA */}
         <div className="text-center" data-aos="zoom-in-up">
           <Link
-            className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold 
+            className="inline-block bg-highlighted hover:bg-highlighted-hover text-white font-semibold 
             text-lg md:text-xl px-10 py-4 md:px-12 md:py-5 rounded-full shadow-lg transition 
             duration-500 ease-in-out transform hover:scale-110"
             to="/login"
