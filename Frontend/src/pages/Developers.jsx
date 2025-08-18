@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { FaLinkedin, FaFacebook, FaInstagram, FaEnvelope } from "react-icons/fa";
+import { FaLinkedin, FaInstagram, FaEnvelope, FaGlobe } from "react-icons/fa"; 
 import AbhijitPic from "../assets/abhijit_pic.jpg";
 import SouravPic from "../assets/Sourav_pic.jpg";
 import RohitPic from "../assets/image.jpg";
@@ -13,7 +13,7 @@ const founders = [
     img: RohitPic,
     email: "rg954792@gmail.com",
     linkedin: "https://www.linkedin.com/in/rohit-gupta-a6a53222a/",
-    facebook: "https://www.facebook.com/profile.php?id=100026654993111",
+    website: "https://www.facebook.com/profile.php?id=100026654993111", 
     instagram: "https://www.instagram.com/rohit_gupta_0810/",
   },
   {
@@ -22,7 +22,7 @@ const founders = [
     img: SouravPic,
     email: "inbox.souravghosh@gmail.com",
     linkedin: "https://www.linkedin.com/in/souravghosh121/",
-    facebook: "https://www.facebook.com/sourav7ghosh",
+    website: "https://souravghosh.me/",
     instagram: "https://www.instagram.com/souravghoshofficial/",
   },
   {
@@ -31,7 +31,7 @@ const founders = [
     img: AbhijitPic,
     email: "abhijit.rabidas.mca@gmail.com",
     linkedin: "https://www.linkedin.com/in/abhijit-rabidas/",
-    facebook: "https://www.abhijitrabidas.live/",
+    website: "https://www.abhijitrabidas.live/",
     instagram: "https://www.instagram.com/aj_das_01/",
   },
 ];
@@ -84,12 +84,12 @@ const Developers = () => {
                 <FaLinkedin />
               </a>
               <a
-                href={founder.facebook}
+                href={founder.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-500"
+                className="hover:text-blue-600"
               >
-                <FaFacebook />
+                <FaGlobe /> 
               </a>
               <a
                 href={founder.instagram}
