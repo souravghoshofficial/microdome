@@ -62,10 +62,10 @@ const Footer = () => {
                   About Us
                 </Link>
               </li>
-              <li>Support</li>
-              <li>Privacy Policy</li>
-              <li>Terms and Conditions</li>
-              <li>Pricing and Refund</li>
+              <li className="hover:text-highlighted cursor-pointer">Support</li>
+              <li className="hover:text-highlighted cursor-pointer">Privacy Policy</li>
+              <li className="hover:text-highlighted cursor-pointer">Terms and Conditions</li>
+              <li className="hover:text-highlighted cursor-pointer">Pricing and Refund</li>
             </ul>
           </div>
 
@@ -75,22 +75,26 @@ const Footer = () => {
               <Link to="/courses" className="hover:text-highlighted">
                 Courses
               </Link>
-              <Link to="/#testimonials">Testimonials</Link>
+              <Link to="/#testimonials" className="hover:text-highlighted">Testimonials</Link>
               <Link to="/faculties" className="hover:text-highlighted">
                 Our Facultites
               </Link>
               <Link to="/resources" className="hover:text-highlighted">
                 Resources
               </Link>
-              <li>FAQs</li>
+              <li className="hover:text-highlighted cursor-pointer">FAQs</li>
             </ul>
           </div>
 
           <div className="w-full md:w-[20%] mt-4 md:mt-0 px-0 md:px-8">
             <h3 className="text-xl font-bold">Community</h3>
             <ul className="mt-2">
-              <li>Telegram</li>
-              <li>Discord</li>
+              <li className="hover:text-highlighted cursor-pointer">Telegram</li>
+              <li>
+                <Link to="https://chat.whatsapp.com/LepMbONA6YlF95IGOITe8h?mode=ac_t" target="_blank" className="hover:text-highlighted">
+                WhatsApp
+               </Link>
+                </li>
             </ul>
           </div>
         </div>
