@@ -22,8 +22,6 @@ const AllUsers = () => {
     axios
       .get(`${ApiUrl}/admin/get-all-users`, { withCredentials: true })
       .then((res) => {
-        console.log("API response:", res.data);
-
         if (res.data.users && Array.isArray(res.data.users)) {
           setUsers(
             res.data.users.map((u) => ({

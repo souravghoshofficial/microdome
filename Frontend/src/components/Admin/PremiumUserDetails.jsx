@@ -60,7 +60,7 @@ const PremiumUserDetails = () => {
         ? "/admin/revoke-access"
         : "/admin/grant-access";
       const { data } = await axios.post(
-        ` ${ApiUrl}${endpoint}, { userId, courseId: id }, { withCredentials: true } `
+        ` ${ApiUrl}${endpoint}`, { userId, courseId: id }, { withCredentials: true } 
       );
       if (data.success) {
         setUsers((prev) =>
