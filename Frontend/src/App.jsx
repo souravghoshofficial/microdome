@@ -1,5 +1,8 @@
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { hideCard } from "./features/profileCard/profileCardSlice.js";
 
 import Layout from "./Layout.jsx";
 
@@ -59,8 +62,26 @@ import { useCourses } from "./hooks/courses.js";
 import { useAuth } from "./hooks/auth.js";
 
 const App = () => {
+  const isProfileCardHidden = useSelector((state) => state.profileCard.show)
+  const dispatch = useDispatch();
   const { loading } = useAuth();
   useCourses();
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (event.button === 0) {
+        if(!isProfileCardHidden){
+          dispatch(hideCard())
+        }
+      }
+    };
+
+    window.addEventListener("mousedown", handleClick);
+
+    return () => {
+      window.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
 
   if (loading) {
     return (

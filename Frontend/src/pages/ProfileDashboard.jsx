@@ -37,7 +37,7 @@ const ProfileDashboard = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 flex justify-center items-center px-4 py-12 text-black dark:text-white transition-colors duration-300">
-      <div className="w-full max-w-5xl bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row">
+      <div className="w-full max-w-5xl mt-8 md:mt-4 bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row">
 
         {/* Left: Profile Section */}
         <div className="bg-blue-600 text-white p-10 md:w-1/3 flex flex-col items-center justify-center relative">

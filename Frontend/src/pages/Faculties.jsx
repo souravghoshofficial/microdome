@@ -275,7 +275,7 @@ const Faculties = () => {
   );
 
   return (
-    <section className="py-32 px-6 md:px-12 lg:px-24 bg-white dark:bg-black transition-all duration-500">
+    <section className="py-32 px-6 md:px-12 lg:px-24 transition-all duration-500">
       <div className="max-w-7xl mx-auto space-y-20">
         {/* Heading */}
         <div className="text-center space-y-3">
