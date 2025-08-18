@@ -13,6 +13,8 @@ import {
   CreateQuiz,
   CreateCourse,
   PremiumUserDetails,
+  Coupons,
+  CreateCoupon
 } from "./components/Admin";
 
 import {
@@ -132,6 +134,8 @@ const App = () => {
             <Route path="premium-users/:id" element={<PremiumUserDetails />} />
             <Route path="create-quiz" element={<CreateQuiz />} />
             <Route path="create-course" element={<CreateCourse />} />
+            <Route path="coupons" element={<Coupons />} />
+            <Route path="create-coupon" element={<CreateCoupon />} />
           </Route>
         </Route>
         <Route path="/payment-success" element={<PaymentSuccess />} />

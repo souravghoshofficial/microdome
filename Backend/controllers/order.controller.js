@@ -257,7 +257,7 @@ export const validateCouponCode = async (req, res) => {
     if (!coupon) {
       return res.status(404).json({
         success: false,
-        message: "Invalid coupon code or coupon not found.",
+        message: "Invalid coupon code.",
       });
     }
 

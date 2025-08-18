@@ -77,7 +77,7 @@ const createCourse = async (req, res) => {
 };
 
 const getAllCourses = async (req, res) => {
-  const courses = await Course.find({});
+  const courses = await Course.find({}).select("-sections -__v");
 
   res.status(200).json({
     message: "All courses fetched successfully",

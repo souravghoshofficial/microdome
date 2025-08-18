@@ -254,7 +254,7 @@ export const createCouponCode = async (req,res)=>{
           message: "All fields are required.",
         });
     }
-    const coupon=await Coupon.create({couponCode,courseId,discount});
+    const coupon = await Coupon.create({couponCode,courseId,discount});
     if(!coupon){
       return res.status(400).json({
           success: false,
@@ -276,28 +276,33 @@ export const createCouponCode = async (req,res)=>{
 }
 
 
-export const getAllCoupons = async (_,res) => {
+export const getAllCoupons = async (_, res) => {
   try {
-    const coupons=await Coupon.find({});
-    if(!coupons){
-      res.status(404).json({
-        success: false,
-        message: "Something went wrong"
-      })
-     }
+    const coupons = await Coupon.find({})
+      .populate("courseId", "cardTitle"); // fetch only cardTitle from Course
 
-     res.status(200).json({
+    if (!coupons || coupons.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No coupons found."
+      });
+    }
+
+    res.status(200).json({
       success: true,
       message: "All coupons fetched successfully.",
       coupons
-     });
+    });
+
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Internal Server error."
+      message: "Internal Server error.",
+      error: error.message
     });
   }
-}
+};
+
 
 export const deleteCoupon = async (req, res) => {
   try {
