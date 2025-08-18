@@ -1,8 +1,13 @@
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 import { TestimonialCard } from "../components";
 import Microdome from "../assets/microdome.jpg";
 import RoshniBanerjee from "../assets/RoshniBanerjee.webp";
 import DeeptakBiswas from "../assets/DeeptakBiswas.png";
 import SumiChakraborty from "../assets/Sumi_Chakraborty.jpg";
+
 const studentsReview = [
   {
     name: "Shrestha Mandal",
@@ -60,11 +65,10 @@ const studentsReview = [
     instituteName: "Kalyani Mahavidyalaya",
     imageUrl: SumiChakraborty,
   },
-   {
+  {
     name: "SHUVAM ROY",
     message:
       '"Three Mentors- 1) Sayan Da 2) Subhadeep Da 3) Rupayan Da.Deadly Combination of trios. Everyone especially My Lovable Sayan Da not Only a teacher, mentor but also    Friend, philosopher and Guide remaining to me Always. Concepts are learned from scratch. You choosed an Applied Subject but they decreased its toughness to us. Also Competitive Batch, there is Strictly Followed schedule. And Also there, Concepts are given. The Result Will Give the answer I Hope."',
-
     presentCourseOfStudy: "B.Sc in Microbiology",
     instituteName: "Kalyani Mahavidyalaya",
     imageUrl: Microdome,
@@ -72,42 +76,68 @@ const studentsReview = [
 ];
 
 const Testimonial = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: "ease-in-out",
+    });
+  }, []);
+
   return (
     <div
       id="testimonials"
       className="my-8 md:my-16 w-full flex items-center justify-center"
     >
       <div className="w-[90%]">
-        <h4 className="text-center text-sm font-bold">Testmonials</h4>
-        <h2 className="text-center text-3xl md:text-4xl font-bold">
-          See What Our <span className="highlighted-text">Students</span> Say
+        {/* Headings */}
+        <h4
+          className="text-center text-sm font-bold"
+          data-aos="fade-up"
+        >
+          Testimonials
+        </h4>
+        <h2
+          className="text-center text-3xl md:text-4xl font-bold"
+          data-aos="fade-up"
+          data-aos-delay="150"
+        >
+          See What Our{" "}
+          <span className="highlighted-text">Students</span> Say
         </h2>
+
+        {/* Marquee Container */}
         <div
           id="marquee"
-          className=" my-16 flex gap-[var(--gap)] w-[100%] mx-auto overflow-hidden"
+          className="my-16 flex gap-[var(--gap)] w-[100%] mx-auto overflow-hidden"
+          data-aos="fade-up"
+          data-aos-delay="300"
         >
           <div className="testimonial-container flex shrink-0 gap-[var(--gap)]">
-            {studentsReview.map((student) => (
-              <TestimonialCard
-                key={student.name}
-                name={student.name}
-                message={student.message}
-                imageUrl={student.imageUrl}
-                presentCourseOfStudy={student.presentCourseOfStudy}
-                instituteName={student.instituteName}
-              />
+            {studentsReview.map((student, idx) => (
+              <div data-aos="zoom-in" data-aos-delay={idx * 100} key={student.name}>
+                <TestimonialCard
+                  name={student.name}
+                  message={student.message}
+                  imageUrl={student.imageUrl}
+                  presentCourseOfStudy={student.presentCourseOfStudy}
+                  instituteName={student.instituteName}
+                />
+              </div>
             ))}
           </div>
+
           <div className="testimonial-container flex shrink-0 gap-[var(--gap)]">
-            {studentsReview.map((student) => (
-              <TestimonialCard
-                key={student.name}
-                name={student.name}
-                message={student.message}
-                imageUrl={student.imageUrl}
-                presentCourseOfStudy={student.presentCourseOfStudy}
-                instituteName={student.instituteName}
-              />
+            {studentsReview.map((student, idx) => (
+              <div data-aos="zoom-in" data-aos-delay={idx * 100} key={student.name}>
+                <TestimonialCard
+                  name={student.name}
+                  message={student.message}
+                  imageUrl={student.imageUrl}
+                  presentCourseOfStudy={student.presentCourseOfStudy}
+                  instituteName={student.instituteName}
+                />
+              </div>
             ))}
           </div>
         </div>
