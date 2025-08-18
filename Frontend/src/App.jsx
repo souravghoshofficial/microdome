@@ -67,21 +67,21 @@ const App = () => {
   const { loading } = useAuth();
   useCourses();
 
-  useEffect(() => {
-    const handleClick = (event) => {
-      if (event.button === 0) {
-        if(!isProfileCardHidden){
-          dispatch(hideCard())
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const handleClick = (event) => {
+  //     if (event.button === 0) {
+  //       if(!isProfileCardHidden){
+  //         dispatch(hideCard())
+  //       }
+  //     }
+  //   };
 
-    window.addEventListener("mousedown", handleClick);
+  //   window.addEventListener("mousedown", handleClick);
 
-    return () => {
-      window.removeEventListener("mousedown", handleClick);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("mousedown", handleClick);
+  //   };
+  // }, []);
 
   if (loading) {
     return (
