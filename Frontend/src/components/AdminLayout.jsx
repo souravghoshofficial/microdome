@@ -15,7 +15,7 @@ const AdminLayout = () => {
     return <div className="w-full h-screen flex items-center justify-center">Loading...</div>; 
   }
 
-  if (role === "admin") {
+  if (role === "admin" || role === "instructor") {
     return <Outlet />;
   }
 

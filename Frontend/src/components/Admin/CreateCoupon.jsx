@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const CreateCoupon = () => {
+
+  const user = useSelector((state) => state.auth?.userData);
+  const role = user?.role;
+
   const [formData, setFormData] = useState({
     couponCode: "",
     discount: "",
@@ -71,6 +76,10 @@ const CreateCoupon = () => {
       setIsSubmitting(false);
     }
   };
+
+  if(role !== "admin"){
+    navigate("/admin/dashboard")
+  }
 
   return (
     <div className="max-w-xl mx-auto bg-white shadow-lg rounded-xl px-4 md:px-6 py-6 my-8">

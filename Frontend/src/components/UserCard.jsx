@@ -49,7 +49,7 @@ const UserCard = ({ className = "" }) => {
         <Link
           to="/admin/dashboard"
           onClick={() => dispatch(hideCard())}
-          className={`${userData?.role === "admin" ? "flex" : "hidden"} mt-2 px-3 py-1.5 rounded-md items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-highlighted cursor-pointer  transition-all duration-300`}
+          className={`${userData?.role === "admin" || userData?.role === "instructor" ? "flex" : "hidden"} mt-2 px-3 py-1.5 rounded-md items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-highlighted cursor-pointer  transition-all duration-300`}
         >
           <ShieldUser size={20} strokeWidth={1} />
           <p>Admin Dashboard</p>

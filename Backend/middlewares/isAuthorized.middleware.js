@@ -18,7 +18,7 @@ export const isEnrolledInCourse = async (req, res, next) => {
     }
 
 
-    if (user.role === "admin") {
+    if (user.role === "admin" || user.role === "instructor") {
       return next();
     }
 

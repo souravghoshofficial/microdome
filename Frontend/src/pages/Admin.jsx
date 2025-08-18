@@ -10,9 +10,11 @@ import {
   Tickets
 } from "lucide-react";
 
+import { useSelector } from "react-redux";
+
 import { Logo } from '../components'
 
-const menuItems = [
+const adminMenuItems = [
   { name: "Dashboard", icon: <Home size={20} />, href: "/admin/dashboard" },
   { name: "All Users", icon: <Users size={20} />, href: "/admin/all-users" },
   { name: "Premium Users", icon: <Star size={20} />, href: "/admin/premium-users" },
@@ -23,8 +25,18 @@ const menuItems = [
   { name: "Create Course", icon: <Plus size={20} />, href: "/admin/create-course" },
   { name: "Coupons", icon: <Tickets size={20} />, href: "/admin/coupons" },
 ];
+const instructorMenuItems = [
+  { name: "Dashboard", icon: <Home size={20} />, href: "/admin/dashboard" },
+  { name: "All Users", icon: <Users size={20} />, href: "/admin/all-users" },
+  { name: "Premium Users", icon: <Star size={20} />, href: "/admin/premium-users" },
+  { name: "All Courses", icon: <BookOpen size={20} />, href: "/admin/all-courses" },
+  { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
+  { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
+];
 
 export default function Admin() {
+  const user = useSelector((state) => state.auth?.userData);
+  const menuItems = user?.role === "admin" ? adminMenuItems : instructorMenuItems;
   return (
     <div className="flex h-screen">
       {/* Sidebar */}

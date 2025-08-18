@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import userImage from "../../assets/user-img.jpeg";
@@ -11,6 +12,9 @@ const PremiumUserDetails = () => {
   const [users, setUsers] = useState([]);
   const [courseName, setCourseName] = useState("Course Name");
   const [confirmUser, setConfirmUser] = useState(null);
+
+  const user = useSelector((state) => state.auth?.userData);
+  const role = user?.role; 
 
   // Search + Pagination
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,6 +52,31 @@ const PremiumUserDetails = () => {
         toast.error("Failed to load user details");
       });
   }, [id]);
+
+  // Toggle Access
+  const toggleAccess = async (userId, currentAccess) => {
+    try {
+      const endpoint = currentAccess
+        ? "/admin/revoke-access"
+        : "/admin/grant-access";
+      const { data } = await axios.post(
+        ` ${ApiUrl}${endpoint}, { userId, courseId: id }, { withCredentials: true } `
+      );
+      if (data.success) {
+        setUsers((prev) =>
+          prev.map((user) =>
+            user.id === userId ? { ...user, access: !currentAccess } : user
+          )
+        );
+        toast.success(data.message);
+      } else {
+        toast.error(data.message || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Error updating access:", error);
+      toast.error("Failed to update access");
+    }
+  };
 
   // Filter users by search
   const filteredUsers = users.filter((user) =>
@@ -93,7 +122,7 @@ const PremiumUserDetails = () => {
                   Mobile No.
                 </th>
                 <th className="px-4 py-2 text-center">Institute Name</th>
-                <th className="px-4 py-2 text-center">Active Status</th>
+                <th className="px-4 py-2 text-center">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -126,27 +155,39 @@ const PremiumUserDetails = () => {
                     </td>
                     <td className="px-4 py-3 text-center">{user.university}</td>
 
-                    {/* Toggle Access */}
+                    {/* ✅ Role-based Access Control */}
                     <td className="px-4 py-3 text-center">
-                      <label className="inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only"
-                          checked={user.access}
-                          onChange={() => setConfirmUser(user)}
-                        />
-                        <div
-                          className={`w-11 h-6 flex items-center rounded-full p-1 duration-300 ${
-                            user.access ? "bg-green-500" : "bg-gray-300"
+                      {role === "admin" ? (
+                        <label className="inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            checked={user.access}
+                            onChange={() => setConfirmUser(user)}
+                          />
+                          <div
+                            className={`w-11 h-6 flex items-center rounded-full p-1 duration-300 ${
+                              user.access ? "bg-green-500" : "bg-gray-300"
+                            }`}
+                          >
+                            <div
+                              className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ${
+                                user.access ? "translate-x-5" : ""
+                              }`}
+                            ></div>
+                          </div>
+                        </label>
+                      ) : (
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded ${
+                            user.access
+                              ? "text-green-600 bg-green-100"
+                              : "text-red-600 bg-red-100"
                           }`}
                         >
-                          <div
-                            className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ${
-                              user.access ? "translate-x-5" : ""
-                            }`}
-                          ></div>
-                        </div>
-                      </label>
+                          {user.access ? "Active" : "Inactive"}
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -198,8 +239,8 @@ const PremiumUserDetails = () => {
         </div>
       )}
 
-      {/* Confirmation Modal */}
-      {confirmUser && (
+      {/* Confirmation Modal (only for Admins) */}
+      {role === "admin" && confirmUser && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg p-6 w-80 shadow-lg">
             <h3 className="text-lg font-semibold mb-4">Confirm Action</h3>
@@ -225,8 +266,8 @@ const PremiumUserDetails = () => {
                     ? "bg-red-500 hover:bg-red-600"
                     : "bg-green-500 hover:bg-green-600"
                 }`}
-                onClick={() => {
-                  // Keep existing logic in your code
+                 onClick={() => {
+                  toggleAccess(confirmUser.id, confirmUser.access);
                   setConfirmUser(null);
                 }}
               >
@@ -241,3 +282,4 @@ const PremiumUserDetails = () => {
 };
 
 export default PremiumUserDetails;
+

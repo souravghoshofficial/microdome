@@ -17,7 +17,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 
 import { isEnrolledInCourse } from "../middlewares/isAuthorized.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import { isAdmin } from "../middlewares/admin.middleware.js";
+import { authorizedRoles } from "../middlewares/authorizedRoles.middleware.js";
 
 const router = Router();
 
@@ -27,9 +27,9 @@ router
 
 router.route("/get-all-courses").get(getAllCourses);
 
-router.route("/add-section").post(verifyJWT , isAdmin , upload.fields([{ name: "noteURL", maxCount: 1 }]), addSection);
+router.route("/add-section").post(verifyJWT , authorizedRoles("admin", "instructor") , upload.fields([{ name: "noteURL", maxCount: 1 }]), addSection);
 
-router.route("/add-lecture").post(verifyJWT , isAdmin , upload.fields([{ name: "noteURL", maxCount: 1 }]), addLecture);
+router.route("/add-lecture").post(verifyJWT , authorizedRoles("admin", "instructor") , upload.fields([{ name: "noteURL", maxCount: 1 }]), addLecture);
 
 router.route("/update-section").post(addLectureToASection);
 
