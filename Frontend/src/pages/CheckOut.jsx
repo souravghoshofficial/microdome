@@ -1,3 +1,5 @@
+
+
 // import { useEffect, useState } from "react";
 // import axios from "axios";
 // import { loadRazorpayScript } from "../utils/razorpay";
@@ -147,9 +149,17 @@
 //   };
 
 //   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 dark:from-slate-900 dark:to-slate-800 px-4">
+//     <div
+//       className="min-h-screen flex items-center justify-center 
+//       bg-gradient-to-br from-gray-50 to-gray-200 
+//       dark:bg-black px-4"
+//     >
 //       <ToastContainer />
-//       <div className="mt-8 w-full max-w-3xl bg-white dark:bg-[#1e293b] shadow-2xl rounded-2xl p-10 mb-16 relative overflow-hidden">
+//       <div
+//         className="mt-8 w-full max-w-3xl bg-white 
+//         dark:bg-[#1b1e27] shadow-2xl rounded-2xl p-10 mb-16 
+//         relative overflow-hidden"
+//       >
 //         <h2 className="text-4xl font-extrabold mb-8 text-center text-gray-900 dark:text-gray-100">
 //           Checkout
 //         </h2>
@@ -247,6 +257,8 @@
 // };
 
 // export default CheckOut;
+
+
 
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -377,13 +389,13 @@ const CheckOut = () => {
           } catch (err) {
             console.log("Failed to refresh user:", err.message);
           } finally {
-            setIsSubmitting(false); // ✅ reset after success
+            setIsSubmitting(false);
           }
         },
         modal: {
           ondismiss: function () {
             toast.info("Payment cancelled by user");
-            setIsSubmitting(false); // ✅ reset after user cancels/escapes
+            setIsSubmitting(false);
           },
         },
       };
@@ -397,18 +409,10 @@ const CheckOut = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center 
-      bg-gradient-to-br from-gray-50 to-gray-200 
-      dark:bg-black px-4"
-    >
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 dark:bg-black px-3 sm:px-6">
       <ToastContainer />
-      <div
-        className="mt-8 w-full max-w-3xl bg-white 
-        dark:bg-[#1b1e27] shadow-2xl rounded-2xl p-10 mb-16 
-        relative overflow-hidden"
-      >
-        <h2 className="text-4xl font-extrabold mb-8 text-center text-gray-900 dark:text-gray-100">
+      <div className="mt-6 w-full max-w-3xl bg-white dark:bg-[#1b1e27] shadow-2xl rounded-2xl p-5 sm:p-8 md:p-10 mb-12 relative overflow-hidden">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-6 sm:mb-8 text-center text-gray-900 dark:text-gray-100">
           Checkout
         </h2>
 
@@ -417,25 +421,25 @@ const CheckOut = () => {
             Loading course details...
           </p>
         ) : courseDetails ? (
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             {/* Course Card */}
-            <div className="border rounded-xl p-6 bg-gradient-to-r from-green-50 to-green-100 dark:from-slate-700 dark:to-slate-600 shadow-md">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+            <div className="border rounded-xl p-4 sm:p-6 bg-gradient-to-r from-green-50 to-green-100 dark:from-slate-700 dark:to-slate-600 shadow-md">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-50">
                 {courseDetails.courseTitle}
               </h3>
               <p className="text-gray-700 dark:text-gray-300 mt-2 text-sm leading-relaxed">
                 {courseDetails.courseDescription}
               </p>
-              <div className="flex items-baseline gap-4 mt-4">
-                <span className="text-lg line-through text-gray-500">
+              <div className="flex flex-col sm:flex-row items-start sm:items-baseline gap-2 sm:gap-4 mt-4">
+                <span className="text-base sm:text-lg line-through text-gray-500">
                   ₹{courseDetails.actualPrice}
                 </span>
-                <span className="text-3xl font-extrabold text-green-700 dark:text-green-400">
+                <span className="text-2xl sm:text-3xl font-extrabold text-green-700 dark:text-green-400">
                   ₹{finalAmount}
                 </span>
               </div>
               {appliedDiscount > 0 && (
-                <p className="mt-2 text-green-600 font-semibold">
+                <p className="mt-2 text-green-600 font-semibold text-sm sm:text-base">
                   Coupon Applied: {appliedDiscount}% OFF
                 </p>
               )}
@@ -443,20 +447,20 @@ const CheckOut = () => {
 
             {/* Coupon Input */}
             <div>
-              <label className="block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+              <label className="block mb-2 sm:mb-3 font-semibold text-gray-700 dark:text-gray-300 text-sm sm:text-base">
                 Coupon Code
               </label>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   placeholder="Enter coupon code"
-                  className="flex-1 px-5 py-3 border rounded-lg text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
+                  className="flex-1 px-4 py-2 sm:px-5 sm:py-3 border rounded-lg text-base sm:text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
                 />
                 <button
                   onClick={handleApplyCoupon}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer text-sm sm:text-base"
                 >
                   Apply
                 </button>
@@ -465,7 +469,7 @@ const CheckOut = () => {
 
             {/* Phone Input */}
             <div>
-              <label className="block mb-3 font-semibold text-gray-700 dark:text-gray-300">
+              <label className="block mb-2 sm:mb-3 font-semibold text-gray-700 dark:text-gray-300 text-sm sm:text-base">
                 Whatsapp Number
               </label>
               <input
@@ -473,7 +477,7 @@ const CheckOut = () => {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Enter your whatsapp number"
-                className="w-full px-5 py-3 border rounded-lg text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
+                className="w-full px-4 py-2 sm:px-5 sm:py-3 border rounded-lg text-base sm:text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
               />
             </div>
 
@@ -482,11 +486,11 @@ const CheckOut = () => {
               <button
                 onClick={handlePayment}
                 disabled={isSubmitting}
-                className={`${
+                className={`w-full sm:w-auto ${
                   isSubmitting
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 cursor-pointer"
-                } text-white font-bold px-10 py-4 rounded-xl text-lg shadow-lg transform transition-all duration-300`}
+                } text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-xl text-base sm:text-lg shadow-lg transform transition-all duration-300`}
               >
                 {isSubmitting
                   ? "Processing..."
