@@ -11,7 +11,7 @@ const AllUsers = () => {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(5);
+  const [usersPerPage] = useState(7);
 
   function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);

@@ -19,7 +19,7 @@ const PremiumUserDetails = () => {
   // Search + Pagination
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(5);
+  const [usersPerPage] = useState(7);
 
   useEffect(() => {
     axios
