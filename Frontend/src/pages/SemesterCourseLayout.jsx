@@ -22,6 +22,17 @@ const syllabus = {
 "Sterilization and Aseptic Techniques: Definitions, evaluation methods, physical methods (moist/dry heat, filtration, radiation), chemical agents and their practical application, selection criteria."
 ],
 },
+{
+"subject": "Food Fermentation Techniques",
+"topics": [
+  "Fermented Foods- Definition, types, advantages and health benefits.",
+  "Milk Based Fermented Foods- Dahi, Yogurt, Buttermilk (Chhach) and cheese: Preparation of inoculums, types of microorganisms and production process.",
+  "Grain Based Fermented Foods- Soy sauce, Bread, Idli and Dosa: Microorganisms and production process.",
+  "Vegetable Based Fermented Foods- Pickels, Saeurkraut: Microorganisms and production process Fermented.",
+  "Meat and Fis Types, microorganisms involved, fermentation process.",
+  "Probiotic Foods- Definition, types, microorganisms and health benefits."
+],
+},
 ],
 
 semester_ii : 
