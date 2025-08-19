@@ -24,6 +24,7 @@ import LoadingScreen from "./LoadingScreen";
 import Developers from "./Developers";
 import LandingPageCourses from "./LandingPageCourses";
 import CheckOut from "./CheckOut";
+
 export {
   Landing,
   About,

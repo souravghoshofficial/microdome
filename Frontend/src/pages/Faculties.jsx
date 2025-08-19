@@ -7,6 +7,9 @@ import rupayanImg from "../assets/Rupayanpic.png";
 import subhadeepImg from "../assets/Subhadeep.png";
 import akashImg from "../assets/Akashpic.jpg";
 import krishnenduImg from "../assets/krishnendupic.jpg";
+import Microdome from "../assets/microdome.jpg";
+
+import { Helmet } from "react-helmet-async";
 
 const faculties = [
   {
@@ -107,55 +110,109 @@ const Faculties = () => {
   );
 
   return (
-    <section className="py-32 px-6 md:px-12 lg:px-24 transition-all duration-500">
-      <div className="max-w-7xl mx-auto space-y-20">
-        {/* Heading */}
-        <div className="text-center space-y-3">
-          <h3
-            data-aos="fade-down"
-            className="text-3xl md:text-4xl font-bold text-black dark:text-white"
-          >
-            Meet Our <span className="text-highlighted">Faculties</span>
-          </h3>
-          <p
-            data-aos="fade-up"
-            className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto"
-          >
-            Learn from highly qualified mentors who have cracked top national
-            exams and bring rich academic and research experience to guide you
-            towards success.
-          </p>
-        </div>
+    <>
+      <Helmet>
+        {/* Basic Meta Tags */}
+        <title>Faculties | Microdome Classes</title>
+        <meta
+          name="description"
+          content="Meet our expert faculties at Microdome Classes, dedicated to nurturing future biologists with mentorship and interactive learning."
+        />
+        <meta
+          name="keywords"
+          content="Microdome, Microdome Classes, Biology Coaching, Faculties, Life Sciences, IIT JAM, GAT-B, CUET-PG, Biology Classes"
+        />
+        <meta name="author" content="Microdome" />
+        {/* Open Graph (Facebook/LinkedIn) */}
+        <meta property="og:title" content="Faculties | Microdome Classes" />
+        <meta
+          property="og:description"
+          content="Learn from highly qualified mentors who have cracked top national exams and bring rich academic and research experience to guide you towards success."
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content="https://microdomeclasses.in/faculties"
+        />
+        <meta property="og:image" content={Microdome} />
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Faculties | Microdome Classes" />
+        <meta
+          name="twitter:description"
+          content="Meet our expert faculties at Microdome Classes, dedicated to nurturing future biologists with mentorship and interactive learning."
+        />
+        <meta name="twitter:image" content={Microdome} />
+        <link rel="canonical" href="https://microdomeclasses.in/faculties" />
+        <link rel="icon" href="/microdomeLogo.png" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <meta name="msapplication-TileColor" content="#da532c" />
+        <meta name="theme-color" content="#ffffff" />
+      </Helmet>
 
-        {/* Faculties Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
-          {faculties.map((faculty, index) => renderFacultyCard(faculty, index))}
-        </div>
+      <section className="py-32 px-6 md:px-12 lg:px-24 transition-all duration-500">
+        <div className="max-w-7xl mx-auto space-y-20">
+          {/* Heading */}
+          <div className="text-center space-y-3">
+            <h3
+              data-aos="fade-down"
+              className="text-3xl md:text-4xl font-bold text-black dark:text-white"
+            >
+              Meet Our <span className="text-highlighted">Faculties</span>
+            </h3>
+            <p
+              data-aos="fade-up"
+              className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto"
+            >
+              Learn from highly qualified mentors who have cracked top national
+              exams and bring rich academic and research experience to guide you
+              towards success.
+            </p>
+          </div>
 
-        {/* Adjunct Faculty Section */}
-        <div className="space-y-6">
-          <h3
-            data-aos="fade-up"
-            className="text-2xl md:text-4xl font-bold text-center text-black dark:text-white"
-          >
-            Adjunct <span className="text-highlighted">Faculty</span>
-          </h3>
-          <p
-            data-aos="fade-up"
-            data-aos-delay="200"
-            className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-center text-lg"
-          >
-            Our adjunct faculty members bring additional expertise and diverse
-            research experience to strengthen our academic environment.
-          </p>
+          {/* Faculties Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
-            {adjunctFaculties.map((faculty, index) =>
+            {faculties.map((faculty, index) =>
               renderFacultyCard(faculty, index)
             )}
           </div>
+
+          {/* Adjunct Faculty Section */}
+          <div className="space-y-6">
+            <h3
+              data-aos="fade-up"
+              className="text-2xl md:text-4xl font-bold text-center text-black dark:text-white"
+            >
+              Adjunct <span className="text-highlighted">Faculty</span>
+            </h3>
+            <p
+              data-aos="fade-up"
+              data-aos-delay="200"
+              className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-center text-lg"
+            >
+              Our adjunct faculty members bring additional expertise and diverse
+              research experience to strengthen our academic environment.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
+              {adjunctFaculties.map((faculty, index) =>
+                renderFacultyCard(faculty, index)
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 
