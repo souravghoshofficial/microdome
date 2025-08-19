@@ -28,13 +28,13 @@ const BuyNowCard = ({
             >
               ₹ {actualPrice}
             </h3>
-            <h3 className="text-sm text-gray-700 ml-[-4px]">{mode === "live" ? "/monthly" : ""}</h3>
+            <h3 className="text-sm text-gray-700 dark:text-gray-300 ml-[-4px]">{mode === "live" ? "/monthly" : ""}</h3>
           </div>
           <div>
             <h4
               className={`${
                 discount ? "block" : "hidden"
-              } text-right px-2 py-0.5 text-sm font-semibold bg-green-100 text-green-600 dark:bg-white rounded-md bg:text-black`}
+              } text-right px-2 py-0.5 text-sm font-semibold bg-green-100 text-green-600 dark:bg-white rounded-md dark:text-black`}
             >
               {discount}% OFF
             </h4>
