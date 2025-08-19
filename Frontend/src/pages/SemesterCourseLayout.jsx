@@ -218,7 +218,7 @@ const SemesterCourseLayout = () => {
       navigate(`/my-courses/${courseDetails?._id}`);
       return;
     }
-    // ✅ Redirect to Checkout page
+    // Redirect to Checkout page
     navigate(`/checkout/${id}`);
   };
 
@@ -246,6 +246,7 @@ const SemesterCourseLayout = () => {
             imageUrl={courseDetails?.courseImage}
             handlePayment={handleEnrollClick} // ✅ now navigates to checkout
             isEnrolled={isEnrolled}
+            mode={courseDetails?.mode}
           />
         </div>
       </div>

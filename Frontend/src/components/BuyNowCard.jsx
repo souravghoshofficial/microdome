@@ -4,7 +4,8 @@ const BuyNowCard = ({
   handlePayment,
   isEnrolled,
   imageUrl,
-  courseFeatures
+  courseFeatures,
+  mode
 }) => {
   const discount = Math.trunc(
     100 * ((actualPrice - discountedPrice) / actualPrice)
@@ -23,16 +24,17 @@ const BuyNowCard = ({
             <h3
               className={`${
                 actualPrice === discountedPrice ? "hidden" : "block"
-              } text-lg line-through`}
+              } text-sm line-through`}
             >
               ₹ {actualPrice}
             </h3>
+            <h3 className="text-sm text-gray-700 ml-[-4px]">{mode === "live" ? "/monthly" : ""}</h3>
           </div>
           <div>
             <h4
               className={`${
                 discount ? "block" : "hidden"
-              } text-right px-2 py-0.5 text-sm font-semibold bg-slate-200 dark:bg-white rounded-md text-black`}
+              } text-right px-2 py-0.5 text-sm font-semibold bg-green-100 text-green-600 dark:bg-white rounded-md bg:text-black`}
             >
               {discount}% OFF
             </h4>

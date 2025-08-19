@@ -7,7 +7,7 @@ const DownloadBtn = ({ url }) => {
       <a 
         href={url} 
         download
-        className='flex items-center justify-center px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg'
+        className={`flex items-center justify-center px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg`}
       >
         <Download className='block lg:hidden w-4 h-4' />
         <span className='hidden lg:block'>Download</span>

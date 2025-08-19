@@ -104,6 +104,20 @@ const EntranceBatch = () => {
             <div className="w-full mt-4">
               <CourseSyllabus syllabus={syllabus} />
             </div>
+             {/* ✅ Entrance Exam Brochures Section */}
+      <div className="w-full mt-4 flex items-center ">
+        <div className="mt-2 w-full md:w-[90%]">
+          <h2 className="text-xl font-semibold">
+            Entrance Exam Brochures
+          </h2>
+
+          {brochures.map((section) => (
+            <div key={section.id}>
+              <BrochureTopic topic={section.topic} brochures={section.pdfs} />
+            </div>
+          ))}
+        </div>
+      </div>
           </div>
 
           <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto md:w-[50%] lg:w-[36%] z-20">
@@ -118,25 +132,13 @@ const EntranceBatch = () => {
               imageUrl={courseDetails?.courseImage}
               handlePayment={handleEnrollClick}
               isEnrolled={isEnrolled}
+              mode={courseDetails?.mode}
             />
           </div>
         </div>
       </div>
 
-      {/* ✅ Entrance Exam Brochures Section */}
-      <div className="w-full flex items-center justify-center transition-colors duration-300">
-        <div className="mt-2 md:mt-4 mb-24 md:mb-32 w-[90%]">
-          <h2 className="text-3xl md:text-4xl font-bold text-center">
-            Entrance Exam <span className="text-highlighted">Brochures</span>
-          </h2>
-
-          {brochures.map((section) => (
-            <div key={section.id}>
-              <BrochureTopic topic={section.topic} brochures={section.pdfs} />
-            </div>
-          ))}
-        </div>
-      </div>
+     
     </>
   );
 };
