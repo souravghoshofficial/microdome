@@ -43,7 +43,7 @@ const Landing = () => {
         {/* Buttons */}
         <div
           className="mt-5 w-full md:w-[50%] flex items-center justify-center gap-5"
-          data-aos="zoom-in"
+          data-aos="fade-up"
           data-aos-delay="400"
         >
           <Link
