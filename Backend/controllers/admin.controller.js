@@ -339,8 +339,8 @@ export const deleteCoupon = async (req, res) => {
 // --- analytics --- //
 
 export const getTotalUserCount = async (_, res) => {
-  try {
-    const totalUsers = await prisma.user.count();
+ try {
+    const totalUsers = await User.countDocuments();
     res.status(200).json({ success: true, totalUsers });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
