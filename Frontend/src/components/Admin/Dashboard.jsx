@@ -16,7 +16,7 @@ const Dashboard = () => {
         if (res.data.success) {
           setStats((prev) => ({
             ...prev,
-            totalUsers: res.data.count ?? 0, // fallback to 0
+            totalUsers: res.data.totalUsers ?? 0, // fallback to 0
           }));
         } else {
           toast.error("Failed to fetch total users");
@@ -34,7 +34,7 @@ const Dashboard = () => {
         if (res.data.success) {
           setStats((prev) => ({
             ...prev,
-            premiumUsers: res.data.count ?? 0, // fallback to 0
+            premiumUsers: res.data.premiumUsers ?? 0, // fallback to 0
           }));
         } else {
           toast.error("Failed to fetch premium users");
