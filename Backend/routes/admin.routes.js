@@ -10,7 +10,8 @@ import {
   getAllCoupons,
   deleteCoupon,
   getTotalUserCount,
-  getPremiumUserCount
+  getPremiumUserCount,
+  getTotalCourses
 } from "../controllers/admin.controller.js";
 import { authorizedRoles } from "../middlewares/authorizedRoles.middleware.js";
 
@@ -41,5 +42,6 @@ router.route("/grant-access").post(authorizedRoles("admin"), grantAccess);
 // --- stats --- //
 router.route("/stats/users").get(authorizedRoles("admin", "instructor"), getTotalUserCount)
 router.route("/stats/premium-users").get(authorizedRoles("admin", "instructor"), getPremiumUserCount)
+router.route("/stats/courses").get(authorizedRoles("admin", "instructor"), getTotalCourses)
 
 export default router;

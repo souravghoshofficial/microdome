@@ -355,3 +355,19 @@ export const getPremiumUserCount = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+export const getTotalCourses = async (req, res) => {
+  try {
+    const count = await Course.countDocuments(); 
+    res.status(200).json({
+      success: true,
+      count,
+    });
+  } catch (error) {
+    console.error("Error fetching total courses:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch total courses",
+    });
+  }
+};

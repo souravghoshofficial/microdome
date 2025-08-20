@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Users, Crown } from "lucide-react"; // icons
+import { Users, Crown, Book } from "lucide-react"; 
 import toast, { Toaster } from "react-hot-toast";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const Dashboard = () => {
-  const [stats, setStats] = useState({ totalUsers: 0, premiumUsers: 0 });
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    premiumUsers: 0,
+    totalCourses: 0,
+  });
 
   useEffect(() => {
     // Fetch total users
@@ -44,6 +48,21 @@ const Dashboard = () => {
         console.error(err);
         toast.error("Error fetching premium users");
       });
+
+    // Fetch total courses
+    axios
+      .get(`${ApiUrl}/admin/stats/courses`, { withCredentials: true })
+      .then((res) => {
+        if (res.data.success) {
+          setStats((prev) => ({ ...prev, totalCourses: res.data.count ?? 0 }));
+        } else {
+          toast.error("Failed to fetch total courses");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Error fetching total courses");
+      });
   }, []);
 
   return (
@@ -51,14 +70,12 @@ const Dashboard = () => {
       <Toaster position="top-right" />
 
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Total Users Card */}
         <div className="bg-gradient-to-r from-pink-500 to-red-400 text-white rounded-xl shadow-md p-6 flex flex-col justify-between relative overflow-hidden">
           <div>
             <h2 className="text-lg font-semibold">Total Users</h2>
-            <p className="text-3xl font-bold mt-2">
-              {stats.totalUsers || 0}
-            </p>
+            <p className="text-3xl font-bold mt-2">{stats.totalUsers || 0}</p>
           </div>
           <div className="absolute bottom-4 right-4 opacity-40">
             <Users size={40} />
@@ -69,12 +86,21 @@ const Dashboard = () => {
         <div className="bg-gradient-to-r from-blue-500 to-indigo-400 text-white rounded-xl shadow-md p-6 flex flex-col justify-between relative overflow-hidden">
           <div>
             <h2 className="text-lg font-semibold">Premium Users</h2>
-            <p className="text-3xl font-bold mt-2">
-              {stats.premiumUsers || 0}
-            </p>
+            <p className="text-3xl font-bold mt-2">{stats.premiumUsers || 0}</p>
           </div>
           <div className="absolute bottom-4 right-4 opacity-40">
             <Crown size={40} />
+          </div>
+        </div>
+
+        {/* Total Courses Card */}
+        <div className="bg-gradient-to-r from-green-500 to-emerald-400 text-white rounded-xl shadow-md p-6 flex flex-col justify-between relative overflow-hidden">
+          <div>
+            <h2 className="text-lg font-semibold">Total Courses</h2>
+            <p className="text-3xl font-bold mt-2">{stats.totalCourses || 0}</p>
+          </div>
+          <div className="absolute bottom-4 right-4 opacity-40">
+            <Book size={40} />
           </div>
         </div>
       </div>
