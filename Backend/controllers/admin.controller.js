@@ -72,7 +72,6 @@ export const createQuiz = async (req, res) => {
   }
 };
 
-
 export const getUserDetailsByCourseId = async (req, res) => {
   try {
     const courseId = req.params.id;
@@ -245,64 +244,60 @@ export const getCourseDetailsWithUserCounts = async (req, res) => {
   }
 };
 
-export const createCouponCode = async (req,res)=>{
+export const createCouponCode = async (req, res) => {
   try {
-    const {couponCode,courseId,discount}=req.body;
-    if(!couponCode || !courseId || !discount){
+    const { couponCode, courseId, discount } = req.body;
+    if (!couponCode || !courseId || !discount) {
       return res.status(400).json({
-          success: false,
-          message: "All fields are required.",
-        });
+        success: false,
+        message: "All fields are required.",
+      });
     }
-    const coupon = await Coupon.create({couponCode,courseId,discount});
-    if(!coupon){
+    const coupon = await Coupon.create({ couponCode, courseId, discount });
+    if (!coupon) {
       return res.status(400).json({
-          success: false,
-          message: "Error while creating coupon",
-        });
+        success: false,
+        message: "Error while creating coupon",
+      });
     }
-  
+
     res.status(200).json({
       success: true,
       message: "Coupon created successfully.",
-      coupon
+      coupon,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Internal Server error."
-    })
+      message: "Internal Server error.",
+    });
   }
-}
-
+};
 
 export const getAllCoupons = async (_, res) => {
   try {
-    const coupons = await Coupon.find({})
-      .populate("courseId", "cardTitle"); // fetch only cardTitle from Course
+    const coupons = await Coupon.find({}).populate("courseId", "cardTitle"); // fetch only cardTitle from Course
 
     if (!coupons || coupons.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "No coupons found."
+        message: "No coupons found.",
       });
     }
 
     res.status(200).json({
       success: true,
       message: "All coupons fetched successfully.",
-      coupons
+      coupons,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Internal Server error.",
-      error: error.message
+      error: error.message,
     });
   }
 };
-
 
 export const deleteCoupon = async (req, res) => {
   try {
@@ -338,5 +333,25 @@ export const deleteCoupon = async (req, res) => {
       message: "Internal Server Error",
       error: error.message,
     });
+  }
+};
+
+// --- analytics --- //
+
+export const getTotalUserCount = async (_, res) => {
+  try {
+    const totalUsers = await prisma.user.count();
+    res.status(200).json({ success: true, totalUsers });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export const getPremiumUserCount = async (req, res) => {
+  try {
+    const premiumUsers = await User.countDocuments({ isPremiumMember: true });
+    res.status(200).json({ success: true, premiumUsers });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };

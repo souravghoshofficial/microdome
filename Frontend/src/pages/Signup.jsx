@@ -77,7 +77,7 @@ const Signup = () => {
           setError(err.response.statusText);
         }
 
-        if (err.status === 409) {
+        if (err.status === 400) {
           setError("User with this email already exists");
         }
       })
