@@ -66,9 +66,17 @@ const studentsReview = [
     imageUrl: SumiChakraborty,
   },
   {
-    name: "SHUVAM ROY",
+    name: "Shuvam Roy",
     message:
-      '"Three Mentors- 1) Sayan Da 2) Subhadeep Da 3) Rupayan Da.Deadly Combination of trios. Everyone especially My Lovable Sayan Da not Only a teacher, mentor but also    Friend, philosopher and Guide remaining to me Always. Concepts are learned from scratch. You choosed an Applied Subject but they decreased its toughness to us. Also Competitive Batch, there is Strictly Followed schedule. And Also there, Concepts are given. The Result Will Give the answer I Hope."',
+      '"Three Mentors- 1) Sayan Da 2) Subhadeep Da 3) Rupayan Da.Deadly Combination of trios. Everyone especially My Lovable Sayan Da not Only a teacher, mentor but also Friend, philosopher and Guide remaining to me Always. Concepts are learned from scratch. You choosed an Applied Subject but they decreased its toughness to us. Also Competitive Batch, there is Strictly Followed schedule. And Also there, Concepts are given. The Result Will Give the answer I Hope."',
+    presentCourseOfStudy: "B.Sc in Microbiology",
+    instituteName: "Kalyani Mahavidyalaya",
+    imageUrl: Microdome,
+  },
+  {
+    name: "Arpit Tarafdar",
+    message:
+      '"Microdome is a great initiative which provides guidance and deep course knowledge by interacting with faculties. Th e best part of using this platform is, we get handy notes and picture based ppt which helps in last moment revision for the critical concept. Regular test helps to improve efficiency and detail analysis discussed after the test highlights the point that need some improvement."',
     presentCourseOfStudy: "B.Sc in Microbiology",
     instituteName: "Kalyani Mahavidyalaya",
     imageUrl: Microdome,
