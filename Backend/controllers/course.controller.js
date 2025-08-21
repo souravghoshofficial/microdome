@@ -87,7 +87,7 @@ const getAllCourses = async (req, res) => {
 
 const addLecture = async (req, res) => {
   try {
-    const { title, videoURL, noteURL, noteTitle, sectionId } = req.body;
+    const { title, videoURL, noteTitle, sectionId } = req.body;
   
     if(!sectionId){
       throw new ApiError(400, "sectionId is required");
@@ -104,22 +104,21 @@ const addLecture = async (req, res) => {
     }
   
     const noteURLlocalPath = req.files?.noteURL[0]?.path;
+
+    const uploadedNoteURL = null;
     
-      if (!noteURLlocalPath) {
-        throw new ApiError(400, "Note is missing");
-      }
-    
-      const uploadedNoteURL = await uploadOnCloudinary(noteURLlocalPath);
-    
-      if (!uploadedNoteURL?.url) {
+      if (noteURLlocalPath) {
+        uploadedNoteURL = await uploadOnCloudinary(noteURLlocalPath);
+         if (!uploadedNoteURL?.url) {
         throw new ApiError(400, "Error while uploading the note");
+      }
       }
     
       const lecture = await Lecture.create({
         title,
         videoURL,
-        noteTitle,
-        noteURL: uploadedNoteURL.url
+        noteTitle: noteTitle ? noteTitle : "",
+        noteURL: uploadedNoteURL?.url || ""
       })
   
       if(!lecture){
@@ -145,7 +144,7 @@ const addLecture = async (req, res) => {
 
 const addSection = async (req, res) => {
   try {
-    const { sectionTitle, lectureTitle,videoURL,noteTitle,noteURL,courseId } = req.body;
+    const { sectionTitle, lectureTitle, videoURL, noteTitle, courseId } = req.body;
     
     if(!(sectionTitle && lectureTitle && videoURL && courseId)){
       res.status(400).json({
@@ -158,22 +157,22 @@ const addSection = async (req, res) => {
       throw new ApiError(400,"Error while creating section");
     }
     const noteURLlocalPath = req.files?.noteURL[0]?.path;
+
+     const uploadedNoteURL = null;
   
     if (!noteURLlocalPath) {
-      throw new ApiError(400, "Note is missing");
-    }
-  
-    const uploadedNoteURL = await uploadOnCloudinary(noteURLlocalPath);
-  
-    if (!uploadedNoteURL?.url) {
+      uploadedNoteURL = await uploadOnCloudinary(noteURLlocalPath);
+       if (!uploadedNoteURL?.url) {
       throw new ApiError(400, "Error while uploading the note");
     }
+    }
+  
   
     const lecture = await Lecture.create({
       title: lectureTitle,
       videoURL,
-      noteTitle,
-      noteURL: uploadedNoteURL.url
+      noteTitle: noteTitle ? noteTitle : "",
+      noteURL: uploadedNoteURL?.url || ""
     })
   
     if(!lecture){

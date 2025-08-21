@@ -142,7 +142,7 @@ const AddSection = () => {
                 value={formData.noteTitle}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
-                required
+         
               />
               <input
                 type="file"
@@ -150,7 +150,7 @@ const AddSection = () => {
                 accept=".pdf,.docx,.pptx"
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
-                required
+           
               />
               <div className="flex justify-between">
                 <button

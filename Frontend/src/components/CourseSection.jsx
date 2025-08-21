@@ -47,7 +47,7 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
                       {lecture.title}
                     </li>
                     {lecture?.noteURL && (<div className="w-full flex justify-end">
-                        <a className="px-2 py-0.5 border border-blue-400 rounded-sm hover:bg-blue-200 text-sm flex items-center gap-1" download={lecture.noteTitle} href={lecture.noteURL}><RiFolderOpenLine className="inline" size={14}/>Notes</a>
+                        <a className="px-2 py-0.5 border border-blue-400 rounded-sm hover:bg-blue-200 text-sm flex items-center gap-1" download href={lecture.noteURL}><RiFolderOpenLine className="inline" size={14}/>Notes</a>
                     </div>
                     )} 
                   </div>

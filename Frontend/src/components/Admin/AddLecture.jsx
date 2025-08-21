@@ -161,7 +161,6 @@ const AddLecture = () => {
                 value={formData.noteTitle}
                 onChange={handleChange}
                 className="w-full border p-2 rounded"
-                required
               />
               <input
                 type="file"
@@ -169,7 +168,6 @@ const AddLecture = () => {
                 accept=".pdf,.docx,.pptx"
                 onChange={handleChange}
                 className="w-full border p-2 rounded"
-                required
               />
               <div className="flex justify-between">
                 <button
