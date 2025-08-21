@@ -57,7 +57,7 @@ const About = () => {
           </div>
 
           {/* Right Video */}
-          <div className="w-full md:w-[50%] overflow-hidden" data-aos="fade-down">
+          <div className="w-full md:w-[50%] overflow-hidden" data-aos="fade-up">
             <video autoPlay muted loop className="w-full h-auto rounded-xl">
               <source src={cellVideo} />
             </video>

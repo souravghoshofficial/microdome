@@ -41,7 +41,7 @@ const Enroll = () => {
           {/* CARD 1 */}
           <div
             className="flex-1 p-6 border border-gray-950/[.1] dark:border-gray-50/[.1] dark:bg-gray-50/[.10] rounded-2xl shadow-sm flex flex-col justify-between"
-            data-aos="fade-up"
+            data-aos="zoom-in"
           >
             <div>
               <div className="w-12 h-12 md:h-14 md:w-14 flex items-center justify-center bg-blue-100 dark:bg-[#0F1D2B] rounded-full border border-[#109FE7]">
@@ -93,7 +93,7 @@ const Enroll = () => {
           {/* CARD 3 */}
           <div
             className="flex-1 p-6 border border-gray-950/[.1] dark:border-gray-50/[.1] dark:bg-gray-50/[.10] rounded-2xl shadow-sm flex flex-col justify-between"
-            data-aos="fade-down"
+            data-aos="zoom-in"
             data-aos-delay="400"
           >
             <div>
