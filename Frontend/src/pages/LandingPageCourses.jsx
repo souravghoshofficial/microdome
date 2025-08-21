@@ -1,8 +1,13 @@
-import { Link } from "react-router";
-import { Rocket, BookOpen, Video } from "lucide-react";
 import { useSelector } from "react-redux";
 import { CourseCard } from "../components";
-import demo_pic from "../assets/demo_pic.jpg";
+import bscCourseImg from "../assets/bscCard.png";
+import { Link } from "react-router";
+import {ChevronRight} from "lucide-react"
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/bundle";
 
 const LandingPageCourses = () => {
   const courses = useSelector((state) => state.courses.courses);
@@ -15,24 +20,36 @@ const LandingPageCourses = () => {
     );
   }
 
+  // Filter entrance courses
   const entranceCourses = courses.filter(
-    (course) => course.courseTag.toLowerCase() !== "b.sc hons." && course.courseTag.toLowerCase() === "m.sc entrance"
+    (course) => course.courseTag.toLowerCase() === "m.sc entrance"
   );
 
+  // Local semester course
   const SemesterCourse = [
     {
-      id: 3,
+      _id: "local-bsc-1",
       cardTitle: "B.Sc Hons. Microbiology",
       subTitle: "Ultimate guide to excel in the Microbiology",
       courseTag: "B.Sc Hons.",
       mode: "live",
       language: "hinglish",
-      courseImage: demo_pic,
+      courseImage: bscCourseImg,
       actualPrice: 1200,
       discountedPrice: 999,
       linkAddress: "bsc-hons-batch",
     },
   ];
+
+  const allCourses = [...entranceCourses, ...SemesterCourse];
+
+  if (allCourses.length === 0) {
+    return (
+      <div className="text-center py-16 text-gray-500">
+        No courses available yet.
+      </div>
+    );
+  }
 
   return (
     <div className="my-16 w-full flex items-center justify-center">
@@ -46,53 +63,45 @@ const LandingPageCourses = () => {
         </h2>
 
         {/* Courses Slider */}
-        <div
-          className="
-            mt-8 w-full lg:w-[90%] mx-auto 
-            flex md:justify-center 
-            overflow-x-scroll gap-6 scrollbar-none py-4 "
+        <Swiper
+          modules={[Autoplay, Navigation]}
+          speed={1000}
+          spaceBetween={16}
+          slidesPerView={1.1}
+          centeredSlides={false}
+          breakpoints={{
+            640: { slidesPerView: 2, spaceBetween: 20 },
+            1100: { slidesPerView: 3, spaceBetween: 40 },
+          }}
+          className="mt-8 w-full lg:w-[90%] mx-auto"
         >
-          {entranceCourses.map((course) => (
-            <CourseCard
-              key={course.id}
-              imageHeight="h-48 md:h-56"
-              className="
-                w-[85%] md:w-[30%] flex-shrink-0"
-              courseTitle={course.cardTitle}
-              subTitle={course.subTitle}
-              type={course.mode.toUpperCase()}
-              language={course.language.toUpperCase()}
-              courseImg={course.courseImage}
-              courseTag={course.courseTag.toUpperCase()}
-              actualPrice={course.actualPrice}
-              discountedPrice={course.discountedPrice}
-              linkAddress={`/courses/${course.linkAddress}`}
-            />
+          {allCourses.map((course) => (
+            <SwiperSlide key={course._id} className="py-6">
+              <CourseCard
+                imageHeight="h-64"
+                className="w-full shadow-none border border-transparent hover:border-blue-500 transition-all duration-300"
+                courseTitle={course.cardTitle}
+                subTitle={course.subTitle}
+                type={course.mode.toUpperCase()}
+                language={course.language.toUpperCase()}
+                courseImg={course.courseImage}
+                courseTag={course.courseTag.toUpperCase()}
+                actualPrice={course.actualPrice}
+                discountedPrice={course.discountedPrice}
+                linkAddress={`/courses/${course.linkAddress}`}
+              />
+            </SwiperSlide>
           ))}
-
-          {SemesterCourse.map((course) => (
-            <CourseCard
-              key={course.id}
-              imageHeight="h-48 md:h-56"
-              className="
-                w-[85%] md:w-[30%] flex-shrink-0"
-              courseTitle={course.cardTitle}
-              subTitle={course.subTitle}
-              type={course.mode.toUpperCase()}
-              language={course.language.toUpperCase()}
-              courseImg={course.courseImage}
-              courseTag={course.courseTag.toUpperCase()}
-              actualPrice={course.actualPrice}
-              discountedPrice={course.discountedPrice}
-              linkAddress={`/courses/${course.linkAddress}`}
-            />
-          ))}
+        </Swiper>
+        <div className="w-full flex justify-center">
+          <Link
+            to="/courses"
+            className="bg-highlighted hover:bg-highlighted-hover text-gray-200 dark:text-white font-semibold px-5 py-2 rounded-md mt-2 text-base md:text-lg flex items-center gap-1"
+          >
+            View All Courses
+            <ChevronRight size={20} />
+          </Link>
         </div>
-       <div className="w-full flex justify-center">
- <Link to="/courses" className="bg-highlighted hover:bg-highlighted-hover text-gray-200 dark:text-white font-semibold px-5 py-2 rounded-md mt-2 text-base md:text-lg">
-        View All Courses
-        </Link>
-       </div>
       </div>
     </div>
   );

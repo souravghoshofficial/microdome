@@ -4,7 +4,7 @@ import "aos/dist/aos.css";
 
 import { useSelector } from "react-redux";
 import { CourseCard } from "../components";
-import demo_pic from "../assets/demo_pic.jpg";
+import bscCourseImg from "../assets/bscCard.png"
 import Microdome from "../assets/microdome.jpg";
 import { Helmet } from "react-helmet-async";
 
@@ -35,7 +35,7 @@ const Courses = () => {
       courseTag: "B.Sc Hons.",
       mode: "live",
       language: "hinglish",
-      courseImage: demo_pic,
+      courseImage: bscCourseImg,
       actualPrice: 1200,
       discountedPrice: 999,
       linkAddress: "bsc-hons-batch",
