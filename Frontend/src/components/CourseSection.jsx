@@ -12,15 +12,16 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
     setshowMenu(newMenu);
   };
 
-  // ✅ Force download with Cloudinary fl_attachment
-  const handleDownload = (url) => {
+  // ✅ Force download with Cloudinary fl_attachment and custom filename
+  const handleDownload = (url, fileName = "notes.pdf") => {
+    let safeFileName = fileName.replace(/\s+/g, "_"); // replace spaces with _
     let downloadUrl = url.includes("fl_attachment")
       ? url
-      : url.replace("/upload/", "/upload/fl_attachment/");
+      : url.replace("/upload/", `/upload/fl_attachment:${safeFileName}/`);
 
     const link = document.createElement("a");
     link.href = downloadUrl;
-    link.setAttribute("download", "");
+    link.setAttribute("download", safeFileName);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -57,7 +58,7 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
               <ul>
                 {section.lectures.map((lecture, idx) => (
                   <div
-                    key={lecture._id || idx} // ✅ safer key
+                    key={lecture._id || idx}
                     onClick={() => setVideoURL(lecture.videoURL)}
                     className={`${
                       lecture.videoURL === videoURL
@@ -73,8 +74,11 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
                       <div className="w-full flex justify-end">
                         <button
                           onClick={(e) => {
-                            e.stopPropagation(); // ✅ prevent video change when clicking Notes
-                            handleDownload(lecture.noteURL);
+                            e.stopPropagation();
+                            handleDownload(
+                              lecture.noteURL,
+                              lecture.noteTitle || "notes.pdf"
+                            );
                           }}
                           className="px-2 py-0.5 border border-blue-400 rounded-sm hover:bg-blue-200 text-sm flex items-center gap-1"
                         >
