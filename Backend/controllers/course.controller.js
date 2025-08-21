@@ -5,7 +5,6 @@ import { Lecture } from "../models/lecture.model.js";
 
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
-
 const createCourse = async (req, res) => {
   const {
     cardTitle,
@@ -29,7 +28,7 @@ const createCourse = async (req, res) => {
       actualPrice &&
       discountedPrice &&
       courseTitle &&
-      courseDescription && 
+      courseDescription &&
       whatsappLink
     )
   ) {
@@ -88,121 +87,122 @@ const getAllCourses = async (req, res) => {
 const addLecture = async (req, res) => {
   try {
     const { title, videoURL, noteTitle, sectionId } = req.body;
-  
-    if(!sectionId){
+
+    if (!sectionId) {
       throw new ApiError(400, "sectionId is required");
     }
-    
-    const section = await Section.findById(sectionId);
-  
-    if(!section){
-      throw new ApiError(400, "section not found");
-    }
-  
-    if (!videoURL && !title) {
-      throw new ApiError(400, "video title and video url is required");
-    }
-  
-    const noteURLlocalPath = req.files?.noteURL[0]?.path;
 
-    const uploadedNoteURL = null;
-    
-      if (noteURLlocalPath) {
-        uploadedNoteURL = await uploadOnCloudinary(noteURLlocalPath);
-         if (!uploadedNoteURL?.url) {
+    const section = await Section.findById(sectionId);
+    if (!section) {
+      throw new ApiError(404, "Section not found");
+    }
+
+    if (!title || !videoURL) {
+      throw new ApiError(400, "Both lecture title and video URL are required");
+    }
+
+    let uploadedNoteURL = null;
+    const noteURLlocalPath = req.files?.noteURL?.[0]?.path;
+
+    if (noteURLlocalPath) {
+      uploadedNoteURL = await uploadOnCloudinary(noteURLlocalPath);
+      if (!uploadedNoteURL?.url) {
         throw new ApiError(400, "Error while uploading the note");
       }
-      }
-    
-      const lecture = await Lecture.create({
-        title,
-        videoURL,
-        noteTitle: noteTitle ? noteTitle : "",
-        noteURL: uploadedNoteURL?.url || ""
-      })
-  
-      if(!lecture){
-        throw new ApiError(400,"Error while creating lecture");
-      }
-  
-      section.lectures.push(lecture._id);
+    }
 
-      section.save();
+    const lecture = await Lecture.create({
+      title,
+      videoURL,
+      noteTitle: noteTitle || "",
+      noteURL: uploadedNoteURL?.url || "",
+    });
 
-      res.status(201).json({
-        message: "Lecture added successfully"
-      })
+    if (!lecture) {
+      throw new ApiError(500, "Error while creating lecture");
+    }
+
+    const updatedSection = await Section.findByIdAndUpdate(
+      sectionId,
+      { $push: { lectures: lecture._id } },
+      { new: true }
+    );
+
+    res.status(201).json({
+      message: "Lecture added successfully",
+      lecture,
+      section: updatedSection,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Something went wrong"
-    })
+    console.error("Error in addLecture:", error);
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
   }
-
-
 };
 
 const addSection = async (req, res) => {
   try {
-    const { sectionTitle, lectureTitle, videoURL, noteTitle, courseId } = req.body;
-    
-    if(!(sectionTitle && lectureTitle && videoURL && courseId)){
-      res.status(400).json({
-        message: "All of these fields are required"
+    const { sectionTitle, lectureTitle, videoURL, noteTitle, courseId } =
+      req.body;
+
+    if (!(sectionTitle && lectureTitle && videoURL && courseId)) {
+      return res.status(400).json({
+        message:
+          "sectionTitle, lectureTitle, videoURL, and courseId are required",
       });
     }
-    const course = await Course.findById(courseId);
-  
-    if(!course){
-      throw new ApiError(400,"Error while creating section");
-    }
-    const noteURLlocalPath = req.files?.noteURL[0]?.path;
 
-     const uploadedNoteURL = null;
-  
-    if (!noteURLlocalPath) {
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      throw new ApiError(400, "Course not found while creating section");
+    }
+
+    // Optional note upload
+    const noteURLlocalPath = req.files?.noteURL?.[0]?.path || null;
+
+    let uploadedNoteURL = null;
+    if (noteURLlocalPath) {
       uploadedNoteURL = await uploadOnCloudinary(noteURLlocalPath);
-       if (!uploadedNoteURL?.url) {
-      throw new ApiError(400, "Error while uploading the note");
     }
-    }
-  
-  
+
     const lecture = await Lecture.create({
       title: lectureTitle,
       videoURL,
-      noteTitle: noteTitle ? noteTitle : "",
-      noteURL: uploadedNoteURL?.url || ""
-    })
-  
-    if(!lecture){
-      throw new ApiError(400,"Error while creating lecture");
+      noteTitle: noteTitle || "",
+      noteURL: uploadedNoteURL?.url || "",
+    });
+
+    if (!lecture) {
+      throw new ApiError(400, "Error while creating lecture");
     }
-  
+
     const section = await Section.create({
       title: sectionTitle,
-      lectures: [lecture._id]
+      lectures: [lecture._id],
     });
-  
-     if(!section){
-      throw new ApiError(400,"Error while creating section");
+
+    if (!section) {
+      throw new ApiError(400, "Error while creating section");
     }
+
     course.sections.push(section._id);
-  
-    course.save();
-  
+    await course.save();
+
     res.status(200).json({
-      message: "section created successfully"
+      message: "Section created successfully",
+      section,
+      lecture,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Something went wrong"
-    })
+      message: error.message || "Something went wrong",
+    });
   }
 };
-
-
 
 const getCourseDetails = async (req, res) => {
   const { linkAddress } = req.body;
@@ -313,11 +313,13 @@ const getFullCourse = async (req, res) => {
 
 const getEnrolledCourses = async (req, res) => {
   const { courseIds } = req.body;
-  const courses = await Course.find({ _id: { $in: courseIds } }).select("_id courseTitle");
+  const courses = await Course.find({ _id: { $in: courseIds } }).select(
+    "_id courseTitle"
+  );
   res.json({ courses });
 };
 
-const getAllSections = async (req,res) => {
+const getAllSections = async (req, res) => {
   const courseId = req.params.id;
 
   try {
@@ -332,14 +334,13 @@ const getAllSections = async (req,res) => {
         .status(404)
         .json({ success: false, message: "Course not found" });
     }
-    const sections=course.sections;
+    const sections = course.sections;
     return res.status(200).json({ success: true, sections });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ success: false, message: "Server error" });
   }
-
-}
+};
 
 export {
   createCourse,
@@ -351,5 +352,5 @@ export {
   getFullCourse,
   getCourseDetails,
   getEnrolledCourses,
-  getAllSections
+  getAllSections,
 };
