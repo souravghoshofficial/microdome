@@ -12,19 +12,16 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
     setshowMenu(newMenu);
   };
 
-  // ✅ Force download with Cloudinary fl_attachment and custom filename
-  const handleDownload = (url, fileName = "notes.pdf") => {
-    let safeFileName = fileName.replace(/\s+/g, "_"); // replace spaces with _
-    let downloadUrl = url.includes("fl_attachment")
-      ? url
-      : url.replace("/upload/", `/upload/fl_attachment:${safeFileName}/`);
+  // ✅ Generate safe Cloudinary download URL
+  const getDownloadUrl = ({ url, fileName }) => {
+    if (!url) return "#";
+    const safeFileName = (fileName || "notes")
+      .replace(/\s+/g, "_") // replace spaces
+      .replace(/[^a-zA-Z0-9._-]/g, ""); // remove special chars
 
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.setAttribute("download", safeFileName);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    return url.includes("/upload/")
+      ? url.replace("/upload/", `/upload/fl_attachment:${safeFileName}/`)
+      : url;
   };
 
   return (
@@ -72,19 +69,18 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
                     </li>
                     {lecture?.noteURL && (
                       <div className="w-full flex justify-end">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDownload(
-                              lecture.noteURL,
-                              lecture.noteTitle || "notes.pdf"
-                            );
-                          }}
+                        <a
+                          href={getDownloadUrl({
+                            url: lecture.noteURL,
+                            fileName: lecture.noteTitle,
+                          })}
+                          download
+                          onClick={(e) => e.stopPropagation()} // ✅ don’t trigger video play
                           className="px-2 py-0.5 border border-blue-400 rounded-sm hover:bg-blue-200 text-sm flex items-center gap-1"
                         >
                           <RiFolderOpenLine className="inline" size={14} />
                           Notes
-                        </button>
+                        </a>
                       </div>
                     )}
                   </div>
