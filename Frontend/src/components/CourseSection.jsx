@@ -14,15 +14,22 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
 
   // ✅ Generate safe Cloudinary download URL
   const getDownloadUrl = ({ url, fileName }) => {
-    if (!url) return "#";
-    const safeFileName = (fileName || "notes")
-      .replace(/\s+/g, "_") // replace spaces
-      .replace(/[^a-zA-Z0-9._-]/g, ""); // remove special chars
+  if (!url) return "#";
 
-    return url.includes("/upload/")
-      ? url.replace("/upload/", `/upload/fl_attachment:${safeFileName}/`)
-      : url;
-  };
+  // ensure HTTPS
+  let safeUrl = url.startsWith("http://")
+    ? url.replace("http://", "https://")
+    : url;
+
+  const safeFileName = (fileName || "notes")
+    .replace(/\s+/g, "_") // replace spaces
+    .replace(/[^a-zA-Z0-9._-]/g, ""); // remove special chars
+
+  return safeUrl.includes("/upload/")
+    ? safeUrl.replace("/upload/", `/upload/fl_attachment:${safeFileName}/`)
+    : safeUrl;
+};
+
 
   return (
     <div className="w-full h-[50vh] md:h-[64vh] overflow-y-scroll mt-2 pb-6 md:px-2 md:scrollbar">
