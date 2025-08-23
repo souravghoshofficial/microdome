@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { RiMenuFill, RiCloseLine, RiLogoutBoxRLine } from "@remixicon/react";
-import { LogOut } from "lucide-react"
+import { House, Book, Info, FileText, User, Users, Settings, LogOut } from "lucide-react"
 import Logo from "./Logo";
 import ThemeBtn from "./ThemeBtn";
 import UserCard from "./UserCard";
@@ -108,7 +108,7 @@ const Navbar = () => {
             </li>
           ))}
           <div className="px-4 border-l border-r border-gray-400/50">
-            <ThemeBtn />
+            <ThemeBtn className="w-11 h-6 after:top-[2px] after:h-5 after:w-5" />
           </div>
           {isLoggedIn && (
             <div onClick={() => dispatch(toogleCard())}>
@@ -148,77 +148,72 @@ const Navbar = () => {
             <RiCloseLine size={24} onClick={() => setShowSideNav(false)} />
           </div>
         </div>
-        <div className="w-[90%] relative mx-auto mt-32 flex flex-col gap-4">
+        <div className="w-[90%] relative mx-auto mt-24 flex flex-col gap-6">
           <NavLink
             onClick={() => setShowSideNav(false)}
             to="/"
             className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg`
+              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
             }
           >
-            Home
+            <House size={22}/>
+            <span>Home</span>
           </NavLink>
           <NavLink
             onClick={() => setShowSideNav(false)}
             to="/courses"
             className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg`
+              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
             }
           >
-            Courses
+            <Book size={22}/>
+            <span>Courses</span>
           </NavLink>
           <NavLink
             onClick={() => setShowSideNav(false)}
             to="/about-us"
             className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg`
+              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
             }
           >
-            About Us
+            <Info size={22} />
+            <span>About Us</span>
           </NavLink>
           <NavLink
             onClick={() => setShowSideNav(false)}
             to="/faculties"
             className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg`
+              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
             }
           >
-            Our Faculties
+           <Users size={22} />
+           <span>Our Faculties</span>
           </NavLink>
           <NavLink
             onClick={() => setShowSideNav(false)}
             to="/resources"
             className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg`
+              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
             }
           >
-            Resources
+           <FileText size={22}/>
+           <span>Resoures</span>
           </NavLink>
-          <div className="flex items-center gap-4 text-lg">
-            <span>Theme : </span>
-            <ThemeBtn />
-          </div>
-          {!isLoggedIn && (
-            <NavLink
-              onClick={() => setShowSideNav(false)}
-              to="/login"
-              className=" w-full py-2 text-center text-lg bg-highlighted hover:bg-highlighted-hover text-white font-semibold rounded-sm"
-            >
-              Login
-            </NavLink>
-          )}
+
+                   
           {isLoggedIn && (
-            <div>
+            <div className="w-full">
               <NavLink
                 onClick={() => setShowSideNav(false)}
                 to="/profile"
                 className={({ isActive }) =>
                   `${
                     isActive ? "text-highlighted font-semibold" : ""
-                  } text-lg block`
+                  } text-lg flex items-center gap-4 pl-2`
                 }
               >
-                Profile
+               <User size={22}/>
+               <span>Profile</span>
               </NavLink>
               <NavLink
                 onClick={() => setShowSideNav(false)}
@@ -226,19 +221,41 @@ const Navbar = () => {
                 className={({ isActive }) =>
                   `${role === "admin" ? "block" : "hidden"} ${
                     isActive ? "text-highlighted font-semibold" : ""
-                  } text-lg mt-4`
+                  } text-lg mt-6 flex items-center gap-4 pl-2`
                 }
               >
-                Admin Dashboard
+                <Settings size={22}/>
+                <span>Admin Dashboard</span>
               </NavLink>
+                </div>
+  )}
+
+            <div className="w-full flex items-center justify-center my-1">
+            <div className="w-[70%] flex items-center justify-between gap-4 px-4 py-3 bg-gray-100 dark:bg-zinc-800 rounded-lg">
+              <span className="text-sm">Theme</span>
+            <ThemeBtn className="w-9 h-5 after:top-[1px] after:h-4 after:w-4" />
+            </div>
+          </div>
+          
+          {!isLoggedIn && (
+            <NavLink
+              onClick={() => setShowSideNav(false)}
+              to="/login"
+              className="mt-2 w-full py-2 text-center text-lg bg-highlighted hover:bg-highlighted-hover text-white font-semibold rounded-sm"
+            >
+              Login
+            </NavLink>
+          )}
+{isLoggedIn &&
+              (  <div>
               <div
                 onClick={() => {
                   logoutUser();
                   setShowSideNav(false);
                 }}
-                className="mt-8 rounded-md flex items-center gap-2 w-full cursor-pointer text-lg"
+                className="mt-16 rounded-md flex items-center gap-2 w-full cursor-pointer text-lg pl-2 text-red-500"
               >
-                <LogOut size={16} />
+                <LogOut size={22} />
                 <p>Sign Out</p>
               </div>
             </div>
