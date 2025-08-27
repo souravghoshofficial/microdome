@@ -197,7 +197,7 @@ const Navbar = () => {
             }
           >
            <FileText size={22}/>
-           <span>Resoures</span>
+           <span>Resources</span>
           </NavLink>
 
                    
