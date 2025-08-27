@@ -44,7 +44,7 @@ const Developers = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-black py-16 px-6 transition-colors duration-500">
       <h1
-        className="text-4xl md:text-5xl font-bold text-center text-gray-800 dark:text-gray-100 mb-12 mt-10"
+        className="text-3xl md:text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-12 mt-10"
         data-aos="fade-down"
       >
         Meet Our <span className="text-highlighted">Developers</span>
