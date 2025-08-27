@@ -246,7 +246,7 @@ const SemesterCourseLayout = () => {
             imageUrl={courseDetails?.courseImage}
             handlePayment={handleEnrollClick} // ✅ now navigates to checkout
             isEnrolled={isEnrolled}
-            mode={courseDetails?.mode}
+            mode={courseDetails?.mode.toUpperCase()}
           />
         </div>
       </div>

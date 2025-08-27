@@ -28,7 +28,7 @@ const BuyNowCard = ({
             >
               ₹ {actualPrice}
             </h3>
-            <h3 className="text-sm text-gray-700 dark:text-gray-300 ml-[-4px]">{mode.toUpperCase() === "LIVE" ? "(monthly)" : ""}</h3>
+            <h3 className="text-sm text-gray-700 dark:text-gray-300 ml-[-4px]">{mode === "LIVE" ? "(monthly)" : ""}</h3>
           </div>
           <div>
             <h4
