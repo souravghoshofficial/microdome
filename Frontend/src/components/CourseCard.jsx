@@ -37,7 +37,7 @@ const CourseCard = ({
               ₹ {actualPrice}
               
             </h3>
-            <h3 className="text-sm -ml-1.5 text-gray-700 dark:text-gray-400">{type === "LIVE" ? "/monthly" : ""}</h3>
+            <h3 className="text-sm -ml-1.5 text-gray-700 dark:text-gray-400">{type === "LIVE" ? "(monthly)" : ""}</h3>
           </div>
           <div>
             <h4 className={`${discount ? "block" : "hidden"} text-right px-2 py-0.5 text-sm font-semibold bg-green-100 dark:bg-gray-100 rounded-md text-green-600 dark:text-black`}>{discount}% OFF</h4>
