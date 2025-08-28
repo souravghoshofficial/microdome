@@ -14,18 +14,32 @@ import { Coupon } from "../models/coupon.model.js";
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select(
-      "-password -__v -updatedAt -enrolledCourses -presentCourseOfStudy"
-    );
+    const { limit } = req.query; // read query parameter (optional)
+
+    let query = User.find({})
+      .select("-password -__v -updatedAt -enrolledCourses -presentCourseOfStudy")
+      .sort({ createdAt: -1 }); // newest first
+
+    if (limit) {
+      query = query.limit(parseInt(limit)); // apply limit if provided
+    }
+
+    const users = await query;
+
     res.status(200).json({
-      message: "All users are fetched successfully",
+      success: true,
+      message: "Users fetched successfully",
       users,
     });
   } catch (error) {
-    console.log("Error for fetching users: ", error);
-    throw new ApiError(500, "Failed to fetch the users");
+    console.log("Error fetching users: ", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch the users",
+    });
   }
 };
+
 
 // ------ quiz controllers ------- //
 

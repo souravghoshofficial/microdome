@@ -92,7 +92,7 @@ const AddSection = () => {
       ) : courses.length === 0 ? (
         <p className="text-center text-gray-600">No courses found.</p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-auto">
+        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-auto scrollbar-none">
           {courses.map((course) => (
             <div
               key={course._id}
