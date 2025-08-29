@@ -11,7 +11,7 @@ import Logo from "./Logo";
 
 const Footer = () => {
   return (
-    <div className="w-full mt-8 pb-8 md:pb-16 flex items-center justify-center">
+    <div className="w-full py-8 md:pb-16 flex items-center justify-center bg-white dark:bg-gray-950 text-black dark:text-white">
       <div className="w-[90%]">
         <hr className="w-full text-gray-600" />
 

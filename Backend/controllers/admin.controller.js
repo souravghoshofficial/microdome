@@ -58,8 +58,9 @@ export const createQuiz = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    // Validate question format
     for (let q of questions) {
-      if (!q.questionText || !q.options || q.correctOption === undefined) {
+      if (!q.questionText || !q.options || q.options.length < 2 || q.correctOption === undefined) {
         return res.status(400).json({ message: "Invalid question format" });
       }
     }
@@ -67,12 +68,12 @@ export const createQuiz = async (req, res) => {
     // Step 1: Create all questions
     const createdQuestions = await Question.insertMany(questions);
 
-    // Step 2: Create quiz with references to created questions
+    // Step 2: Create quiz with references
     const quiz = await Quiz.create({
       title,
       description,
-      timeLimit,
       category,
+      timeLimit,
       questions: createdQuestions.map((q) => q._id),
     });
 
@@ -85,6 +86,7 @@ export const createQuiz = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 export const getUserDetailsByCourseId = async (req, res) => {
   try {

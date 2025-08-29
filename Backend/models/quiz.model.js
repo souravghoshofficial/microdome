@@ -15,7 +15,7 @@ const quizSchema = new Schema(
     category: {
       type: String,
       required: true,
-      emun: ["paid", "free"],
+      enum: ["paid", "free"],
     },
     questions: [
       {
