@@ -79,7 +79,7 @@ const LandingPageCourses = () => {
             <SwiperSlide key={course._id} className="py-6">
               <CourseCard
                 imageHeight="h-64"
-                className="w-full shadow-none border border-transparent hover:border-blue-500 transition-all duration-300"
+                className="w-full shadow-none border border-transparent"
                 courseTitle={course.cardTitle}
                 subTitle={course.subTitle}
                 type={course.mode.toUpperCase()}

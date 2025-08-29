@@ -197,7 +197,7 @@ const Navbar = () => {
             }
           >
            <FileText size={22}/>
-           <span>Resoures</span>
+           <span>Resources</span>
           </NavLink>
 
                    
@@ -219,7 +219,7 @@ const Navbar = () => {
                 onClick={() => setShowSideNav(false)}
                 to="/admin/dashboard"
                 className={({ isActive }) =>
-                  `${role === "admin" ? "block" : "hidden"} ${
+                  `${role === "admin" || role === "instructor" ? "block" : "hidden"} ${
                     isActive ? "text-highlighted font-semibold" : ""
                   } text-lg mt-6 flex items-center gap-4 pl-2`
                 }

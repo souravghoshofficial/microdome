@@ -22,7 +22,7 @@ router
   .get(authorizedRoles("admin", "instructor"), getAllUsers);
 router
   .route("/get-user-details/:id")
-  .get(authorizedRoles("admin"), getUserDetailsByCourseId);
+  .get(authorizedRoles("admin", "instructor"), getUserDetailsByCourseId);
 
 // ---- quiz routes ---- //
 router.route("/create-quiz").post(authorizedRoles("admin"), createQuiz);

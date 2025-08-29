@@ -132,7 +132,7 @@ const EntranceBatch = () => {
               imageUrl={courseDetails?.courseImage}
               handlePayment={handleEnrollClick}
               isEnrolled={isEnrolled}
-              mode={courseDetails?.mode}
+              mode={courseDetails?.mode.toUpperCase()}
             />
           </div>
         </div>
