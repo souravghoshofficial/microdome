@@ -155,7 +155,7 @@ const AddLecture = () => {
             </ul>
             <button
               onClick={resetForm}
-              className="mt-4 px-3 py-2 bg-red-500 text-white cursor-pointer"
+              className="mt-4 px-3 py-1.5 bg-red-500 text-white cursor-pointer rounded-md"
             >
               Cancel
             </button>
@@ -202,7 +202,7 @@ const AddLecture = () => {
                 name="noteURL"
                 accept=".pdf,.docx,.pptx"
                 onChange={handleChange}
-                className="w-full border p-2 rounded file:px-2 file:py-1 file:bg-blue-500"
+                className="w-full border p-2 rounded file:px-2 file:py-1 file:bg-blue-500 hover:file:bg-blue-600 file:rounded-md"
               />
               <div className="flex justify-between">
                 <button
