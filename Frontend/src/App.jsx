@@ -162,7 +162,7 @@ const App = () => {
           </Route>
         </Route>
         <Route path="/payment-success" element={<PaymentSuccess />} />
-        <Route path="/quiz" element={[<QuizList />, <Navbar />, <Footer />]} />
+        <Route path="/quiz" element={[<QuizList />, <Navbar />]} />
         <Route path="/quiz/:quizId" element={<QuizLayout />} />
         <Route path="/quiz/result/:quizId" element={<QuizResult />} />
         <Route path="/checkout/:id" element = {<CheckOut/>}/>

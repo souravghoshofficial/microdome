@@ -155,7 +155,7 @@ const AddLecture = () => {
             </ul>
             <button
               onClick={resetForm}
-              className="mt-4 text-sm text-red-600 hover:underline cursor-pointer"
+              className="mt-4 px-3 py-2 bg-red-500 text-white cursor-pointer"
             >
               Cancel
             </button>
@@ -202,22 +202,22 @@ const AddLecture = () => {
                 name="noteURL"
                 accept=".pdf,.docx,.pptx"
                 onChange={handleChange}
-                className="w-full border p-2 rounded"
+                className="w-full border p-2 rounded file:px-2 file:py-1 file:bg-blue-500"
               />
               <div className="flex justify-between">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {submitting ? "Submitting..." : "Submit"}
-                </button>
                 <button
                   type="button"
                   onClick={resetForm}
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer"
                 >
                   Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submitting ? "Submitting..." : "Submit"}
                 </button>
               </div>
             </form>

@@ -169,11 +169,18 @@ const AddSection = () => {
                 name="noteURL"
                 accept=".pdf,.docx,.pptx"
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded file:px-2 file:py-1 file:bg-blue-500"
               />
 
               <div className="flex justify-between">
                 <button
+                  type="button"
+                  onClick={resetForm}
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                   <button
                   type="submit"
                   disabled={loading}
                   className={`px-4 py-2 rounded text-white cursor-pointer ${
@@ -183,13 +190,6 @@ const AddSection = () => {
                   }`}
                 >
                   {loading ? "Submitting..." : "Submit"}
-                </button>
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer"
-                >
-                  Cancel
                 </button>
               </div>
             </form>
