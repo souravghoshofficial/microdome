@@ -202,7 +202,7 @@ const AddLecture = () => {
                 name="noteURL"
                 accept=".pdf,.docx,.pptx"
                 onChange={handleChange}
-                className="w-full border p-2 rounded file:px-2 file:py-1 file:bg-blue-500 hover:file:bg-blue-600 file:rounded-md"
+                className="w-full border p-2 rounded file:px-2 file:py-1 file:bg-blue-500 hover:file:bg-blue-600 file:rounded-md file:text-white"
               />
               <div className="flex justify-between">
                 <button

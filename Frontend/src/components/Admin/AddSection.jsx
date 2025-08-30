@@ -169,7 +169,7 @@ const AddSection = () => {
                 name="noteURL"
                 accept=".pdf,.docx,.pptx"
                 onChange={handleChange}
-                className="w-full p-2 border rounded file:px-2 file:py-1 file:bg-blue-500 hover:file:bg-blue-600 file:rounded-md"
+                className="w-full p-2 border rounded file:px-2 file:py-1 file:bg-blue-500 hover:file:bg-blue-600 file:rounded-md file:text-white"
               />
 
               <div className="flex justify-between">
