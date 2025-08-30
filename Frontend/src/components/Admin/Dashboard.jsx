@@ -163,7 +163,7 @@ const Dashboard = () => {
             <tbody>
               {latestUsers.length > 0 ? (
                 latestUsers.map((user) => (
-                  <tr key={user.id} className="border-b hover:bg-gray-50 text-sm">
+                  <tr key={user.id} className="border-b hover:bg-gray-50 text-xs md:text-sm">
                     <td className="px-4 py-3 flex items-center gap-3 whitespace-nowrap">
                       <img
                         src={user.profilePic}
