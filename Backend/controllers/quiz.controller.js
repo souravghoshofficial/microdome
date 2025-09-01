@@ -1,12 +1,13 @@
 import { Quiz } from "../models/quiz.model.js";
-import { Question } from "../models/question.model.js";
+import { User } from "../models/user.model.js";
+import { QuizResult } from "../models/quizResult.model.js";
 import mongoose from "mongoose";
 
 
 export const getAllQuizzes = async (_, res) => {
     try {
         const quizzes = await Quiz.find({})
-            .select("_id title description timeLimit createdAt updatedAt");
+            .select("_id title description timeLimit category questions");
 
         res.status(200).json({
             success: true,
@@ -56,10 +57,10 @@ export const getQuizById = async (req, res) => {
 };
 
 
-
 export const submitQuiz = async (req, res) => {
   try {
     const { quizId, answers } = req.body;
+    const userId = req.user._id; // ✅ assuming auth middleware attaches user
 
     // --- Input validation ---
     if (!quizId || !mongoose.Types.ObjectId.isValid(quizId)) {
@@ -75,7 +76,7 @@ export const submitQuiz = async (req, res) => {
     // --- Fetch quiz with populated questions ---
     const quiz = await Quiz.findById(quizId).populate({
       path: "questions",
-      model: "Question", // ✅ use string
+      model: "Question",
       select: "-__v",
     });
 
@@ -83,6 +84,19 @@ export const submitQuiz = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "Quiz not found" });
+    }
+
+    // --- Check if user already attempted this quiz ---
+    const alreadyAttempted = await QuizResult.findOne({
+      user: userId,
+      quiz: quizId,
+    });
+
+    if (alreadyAttempted) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already attempted this quiz",
+      });
     }
 
     const total = quiz.questions.length;
@@ -103,11 +117,25 @@ export const submitQuiz = async (req, res) => {
       return {
         questionId: q._id,
         question: q.questionText,
-        options: q.options, // keep all options for review
+        options: q.options,
         selectedOption: userAnswer ? Number(userAnswer.selectedOption) : null,
         correctAnswer: q.correctOption,
         isCorrect,
       };
+    });
+
+    // --- Save result to DB ---
+    const quizResult = new QuizResult({
+      user: userId,
+      quiz: quizId,
+      score,
+      total,
+    });
+    await quizResult.save();
+
+    // --- Update user's attemptedQuizzes ---
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { attemptedQuizzes: quizId }, // ensures no duplicates
     });
 
     // --- Response ---
@@ -126,5 +154,6 @@ export const submitQuiz = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
+
 
 

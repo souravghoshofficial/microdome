@@ -1,11 +1,31 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { login } from "../features/auth/authSlice";
+import axios from "axios";
+
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const QuizResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const result = location.state;
+
+  const handleBtnClick = async () => {
+    try {
+      const res = await axios.get(`${ApiUrl}/users/current-user`, {
+        withCredentials: true,
+      });
+      dispatch(login(res.data.data));
+      navigate("/quiz");
+    } catch {
+      console.log("Something went wrong");
+    } finally {
+      navigate("/quiz");
+    }
+  };
 
   if (!result) {
     return (
@@ -30,8 +50,8 @@ const QuizResult = () => {
         <h1 className="text-2xl font-bold mb-2">Quiz Results</h1>
         <p className="text-lg mb-4">
           You scored{" "}
-          <span className="font-semibold text-blue-600">{result.score}</span> out
-          of <span className="font-semibold">{result.total}</span>
+          <span className="font-semibold text-blue-600">{result.score}</span>{" "}
+          out of <span className="font-semibold">{result.total}</span>
         </p>
 
         <div className="w-full bg-gray-200 dark:bg-zinc-700 rounded-full h-4">
@@ -116,7 +136,7 @@ const QuizResult = () => {
 
       {/* Go Back Button */}
       <button
-        onClick={() => navigate("/quiz")}
+        onClick={handleBtnClick}
         className="mt-10 bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-6 py-2 rounded-lg shadow-md"
       >
         Go to Quizzes

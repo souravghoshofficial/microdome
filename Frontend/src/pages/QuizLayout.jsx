@@ -125,15 +125,15 @@ const QuizLayout = () => {
             <span className="font-semibold">{quiz.timeLimit} minutes</span>
           </p>
           <div className="flex justify-center gap-4">
+             <Button
+              btnText="Cancel"
+              className="bg-red-500 hover:bg-red-600 text-white"
+              onClick={() => navigate("/quiz")}
+            />
             <Button
               btnText="Start Quiz"
               className="bg-green-500 hover:bg-green-600 text-white"
               onClick={() => setQuizStarted(true)}
-            />
-            <Button
-              btnText="Cancel"
-              className="bg-red-500 hover:bg-red-600 text-white"
-              onClick={() => navigate("/quiz")}
             />
           </div>
         </motion.div>
@@ -202,7 +202,7 @@ const QuizLayout = () => {
           {currentQuestion > 0 && (
             <Button
               btnText="Previous"
-              className="bg-gray-500 hover:bg-gray-600 text-white"
+              className="bg-green-500 hover:bg-green-600 text-white"
               onClick={() => setCurrentQuestion((prev) => prev - 1)}
             />
           )}

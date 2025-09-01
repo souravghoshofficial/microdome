@@ -95,6 +95,7 @@ const CheckOut = () => {
           courseId: courseDetails?._id,
           amount: finalAmount,
           phone,
+          itemType: "course"
         },
         { withCredentials: true }
       );

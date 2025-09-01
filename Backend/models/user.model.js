@@ -35,6 +35,18 @@ const userSchema = new Schema(
       default: false,
     },
 
+    hasAccessToQuizzes: { 
+      type: Boolean, 
+      default: false 
+    },
+
+    attemptedQuizzes: [
+      { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Quiz" 
+      }
+    ],
+
     enrolledCourses: [
       {
         type: mongoose.Schema.Types.ObjectId,

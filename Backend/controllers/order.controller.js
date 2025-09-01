@@ -3,25 +3,35 @@ import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
 import { Course } from "../models/course.model.js";
 import crypto from "crypto";
-import { sendCourseConfirmationEmail } from "../utils/sendEmail.js";
+import { sendCourseConfirmationEmail, sendQuizConfirmationEmail } from "../utils/sendEmail.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Coupon } from "../models/coupon.model.js";
+
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 const createOrder = async (req, res) => {
-  const { courseId, amount, phone } = req.body;
+  const { courseId, amount, phone, itemType } = req.body;
 
   try {
+    // ✅ Validate itemType
+    if (!itemType || !["course", "quiz"].includes(itemType)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or missing itemType. Must be 'course' or 'quiz'.",
+      });
+    }
+
     const options = {
-      amount: Number(amount) * 100, // Amount in smallest currency unit
+      amount: Number(amount) * 100, // amount in paisa
       currency: "INR",
       receipt: `receipt_order_${new Date().getTime()}`,
       notes: {
-        courseId: courseId,
         userId: req.user._id,
+        itemType: itemType,
+        courseId: courseId || "", // may be empty for quiz
       },
     };
 
@@ -37,15 +47,16 @@ const createOrder = async (req, res) => {
     // ✅ Save order in DB
     const newOrder = new Order({
       user: req.user._id,
-      course: courseId,
-      amount: amount,
+      course: itemType === "course" ? courseId : null, // only save courseId for course
+      itemType,
+      amount,
       razorpayOrderId: order.id,
-      razorpayPaymentId: "", // This will be updated after payment
+      razorpayPaymentId: "", // will be updated after verification
       status: "Pending",
     });
     await newOrder.save();
 
-    // ✅ Update phone number for current user
+    // ✅ Update user phone if provided
     if (phone) {
       await User.findByIdAndUpdate(
         req.user._id,
@@ -68,87 +79,6 @@ const createOrder = async (req, res) => {
   }
 };
 
-// const verifyPayment = async (req, res) => {
-//   try {
-//     const body = JSON.stringify(req.body);
-//     const signature = req.headers["x-razorpay-signature"];
-//     console.log(body);
-//     console.log(signature);
-
-//     const expectedSignature = crypto
-//       .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
-//       .update(body)
-//       .digest("hex");
-
-//     if (signature !== expectedSignature) {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: "Invalid signature" });
-//     }
-
-//     const event = req.body;
-
-//     if (event.event !== "payment.captured") {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: "Unexpected event type" });
-//     }
-
-//     const payment = event.payload.payment.entity;
-
-//     const order = await Order.findOne({ razorpayOrderId: payment.order_id });
-//     if (!order) {
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "Order not found" });
-//     }
-
-//     order.razorpayPaymentId = payment.id;
-//     order.status = "Completed";
-//     await order.save();
-
-//     const user = await User.findById(order.user);
-//     if (!user) {
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "User not found" });
-//     }
-
-//     user.isPremiumMember = true;
-//     if (!user.enrolledCourses.includes(order.course)) {
-//       user.enrolledCourses.push(order.course);
-//     }
-//     await user.save();
-
-//     const courseDetails = await Course.findById(order.course);
-
-//     await CourseEnrollment.create({
-//       courseId: courseDetails._id,
-//       userId: user._id,
-//     });
-
-//     await sendCourseConfirmationEmail({
-//       to: user.email,
-//       studentName: user.name,
-//       courseTitle: courseDetails.courseTitle,
-//       accessLink: `https://microdomeclasses.in/my-courses/${courseDetails._id}`,
-//     });
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Payment verified successfully",
-//       razorpay_order_id: payment.order_id,
-//       razorpay_payment_id: payment.id,
-//     });
-//   } catch (error) {
-//     console.error("Error verifying payment:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Payment verification failed",
-//       error: error.message,
-//     });
-//   }
-// };
 
 const verifyPayment = async (req, res) => {
   try {
@@ -161,76 +91,91 @@ const verifyPayment = async (req, res) => {
       .digest("hex");
 
     if (signature !== expectedSignature) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid signature" });
+      console.error("Invalid signature, possible spoofing attempt");
+      return res.status(200).json({ success: false, message: "Invalid signature" });
     }
 
     const event = req.body;
 
     if (event.event !== "payment.captured") {
-      return res
-        .status(400)
-        .json({ success: false, message: "Unexpected event type" });
+      console.warn("Ignored non-payment event:", event.event);
+      return res.status(200).json({ success: false, message: "Unexpected event" });
     }
 
     const payment = event.payload.payment.entity;
 
+    // Find order
     const order = await Order.findOne({ razorpayOrderId: payment.order_id });
     if (!order) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Order not found" });
+      console.error("Order not found for payment:", payment.order_id);
+      return res.status(200).json({ success: false, message: "Order not found" });
     }
 
+    // Update order
     order.razorpayPaymentId = payment.id;
     order.status = "Completed";
     await order.save();
 
+    // Get user
     const user = await User.findById(order.user);
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      console.error("User not found for order:", order._id);
+      return res.status(200).json({ success: false, message: "User not found" });
     }
 
-    user.isPremiumMember = true;
-    if (!user.enrolledCourses.includes(order.course)) {
-      user.enrolledCourses.push(order.course);
+    // Handle itemType
+    if (order.itemType === "course") {
+      user.isPremiumMember = true;
+
+      if (!user.enrolledCourses.includes(order.course)) {
+        user.enrolledCourses.push(order.course);
+      }
+      await user.save();
+
+      const courseDetails = await Course.findById(order.course);
+
+      await CourseEnrollment.create({
+        courseId: courseDetails._id,
+        userId: user._id,
+      });
+
+      await sendCourseConfirmationEmail({
+        to: user.email,
+        studentName: user.name,
+        courseTitle: courseDetails.courseTitle,
+        accessLink: `https://microdomeclasses.in/my-courses/${courseDetails._id}`,
+        whatsappLink: courseDetails.whatsappLink,
+      });
+
+    } else if (order.itemType === "quiz") {
+      user.hasAccessToQuizzes = true;
+      await user.save();
+
+      await sendQuizConfirmationEmail({
+        to: user.email,
+        studentName: user.name,
+        quizLink: "https://microdomeclasses.in/quiz"
+      });
     }
-    await user.save();
 
-    const courseDetails = await Course.findById(order.course);
-
-    await CourseEnrollment.create({
-      courseId: courseDetails._id,
-      userId: user._id,
-    });
-
-    // Send email with course details + WhatsApp link
-    await sendCourseConfirmationEmail({
-      to: user.email,
-      studentName: user.name,
-      courseTitle: courseDetails.courseTitle,
-      accessLink: `https://microdomeclasses.in/my-courses/${courseDetails._id}`,
-      whatsappLink: courseDetails.whatsappLink, // added here
-    });
-
-    res.status(200).json({
+    // Always respond 200 to Razorpay
+    return res.status(200).json({
       success: true,
-      message: "Payment verified successfully",
+      message: "Payment processed",
       razorpay_order_id: payment.order_id,
       razorpay_payment_id: payment.id,
     });
   } catch (error) {
-    console.error("Error verifying payment:", error);
-    res.status(500).json({
+    console.error("Error in webhook processing:", error);
+
+    // Still respond 200 to Razorpay, just mark as failed internally
+    return res.status(200).json({
       success: false,
-      message: "Payment verification failed",
-      error: error.message,
+      message: "Internal error while processing payment",
     });
   }
 };
+
 
 
 
