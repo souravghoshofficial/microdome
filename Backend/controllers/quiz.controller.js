@@ -1,5 +1,6 @@
 import { Quiz } from "../models/quiz.model.js";
 import { Question } from "../models/question.model.js";
+import mongoose from "mongoose";
 
 
 export const getAllQuizzes = async (_, res) => {
@@ -60,53 +61,70 @@ export const submitQuiz = async (req, res) => {
   try {
     const { quizId, answers } = req.body;
 
-    if (!quizId || !answers || !Array.isArray(answers)) {
-      return res.status(400).json({ message: "Invalid request data" });
+    // --- Input validation ---
+    if (!quizId || !mongoose.Types.ObjectId.isValid(quizId)) {
+      return res.status(400).json({ success: false, message: "Invalid quizId" });
     }
 
+    if (!answers || !Array.isArray(answers)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Answers must be a non-empty array" });
+    }
+
+    // --- Fetch quiz with populated questions ---
     const quiz = await Quiz.findById(quizId).populate({
-                path: "questions", 
-                model: "Question", 
-                select: "-__v" 
-            });
+      path: "questions",
+      model: "Question", // ✅ use string
+      select: "-__v",
+    });
 
     if (!quiz) {
-      return res.status(404).json({ message: "Quiz not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Quiz not found" });
     }
 
+    const total = quiz.questions.length;
     let score = 0;
-    let total = quiz.questions.length;
-    let resultDetails = [];
 
-    quiz.questions.forEach((q) => {
+    // --- Evaluate answers ---
+    const resultDetails = quiz.questions.map((q) => {
       const userAnswer = answers.find(
         (ans) => ans.questionId.toString() === q._id.toString()
       );
 
       const isCorrect =
         userAnswer &&
-        parseInt(userAnswer.selectedOption) === q.correctOption;
+        Number(userAnswer.selectedOption) === q.correctOption;
 
       if (isCorrect) score++;
 
-      resultDetails.push({
+      return {
         questionId: q._id,
         question: q.questionText,
-        options: q.options, // All options
-        selectedOption: userAnswer ? userAnswer.selectedOption : null,
-        correctAnswer: q.correctOption, // Index of correct option
+        options: q.options, // keep all options for review
+        selectedOption: userAnswer ? Number(userAnswer.selectedOption) : null,
+        correctAnswer: q.correctOption,
         isCorrect,
-      });
+      };
     });
 
-    return res.json({
+    // --- Response ---
+    return res.status(200).json({
+      success: true,
       quizId,
       score,
       total,
+      percentage: ((score / total) * 100).toFixed(2),
       resultDetails,
     });
   } catch (error) {
     console.error("Error submitting quiz:", error);
-    return res.status(500).json({ message: "Server error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 };
+
+

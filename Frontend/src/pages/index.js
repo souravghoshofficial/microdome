@@ -24,6 +24,7 @@ import LoadingScreen from "./LoadingScreen";
 import Developers from "./Developers";
 import LandingPageCourses from "./LandingPageCourses";
 import CheckOut from "./CheckOut";
+import QuizResult from "./QuizResult";
 
 export {
   Landing,
@@ -52,4 +53,5 @@ export {
   Developers,
   LandingPageCourses,
   CheckOut,
+  QuizResult,
 };

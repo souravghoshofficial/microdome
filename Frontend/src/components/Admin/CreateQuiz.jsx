@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast"
+import toast, { Toaster } from "react-hot-toast";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -8,8 +8,9 @@ const CreateQuiz = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [timeLimit, setTimeLimit] = useState("");
+  const [category, setCategory] = useState("free");
   const [questions, setQuestions] = useState([
-    { questionText: "", options: ["", "", "", ""], correctOption: "" }
+    { questionText: "", options: ["", "", "", ""], correctOption: "" },
   ]);
 
   const handleQuestionChange = (index, value) => {
@@ -26,14 +27,14 @@ const CreateQuiz = () => {
 
   const handleCorrectOptionChange = (qIndex, value) => {
     const updated = [...questions];
-    updated[qIndex].correctOption = value; // keep 1-based in UI
+    updated[qIndex].correctOption = value;
     setQuestions(updated);
   };
 
   const addQuestion = () => {
     setQuestions([
       ...questions,
-      { questionText: "", options: ["", "", "", ""], correctOption: "" }
+      { questionText: "", options: ["", "", "", ""], correctOption: "" },
     ]);
   };
 
@@ -43,26 +44,31 @@ const CreateQuiz = () => {
     const payload = {
       title,
       description,
+      category,
       timeLimit: Number(timeLimit),
-      questions: questions.map(q => ({
-        question: q.questionText,
+      questions: questions.map((q) => ({
+        questionText: q.questionText,
         options: q.options,
-        correctOption: Number(q.correctOption) - 1 // convert to 0-based before saving
-      }))
+        correctOption: Number(q.correctOption) - 1, // convert 1-based UI → 0-based DB
+      })),
     };
 
     try {
       const res = await axios.post(`${ApiUrl}/admin/create-quiz`, payload, {
-      withCredentials: true
-    });
-      toast.success("Quiz created successfully!")
+        withCredentials: true,
+      });
+
+      toast.success("Quiz created successfully!");
       console.log(res.data);
 
-      // reset
+      // Reset form
       setTitle("");
       setDescription("");
       setTimeLimit("");
-      setQuestions([{ questionText: "", options: ["", "", "", ""], correctOption: "" }]);
+      setCategory("free");
+      setQuestions([
+        { questionText: "", options: ["", "", "", ""], correctOption: "" },
+      ]);
     } catch (err) {
       console.error(err);
       toast.error("Error creating quiz");
@@ -71,10 +77,12 @@ const CreateQuiz = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-4 bg-white shadow-lg rounded-xl">
-      <Toaster position="top-right"/>
+      <Toaster position="top-right" />
       <h2 className="text-2xl font-bold mb-4">Create New Quiz</h2>
-      <form onSubmit={handleSubmit} className="space-y-4 h-[82vh] overflow-y-scroll scrollbar-none">
-
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 h-[82vh] overflow-y-scroll scrollbar-none"
+      >
         <input
           type="text"
           placeholder="Quiz Title"
@@ -91,6 +99,16 @@ const CreateQuiz = () => {
           className="w-full p-2 border rounded"
           required
         />
+
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="w-full p-2 border rounded"
+          required
+        >
+          <option value="free">Free</option>
+          <option value="paid">Paid</option>
+        </select>
 
         <input
           type="number"
@@ -117,7 +135,9 @@ const CreateQuiz = () => {
                 type="text"
                 placeholder={`Option ${optIndex + 1}`}
                 value={opt}
-                onChange={(e) => handleOptionChange(qIndex, optIndex, e.target.value)}
+                onChange={(e) =>
+                  handleOptionChange(qIndex, optIndex, e.target.value)
+                }
                 className="w-full p-2 border rounded"
                 required
               />
@@ -129,7 +149,9 @@ const CreateQuiz = () => {
               min="1"
               max="4"
               value={q.correctOption}
-              onChange={(e) => handleCorrectOptionChange(qIndex, e.target.value)}
+              onChange={(e) =>
+                handleCorrectOptionChange(qIndex, e.target.value)
+              }
               className="w-full p-2 border rounded"
               required
             />

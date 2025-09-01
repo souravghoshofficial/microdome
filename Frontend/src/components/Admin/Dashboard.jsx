@@ -97,11 +97,11 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen w-full p-6">
+    <div className="h-screen w-full py-2 overflow-y-scroll scrollbar-none">
       <Toaster position="top-right" />
 
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         {/* Total Users Card */}
         <div className="bg-gradient-to-r from-pink-500 to-red-400 text-white rounded-xl shadow-md p-6 flex flex-col justify-between relative overflow-hidden">
           <div>
@@ -137,7 +137,7 @@ const Dashboard = () => {
       </div>
 
       {/* Latest Users Table */}
-      <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="bg-white rounded-lg shadow-md p-4 w-full mb-24">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Latest Registered Users</h2>
           <Link
@@ -163,7 +163,7 @@ const Dashboard = () => {
             <tbody>
               {latestUsers.length > 0 ? (
                 latestUsers.map((user) => (
-                  <tr key={user.id} className="border-b hover:bg-gray-50 text-sm">
+                  <tr key={user.id} className="border-b hover:bg-gray-50 text-xs md:text-sm">
                     <td className="px-4 py-3 flex items-center gap-3 whitespace-nowrap">
                       <img
                         src={user.profilePic}
