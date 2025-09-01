@@ -1,4 +1,4 @@
-import Quiz from "../models/quiz.model.js"; 
+import { Quiz } from "../models/quiz.model.js"; 
 
 export const checkQuizAccess = async (req, res, next) => {
   try {
