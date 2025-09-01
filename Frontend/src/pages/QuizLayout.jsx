@@ -19,22 +19,42 @@ const QuizLayout = () => {
 
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
   const [quizStarted, setQuizStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
+  // Fetch Quiz
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const res = await axios.get(`${ApiUrl}/quiz/${quizId}`);
+        const res = await axios.get(`${ApiUrl}/quiz/${quizId}`, {
+          withCredentials: true, // important if using cookies
+        });
+
         if (res.data?.success) {
           setQuiz(res.data.data);
           setTimeLeft(res.data.data.timeLimit * 60);
+        } else {
+          setErrorMessage("Something went wrong while loading the quiz.");
         }
       } catch (err) {
-        console.error("Error fetching quiz:", err);
+        if (err.response) {
+          // Backend returned error
+          if (err.response.status === 401) {
+            setErrorMessage("Unauthorized. Please login to access this quiz.");
+          } else if (err.response.status === 403) {
+            setErrorMessage("You do not have access to this quiz.");
+          } else if (err.response.status === 404) {
+            setErrorMessage("Quiz not found.");
+          } else {
+            setErrorMessage("Failed to load quiz. Please try again later.");
+          }
+        } else {
+          setErrorMessage("Network error. Please check your connection.");
+        }
       } finally {
         setLoading(false);
       }
@@ -42,6 +62,7 @@ const QuizLayout = () => {
     fetchQuiz();
   }, [quizId]);
 
+  // Timer
   useEffect(() => {
     if (quizStarted && timeLeft > 0) {
       const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
@@ -76,10 +97,14 @@ const QuizLayout = () => {
         selectedOption: answers[qIdx],
       }));
 
-      const res = await axios.post(`${ApiUrl}/quiz/submit`, {
-        quizId,
-        answers: formattedAnswers,
-      });
+      const res = await axios.post(
+        `${ApiUrl}/quiz/submit`,
+        {
+          quizId,
+          answers: formattedAnswers,
+        },
+        { withCredentials: true }
+      );
 
       if (res.data?.success) {
         navigate(`/quiz/result/${quizId}`, { state: res.data });
@@ -93,10 +118,27 @@ const QuizLayout = () => {
     }
   };
 
+  // Loading screen
   if (loading) {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-gray-100 dark:bg-zinc-950 text-gray-800 dark:text-white">
         <p className="text-lg animate-pulse">Loading quiz...</p>
+      </div>
+    );
+  }
+
+  // Error screen
+  if (errorMessage) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-gray-100 dark:bg-zinc-950 text-gray-800 dark:text-white px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white dark:bg-zinc-900 p-8 rounded-2xl w-full max-w-md text-center shadow-lg"
+        >
+          <h2 className="text-2xl font-bold mb-4">Access Denied</h2>
+          <p className="text-gray-600 dark:text-gray-300">{errorMessage}</p>
+        </motion.div>
       </div>
     );
   }
@@ -125,7 +167,7 @@ const QuizLayout = () => {
             <span className="font-semibold">{quiz.timeLimit} minutes</span>
           </p>
           <div className="flex justify-center gap-4">
-             <Button
+            <Button
               btnText="Cancel"
               className="bg-red-500 hover:bg-red-600 text-white"
               onClick={() => navigate("/quiz")}
