@@ -174,11 +174,18 @@ export const getQuizLeaderboard = async (req, res) => {
       .populate("user", "name profileImage")
       .sort({ score: -1, attemptedAt: 1 }); // tie-breaker: earlier attempt ranks higher
 
+    // Prepare common quiz info
+    const quizInfo = {
+      title: quiz.title,
+      totalQuestions: quiz.questions.length,
+      totalMarks: quiz.totalMarks || quiz.questions.length, // ✅ safer default
+    };
+
     if (!results.length) {
       return res.status(200).json({
         success: true,
         data: {
-          quiz,
+          quiz: quizInfo,
           topThree: [],
           others: [],
         },
@@ -193,9 +200,8 @@ export const getQuizLeaderboard = async (req, res) => {
       success: true,
       data: {
         quiz: {
-          title: quiz.title,
-          totalQuestions: quiz.questions.length,
-          totalMarks: results[0]?.total || 0,
+          ...quizInfo,
+          totalMarks: results[0]?.total || quiz.totalMarks || 0, // ✅ prioritize result total if available
         },
         topThree,
         others,
@@ -209,6 +215,7 @@ export const getQuizLeaderboard = async (req, res) => {
     });
   }
 };
+
 
 
 
