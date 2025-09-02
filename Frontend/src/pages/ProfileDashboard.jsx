@@ -45,7 +45,7 @@ const ProfileDashboard = () => {
           <img
             src={userData?.profileImage || userImg}
             alt="Profile"
-            className="w-36 h-36 rounded-full border-4 border-white"
+            className="w-36 h-36 rounded-full border-4 border-white object-center object-cover"
           />
           <h2 className="text-2xl font-semibold mt-6">{userData?.name || "User Name"}</h2>
           <p className="text-sm opacity-80 mt-2">

@@ -32,7 +32,7 @@ const QuizLeaderboard = () => {
 
   if (loading) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
+      <div className="w-full h-screen flex items-center justify-center bg-gray-100 dark:bg-zinc-950">
         <p className="text-lg animate-pulse">Loading Leaderboard...</p>
       </div>
     );
@@ -40,7 +40,7 @@ const QuizLeaderboard = () => {
 
   if (!data) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
+      <div className="w-full h-screen flex items-center justify-center bg-gray-100 dark:bg-zinc-950">
         <p className="text-lg">Leaderboard not found.</p>
       </div>
     );
@@ -52,7 +52,7 @@ const QuizLeaderboard = () => {
   if (topThree.length === 0 && others.length === 0) {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-zinc-950 text-gray-800 dark:text-white py-10">
-        <div className="w-[95%] lg:w-[80%] mx-auto bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-lg text-center">
+        <div className="w-[90%] lg:w-[80%] mx-auto bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-lg text-center">
           <h1 className="text-3xl font-bold mb-4">{quiz.title}</h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
             Total Questions: <strong>{quiz.totalQuestions}</strong> | Total Marks:{" "}
@@ -70,7 +70,7 @@ const QuizLeaderboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-zinc-950 text-gray-800 dark:text-white py-10">
-      <div className="w-[95%] lg:w-[80%] mx-auto bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-lg">
+      <div className="w-[95%] lg:w-[80%] mx-auto bg-white dark:bg-zinc-900 py-6 px-4 md:p-6 rounded-xl shadow-lg">
         {/* Quiz Info */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold">{quiz.title}</h1>
@@ -89,10 +89,10 @@ const QuizLeaderboard = () => {
                 <img
                   src={topThree[1].user.profileImage || dummyImg}
                   alt={topThree[1].user.name}
-                  className="w-20 h-20 rounded-full border-4 border-gray-400"
+                  className="w-20 h-20 object-center object-cover rounded-full border-4 border-gray-400"
                 />
-                <p className="mt-2 font-semibold">{topThree[1].user.name}</p>
-                <span className="text-sm text-gray-500">
+                <p className="mt-2 font-semibold text-center">{topThree[1].user.name}</p>
+                <span className="text-sm font-semibold">
                   Score: {topThree[1].score}
                 </span>
                 <div className="bg-gray-400 w-16 h-24 mt-2 rounded-t-lg flex items-center justify-center text-white font-bold">
@@ -107,10 +107,10 @@ const QuizLeaderboard = () => {
                 <img
                   src={topThree[0].user.profileImage || dummyImg}
                   alt={topThree[0].user.name}
-                  className="w-24 h-24 rounded-full border-4 border-yellow-500"
+                  className="w-24 h-24 object-center object-cover rounded-full border-4 border-yellow-500"
                 />
-                <p className="mt-2 font-semibold">{topThree[0].user.name}</p>
-                <span className="text-sm text-gray-500">
+                <p className="mt-2 font-semibold text-center">{topThree[0].user.name}</p>
+                <span className="text-sm font-semibold">
                   Score: {topThree[0].score}
                 </span>
                 <div className="bg-yellow-500 w-16 h-32 mt-2 rounded-t-lg flex items-center justify-center text-white font-bold">
@@ -125,10 +125,10 @@ const QuizLeaderboard = () => {
                 <img
                   src={topThree[2].user.profileImage || dummyImg}
                   alt={topThree[2].user.name}
-                  className="w-20 h-20 rounded-full border-4 border-orange-500"
+                  className="w-20 h-20 object-center object-cover rounded-full border-4 border-orange-500"
                 />
-                <p className="mt-2 font-semibold">{topThree[2].user.name}</p>
-                <span className="text-sm text-gray-500">
+                <p className="mt-2 font-semibold text-center">{topThree[2].user.name}</p>
+                <span className="text-sm font-semibold">
                   Score: {topThree[2].score}
                 </span>
                 <div className="bg-orange-500 w-16 h-20 mt-2 rounded-t-lg flex items-center justify-center text-white font-bold">
@@ -139,28 +139,26 @@ const QuizLeaderboard = () => {
           </div>
         )}
 
-        {/* Others (only show if exist, without heading) */}
+
         {others.length > 0 && (
           <div className="mt-6">
-            <div className="bg-gray-100 dark:bg-zinc-800 rounded-lg overflow-hidden">
               {others.map((item, index) => (
                 <div
                   key={item._id}
-                  className="flex items-center gap-4 p-4 border-b border-gray-300 dark:border-zinc-700"
+                  className="bg-gray-100 dark:bg-zinc-800 rounded-lg overflow-hidden flex items-center gap-2 py-3 px-4 md:px-8 mt-2"
                 >
-                  <span className="font-bold w-6">{index + 4}</span>
+                  <span className="font-bold w-4">{index + 4}</span>
                   <img
                     src={item.user.profileImage || dummyImg}
                     alt={item.user.name}
-                    className="w-12 h-12 rounded-full"
+                    className="w-10 h-10 rounded-full object-center object-cover"
                   />
                   <div className="flex-1">
                     <p className="font-semibold">{item.user.name}</p>
                   </div>
-                  <span className="font-semibold">{item.score}</span>
+                  <span className="font-semibold text-sm">Score: {item.score}</span>
                 </div>
               ))}
-            </div>
           </div>
         )}
       </div>
