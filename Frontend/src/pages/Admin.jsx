@@ -7,7 +7,8 @@ import {
   Video,
   BookOpen,
   Plus,
-  Tickets
+  Tickets,
+  FileQuestion
 } from "lucide-react";
 
 import { useSelector } from "react-redux";
@@ -19,9 +20,9 @@ const adminMenuItems = [
   { name: "All Users", icon: <Users size={20} />, href: "/admin/all-users" },
   { name: "Premium Users", icon: <Star size={20} />, href: "/admin/premium-users" },
   { name: "All Courses", icon: <BookOpen size={20} />, href: "/admin/all-courses" },
+  { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
-  { name: "Create Quiz", icon: <Plus size={20} />, href: "/admin/create-quiz" },
   { name: "Create Course", icon: <Plus size={20} />, href: "/admin/create-course" },
   { name: "Coupons", icon: <Tickets size={20} />, href: "/admin/coupons" },
 ];
@@ -30,6 +31,7 @@ const instructorMenuItems = [
   { name: "All Users", icon: <Users size={20} />, href: "/admin/all-users" },
   { name: "Premium Users", icon: <Star size={20} />, href: "/admin/premium-users" },
   { name: "All Courses", icon: <BookOpen size={20} />, href: "/admin/all-courses" },
+  { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
 ];

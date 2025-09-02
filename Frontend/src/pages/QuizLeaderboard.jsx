@@ -70,7 +70,7 @@ const QuizLeaderboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-zinc-950 text-gray-800 dark:text-white py-10">
-      <div className="w-[95%] lg:w-[80%] mx-auto bg-white dark:bg-zinc-900 py-6 px-4 md:p-6 rounded-xl shadow-lg">
+      <div className="mt-8 md:mt-10 w-[95%] lg:w-[80%] mx-auto bg-white dark:bg-zinc-900 py-6 px-4 md:p-6 rounded-xl shadow-lg">
         {/* Quiz Info */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold">{quiz.title}</h1>

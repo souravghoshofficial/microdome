@@ -10,5 +10,6 @@ import CreateCourse from "./CreateCourse";
 import PremiumUserDetails from "./PremiumUserDetails";
 import Coupons from "./Coupons";
 import CreateCoupon from "./CreateCoupon";
+import AllQuizzes from "./AllQuizzes";
 
-export {Dashboard , AddSection , AddLecture , AllUsers , PremiumUsers, AllCourses, CreateQuiz, CreateCourse,PremiumUserDetails, Coupons , CreateCoupon};
+export {Dashboard , AddSection , AddLecture , AllUsers , PremiumUsers, AllCourses, CreateQuiz, CreateCourse,PremiumUserDetails, Coupons , CreateCoupon, AllQuizzes};

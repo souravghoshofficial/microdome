@@ -17,7 +17,8 @@ import {
   CreateCourse,
   PremiumUserDetails,
   Coupons,
-  CreateCoupon
+  CreateCoupon,
+  AllQuizzes
 } from "./components/Admin";
 
 import {
@@ -156,6 +157,7 @@ const App = () => {
             <Route path="all-courses" element={<AllCourses />} />
             <Route path="premium-users" element={<PremiumUsers />} />
             <Route path="premium-users/:id" element={<PremiumUserDetails />} />
+            <Route path="quizzes" element={<AllQuizzes />} />
             <Route path="create-quiz" element={<CreateQuiz />} />
             <Route path="create-course" element={<CreateCourse />} />
             <Route path="coupons" element={<Coupons />} />
@@ -166,7 +168,7 @@ const App = () => {
         <Route path="/quiz" element={[<QuizList />, <Navbar />]} />
         <Route path="/quiz/:quizId" element={<QuizLayout />} />
         <Route path="/quiz/result/:quizId" element={<QuizResult />} />
-        <Route path="/quiz/leaderboard/:quizId" element={<QuizLeaderboard />} />
+        <Route path="/quiz/leaderboard/:quizId" element={[<QuizLeaderboard /> , <Navbar />]} />
         <Route path="/checkout/:id" element = {<CheckOut/>}/>
       </Routes>
     </BrowserRouter>

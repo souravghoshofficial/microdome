@@ -11,7 +11,8 @@ import {
   deleteCoupon,
   getTotalUserCount,
   getPremiumUserCount,
-  getTotalCourses
+  getTotalCourses,
+  getAllQuizzes
 } from "../controllers/admin.controller.js";
 import { authorizedRoles } from "../middlewares/authorizedRoles.middleware.js";
 
@@ -25,7 +26,8 @@ router
   .get(authorizedRoles("admin", "instructor"), getUserDetailsByCourseId);
 
 // ---- quiz routes ---- //
-router.route("/create-quiz").post(authorizedRoles("admin"), createQuiz);
+router.route("/create-quiz").post(authorizedRoles("admin", "instructor"), createQuiz);
+router.route("/quizzes").get(authorizedRoles("admin", "instructor"), getAllQuizzes);
 
 router
   .route("/courses-with-user-counts")

@@ -5,6 +5,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Course } from "../models/course.model.js";
+import { QuizResult } from "../models/quizResult.model.js"
 import {
   sendAccessRevokedEmail,
   sendAccessGrantedEmail,
@@ -43,7 +44,7 @@ export const getAllUsers = async (req, res) => {
 
 // ------ quiz controllers ------- //
 
-// Create Quiz
+//  Quiz
 export const createQuiz = async (req, res) => {
   try {
     const { title, description, category, timeLimit, questions } = req.body;
@@ -86,6 +87,35 @@ export const createQuiz = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+export const getAllQuizzes = async (req, res) => {
+  try {
+    const quizzes = await Quiz.find().lean();
+
+    const quizzesWithStats = await Promise.all(
+      quizzes.map(async (quiz) => {
+        const studentCount = await QuizResult.countDocuments({ quiz: quiz._id });
+        return {
+          _id: quiz._id,
+          title: quiz.title,
+          category: quiz.category,
+          noOfQuestions: quiz.questions.length,
+          time: quiz.timeLimit,
+          attemptedBy: studentCount,
+        };
+      })
+    );
+
+    res.json({
+      success: true,
+      data: quizzesWithStats,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
 
 
 export const getUserDetailsByCourseId = async (req, res) => {

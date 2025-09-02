@@ -73,7 +73,7 @@ const Coupons = () => {
   to="/admin/create-coupon"
   className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow text-sm md:text-base"
 >
-  <Plus className="w-4 h-4" /> {/* ✅ Icon instead of "+" */}
+  <Plus className="w-4 h-4" />
   Create Coupon
 </Link>
       </div>
