@@ -5,6 +5,7 @@ import {
   RiEditBoxLine,
   RiBookOpenLine,
   RiExternalLinkLine,
+  RiQuestionAnswerLine
 } from "@remixicon/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -59,7 +60,7 @@ const ProfileDashboard = () => {
         </div>
 
         {/* Right: Info Cards */}
-        <div className="flex-1 p-8 grid grid-cols-1 gap-6">
+        <div className="flex-1 p-6 md:p-8 grid grid-cols-1 gap-6">
 
           {/* Personal Info */}
           <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
@@ -98,8 +99,28 @@ const ProfileDashboard = () => {
               ) : (
                 <p className="text-gray-500">You haven't enrolled in any course</p>
               )}
+              
             </div>
           </div>
+
+          {/* Mock Test Series */}
+           {
+            userData?.hasAccessToQuizzes && <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
+            <div className="flex items-center gap-2 mb-4 text-green-600 font-semibold">
+              <RiQuestionAnswerLine size={20} />
+              Mock Test Series
+            </div>
+            <div className="text-sm space-y-2">    
+                    <Link
+                      to={`/quiz`}
+                      className="text-blue-600 hover:underline flex items-center gap-1"
+                    >
+                      <RiExternalLinkLine size={14} />
+                      {"Mock Test Series"}
+                    </Link>
+            </div>
+          </div>
+           }
 
         </div>
       </div>

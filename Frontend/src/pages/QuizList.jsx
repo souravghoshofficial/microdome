@@ -129,7 +129,7 @@ const QuizList = () => {
       return isAttempted
         ? {
             text: "Go to Result",
-            onClick: () => navigate(`/quiz-result/${quiz._id}`),
+            onClick: () => navigate(`/quiz/leaderboard/${quiz._id}`),
           }
         : {
             text: "Attempt",
@@ -147,7 +147,7 @@ const QuizList = () => {
       return isAttempted
         ? {
             text: "Go to Result",
-            onClick: () => navigate(`/quiz-result/${quiz._id}`),
+            onClick: () => navigate(`/quiz/leaderboard/${quiz._id}`),
           }
         : {
             text: "Attempt",

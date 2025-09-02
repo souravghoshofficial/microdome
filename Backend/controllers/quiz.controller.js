@@ -156,4 +156,59 @@ export const submitQuiz = async (req, res) => {
 };
 
 
+export const getQuizLeaderboard = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Fetch quiz
+    const quiz = await Quiz.findById(id);
+    if (!quiz) {
+      return res.status(404).json({
+        success: false,
+        message: "Quiz not found",
+      });
+    }
+
+    // Get results sorted by score (highest first)
+    const results = await QuizResult.find({ quiz: id })
+      .populate("user", "name profileImage")
+      .sort({ score: -1, attemptedAt: 1 }); // tie-breaker: earlier attempt ranks higher
+
+    if (!results.length) {
+      return res.status(200).json({
+        success: true,
+        data: {
+          quiz,
+          topThree: [],
+          others: [],
+        },
+      });
+    }
+
+    // Split results
+    const topThree = results.slice(0, 3);
+    const others = results.slice(3);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        quiz: {
+          title: quiz.title,
+          totalQuestions: quiz.questions.length,
+          totalMarks: results[0]?.total || 0,
+        },
+        topThree,
+        others,
+      },
+    });
+  } catch (error) {
+    console.error("Leaderboard fetch error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+
 
