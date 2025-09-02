@@ -14,7 +14,7 @@ const QuizLeaderboard = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const res = await axios.get(`${ApiUrl}/quiz/${quizId}/leaderboard`);
+        const res = await axios.get(`${ApiUrl}/quiz/${quizId}/leaderboard`, {withCredentials: true});
         if (res.data?.success) {
           setData(res.data.data);
         }
