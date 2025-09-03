@@ -95,7 +95,7 @@ const CheckOut = () => {
           courseId: courseDetails?._id,
           amount: finalAmount,
           phone,
-          itemType: "course"
+          itemType: "course",
         },
         { withCredentials: true }
       );
@@ -114,7 +114,7 @@ const CheckOut = () => {
         name: "Microdome Classes",
         description: `Payment for ${courseDetails.courseTitle}`,
         image:
-          "http://res.cloudinary.com/deljukiyr/image/upload/v1748880241/qi2txlfzapvqkqle8baa.jpg",
+          "https://res.cloudinary.com/dpsmiqy61/image/upload/v1755101381/1755101380750-MicroDome%20new%20logo.png",
         order_id: res.data.order.id,
         handler: async function (response) {
           try {
@@ -148,107 +148,113 @@ const CheckOut = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 dark:bg-black px-3 sm:px-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 dark:from-black dark:to-gray-900 px-4 sm:px-6">
       <ToastContainer />
-      <div
-        className="mt-6 w-full max-w-3xl bg-white dark:bg-[#1b1e27] shadow-2xl rounded-2xl p-5 sm:p-8 md:p-10 mb-12 relative overflow-hidden"
-      >
-        <h2
-          className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-6 sm:mb-8 text-center text-gray-900 dark:text-gray-100"
-        >
-          Checkout
-        </h2>
-
+      <div className="mt-10 w-full max-w-5xl bg-white dark:bg-[#1b1e27] shadow-2xl rounded-2xl overflow-hidden">
         {loading ? (
-          <p className="text-center text-gray-600 dark:text-gray-400">
+          <p className="text-center text-gray-600 dark:text-gray-400 py-12">
             Loading course details...
           </p>
         ) : courseDetails ? (
-          <div className="space-y-6 sm:space-y-8">
-            {/* Course Card */}
-            <div
-              className="border rounded-xl p-4 sm:p-6 bg-gradient-to-r from-green-50 to-green-100 dark:from-slate-700 dark:to-slate-600 shadow-md"
-            >
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-50">
-                {courseDetails.courseTitle}
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300 mt-2 text-sm leading-relaxed">
-                {courseDetails.courseDescription}
-              </p>
-              <div className="flex flex-col sm:flex-row items-start sm:items-baseline gap-2 sm:gap-4 mt-4">
-                <span className="text-base sm:text-lg line-through text-gray-500">
-                  ₹{courseDetails.actualPrice}
-                </span>
-                <span className="text-2xl sm:text-3xl font-extrabold text-green-700 dark:text-green-400">
-                  ₹{finalAmount}
-                </span>
-              </div>
-              {appliedDiscount > 0 && (
-                <p className="mt-2 text-green-600 font-semibold text-sm sm:text-base">
-                  Coupon Applied: {appliedDiscount}% OFF
-                </p>
-              )}
-            </div>
-
-            {/* Coupon Input */}
-            <div>
-              <label className="block mb-2 sm:mb-3 font-semibold text-gray-700 dark:text-gray-300 text-sm sm:text-base">
-                Coupon Code
-              </label>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="text"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                  placeholder="Enter coupon code"
-                  className="flex-1 px-4 py-2 sm:px-5 sm:py-3 border rounded-lg text-base sm:text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
-                />
-                <button
-                  onClick={handleApplyCoupon}
-                  className="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer text-sm sm:text-base"
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
-
-            {/* Phone Input */}
-            <div>
-              <label className="block mb-2 sm:mb-3 font-semibold text-gray-700 dark:text-gray-300 text-sm sm:text-base">
-                Whatsapp Number
-              </label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="Enter your whatsapp number"
-                className="w-full px-4 py-2 sm:px-5 sm:py-3 border rounded-lg text-base sm:text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
+          <div className="grid md:grid-cols-2">
+            {/* Left: Course Image */}
+            <div className="relative h-64 md:h-full p-4 mt-6 md:mt-0 flex items-center justify-center">
+              <img
+                src={courseDetails.courseImage}
+                alt={courseDetails.courseTitle}
+                className="max-h-80 md:max-h-[500px] w-auto object-contain rounded-lg"
               />
             </div>
 
-            {/* Payment Button */}
-            <div className="text-center">
-              <button
-                onClick={handlePayment}
-                disabled={isSubmitting}
-                className={`w-full sm:w-auto ${
-                  isSubmitting
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 cursor-pointer"
-                } text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-xl text-base sm:text-lg shadow-lg transform transition-all duration-300`}
-              >
-                {isSubmitting
-                  ? "Processing..."
-                  : isEnrolled
-                  ? "Go to My Course"
-                  : "Proceed to Payment"}
-              </button>
+            {/* Right: Checkout Info */}
+            <div className="p-6 sm:p-10 flex flex-col justify-between">
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
+                  {courseDetails.courseTitle}
+                </h2>
+                {courseDetails.subTitle && (
+                  <p className="text-gray-600 dark:text-gray-400 mb-4 text-base sm:text-lg">
+                    {courseDetails.subTitle}
+                  </p>
+                )}
+
+                {/* Price Section */}
+                <div className="flex items-baseline gap-3 mb-4">
+                  <span className="text-lg sm:text-xl line-through text-gray-500">
+                    ₹{courseDetails.actualPrice}
+                  </span>
+                  <span className="text-3xl sm:text-4xl font-extrabold text-green-600 dark:text-green-400">
+                    ₹{finalAmount}
+                  </span>
+                </div>
+
+                {appliedDiscount > 0 && (
+                  <p className="mb-4 text-green-600 font-semibold text-sm sm:text-base">
+                    Coupon Applied: {appliedDiscount}% OFF
+                  </p>
+                )}
+
+                {/* Coupon Input */}
+                <div className="mb-6">
+                  <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+                    Coupon Code
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) =>
+                        setCouponCode(e.target.value.toUpperCase())
+                      }
+                      placeholder="Enter coupon code"
+                      className="flex-1 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
+                    />
+                    <button
+                      onClick={handleApplyCoupon}
+                      className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base cursor-pointer"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>
+
+                {/* Phone Input */}
+                <div className="mb-6">
+                  <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+                    Whatsapp Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Enter your whatsapp number"
+                    className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
+                  />
+                </div>
+              </div>
+
+              {/* Payment Button */}
+              <div className="mt-6">
+                <button
+                  onClick={handlePayment}
+                  disabled={isSubmitting}
+                  className={`w-full py-3 sm:py-4 font-bold text-lg rounded-xl shadow-lg transition-all ${
+                    isSubmitting
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white cursor-pointer"
+                  }`}
+                >
+                  {isSubmitting
+                    ? "Processing..."
+                    : isEnrolled
+                    ? "Go to My Course"
+                    : "Proceed to Payment"}
+                </button>
+              </div>
             </div>
           </div>
         ) : (
-          <p className="text-center text-red-600">
-            Course not found
-          </p>
+          <p className="text-center text-red-600 py-12">Course not found</p>
         )}
       </div>
     </div>
@@ -256,4 +262,3 @@ const CheckOut = () => {
 };
 
 export default CheckOut;
-

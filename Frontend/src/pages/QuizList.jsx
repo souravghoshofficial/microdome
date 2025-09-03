@@ -61,7 +61,7 @@ const QuizList = () => {
       const res = await axios.post(
         `${ApiUrl}/orders/create-order`,
         {
-          amount: 10,
+          amount: 1,
           itemType: "quiz",
         },
         { withCredentials: true }
@@ -75,12 +75,12 @@ const QuizList = () => {
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: 10 * 100,
+        amount: 1 * 100,
         currency: "INR",
         name: "Microdome Classes",
         description: "Payment for Mock Test Series",
         image:
-          "http://res.cloudinary.com/deljukiyr/image/upload/v1748880241/qi2txlfzapvqkqle8baa.jpg",
+          "https://res.cloudinary.com/dpsmiqy61/image/upload/v1755101381/1755101380750-MicroDome%20new%20logo.png",
         order_id: res.data.order.id,
 
         handler: async function (response) {
@@ -188,12 +188,12 @@ const QuizList = () => {
                     <p className="text-gray-600 dark:text-gray-400 mt-2 line-clamp-3">
                       {quiz.description}
                     </p>
-                    {quiz.timeLimit > 0 && (
+                    {/* {quiz.timeLimit > 0 && (
                       <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-3">
                         <Clock size={16} className="mr-2" />
                         Time Limit: {quiz.timeLimit} min
                       </div>
-                    )}
+                    )} */}
                   </div>
 
                   {/* ✅ Button Logic */}
@@ -244,8 +244,8 @@ const QuizList = () => {
 
             {/* ✅ Pricing Section */}
             {(() => {
-              const actualPrice = 1499;
-              const discountedPrice = 10;
+              const actualPrice = 499;
+              const discountedPrice = 1;
               const discountPercent = Math.round(
                 ((actualPrice - discountedPrice) / actualPrice) * 100
               );
@@ -270,14 +270,14 @@ const QuizList = () => {
             {/* Buttons */}
             <div className="flex justify-between gap-3">
               <button
-                className="flex-1 py-2 rounded-lg bg-gray-200 dark:bg-zinc-800 hover:bg-gray-300 dark:hover:bg-zinc-700 transition"
+                className="flex-1 py-2 rounded-lg bg-gray-200 dark:bg-zinc-800 hover:bg-gray-300 dark:hover:bg-zinc-700 transition cursor-pointer"
                 onClick={() => setIsModalOpen(false)}
               >
                 Cancel
               </button>
               <button
                 disabled={isPaying}
-                className={`flex-1 py-2 rounded-lg text-white transition ${
+                className={`flex-1 py-2 rounded-lg text-white transition cursor-pointer ${
                   isPaying
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-indigo-600 hover:bg-indigo-700"

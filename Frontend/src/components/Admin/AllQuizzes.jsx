@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { Plus } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import { Link } from "react-router";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -101,12 +101,18 @@ const AllQuizzes = () => {
                     </td>
 
                     {/* Actions */}
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-4 py-3 text-center flex justify-center gap-2">
+                       <Link
+                        className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs md:text-sm"
+                        to={`/admin/edit-quiz/${quiz._id}`}
+                      >
+                        <Pencil className="w-4 h-4" /> Edit
+                      </Link>
                       <Link
                         className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs md:text-sm"
                         to={`/admin/quiz-result/${quiz._id}`}
                       >
-                        View Details
+                        View Results
                       </Link>
                     </td>
                   </tr>

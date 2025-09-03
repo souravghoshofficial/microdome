@@ -11,6 +11,7 @@ import Coupons from "./Coupons";
 import CreateCoupon from "./CreateCoupon";
 import AllQuizzes from "./AllQuizzes";
 import QuizResults from "./QuizResult";
+import EditQuiz from "./EditQuiz";
 
 export {
   Dashboard,
@@ -26,4 +27,5 @@ export {
   CreateCoupon,
   AllQuizzes,
   QuizResults,
+  EditQuiz
 };

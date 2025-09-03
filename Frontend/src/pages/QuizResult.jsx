@@ -19,11 +19,11 @@ const QuizResult = () => {
         withCredentials: true,
       });
       dispatch(login(res.data.data));
-      navigate("/quiz");
+      navigate("/quizzes");
     } catch {
       console.log("Something went wrong");
     } finally {
-      navigate("/quiz");
+      navigate("/quizzes");
     }
   };
 
@@ -34,7 +34,7 @@ const QuizResult = () => {
           No quiz result available.
         </p>
         <button
-          onClick={() => navigate("/quiz")}
+          onClick={() => navigate("/quizzes")}
           className="ml-3 bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-lg"
         >
           Back to Quizzes

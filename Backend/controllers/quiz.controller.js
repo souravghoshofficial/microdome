@@ -5,23 +5,26 @@ import mongoose from "mongoose";
 
 
 export const getAllQuizzes = async (_, res) => {
-    try {
-        const quizzes = await Quiz.find({})
-            .select("_id title description timeLimit category questions");
+  try {
+    const quizzes = await Quiz.find({})
+      .select("_id title description timeLimit category questions")
+      .sort({ 
+        category: 1 // "free" first, then "paid" (alphabetical)
+      });
 
-        res.status(200).json({
-            success: true,
-            data: quizzes
-        });
-
-    } catch (error) {
-        console.error("Error fetching quizzes:", error);
-        res.status(500).json({
-            success: false,
-            message: "Server error while fetching quizzes"
-        });
-    }
+    res.status(200).json({
+      success: true,
+      data: quizzes,
+    });
+  } catch (error) {
+    console.error("Error fetching quizzes:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching quizzes",
+    });
+  }
 };
+
 
 export const getQuizById = async (req, res) => {
     try {

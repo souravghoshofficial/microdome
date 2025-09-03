@@ -116,6 +116,87 @@ export const getAllQuizzes = async (req, res) => {
   }
 };
 
+export const getFullQuizById = async(req, res) => {
+   try {
+    const quiz = await Quiz.findById(req.params.id).populate("questions");
+    if (!quiz) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Quiz not found" });
+    }
+
+    res.json({ success: true, data: quiz });
+  } catch (err) {
+    console.error("Error fetching quiz:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Error fetching quiz" });
+  }
+}
+
+export const editQuiz = async (req, res) => {
+  try {
+    const { title, description, category, timeLimit, questions } = req.body;
+
+    const quiz = await Quiz.findById(req.params.id);
+    if (!quiz) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Quiz not found" });
+    }
+
+    // ✅ Update quiz details
+    quiz.title = title || quiz.title;
+    quiz.description = description || quiz.description;
+    quiz.category = category || quiz.category;
+    quiz.timeLimit = timeLimit ?? quiz.timeLimit;
+
+    // ✅ If questions provided, update or create them
+    if (Array.isArray(questions)) {
+      const updatedQuestionIds = [];
+
+      for (let q of questions) {
+        if (q._id) {
+          // Update existing question
+          const updatedQ = await Question.findByIdAndUpdate(
+            q._id,
+            {
+              questionText: q.questionText,
+              options: q.options,
+              correctOption: q.correctOption,
+            },
+            { new: true }
+          );
+          if (updatedQ) updatedQuestionIds.push(updatedQ._id);
+        } else {
+          // Create new question
+          const newQ = await Question.create({
+            questionText: q.questionText,
+            options: q.options,
+            correctOption: q.correctOption,
+          });
+          updatedQuestionIds.push(newQ._id);
+        }
+      }
+
+      quiz.questions = updatedQuestionIds;
+    }
+
+    const savedQuiz = await quiz.save();
+
+    res.json({
+      success: true,
+      message: "Quiz updated successfully",
+      data: await savedQuiz.populate("questions"),
+    });
+  } catch (err) {
+    console.error("Error updating quiz:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Error updating quiz" });
+  }
+}
+
 
 export const getQuizResults = async (req, res) => {
   try {
@@ -165,6 +246,7 @@ export const getQuizResults = async (req, res) => {
 };
 
 
+// ----------------------------------- //
 
 
 export const getUserDetailsByCourseId = async (req, res) => {

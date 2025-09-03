@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { RiMenuFill, RiCloseLine, RiLogoutBoxRLine } from "@remixicon/react";
-import { House, Book, Info, FileText, User, Users, Settings, LogOut } from "lucide-react"
+import { House, Book, Info, FileText, User, Users, Settings, LogOut,  FileQuestion } from "lucide-react"
 import Logo from "./Logo";
 import ThemeBtn from "./ThemeBtn";
 import UserCard from "./UserCard";
@@ -19,6 +19,10 @@ const navItems = [
   {
     navItemName: "Courses",
     linkAddress: "/courses",
+  },
+  {
+    navItemName: "Quizzes",
+    linkAddress: "/quizzes",
   },
   {
     navItemName: "About Us",
@@ -168,6 +172,16 @@ const Navbar = () => {
           >
             <Book size={22}/>
             <span>Courses</span>
+          </NavLink>
+          <NavLink
+            onClick={() => setShowSideNav(false)}
+            to="/quizzes"
+            className={({ isActive }) =>
+              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
+            }
+          >
+            <FileQuestion size={22}/>
+            <span>Quizzes</span>
           </NavLink>
           <NavLink
             onClick={() => setShowSideNav(false)}

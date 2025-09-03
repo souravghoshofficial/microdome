@@ -112,7 +112,7 @@ const ProfileDashboard = () => {
             </div>
             <div className="text-sm space-y-2">    
                     <Link
-                      to={`/quiz`}
+                      to={`/quizzes`}
                       className="text-blue-600 hover:underline flex items-center gap-1"
                     >
                       <RiExternalLinkLine size={14} />

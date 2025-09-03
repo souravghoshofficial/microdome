@@ -139,6 +139,7 @@ const verifyPayment = async (req, res) => {
         userId: user._id,
       });
 
+      // 1. Send course confirmation email
       await sendCourseConfirmationEmail({
         to: user.email,
         studentName: user.name,
@@ -147,6 +148,24 @@ const verifyPayment = async (req, res) => {
         whatsappLink: courseDetails.whatsappLink,
       });
 
+      // 2. Check if this course is an MSc Entrance batch
+      const MSC_ENTRANCE_BATCH_IDS = [
+        "68a3910c37c7e92815cbac12",
+        "68a6cdeefa66a524a5255dcd"
+      ];
+
+      if (MSC_ENTRANCE_BATCH_IDS.includes(order.course.toString())) {
+        user.hasAccessToQuizzes = true;
+        await user.save();
+
+        // Send quiz confirmation email
+        await sendQuizConfirmationEmail({
+          to: user.email,
+          studentName: user.name,
+          quizLink: "https://microdomeclasses.in/quizzes"
+        });
+      }
+
     } else if (order.itemType === "quiz") {
       user.hasAccessToQuizzes = true;
       await user.save();
@@ -154,7 +173,7 @@ const verifyPayment = async (req, res) => {
       await sendQuizConfirmationEmail({
         to: user.email,
         studentName: user.name,
-        quizLink: "https://microdomeclasses.in/quiz"
+        quizLink: "https://microdomeclasses.in/quizzes"
       });
     }
 
@@ -175,8 +194,6 @@ const verifyPayment = async (req, res) => {
     });
   }
 };
-
-
 
 
 export const validateCouponCode = async (req, res) => {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Clock } from "lucide-react";
+import { Clock, HelpCircle, ClipboardList } from "lucide-react";
 
 import {
   QuestionNavigation,
@@ -42,7 +42,6 @@ const QuizLayout = () => {
         }
       } catch (err) {
         if (err.response) {
-          // Backend returned error
           if (err.response.status === 401) {
             setErrorMessage("Unauthorized. Please login to access this quiz.");
           } else if (err.response.status === 403) {
@@ -91,7 +90,6 @@ const QuizLayout = () => {
 
     setSubmitting(true);
     try {
-      // convert answers object -> array
       const formattedAnswers = Object.keys(answers).map((qIdx) => ({
         questionId: quiz.questions[qIdx]._id,
         selectedOption: answers[qIdx],
@@ -99,10 +97,7 @@ const QuizLayout = () => {
 
       const res = await axios.post(
         `${ApiUrl}/quiz/submit`,
-        {
-          quizId,
-          answers: formattedAnswers,
-        },
+        { quizId, answers: formattedAnswers },
         { withCredentials: true }
       );
 
@@ -118,7 +113,7 @@ const QuizLayout = () => {
     }
   };
 
-  // Loading screen
+  // Loading
   if (loading) {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-gray-100 dark:bg-zinc-950 text-gray-800 dark:text-white">
@@ -127,7 +122,7 @@ const QuizLayout = () => {
     );
   }
 
-  // Error screen
+  // Error
   if (errorMessage) {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-gray-100 dark:bg-zinc-950 text-gray-800 dark:text-white px-4">
@@ -162,15 +157,37 @@ const QuizLayout = () => {
         >
           <h1 className="text-3xl font-bold mb-4">{quiz.title}</h1>
           <p className="mb-4 text-gray-600 dark:text-gray-300">{quiz.description}</p>
-          <p className="mb-6 text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2">
-            <Clock size={18} /> Time Limit:{" "}
-            <span className="font-semibold">{quiz.timeLimit} minutes</span>
-          </p>
+
+          {/* Quiz Details */}
+        
+            <div className="w-full px-2 md:px-4 flex flex-col md:flex-row justify-center md:justify-between items-center gap-2 text-gray-700 dark:text-gray-300 mb-6">
+<div className="flex items-center gap-2 justify-center ">
+              <ClipboardList size={18} />
+              <span>Total Questions: {quiz.questions.length}</span>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              <HelpCircle size={18} />
+              <span>Total Marks: {quiz.questions.length}</span>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              <Clock size={18} />
+              <span>Time Limit: {quiz.timeLimit} minutes</span>
+            </div>
+            </div>
+   
+
+          {/* Extra Instructions */}
+          <ul className="text-gray-600 dark:text-gray-400 text-sm mb-6 list-disc list-inside text-left px-2 md:px-4">
+            <li>No negative marking</li>
+            <li>Attempt all questions in the given time</li>
+            <li>Each question carries equal marks</li>
+          </ul>
+
           <div className="flex justify-center gap-4">
             <Button
               btnText="Cancel"
               className="bg-red-500 hover:bg-red-600 text-white"
-              onClick={() => navigate("/quiz")}
+              onClick={() => navigate("/quizzes")}
             />
             <Button
               btnText="Start Quiz"

@@ -20,7 +20,7 @@ const quizSchema = new Schema(
     questions: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "question",
+        ref: "Question",
         required: true,
       },
     ],
