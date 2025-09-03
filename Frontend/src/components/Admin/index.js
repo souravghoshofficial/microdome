@@ -1,5 +1,4 @@
 import Dashboard from "./Dashboard";
-
 import AddSection from "./AddSection";
 import AddLecture from "./AddLecture";
 import AllUsers from "./AllUsers";
@@ -11,5 +10,20 @@ import PremiumUserDetails from "./PremiumUserDetails";
 import Coupons from "./Coupons";
 import CreateCoupon from "./CreateCoupon";
 import AllQuizzes from "./AllQuizzes";
+import QuizResults from "./QuizResult";
 
-export {Dashboard , AddSection , AddLecture , AllUsers , PremiumUsers, AllCourses, CreateQuiz, CreateCourse,PremiumUserDetails, Coupons , CreateCoupon, AllQuizzes};
+export {
+  Dashboard,
+  AddSection,
+  AddLecture,
+  AllUsers,
+  PremiumUsers,
+  AllCourses,
+  CreateQuiz,
+  CreateCourse,
+  PremiumUserDetails,
+  Coupons,
+  CreateCoupon,
+  AllQuizzes,
+  QuizResults,
+};

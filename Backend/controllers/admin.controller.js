@@ -117,6 +117,55 @@ export const getAllQuizzes = async (req, res) => {
 };
 
 
+export const getQuizResults = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+
+    // Check if quiz exists
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({
+        success: false,
+        message: "Quiz not found",
+      });
+    }
+
+    // Fetch quiz results with user details
+    const results = await QuizResult.find({ quiz: quizId })
+      .populate("user", "name email profileImage")
+      .sort({ score: -1, attemptedAt: 1 }); // Highest score first, earlier attempt wins tie
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        quizTitle: quiz.title,
+        students: results.map((r) => ({
+          id: r._id,
+          name: r.user?.name || "Unknown",
+          email: r.user?.email || "---",
+          profileImage: r.user?.profileImage || null,
+          score: r.score,
+          attemptedAt: new Date(r.attemptedAt).toLocaleString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        })),
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching quiz results:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+
+
 
 export const getUserDetailsByCourseId = async (req, res) => {
   try {

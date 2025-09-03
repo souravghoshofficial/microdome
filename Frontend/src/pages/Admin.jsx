@@ -23,7 +23,6 @@ const adminMenuItems = [
   { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
-  { name: "Create Course", icon: <Plus size={20} />, href: "/admin/create-course" },
   { name: "Coupons", icon: <Tickets size={20} />, href: "/admin/coupons" },
 ];
 const instructorMenuItems = [

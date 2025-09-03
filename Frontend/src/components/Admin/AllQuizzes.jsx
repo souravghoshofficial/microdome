@@ -102,14 +102,12 @@ const AllQuizzes = () => {
 
                     {/* Actions */}
                     <td className="px-4 py-3 text-center">
-                      <button
+                      <Link
                         className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs md:text-sm"
-                        onClick={() =>
-                          (window.location.href = `/admin/quizzes/${quiz._id}`)
-                        }
+                        to={`/admin/quiz-result/${quiz._id}`}
                       >
                         View Details
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 ))

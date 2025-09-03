@@ -12,7 +12,8 @@ import {
   getTotalUserCount,
   getPremiumUserCount,
   getTotalCourses,
-  getAllQuizzes
+  getAllQuizzes,
+  getQuizResults
 } from "../controllers/admin.controller.js";
 import { authorizedRoles } from "../middlewares/authorizedRoles.middleware.js";
 
@@ -28,6 +29,7 @@ router
 // ---- quiz routes ---- //
 router.route("/create-quiz").post(authorizedRoles("admin", "instructor"), createQuiz);
 router.route("/quizzes").get(authorizedRoles("admin", "instructor"), getAllQuizzes);
+router.route("/quiz/:quizId/results").get(authorizedRoles("admin", "instructor"), getQuizResults);
 
 router
   .route("/courses-with-user-counts")
