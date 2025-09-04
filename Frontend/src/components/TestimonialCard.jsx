@@ -46,3 +46,6 @@ const TestimonialCard = ({ name, message, imageUrl, presentCourseOfStudy , insti
 };
 
 export default TestimonialCard;
+
+
+

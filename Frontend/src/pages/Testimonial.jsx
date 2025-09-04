@@ -7,6 +7,7 @@ import Microdome from "../assets/microdome.jpg";
 import RoshniBanerjee from "../assets/RoshniBanerjee.webp";
 import DeeptakBiswas from "../assets/DeeptakBiswas.png";
 import SumiChakraborty from "../assets/Sumi_Chakraborty.jpg";
+import AdrijaBiswas from '../assets/AdrijaBiswas.jpg';
 
 const studentsReview = [
   {
@@ -80,6 +81,14 @@ const studentsReview = [
     presentCourseOfStudy: "B.Sc in Microbiology",
     instituteName: "Kalyani Mahavidyalaya",
     imageUrl: Microdome,
+  },
+  {
+    name: "Adrija Biswas",
+    message:
+      '"It is a great experience after joining MicroDome. Mentors are friendly & helpful. Study materials are easy to understand. It has benefited me a lot.✨"',
+    presentCourseOfStudy: "B.Sc in Microbiology",
+    instituteName: "Kalyani Mahavidyalaya",
+    imageUrl: AdrijaBiswas,
   },
 ];
 
