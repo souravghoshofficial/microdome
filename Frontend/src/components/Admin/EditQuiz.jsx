@@ -148,12 +148,11 @@ const EditQuiz = () => {
 
         {questions.map((q, qIndex) => (
           <div key={qIndex} className="p-4 border rounded space-y-2">
-            <input
-              type="text"
+            <textarea
               placeholder={`Question ${qIndex + 1}`}
               value={q.questionText}
               onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded resize-y min-h-[60px]"
               required
             />
 
