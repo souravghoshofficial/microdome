@@ -5,7 +5,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Course } from "../models/course.model.js";
-import { QuizResult } from "../models/quizResult.model.js"
+import { QuizResult } from "../models/quizResult.model.js";
+import { GoogleGenAI } from "@google/genai";
 import {
   sendAccessRevokedEmail,
   sendAccessGrantedEmail,
@@ -13,12 +14,18 @@ import {
 
 import { Coupon } from "../models/coupon.model.js";
 
+const genAI = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
+
 export const getAllUsers = async (req, res) => {
   try {
     const { limit } = req.query; // read query parameter (optional)
 
     let query = User.find({})
-      .select("-password -__v -updatedAt -enrolledCourses -presentCourseOfStudy")
+      .select(
+        "-password -__v -updatedAt -enrolledCourses -presentCourseOfStudy"
+      )
       .sort({ createdAt: -1 }); // newest first
 
     if (limit) {
@@ -41,7 +48,6 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-
 // ------ quiz controllers ------- //
 
 //  Quiz
@@ -61,7 +67,12 @@ export const createQuiz = async (req, res) => {
 
     // Validate question format
     for (let q of questions) {
-      if (!q.questionText || !q.options || q.options.length < 2 || q.correctOption === undefined) {
+      if (
+        !q.questionText ||
+        !q.options ||
+        q.options.length < 2 ||
+        q.correctOption === undefined
+      ) {
         return res.status(400).json({ message: "Invalid question format" });
       }
     }
@@ -89,13 +100,108 @@ export const createQuiz = async (req, res) => {
 };
 
 
+export const generateQuiz = async (req, res) => {
+  try {
+    const { title, description, subject, topic, numQuestions, timeLimit } =
+      req.body;
+
+    const prompt = `
+You are an expert quiz generator for students preparing for MSc entrance exams 
+like IIT JAM, CUET PG, and other postgraduate-level exams in the fields of 
+Biology, Microbiology, Biotechnology, Biochemistry, and Life Sciences. 
+
+The questions should:
+- Be of **college-level (B.Sc standard)** difficulty.
+- Match the **style and rigor of competitive entrance exams**.
+- Contain only **one correct answer** out of four options.
+- Be factually accurate and clear.
+- Avoid trivial/general knowledge questions.
+
+Use the following quiz details:
+Title: ${title}
+Description: ${description}
+Subject: ${subject}
+Topic: ${topic}
+Number of Questions: ${numQuestions}
+Time Limit: ${timeLimit} minutes
+
+Return the quiz in **strict JSON format** with this schema:
+
+{
+  "title": "string",
+  "description": "string",
+  "category": "free",
+  "timeLimit": number,
+  "questions": [
+    {
+      "questionText": "string",
+      "options": ["string", "string", "string", "string"],
+      "correctOption": number
+    }
+  ]
+}
+
+Important:
+- Only return valid JSON.
+- Do NOT include markdown fences.
+- Do NOT add explanations or comments.
+- Ensure "correctOption" is always an integer between 0–3.
+- The number of questions MUST equal ${numQuestions}.
+`;
+
+    // Call Gemini
+    const response = await genAI.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+    });
+
+    const textResponse =
+      response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+    if (!textResponse) {
+      return res.status(500).json({
+        success: false,
+        message: "No response from AI",
+      });
+    }
+
+    // ✅ Parse into JSON object
+    let quizObj;
+    try {
+      quizObj = JSON.parse(textResponse);
+    } catch (err) {
+      console.error("Failed to parse AI JSON:", textResponse);
+      return res.status(500).json({
+        success: false,
+        message: "AI returned invalid JSON",
+      });
+    }
+
+    res.json({
+      success: true,
+      quiz: quizObj,
+    });
+  } catch (error) {
+    console.error("Error generating quiz:", error);
+    res.status(500).json({
+      success: false,
+      message:
+        error?.response?.data?.error?.message ||
+        "Quiz generation failed. Please try again later.",
+    });
+  }
+};
+
+
 export const getAllQuizzes = async (req, res) => {
   try {
     const quizzes = await Quiz.find().lean();
 
     const quizzesWithStats = await Promise.all(
       quizzes.map(async (quiz) => {
-        const studentCount = await QuizResult.countDocuments({ quiz: quiz._id });
+        const studentCount = await QuizResult.countDocuments({
+          quiz: quiz._id,
+        });
         return {
           _id: quiz._id,
           title: quiz.title,
@@ -116,8 +222,8 @@ export const getAllQuizzes = async (req, res) => {
   }
 };
 
-export const getFullQuizById = async(req, res) => {
-   try {
+export const getFullQuizById = async (req, res) => {
+  try {
     const quiz = await Quiz.findById(req.params.id).populate("questions");
     if (!quiz) {
       return res
@@ -128,11 +234,9 @@ export const getFullQuizById = async(req, res) => {
     res.json({ success: true, data: quiz });
   } catch (err) {
     console.error("Error fetching quiz:", err);
-    res
-      .status(500)
-      .json({ success: false, message: "Error fetching quiz" });
+    res.status(500).json({ success: false, message: "Error fetching quiz" });
   }
-}
+};
 
 export const editQuiz = async (req, res) => {
   try {
@@ -191,12 +295,9 @@ export const editQuiz = async (req, res) => {
     });
   } catch (err) {
     console.error("Error updating quiz:", err);
-    res
-      .status(500)
-      .json({ success: false, message: "Error updating quiz" });
+    res.status(500).json({ success: false, message: "Error updating quiz" });
   }
-}
-
+};
 
 export const getQuizResults = async (req, res) => {
   try {
@@ -245,9 +346,7 @@ export const getQuizResults = async (req, res) => {
   }
 };
 
-
 // ----------------------------------- //
-
 
 export const getUserDetailsByCourseId = async (req, res) => {
   try {
@@ -516,7 +615,7 @@ export const deleteCoupon = async (req, res) => {
 // --- analytics --- //
 
 export const getTotalUserCount = async (_, res) => {
- try {
+  try {
     const totalUsers = await User.countDocuments();
     res.status(200).json({ success: true, totalUsers });
   } catch (err) {
@@ -535,7 +634,7 @@ export const getPremiumUserCount = async (req, res) => {
 
 export const getTotalCourses = async (req, res) => {
   try {
-    const count = await Course.countDocuments(); 
+    const count = await Course.countDocuments();
     res.status(200).json({
       success: true,
       count,
