@@ -10,7 +10,11 @@ const orderSchema = new Schema(
     course: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course",
-      required: true,
+    },
+    itemType: {
+      type: String,
+      enum: ["course", "quiz"],
+      default: "course",  
     },
     amount: {
       type: Number,
@@ -29,9 +33,7 @@ const orderSchema = new Schema(
       default: "Pending",
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 export const Order = mongoose.model("Order", orderSchema);

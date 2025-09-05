@@ -5,6 +5,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Course } from "../models/course.model.js";
+import { QuizResult } from "../models/quizResult.model.js"
 import {
   sendAccessRevokedEmail,
   sendAccessGrantedEmail,
@@ -43,7 +44,7 @@ export const getAllUsers = async (req, res) => {
 
 // ------ quiz controllers ------- //
 
-// Create Quiz
+//  Quiz
 export const createQuiz = async (req, res) => {
   try {
     const { title, description, category, timeLimit, questions } = req.body;
@@ -86,6 +87,166 @@ export const createQuiz = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+export const getAllQuizzes = async (req, res) => {
+  try {
+    const quizzes = await Quiz.find().lean();
+
+    const quizzesWithStats = await Promise.all(
+      quizzes.map(async (quiz) => {
+        const studentCount = await QuizResult.countDocuments({ quiz: quiz._id });
+        return {
+          _id: quiz._id,
+          title: quiz.title,
+          category: quiz.category,
+          noOfQuestions: quiz.questions.length,
+          time: quiz.timeLimit,
+          attemptedBy: studentCount,
+        };
+      })
+    );
+
+    res.json({
+      success: true,
+      data: quizzesWithStats,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+export const getFullQuizById = async(req, res) => {
+   try {
+    const quiz = await Quiz.findById(req.params.id).populate("questions");
+    if (!quiz) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Quiz not found" });
+    }
+
+    res.json({ success: true, data: quiz });
+  } catch (err) {
+    console.error("Error fetching quiz:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Error fetching quiz" });
+  }
+}
+
+export const editQuiz = async (req, res) => {
+  try {
+    const { title, description, category, timeLimit, questions } = req.body;
+
+    const quiz = await Quiz.findById(req.params.id);
+    if (!quiz) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Quiz not found" });
+    }
+
+    // ✅ Update quiz details
+    quiz.title = title || quiz.title;
+    quiz.description = description || quiz.description;
+    quiz.category = category || quiz.category;
+    quiz.timeLimit = timeLimit ?? quiz.timeLimit;
+
+    // ✅ If questions provided, update or create them
+    if (Array.isArray(questions)) {
+      const updatedQuestionIds = [];
+
+      for (let q of questions) {
+        if (q._id) {
+          // Update existing question
+          const updatedQ = await Question.findByIdAndUpdate(
+            q._id,
+            {
+              questionText: q.questionText,
+              options: q.options,
+              correctOption: q.correctOption,
+            },
+            { new: true }
+          );
+          if (updatedQ) updatedQuestionIds.push(updatedQ._id);
+        } else {
+          // Create new question
+          const newQ = await Question.create({
+            questionText: q.questionText,
+            options: q.options,
+            correctOption: q.correctOption,
+          });
+          updatedQuestionIds.push(newQ._id);
+        }
+      }
+
+      quiz.questions = updatedQuestionIds;
+    }
+
+    const savedQuiz = await quiz.save();
+
+    res.json({
+      success: true,
+      message: "Quiz updated successfully",
+      data: await savedQuiz.populate("questions"),
+    });
+  } catch (err) {
+    console.error("Error updating quiz:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Error updating quiz" });
+  }
+}
+
+
+export const getQuizResults = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+
+    // Check if quiz exists
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({
+        success: false,
+        message: "Quiz not found",
+      });
+    }
+
+    // Fetch quiz results with user details
+    const results = await QuizResult.find({ quiz: quizId })
+      .populate("user", "name email profileImage")
+      .sort({ score: -1, attemptedAt: 1 }); // Highest score first, earlier attempt wins tie
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        quizTitle: quiz.title,
+        students: results.map((r) => ({
+          id: r._id,
+          name: r.user?.name || "Unknown",
+          email: r.user?.email || "---",
+          profileImage: r.user?.profileImage || null,
+          score: r.score,
+          attemptedAt: new Date(r.attemptedAt).toLocaleString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        })),
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching quiz results:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+
+// ----------------------------------- //
 
 
 export const getUserDetailsByCourseId = async (req, res) => {
