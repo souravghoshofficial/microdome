@@ -148,9 +148,9 @@ const CheckOut = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 dark:from-black dark:to-gray-900 px-4 sm:px-6">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 dark:from-black dark:to-gray-900 px-4 sm:px-6">
       <ToastContainer />
-      <div className="mt-10 w-full max-w-5xl bg-white dark:bg-[#1b1e27] shadow-2xl rounded-2xl overflow-hidden">
+     <div className="my-10 w-full max-w-5xl bg-white dark:bg-[#1b1e27] shadow-2xl rounded-2xl">
         {loading ? (
           <p className="text-center text-gray-600 dark:text-gray-400 py-12">
             Loading course details...
@@ -158,7 +158,7 @@ const CheckOut = () => {
         ) : courseDetails ? (
           <div className="grid md:grid-cols-2">
             {/* Left: Course Image */}
-            <div className="relative h-64 md:h-full p-4 mt-6 md:mt-0 flex items-center justify-center">
+            <div className="relative h-64 md:h-full p-4 mt-4 md:mt-0 flex items-center justify-center">
               <img
                 src={courseDetails.courseImage}
                 alt={courseDetails.courseTitle}
@@ -199,7 +199,7 @@ const CheckOut = () => {
                   <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
                     Coupon Code
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col gap-3 md:flex-row md:gap-2">
                     <input
                       type="text"
                       value={couponCode}
@@ -211,7 +211,7 @@ const CheckOut = () => {
                     />
                     <button
                       onClick={handleApplyCoupon}
-                      className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base cursor-pointer"
+                      className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base cursor-pointer"
                     >
                       Apply
                     </button>
