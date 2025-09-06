@@ -83,7 +83,7 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
                           })}
                           download
                           onClick={(e) => e.stopPropagation()} // ✅ don’t trigger video play
-                          className="px-2 py-0.5 border border-blue-400 rounded-sm hover:bg-blue-200 text-sm flex items-center gap-1"
+                          className="px-2 py-0.5 border border-blue-400 rounded-sm hover:bg-blue-200 dark:hover:bg-blue-500 text-sm flex items-center gap-1"
                         >
                           <RiFolderOpenLine className="inline" size={14} />
                           Notes
