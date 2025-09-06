@@ -35,7 +35,7 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
     <div className="w-full h-[50vh] md:h-[64vh] overflow-y-scroll mt-2 pb-6 md:px-2 md:scrollbar">
       <div className="mt-4">
         {sections.map((section, index) => (
-          <div className="w-full mb-1" key={index}>
+          <div className="w-full mb-2" key={index}>
             <div
               onClick={() => openMenu(index)}
               className="p-3 border cursor-pointer"
