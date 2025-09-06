@@ -52,7 +52,7 @@ const QuizLeaderboard = () => {
   if (topThree.length === 0 && others.length === 0) {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-zinc-950 text-gray-800 dark:text-white py-10">
-        <div className="w-[90%] lg:w-[80%] mx-auto bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-lg text-center">
+        <div className="w-[90%] lg:w-[80%] mx-auto mt-16 bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-lg text-center">
           <h1 className="text-3xl font-bold mb-4">{quiz.title}</h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
             Total Questions: <strong>{quiz.totalQuestions}</strong> | Total Marks:{" "}

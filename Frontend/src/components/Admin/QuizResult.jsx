@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import userImage from "../../assets/user-img.jpeg";
+import { Link } from "react-router"
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -58,7 +59,8 @@ const QuizResults = () => {
 
       {/* Header */}
       <div className="flex justify-between items-center px-6 py-4 border-b">
-        <h2 className="text-lg font-semibold">Quiz Results - {quizTitle}</h2>
+        <h2 className="text-lg font-semibold">{quizTitle}</h2>
+        <Link to={`/quiz/leaderboard/${quizId}`} className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow text-sm md:text-base">Leaderboard</Link>
       </div>
 
       {/* Table */}
