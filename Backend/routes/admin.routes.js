@@ -16,7 +16,8 @@ import {
   getQuizResults,
   getFullQuizById,
   editQuiz,
-  generateQuiz
+  generateQuiz,
+  deleteQuiz
 } from "../controllers/admin.controller.js";
 import { authorizedRoles } from "../middlewares/authorizedRoles.middleware.js";
 
@@ -35,6 +36,7 @@ router.route("/generate-quiz").post(authorizedRoles("admin", "instructor"), gene
 router.route("/quizzes").get(authorizedRoles("admin", "instructor"), getAllQuizzes);
 router.route("/quiz/:id").get(authorizedRoles("admin", "instructor"), getFullQuizById);
 router.route("/quiz/:id").put(authorizedRoles("admin", "instructor"), editQuiz);
+router.route("/quiz/:quizId").delete(authorizedRoles("admin", "instructor"), deleteQuiz);
 router.route("/quiz/:quizId/results").get(authorizedRoles("admin", "instructor"), getQuizResults);
 
 

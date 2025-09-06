@@ -299,6 +299,45 @@ export const editQuiz = async (req, res) => {
   }
 };
 
+export const deleteQuiz = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+
+    // 1. Find quiz
+    const quiz = await Quiz.findById(quizId).populate("questions");
+    if (!quiz) {
+      return res.status(404).json({ success: false, message: "Quiz not found" });
+    }
+
+    // 2. Delete related questions
+    await Question.deleteMany({ _id: { $in: quiz.questions } });
+
+    // 3. Delete related results
+    await QuizResult.deleteMany({ quiz: quizId });
+
+    // 4. Remove quizId from users’ attemptedQuizzes
+    await User.updateMany(
+      { attemptedQuizzes: quizId },
+      { $pull: { attemptedQuizzes: quizId } }
+    );
+
+    // 5. Finally, delete the quiz itself
+    await Quiz.findByIdAndDelete(quizId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Quiz and related data deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting quiz:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+
 export const getQuizResults = async (req, res) => {
   try {
     const { quizId } = req.params;
