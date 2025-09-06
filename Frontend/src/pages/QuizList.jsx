@@ -16,6 +16,7 @@ const QuizList = () => {
   const [discountedPrice , setDiscountedPrice] = useState(99);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.status);
@@ -26,10 +27,14 @@ const QuizList = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
+        setLoading(true)
         const res = await axios.get(`${ApiUrl}/quiz`);
         setQuizzes(res.data.data);
       } catch (err) {
         console.error(err);
+      }
+      finally{
+        setLoading(false)
       }
     };
     fetchQuizzes();
@@ -130,7 +135,7 @@ const QuizList = () => {
     }
   };
 
-  // ✅ Helper for button text & click
+  // Helper for button text & click
   const getButtonConfig = (quiz) => {
     const isAttempted = attemptedQuizzes.includes(quiz._id);
 
@@ -170,6 +175,14 @@ const QuizList = () => {
           };
     }
   };
+
+  if(loading){
+    return(
+       <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-32 flex items-center justify-center">
+        <span className="text-lg text-gray-600 dark:text-gray-400">Loading...</span>
+       </div>
+    )
+  }
 
   return (
     <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-32">
