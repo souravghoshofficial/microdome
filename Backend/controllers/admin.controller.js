@@ -6,6 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Course } from "../models/course.model.js";
 import { QuizResult } from "../models/quizResult.model.js";
+import { QuizPrice } from "../models/quizPrice.model.js";
 import { GoogleGenAI } from "@google/genai";
 import {
   sendAccessRevokedEmail,
@@ -99,7 +100,6 @@ export const createQuiz = async (req, res) => {
   }
 };
 
-
 export const generateQuiz = async (req, res) => {
   try {
     const { title, description, subject, topic, numQuestions, timeLimit } =
@@ -191,7 +191,6 @@ Important:
     });
   }
 };
-
 
 export const getAllQuizzes = async (req, res) => {
   try {
@@ -306,7 +305,9 @@ export const deleteQuiz = async (req, res) => {
     // 1. Find quiz
     const quiz = await Quiz.findById(quizId).populate("questions");
     if (!quiz) {
-      return res.status(404).json({ success: false, message: "Quiz not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Quiz not found" });
     }
 
     // 2. Delete related questions
@@ -336,7 +337,6 @@ export const deleteQuiz = async (req, res) => {
     });
   }
 };
-
 
 export const getQuizResults = async (req, res) => {
   try {
@@ -382,6 +382,19 @@ export const getQuizResults = async (req, res) => {
       success: false,
       message: "Internal server error",
     });
+  }
+};
+
+export const resetQuizPrice = async (req, res) => {
+  try {
+    const { actualPrice, discountedPrice } = req.body;
+    let price = await QuizPrice.findOne();
+    price.actualPrice = actualPrice;
+    price.discountedPrice = discountedPrice;
+    await price.save();
+    res.json({ success: true, data: price, message: "Quiz price reset successfully" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 

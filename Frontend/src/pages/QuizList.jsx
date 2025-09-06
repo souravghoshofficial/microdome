@@ -12,6 +12,8 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const QuizList = () => {
   const [quizzes, setQuizzes] = useState([]);
+  const [actualPrice , setActualPrice] = useState(399);
+  const [discountedPrice , setDiscountedPrice] = useState(99);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
 
@@ -31,6 +33,19 @@ const QuizList = () => {
       }
     };
     fetchQuizzes();
+  }, []);
+
+  useEffect(() => {
+    const fetchQuizPrice = async () => {
+      try {
+        const res = await axios.get(`${ApiUrl}/quiz/bundle/price`);
+        setActualPrice(res.data.quizPrice.actualPrice);
+        setDiscountedPrice(res.data.quizPrice.discountedPrice);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchQuizPrice();
   }, []);
 
   const hasAccessToQuizzes = userData?.hasAccessToQuizzes || false;
@@ -61,7 +76,7 @@ const QuizList = () => {
       const res = await axios.post(
         `${ApiUrl}/orders/create-order`,
         {
-          amount: 1,
+          amount: discountedPrice,
           itemType: "quiz",
         },
         { withCredentials: true }
@@ -75,7 +90,7 @@ const QuizList = () => {
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: 1 * 100,
+        amount: discountedPrice * 100,
         currency: "INR",
         name: "Microdome Classes",
         description: "Payment for Mock Test Series",
@@ -244,8 +259,6 @@ const QuizList = () => {
 
             {/* ✅ Pricing Section */}
             {(() => {
-              const actualPrice = 499;
-              const discountedPrice = 1;
               const discountPercent = Math.round(
                 ((actualPrice - discountedPrice) / actualPrice) * 100
               );

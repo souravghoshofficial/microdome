@@ -3,6 +3,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { Plus, Pencil, Trash } from "lucide-react";
 import { Link } from "react-router";
+import { useSelector } from "react-redux"
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -10,6 +11,8 @@ const AllQuizzes = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [quizzesPerPage] = useState(8);
+
+  const user = useSelector((state) => state.auth.userData)
 
   // Modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -86,13 +89,16 @@ const AllQuizzes = () => {
       {/* Header */}
       <div className="flex flex-row justify-between items-center px-4 md:px-6 py-4 border-b gap-3">
         <h2 className="text-base md:text-lg font-semibold">All Quizzes</h2>
+        <div className="flex items-center justify-center gap-4">
+          {user?.role === "admin" && <Link to="/admin/reset-quiz-price" className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow text-sm md:text-base cursor-pointer">Reset Quiz Price</Link>}
         <Link
           to="/admin/create-quiz"
-          className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow text-sm md:text-base cursor-pointer"
+          className="flex items-center gap-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow text-sm md:text-base cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Create Quiz
         </Link>
+        </div>
       </div>
 
       {/* Table */}

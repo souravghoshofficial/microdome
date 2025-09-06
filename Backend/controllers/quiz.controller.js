@@ -1,6 +1,7 @@
 import { Quiz } from "../models/quiz.model.js";
 import { User } from "../models/user.model.js";
 import { QuizResult } from "../models/quizResult.model.js";
+import { QuizPrice } from  "../models/quizPrice.model.js"
 import mongoose from "mongoose";
 
 
@@ -218,6 +219,15 @@ export const getQuizLeaderboard = async (req, res) => {
     });
   }
 };
+
+export const getQuizPrice = async (req, res) => {
+   try {
+     const quizPrice = await QuizPrice.findOne().select('-_id');
+     res.status(200).json({success: true, quizPrice})
+   } catch (error) {
+      res.status(500).json({success: false, message: "Falied to fetch quiz price"})
+   }
+}
 
 
 
