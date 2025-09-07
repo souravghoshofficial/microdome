@@ -20,6 +20,7 @@ import CourseSyllabus from "./CourseSyllabus";
 import CourseSection from "./CourseSection";
 import PaymentSuccess from "./PaymentSucess";
 import AdminLayout from "./AdminLayout";
+import VerifiedBadge from "./VerifiedBadge";
 
 export {
   Navbar,
@@ -44,4 +45,5 @@ export {
   CourseSection,
   PaymentSuccess,
   AdminLayout,
+  VerifiedBadge
 };

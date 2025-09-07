@@ -60,7 +60,7 @@ const CourseViewPage = () => {
     <div className="w-full h-screen overflow-hidden bg-white dark:bg-zinc-900 text-black dark:text-gray-100">
       <div className="w-full px-8 py-3 flex items-center gap-4">
         <Link to="/">
-          <Logo className={"w-12 h-12"} />
+          <Logo className={"w-7 md:w-9"} />
         </Link>
         <h1 className="text-xl font-bold">{course?.courseTitle}</h1>
       </div>

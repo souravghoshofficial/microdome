@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RiArrowLeftLine } from "@remixicon/react";
-import { Pencil } from "lucide-react";
+import { Pencil, Camera } from "lucide-react"; 
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../features/auth/authSlice";
 import axios from "axios";
@@ -90,8 +90,13 @@ const EditUserDetails = () => {
                   src={imageSrc}
                   alt="Upload Profile"
                 />
+                {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer">
                   <Pencil className="text-white w-6 h-6" />
+                </div>
+                {/* Camera Icon Button */}
+                <div className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow-md cursor-pointer hover:bg-blue-700 transition">
+                  <Camera className="w-4 h-4" />
                 </div>
               </label>
               <input

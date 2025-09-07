@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router";
+import { VerifiedBadge } from "../components";
 import {
   RiShieldUserLine,
   RiEditBoxLine,
@@ -7,6 +8,7 @@ import {
   RiExternalLinkLine,
   RiQuestionAnswerLine
 } from "@remixicon/react";
+import { Pencil } from "lucide-react"
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -47,7 +49,10 @@ const ProfileDashboard = () => {
             alt="Profile"
             className="w-36 h-36 rounded-full border-4 border-white object-center object-cover"
           />
-          <h2 className="text-2xl font-semibold mt-6">{userData?.name || "User Name"}</h2>
+         <div className="mt-6 flex items-center justify-center gap-2" >
+           <h2 className="text-2xl font-semibold">{userData?.name || "User Name"}</h2>
+          {userData?.isPremiumMember && <VerifiedBadge />}
+         </div>
           <p className="text-sm opacity-80 mt-2">
             Member since {userData?.createdAt ? new Date(userData.createdAt).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : "N/A"}
           </p>
@@ -55,7 +60,7 @@ const ProfileDashboard = () => {
             to="edit"
             className="absolute top-4 right-4 bg-white text-blue-600 p-2 rounded-full shadow hover:bg-gray-200 dark:hover:bg-gray-700 transition"
           >
-            <RiEditBoxLine size={20} />
+            <Pencil size={20} />
           </Link>
         </div>
 
