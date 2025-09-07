@@ -150,7 +150,7 @@ const CheckOut = () => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 dark:from-black dark:to-gray-900 px-4 sm:px-6">
       <ToastContainer />
-     <div className="my-10 w-full max-w-5xl bg-white dark:bg-[#1b1e27] shadow-2xl rounded-2xl">
+      <div className="my-10 w-full max-w-5xl bg-white dark:bg-[#1b1e27] shadow-2xl rounded-2xl">
         {loading ? (
           <p className="text-center text-gray-600 dark:text-gray-400 py-12">
             Loading course details...
@@ -230,6 +230,18 @@ const CheckOut = () => {
                     placeholder="Enter your whatsapp number"
                     className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
                   />
+                </div>
+
+                {/*  Payment Trouble Message */}
+                <div className="mb-4">
+                  <p className=" text-yellow-700 dark:text-yellow-800 font-semibold">
+                    ⚠️ Trouble in payment ?
+                  </p>
+                  <ul className="mt-2 text-sm text-yellow-600 dark:text-yellow-700 list-disc list-inside space-y-1">
+                    <li>Make sure to allow <b>third-party cookies</b> in your browser settings.</li>
+                    <li>Recommended Browser: <b>Google Chrome</b></li>
+                    <li>Contact: <b>microdomeclasses2@gmail.com</b></li>
+                  </ul>
                 </div>
               </div>
 

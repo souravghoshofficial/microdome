@@ -257,10 +257,10 @@ const QuizList = () => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-200 dark:bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div
-            className="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-6 w-[90%] max-w-[400px]"
+            className="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-6 w-[90%] max-w-[480px]"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-xl font-bold text-center mb-3">
+            <h2 className="text-2xl font-bold text-center mb-3">
               Unlock Premium Quizzes
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
@@ -270,7 +270,7 @@ const QuizList = () => {
               preparation.
             </p>
 
-            {/* ✅ Pricing Section */}
+            {/* Pricing Section */}
             {(() => {
               const discountPercent = Math.round(
                 ((actualPrice - discountedPrice) / actualPrice) * 100
@@ -279,11 +279,11 @@ const QuizList = () => {
               return (
                 <div className="flex items-center justify-between gap-3 mb-6 px-2">
                   <div className="flex items-center gap-3">
-                    <p className="text-2xl font-bold text-black dark:text-white">
-                      ₹ {discountedPrice}
-                    </p>
-                    <p className="text-gray-500 line-through text-lg">
+                     <p className="text-gray-500 line-through text-lg">
                       ₹ {actualPrice}
+                    </p>
+                    <p className="text-3xl font-bold text-green-600">
+                      ₹ {discountedPrice}
                     </p>
                   </div>
                   <span className="bg-green-100 dark:bg-slate-100 text-green-600 dark:text-black text-sm font-semibold px-2 py-1 rounded-md">
@@ -292,6 +292,17 @@ const QuizList = () => {
                 </div>
               );
             })()}
+
+            <div className="mb-6">
+                  <p className=" text-yellow-700 dark:text-yellow-800 font-semibold">
+                    ⚠️ Trouble in payment ?
+                  </p>
+                  <ul className="mt-2 text-sm text-yellow-600 dark:text-yellow-700 list-disc list-inside space-y-1">
+                    <li>Make sure to allow <b>third-party cookies</b> in your browser settings.</li>
+                    <li>Recommended Browser: <b>Google Chrome</b></li>
+                    <li>Contact: <b>microdomeclasses2@gmail.com</b></li>
+                  </ul>
+                </div>
 
             {/* Buttons */}
             <div className="flex justify-between gap-3">
