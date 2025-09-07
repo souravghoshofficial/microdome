@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { BuyNowCard, CourseSyllabus } from "../components";
 import { loadRazorpayScript } from "../utils/razorpay";
-import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { useParams, useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { login } from "../features/auth/authSlice";
 
 const syllabus = {
@@ -184,6 +183,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const SemesterCourseLayout = () => {
   const { id } = useParams();
+  const courses = useSelector((state) => state.courses.courses)
   const navigate = useNavigate();
   const semester = id.replace(/-/g, "_");
 
@@ -193,19 +193,25 @@ const SemesterCourseLayout = () => {
   const [courseDetails, setCourseDetails] = useState(null);
 
   useEffect(() => {
-    axios
-      .post(
-        `${ApiUrl}/courses/get-course-details`,
-        { linkAddress: id },
-        { withCredentials: true }
-      )
-      .then((res) => {
-        setCourseDetails(res.data.courseDetails);
-      })
-      .catch(() => {
-        console.log("Error fetching course details");
-      });
-  }, [id]);
+    const course = courses.find(c => c.linkAddress === id);
+  if (course) {
+    setCourseDetails(course);
+  } else {
+    setCourseDetails(null)
+  }
+    // axios
+    //   .post(
+    //     `${ApiUrl}/courses/get-course-details`,
+    //     { linkAddress: id },
+    //     { withCredentials: true }
+    //   )
+    //   .then((res) => {
+    //     setCourseDetails(res.data.courseDetails);
+    //   })
+    //   .catch(() => {
+    //     console.log("Error fetching course details");
+    //   });
+  }, [id, courses]);
 
   const isEnrolled = userData?.enrolledCourses.includes(courseDetails?._id);
 
@@ -221,6 +227,14 @@ const SemesterCourseLayout = () => {
     // Redirect to Checkout page
     navigate(`/checkout/${id}`);
   };
+
+    if(!courseDetails){
+    return(
+      <div className="w-full h-screen flex items-center justify-center">
+        <p>No Course Found</p>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full flex items-center justify-center">
@@ -244,7 +258,7 @@ const SemesterCourseLayout = () => {
             actualPrice={courseDetails?.actualPrice}
             discountedPrice={courseDetails?.discountedPrice}
             imageUrl={courseDetails?.courseImage}
-            handlePayment={handleEnrollClick} // ✅ now navigates to checkout
+            handlePayment={handleEnrollClick} // now navigates to checkout
             isEnrolled={isEnrolled}
             mode={courseDetails?.mode.toUpperCase()}
           />

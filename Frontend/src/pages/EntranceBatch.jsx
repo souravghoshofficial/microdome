@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useParams, useNavigate } from "react-router";
 import { syllabus } from "../constants/syllabus.js";
 
+
 import BrochureTopic from "../components/BrochureTopic.jsx";
 import GateInformationBrochure from '../assets/pdfs/GATE2025InformationBrochure.pdf';
 import CuetPgInformationBrochure from '../assets/pdfs/InformationBrochureCUET-PG2025.pdf';
@@ -57,23 +58,31 @@ const brochures = [
 
 const EntranceBatch = () => {
   const { id } = useParams();
+  const courses = useSelector((state) => state.courses.courses)
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.status);
   const userData = useSelector((state) => state.auth.userData);
   const [courseDetails, setCourseDetails] = useState(null);
 
   useEffect(() => {
-    axios
-      .post(
-        `${ApiUrl}/courses/get-course-details`,
-        { linkAddress: id },
-        { withCredentials: true }
-      )
-      .then((res) => {
-        setCourseDetails(res.data.courseDetails);
-      })
-      .catch(() => console.log("Error fetching course details"));
-  }, [id]);
+  const course = courses.find(c => c.linkAddress === id);
+  if (course) {
+    setCourseDetails(course);
+  } else {
+    setCourseDetails(null)
+  }
+    
+    // axios
+    //   .post(
+    //     `${ApiUrl}/courses/get-course-details`,
+    //     { linkAddress: id },
+    //     { withCredentials: true }
+    //   )
+    //   .then((res) => {
+    //     setCourseDetails(res.data.courseDetails);
+    //   })
+    //   .catch(() => console.log("Error fetching course details"));
+  }, [id, courses]);
 
   const isEnrolled = userData?.enrolledCourses.includes(courseDetails?._id);
 
@@ -88,6 +97,14 @@ const EntranceBatch = () => {
     }
     navigate(`/checkout/${id}`);
   };
+
+  if(!courseDetails){
+    return(
+      <div className="w-full h-screen flex items-center justify-center">
+        <p>No Course Found</p>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -104,7 +121,7 @@ const EntranceBatch = () => {
             <div className="w-full mt-4">
               <CourseSyllabus syllabus={syllabus} />
             </div>
-             {/* ✅ Entrance Exam Brochures Section */}
+             {/* Entrance Exam Brochures Section */}
       <div className="w-full mt-4 flex items-center ">
         <div className="mt-2 w-full md:w-[90%]">
           <h2 className="text-xl font-semibold">
@@ -123,7 +140,7 @@ const EntranceBatch = () => {
           <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto md:w-[50%] lg:w-[36%] z-20">
             <BuyNowCard
               courseFeatures={
-                id === "msc-entrance-batch-live"
+                id === "m.sc.-entrance-batch-live"
                   ? liveBatch.courseFeatures
                   : recordedBatch.courseFeatures
               }
