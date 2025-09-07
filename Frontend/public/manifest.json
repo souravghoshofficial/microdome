@@ -3,7 +3,7 @@
   "short_name": "Microdome",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#000",
+  "background_color": "#000000",
   "theme_color": "#0f172a",
   "description": "Online Coaching for IIT JAM, GATE, CUET PG & B.Sc Hons Microbiology.",
   "icons": [
