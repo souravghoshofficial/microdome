@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import userImage from "../../assets/user-img.jpeg";
-import { Link } from "react-router"
+import { Link } from "react-router";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -15,7 +15,7 @@ const QuizResults = () => {
 
   // frontend pagination states
   const [page, setPage] = useState(1);
-  const limit = 10; // students per page
+  const limit = 8; // students per page
 
   useEffect(() => {
     axios
@@ -60,17 +60,23 @@ const QuizResults = () => {
       {/* Header */}
       <div className="flex justify-between items-center px-6 py-4 border-b">
         <h2 className="text-lg font-semibold">{quizTitle}</h2>
-        <Link to={`/quiz/leaderboard/${quizId}`} className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow text-sm md:text-base">Leaderboard</Link>
+        <Link
+          to={`/quiz/leaderboard/${quizId}`}
+          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow text-sm md:text-base"
+        >
+          Leaderboard
+        </Link>
       </div>
 
       {/* Table */}
       <div className="flex-1 overflow-auto">
         <div className="overflow-x-auto">
-          <table className="min-w-[800px] w-full border-collapse">
+          <table className="min-w-[900px] w-full border-collapse">
             <thead className="bg-gray-100 sticky top-0 z-10">
               <tr className="text-left text-gray-600 border-b text-sm md:text-base">
-                <th className="px-4 py-2">Student</th>
-                <th className="px-4 py-2 text-center">Email</th>
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2 text-center">Institute Name</th>
+                <th className="px-4 py-2 text-center">Is Premium</th>
                 <th className="px-4 py-2 text-center">Score</th>
                 <th className="px-4 py-2 text-center whitespace-nowrap">
                   Attempted At
@@ -84,18 +90,30 @@ const QuizResults = () => {
                     key={s.id}
                     className="border-b hover:bg-gray-50 text-xs md:text-sm"
                   >
-                    {/* Student (image + name) */}
+                    {/* Name + Email + Image */}
                     <td className="px-4 py-3 flex items-center gap-3 whitespace-nowrap">
                       <img
                         src={s.profileImage || userImage}
                         alt={s.name}
                         className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
                       />
-                      <span className="font-medium">{s.name}</span>
+                      <div className="min-w-[150px]">
+                        <p className="font-medium">{s.name}</p>
+                        <p className="text-[11px] md:text-xs text-gray-500 truncate">
+                          {s.email}
+                        </p>
+                      </div>
                     </td>
 
-                    {/* Email */}
-                    <td className="px-4 py-3 text-center">{s.email}</td>
+                    {/* Institute Name */}
+                    <td className="px-4 py-3 text-center">
+                      {s.instituteName || "---"}
+                    </td>
+
+                    {/* Is Premium */}
+                    <td className="px-4 py-3 text-center">
+                      {s.isPremiumMember ? "Yes" : "No"}
+                    </td>
 
                     {/* Score */}
                     <td className="px-4 py-3 text-center font-semibold">
@@ -103,15 +121,13 @@ const QuizResults = () => {
                     </td>
 
                     {/* Attempted At */}
-                    <td className="px-4 py-3 text-center">
-                      {new Date(s.attemptedAt).toLocaleString()}
-                    </td>
+                    <td className="px-4 py-3 text-center">{s.attemptedAt}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td
-                    colSpan="4"
+                    colSpan="5"
                     className="text-center py-6 text-gray-500 text-sm"
                   >
                     No students attempted this quiz yet

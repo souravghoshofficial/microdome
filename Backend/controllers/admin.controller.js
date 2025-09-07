@@ -351,9 +351,9 @@ export const getQuizResults = async (req, res) => {
       });
     }
 
-    // Fetch quiz results with user details
+    // Fetch quiz results with extended user details
     const results = await QuizResult.find({ quiz: quizId })
-      .populate("user", "name email profileImage")
+      .populate("user", "name email profileImage instituteName isPremiumMember")
       .sort({ score: -1, attemptedAt: 1 }); // Highest score first, earlier attempt wins tie
 
     return res.status(200).json({
@@ -365,13 +365,18 @@ export const getQuizResults = async (req, res) => {
           name: r.user?.name || "Unknown",
           email: r.user?.email || "---",
           profileImage: r.user?.profileImage || null,
+          instituteName: r.user?.instituteName || "---",
+          isPremiumMember: r.user?.isPremiumMember || false,
           score: r.score,
-          attemptedAt: new Date(r.attemptedAt).toLocaleString("en-US", {
+          // Force IST formatting here
+          attemptedAt: new Date(r.attemptedAt).toLocaleString("en-IN", {
             month: "short",
             day: "numeric",
             year: "numeric",
             hour: "2-digit",
             minute: "2-digit",
+            hour12: true,
+            timeZone: "Asia/Kolkata",
           }),
         })),
       },
@@ -385,6 +390,8 @@ export const getQuizResults = async (req, res) => {
   }
 };
 
+
+
 export const resetQuizPrice = async (req, res) => {
   try {
     const { actualPrice, discountedPrice } = req.body;
@@ -392,7 +399,11 @@ export const resetQuizPrice = async (req, res) => {
     price.actualPrice = actualPrice;
     price.discountedPrice = discountedPrice;
     await price.save();
-    res.json({ success: true, data: price, message: "Quiz price reset successfully" });
+    res.json({
+      success: true,
+      data: price,
+      message: "Quiz price reset successfully",
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
