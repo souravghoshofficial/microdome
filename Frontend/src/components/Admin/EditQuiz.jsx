@@ -15,6 +15,7 @@ const EditQuiz = () => {
   const [category, setCategory] = useState("free");
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false); 
 
   // Fetch quiz details
   useEffect(() => {
@@ -69,6 +70,7 @@ const EditQuiz = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true); 
 
     const payload = {
       title,
@@ -92,6 +94,8 @@ const EditQuiz = () => {
     } catch (err) {
       console.error(err);
       toast.error("Error updating quiz");
+    } finally {
+      setIsSubmitting(false); 
     }
   };
 
@@ -176,7 +180,9 @@ const EditQuiz = () => {
               min="1"
               max="4"
               value={q.correctOption}
-              onChange={(e) => handleCorrectOptionChange(qIndex, e.target.value)}
+              onChange={(e) =>
+                handleCorrectOptionChange(qIndex, e.target.value)
+              }
               className="w-full p-2 border rounded"
               required
             />
@@ -193,9 +199,14 @@ const EditQuiz = () => {
 
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ml-4 cursor-pointer"
+          disabled={isSubmitting}
+          className={`px-4 py-2 rounded ml-4 text-white ${
+            isSubmitting
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+          }`}
         >
-          Save Changes
+          {isSubmitting ? "Saving..." : "Save Changes"}
         </button>
       </form>
     </div>

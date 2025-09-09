@@ -189,9 +189,14 @@ const QuizLayout = () => {
 
             {/* Extra Instructions */}
             <ul className="text-gray-600 dark:text-gray-400 text-sm mb-6 list-disc list-inside text-left px-2 md:px-4">
-              <li>No negative marking</li>
-              <li>Attempt all questions in the given time</li>
-              <li>Each question carries equal marks</li>
+              <li>
+                Each correct answer carries <strong>+1 mark</strong>
+              </li>
+              <li>
+                Each wrong answer carries a <strong>-0.25 mark</strong>
+              </li>
+              <li>Unattempted questions carries <strong>0 mark</strong> </li>
+              <li>Attempt quiz within the given time</li>
             </ul>
 
             <div className="flex justify-center gap-4">

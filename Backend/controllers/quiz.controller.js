@@ -106,27 +106,36 @@ export const submitQuiz = async (req, res) => {
     const total = quiz.questions.length;
     let score = 0;
 
-    // --- Evaluate answers ---
-    const resultDetails = quiz.questions.map((q) => {
-      const userAnswer = answers.find(
-        (ans) => ans.questionId.toString() === q._id.toString()
-      );
+// --- Evaluate answers ---
+const resultDetails = quiz.questions.map((q) => {
+  const userAnswer = answers.find(
+    (ans) => ans.questionId.toString() === q._id.toString()
+  );
 
-      const isCorrect =
-        userAnswer &&
-        Number(userAnswer.selectedOption) === q.correctOption;
+  let isCorrect = false;
+  let awardedMarks = 0;
 
-      if (isCorrect) score++;
+  if (userAnswer) {
+    if (Number(userAnswer.selectedOption) === q.correctOption) {
+      isCorrect = true;
+      awardedMarks = 1; //  full mark for correct
+      score += 1;
+    } else {
+      awardedMarks = -0.25; //  negative marking
+      score -= 0.25;
+    }
+  }
 
-      return {
-        questionId: q._id,
-        question: q.questionText,
-        options: q.options,
-        selectedOption: userAnswer ? Number(userAnswer.selectedOption) : null,
-        correctAnswer: q.correctOption,
-        isCorrect,
-      };
-    });
+  return {
+    questionId: q._id,
+    question: q.questionText,
+    options: q.options,
+    selectedOption: userAnswer ? Number(userAnswer.selectedOption) : null,
+    correctAnswer: q.correctOption,
+    isCorrect,
+    awardedMarks,
+  };
+});
 
     // --- Save result to DB ---
     const quizResult = new QuizResult({
