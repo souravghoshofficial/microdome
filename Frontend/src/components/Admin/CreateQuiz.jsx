@@ -75,7 +75,7 @@ const CreateQuiz = () => {
       });
 
       toast.success("Quiz created successfully!");
-      console.log(res.data);
+      
 
       // Reset
       setTitle("");

@@ -35,7 +35,7 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
     <div className="w-full h-[50vh] md:h-[64vh] overflow-y-scroll mt-2 pb-6 md:px-2 md:scrollbar">
       <div className="mt-4">
         {sections.map((section, index) => (
-          <div className="w-full mb-1" key={index}>
+          <div className="w-full mb-4" key={index}>
             <div
               onClick={() => openMenu(index)}
               className="p-3 border cursor-pointer"
@@ -83,7 +83,7 @@ const CourseSection = ({ sections, videoURL, setVideoURL }) => {
                           })}
                           download
                           onClick={(e) => e.stopPropagation()} // ✅ don’t trigger video play
-                          className="px-2 py-0.5 border border-blue-400 rounded-sm hover:bg-blue-200 text-sm flex items-center gap-1"
+                          className="px-2 py-0.5 border border-blue-400 rounded-sm hover:bg-blue-200 dark:hover:bg-blue-500 text-sm flex items-center gap-1"
                         >
                           <RiFolderOpenLine className="inline" size={14} />
                           Notes

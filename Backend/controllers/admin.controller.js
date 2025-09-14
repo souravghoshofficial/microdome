@@ -6,6 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Course } from "../models/course.model.js";
 import { QuizResult } from "../models/quizResult.model.js";
+import { QuizPrice } from "../models/quizPrice.model.js";
 import { GoogleGenAI } from "@google/genai";
 import {
   sendAccessRevokedEmail,
@@ -99,7 +100,6 @@ export const createQuiz = async (req, res) => {
   }
 };
 
-
 export const generateQuiz = async (req, res) => {
   try {
     const { title, description, subject, topic, numQuestions, timeLimit } =
@@ -191,7 +191,6 @@ Important:
     });
   }
 };
-
 
 export const getAllQuizzes = async (req, res) => {
   try {
@@ -299,6 +298,46 @@ export const editQuiz = async (req, res) => {
   }
 };
 
+export const deleteQuiz = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+
+    // 1. Find quiz
+    const quiz = await Quiz.findById(quizId).populate("questions");
+    if (!quiz) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Quiz not found" });
+    }
+
+    // 2. Delete related questions
+    await Question.deleteMany({ _id: { $in: quiz.questions } });
+
+    // 3. Delete related results
+    await QuizResult.deleteMany({ quiz: quizId });
+
+    // 4. Remove quizId from users’ attemptedQuizzes
+    await User.updateMany(
+      { attemptedQuizzes: quizId },
+      { $pull: { attemptedQuizzes: quizId } }
+    );
+
+    // 5. Finally, delete the quiz itself
+    await Quiz.findByIdAndDelete(quizId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Quiz and related data deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting quiz:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
 export const getQuizResults = async (req, res) => {
   try {
     const { quizId } = req.params;
@@ -312,9 +351,9 @@ export const getQuizResults = async (req, res) => {
       });
     }
 
-    // Fetch quiz results with user details
+    // Fetch quiz results with extended user details
     const results = await QuizResult.find({ quiz: quizId })
-      .populate("user", "name email profileImage")
+      .populate("user", "name email profileImage instituteName isPremiumMember")
       .sort({ score: -1, attemptedAt: 1 }); // Highest score first, earlier attempt wins tie
 
     return res.status(200).json({
@@ -326,13 +365,18 @@ export const getQuizResults = async (req, res) => {
           name: r.user?.name || "Unknown",
           email: r.user?.email || "---",
           profileImage: r.user?.profileImage || null,
+          instituteName: r.user?.instituteName || "---",
+          isPremiumMember: r.user?.isPremiumMember || false,
           score: r.score,
-          attemptedAt: new Date(r.attemptedAt).toLocaleString("en-US", {
+          // Force IST formatting here
+          attemptedAt: new Date(r.attemptedAt).toLocaleString("en-IN", {
             month: "short",
             day: "numeric",
             year: "numeric",
             hour: "2-digit",
             minute: "2-digit",
+            hour12: true,
+            timeZone: "Asia/Kolkata",
           }),
         })),
       },
@@ -343,6 +387,25 @@ export const getQuizResults = async (req, res) => {
       success: false,
       message: "Internal server error",
     });
+  }
+};
+
+
+
+export const resetQuizPrice = async (req, res) => {
+  try {
+    const { actualPrice, discountedPrice } = req.body;
+    let price = await QuizPrice.findOne();
+    price.actualPrice = actualPrice;
+    price.discountedPrice = discountedPrice;
+    await price.save();
+    res.json({
+      success: true,
+      data: price,
+      message: "Quiz price reset successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 

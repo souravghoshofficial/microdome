@@ -20,7 +20,8 @@ import {
   CreateCoupon,
   AllQuizzes,
   QuizResults,
-  EditQuiz
+  EditQuiz,
+  ResetQuizPrice
 } from "./components/Admin";
 
 import {
@@ -163,6 +164,7 @@ const App = () => {
             <Route path="create-quiz" element={<CreateQuiz />} />
             <Route path="edit-quiz/:quizId" element={<EditQuiz />} />
             <Route path="quiz-result/:quizId" element={<QuizResults />} />
+            <Route path="reset-quiz-price" element={<ResetQuizPrice />} />
             <Route path="create-course" element={<CreateCourse />} />
             <Route path="coupons" element={<Coupons />} />
             <Route path="create-coupon" element={<CreateCoupon />} />

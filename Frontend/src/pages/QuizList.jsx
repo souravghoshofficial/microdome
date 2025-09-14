@@ -12,8 +12,11 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const QuizList = () => {
   const [quizzes, setQuizzes] = useState([]);
+  const [actualPrice , setActualPrice] = useState(399);
+  const [discountedPrice , setDiscountedPrice] = useState(99);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.status);
@@ -24,13 +27,30 @@ const QuizList = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
+        setLoading(true)
         const res = await axios.get(`${ApiUrl}/quiz`);
         setQuizzes(res.data.data);
       } catch (err) {
         console.error(err);
       }
+      finally{
+        setLoading(false)
+      }
     };
     fetchQuizzes();
+  }, []);
+
+  useEffect(() => {
+    const fetchQuizPrice = async () => {
+      try {
+        const res = await axios.get(`${ApiUrl}/quiz/bundle/price`);
+        setActualPrice(res.data.quizPrice.actualPrice);
+        setDiscountedPrice(res.data.quizPrice.discountedPrice);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchQuizPrice();
   }, []);
 
   const hasAccessToQuizzes = userData?.hasAccessToQuizzes || false;
@@ -61,7 +81,7 @@ const QuizList = () => {
       const res = await axios.post(
         `${ApiUrl}/orders/create-order`,
         {
-          amount: 1,
+          amount: discountedPrice,
           itemType: "quiz",
         },
         { withCredentials: true }
@@ -75,7 +95,7 @@ const QuizList = () => {
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: 1 * 100,
+        amount: discountedPrice * 100,
         currency: "INR",
         name: "Microdome Classes",
         description: "Payment for Mock Test Series",
@@ -115,7 +135,7 @@ const QuizList = () => {
     }
   };
 
-  // ✅ Helper for button text & click
+  // Helper for button text & click
   const getButtonConfig = (quiz) => {
     const isAttempted = attemptedQuizzes.includes(quiz._id);
 
@@ -155,6 +175,14 @@ const QuizList = () => {
           };
     }
   };
+
+  if(loading){
+    return(
+       <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-32 flex items-center justify-center">
+        <span className="text-lg text-gray-600 dark:text-gray-400">Loading...</span>
+       </div>
+    )
+  }
 
   return (
     <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 py-32">
@@ -229,10 +257,10 @@ const QuizList = () => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-200 dark:bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div
-            className="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-6 w-[90%] max-w-[400px]"
+            className="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-6 w-[90%] max-w-[480px]"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-xl font-bold text-center mb-3">
+            <h2 className="text-2xl font-bold text-center mb-3">
               Unlock Premium Quizzes
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
@@ -242,10 +270,8 @@ const QuizList = () => {
               preparation.
             </p>
 
-            {/* ✅ Pricing Section */}
+            {/* Pricing Section */}
             {(() => {
-              const actualPrice = 499;
-              const discountedPrice = 1;
               const discountPercent = Math.round(
                 ((actualPrice - discountedPrice) / actualPrice) * 100
               );
@@ -253,11 +279,11 @@ const QuizList = () => {
               return (
                 <div className="flex items-center justify-between gap-3 mb-6 px-2">
                   <div className="flex items-center gap-3">
-                    <p className="text-2xl font-bold text-black dark:text-white">
-                      ₹ {discountedPrice}
-                    </p>
-                    <p className="text-gray-500 line-through text-lg">
+                     <p className="text-gray-500 line-through text-lg">
                       ₹ {actualPrice}
+                    </p>
+                    <p className="text-3xl font-bold text-green-600">
+                      ₹ {discountedPrice}
                     </p>
                   </div>
                   <span className="bg-green-100 dark:bg-slate-100 text-green-600 dark:text-black text-sm font-semibold px-2 py-1 rounded-md">
@@ -266,6 +292,17 @@ const QuizList = () => {
                 </div>
               );
             })()}
+
+            <div className="mb-6">
+                  <p className=" text-yellow-700 dark:text-yellow-800 font-semibold">
+                    ⚠️ Trouble in payment ?
+                  </p>
+                  <ul className="mt-2 text-sm text-yellow-600 dark:text-yellow-700 list-disc list-inside space-y-1">
+                    <li>Make sure to allow <b>third-party cookies</b> in your browser settings.</li>
+                    <li>Recommended Browser: <b>Google Chrome</b></li>
+                    <li>Contact: <b>microdomeclasses2@gmail.com</b></li>
+                  </ul>
+                </div>
 
             {/* Buttons */}
             <div className="flex justify-between gap-3">

@@ -58,14 +58,14 @@ const CourseViewPage = () => {
 
   return (
     <div className="w-full h-screen overflow-hidden bg-white dark:bg-zinc-900 text-black dark:text-gray-100">
-      <div className="w-full px-8 py-3 flex items-center gap-4">
+      <div className="w-full px-4 md:px-8 py-3 flex items-center gap-3">
         <Link to="/">
           <Logo className={"w-7 md:w-9"} />
         </Link>
-        <h1 className="text-xl font-bold">{course?.courseTitle}</h1>
+        <h1 className="text-xl font-bold gradiant-text">{course?.courseTitle}</h1>
       </div>
       <div className="w-full mt-2 flex flex-col md:flex-row">
-        <div className="w-full md:w-[60%] p-4 flex-col items-center justify-center">
+        <div className="w-full md:w-[60%] p-4 md:pl-8 flex-col items-center justify-center">
           <div className="relative w-full h-[55vw] md:w-[90%] md:h-[30vw]">
             {/* The YouTube Iframe */}
             <iframe
