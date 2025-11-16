@@ -34,7 +34,7 @@ export const checkQuizAccess = async (req, res, next) => {
       }
 
       // Allow students with paid access
-      if (user.accessToQuizzes === true) {
+      if (user.hasAccessToQuizzes === true) {
         return next();
       }
 
