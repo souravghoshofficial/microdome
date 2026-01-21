@@ -9,9 +9,15 @@ const BScHonsBatch = () => {
     return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
   }
 
-  const semesterCourses = courses.filter(
-    (course) => course.courseTag.toLowerCase() === "b.sc hons."
-  );
+  const semesterCourses = courses
+    .filter(
+      (course) => course.courseTag.toLowerCase() === "b.sc hons."
+    )
+    .sort((a, b) => {
+      const timeA = parseInt(a._id.substring(0, 8), 16);
+      const timeB = parseInt(b._id.substring(0, 8), 16);
+      return timeA - timeB; // oldest → newest
+    });
 
  
   return (
@@ -23,7 +29,7 @@ const BScHonsBatch = () => {
         <div className="mt-8 w-full lg:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
           {semesterCourses.map((course) => (
             <CourseCard
-              key={course.id}
+              key={course._id}
               imageHeight="h-60"
               courseTitle={course.cardTitle}
               subTitle={course.subTitle}
