@@ -2,6 +2,18 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+:root {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-heading: "Rubik", system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+}
+
+
 @theme {
   --color-button: #3eb5a2;
   --color-highlighted: #3eb5a2;
@@ -66,7 +78,7 @@
 }
 
 .testimonial-container {
-  animation: scroll 20s linear infinite;
+  animation: scroll 60s linear infinite;
 }
 
 #marquee:hover .testimonial-container {

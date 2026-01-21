@@ -25,12 +25,12 @@ const TestimonialCard = ({ name, message, imageUrl, presentCourseOfStudy , insti
         </div>
         <div>
           <p className="text-sm font-bold">{name}</p>
-          <p className="text-sm">{presentCourseOfStudy}</p>
-          <p className="text-sm">{instituteName}</p>
+          <p className="mt-px opacity-80 text-xs">{presentCourseOfStudy}</p>
+          <p className="mt-px opacity-80 text-xs">{instituteName}</p>
         </div>
       </div>
 
-      <h3 className="mt-4 text-wrap text-sm font-light">
+      <h3 className="mt-4 text-wrap text-sm font-light italic">
         {displayMessage}
         {shouldTruncate && (
           <button
