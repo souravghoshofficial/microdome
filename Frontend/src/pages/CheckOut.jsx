@@ -17,9 +17,15 @@ const CheckOut = () => {
 
   const [courseDetails, setCourseDetails] = useState(null);
   const [phone, setPhone] = useState("");
+  const [institute, setInstitute] = useState("");
+  const [course, setCourse] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [finalAmount, setFinalAmount] = useState(null);
+
+  const [showCoupon, setShowCoupon] = useState(false);
+
+  const [showPaymentHelp, setShowPaymentHelp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -29,7 +35,7 @@ const CheckOut = () => {
       .post(
         `${ApiUrl}/courses/get-course-details`,
         { linkAddress: id },
-        { withCredentials: true }
+        { withCredentials: true },
       )
       .then((res) => {
         setCourseDetails(res.data.courseDetails);
@@ -54,13 +60,13 @@ const CheckOut = () => {
           courseId: courseDetails._id,
           couponCode,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       if (res.data.success) {
         setAppliedDiscount(res.data.discount);
         const discountAmt = Math.floor(
-          (courseDetails.discountedPrice * res.data.discount) / 100
+          (courseDetails.discountedPrice * res.data.discount) / 100,
         );
         const newPrice = courseDetails.discountedPrice - discountAmt;
         setFinalAmount(newPrice);
@@ -86,6 +92,16 @@ const CheckOut = () => {
       toast.warn("Enter a valid phone number");
       return;
     }
+    // --
+    if (!institute || institute.length < 5) {
+      toast.warn("Enter a valid institute name");
+      return;
+    }
+
+    if (!course || course.length < 5) {
+      toast.warn("Enter a valid course name");
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -95,9 +111,11 @@ const CheckOut = () => {
           courseId: courseDetails?._id,
           amount: finalAmount,
           phone,
+          institute,
+          course,
           itemType: "course",
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       const isScriptLoaded = await loadRazorpayScript();
@@ -195,27 +213,42 @@ const CheckOut = () => {
                 )}
 
                 {/* Coupon Input */}
-                <div className="mb-6">
-                  <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
-                    Coupon Code
-                  </label>
-                  <div className="flex flex-col gap-3 md:flex-row md:gap-2">
-                    <input
-                      type="text"
-                      value={couponCode}
-                      onChange={(e) =>
-                        setCouponCode(e.target.value.toUpperCase())
-                      }
-                      placeholder="Enter coupon code"
-                      className="flex-1 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
-                    />
-                    <button
-                      onClick={handleApplyCoupon}
-                      className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base cursor-pointer"
-                    >
-                      Apply
-                    </button>
-                  </div>
+
+                <div className="mb-4">
+                  {/* Clickable Text */}
+                  <p
+                    onClick={() => setShowCoupon(!showCoupon)}
+                    className="cursor-pointer text-yellow-700 dark:text-yellow-800 font-semibold flex items-center gap-2"
+                  >
+                    Have a coupon code
+                    <span className="text-sm">{showCoupon ? "▲" : "▼"}</span>
+                  </p>
+
+                  {/* Hidden Content */}
+                  {showCoupon && (
+                    <div className="mb-6">
+                      <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+                        Coupon Code
+                      </label>
+                      <div className="flex flex-col gap-3 md:flex-row md:gap-2">
+                        <input
+                          type="text"
+                          value={couponCode}
+                          onChange={(e) =>
+                            setCouponCode(e.target.value.toUpperCase())
+                          }
+                          placeholder="Enter coupon code"
+                          className="flex-1 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
+                        />
+                        <button
+                          onClick={handleApplyCoupon}
+                          className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base cursor-pointer"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Phone Input */}
@@ -232,16 +265,60 @@ const CheckOut = () => {
                   />
                 </div>
 
+                {/* Institute Input */}
+                <div className="mb-6">
+                  <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+                    Institute Name
+                  </label>
+                  <input
+                    type="text"
+                    value={institute}
+                    onChange={(e) => setInstitute(e.target.value)}
+                    placeholder="Enter your Institute Name"
+                    className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
+                  />
+                </div>
+
+                {/* Course Input */}
+                <div className="mb-6">
+                  <label className="block mb-2 font-semibold text-gray-700 dark:text-gray-300">
+                    Present Course of Study
+                  </label>
+                  <input
+                    type="text"
+                    value={course}
+                    onChange={(e) => setCourse(e.target.value)}
+                    placeholder="Enter Present Course of Study"
+                    className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
+                  />
+                </div>
+
                 {/*  Payment Trouble Message */}
                 <div className="mb-4">
-                  <p className=" text-yellow-700 dark:text-yellow-800 font-semibold">
-                    ⚠️ Trouble in payment ?
+                  <p
+                    onClick={() => setShowPaymentHelp(!showPaymentHelp)}
+                    className="cursor-pointer text-yellow-700 dark:text-yellow-800 font-semibold flex items-center gap-2"
+                  >
+                    ⚠️ Trouble in payment?
+                    <span className="text-sm">
+                      {showPaymentHelp ? "▲" : "▼"}
+                    </span>
                   </p>
-                  <ul className="mt-2 text-sm text-yellow-600 dark:text-yellow-700 list-disc list-inside space-y-1">
-                    <li>Make sure to allow <b>third-party cookies</b> in your browser settings.</li>
-                    <li>Recommended Browser: <b>Google Chrome</b></li>
-                    <li>Contact: <b>microdomeclasses2@gmail.com</b></li>
-                  </ul>
+
+                  {showPaymentHelp && (
+                    <ul className="mt-2 text-sm text-yellow-600 dark:text-yellow-700 list-disc list-inside space-y-1">
+                      <li>
+                        Make sure to allow <b>third-party cookies</b> in your
+                        browser settings.
+                      </li>
+                      <li>
+                        Recommended Browser: <b>Google Chrome</b>
+                      </li>
+                      <li>
+                        Contact: <b>microdomeclasses2@gmail.com</b>
+                      </li>
+                    </ul>
+                  )}
                 </div>
               </div>
 
@@ -259,8 +336,8 @@ const CheckOut = () => {
                   {isSubmitting
                     ? "Processing..."
                     : isEnrolled
-                    ? "Go to My Course"
-                    : "Proceed to Payment"}
+                      ? "Go to My Course"
+                      : "Proceed to Payment"}
                 </button>
               </div>
             </div>

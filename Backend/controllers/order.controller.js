@@ -13,7 +13,7 @@ const instance = new Razorpay({
 });
 
 const createOrder = async (req, res) => {
-  const { courseId, amount, phone, itemType } = req.body;
+  const { courseId, amount, phone, institute, course, itemType } = req.body;
 
   try {
     // ✅ Validate itemType
@@ -61,6 +61,23 @@ const createOrder = async (req, res) => {
       await User.findByIdAndUpdate(
         req.user._id,
         { mobileNumber: phone },
+        { new: true }
+      );
+    }
+
+    // ✅ Update institute if provided
+    if (institute) {
+      await User.findByIdAndUpdate(
+        req.user._id,
+        { instituteName: institute },
+        { new: true }
+      );
+    }
+
+    if (course) {
+      await User.findByIdAndUpdate(
+        req.user._id,
+        { presentCourseOfStudy: course },
         { new: true }
       );
     }
