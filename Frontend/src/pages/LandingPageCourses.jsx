@@ -22,7 +22,7 @@ const LandingPageCourses = () => {
 
   // Filter entrance courses
   const entranceCourses = courses.filter(
-    (course) => course.courseTag.toLowerCase() === "m.sc entrance"
+    (course) => course.courseTag.toLowerCase() !== "b.sc hons."
   );
 
   // Local semester course

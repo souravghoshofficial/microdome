@@ -36,11 +36,19 @@ const Courses = () => {
       mode: "live",
       language: "bengali",
       courseImage: bscCourseImg,
-      actualPrice: 1500,
+      actualPrice: 1499,
       discountedPrice: 999,
       linkAddress: "bsc-hons-batch",
     },
   ];
+
+  const liveCourses = entranceCourses.filter(
+    (course) => course.mode.toLowerCase() === "live"
+  );
+
+  const recordedCourses = entranceCourses.filter(
+    (course) => course.mode.toLowerCase() === "recorded"
+  )
 
   return (
     <>
@@ -105,12 +113,20 @@ const Courses = () => {
             Courses <span className="text-highlighted">Offered</span>
           </h2>
 
+
+         <h3 
+         className="w-full lg:w-[90%] mx-auto text-xl md:text-2xl mt-10 font-bold"
+         data-aos="fade-up"
+         >
+          Live Courses
+          </h3>
+          
           <div
-            className="mt-10 w-full lg:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 lg:gap-8"
+            className="mt-8 w-full lg:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 lg:gap-8"
             data-aos="fade-up"
             data-aos-delay="200"
           >
-            {entranceCourses.map((course, index) => (
+            {liveCourses.map((course, index) => (
               <div
                 key={course.id}
                 data-aos="zoom-in"
@@ -136,6 +152,39 @@ const Courses = () => {
                 key={course.id}
                 data-aos="zoom-in"
                 data-aos-delay={(entranceCourses.length + index) * 100}
+              >
+                <CourseCard
+                  imageHeight="h-65"
+                  courseTitle={course.cardTitle}
+                  subTitle={course.subTitle}
+                  type={course.mode.toUpperCase()}
+                  language={course.language.toUpperCase()}
+                  courseImg={course.courseImage}
+                  courseTag={course.courseTag.toUpperCase()}
+                  actualPrice={course.actualPrice}
+                  discountedPrice={course.discountedPrice}
+                  linkAddress={course.linkAddress}
+                />
+              </div>
+            ))}
+          </div>
+
+          <h3 
+          className="w-full lg:w-[90%] mx-auto text-xl md:text-2xl mt-16 font-bold"
+          data-aos="fade-up"
+          >
+          Recorded Courses
+          </h3>
+          <div
+            className="mt-8 w-full lg:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 lg:gap-8"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            {recordedCourses.map((course, index) => (
+              <div
+                key={course.id}
+                data-aos="zoom-in"
+                data-aos-delay={index * 100}
               >
                 <CourseCard
                   imageHeight="h-65"

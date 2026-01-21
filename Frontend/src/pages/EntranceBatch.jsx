@@ -140,7 +140,7 @@ const EntranceBatch = () => {
           <div className="mt-16 lg:sticky h-fit top-32 w-[90%] mx-auto md:w-[50%] lg:w-[36%] z-20">
             <BuyNowCard
               courseFeatures={
-                id === "m.sc.-entrance-batch-live"
+                courseDetails.mode.toLowerCase() === "live"
                   ? liveBatch.courseFeatures
                   : recordedBatch.courseFeatures
               }
