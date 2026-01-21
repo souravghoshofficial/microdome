@@ -31,7 +31,7 @@ const founders = [
     img: AbhijitPic,
     email: "abhijit.rabidas.mca@gmail.com",
     linkedin: "https://www.linkedin.com/in/abhijit-rabidas/",
-    website: "https://www.abhijitrabidas.live/",
+    website: "https://www.abhijitrabidas.me/",
     instagram: "https://www.instagram.com/aj_das_01/",
   },
 ];
