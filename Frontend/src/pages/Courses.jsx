@@ -113,13 +113,20 @@ const Courses = () => {
             Courses <span className="text-highlighted">Offered</span>
           </h2>
 
-
          <h3 
          className="w-full lg:w-[90%] mx-auto text-xl md:text-2xl mt-10 font-bold"
          data-aos="fade-up"
          >
           Live Courses
           </h3>
+
+          <p
+          className="w-full lg:w-[90%] mx-auto mt-2 text-sm md:text-base text-gray-600 dark:text-gray-400"
+          data-aos="fade-up"
+          data-aos-delay="100"
+          >
+          Interactive live classes with real-time doubt solving and mentorship
+          </p>
           
           <div
             className="mt-8 w-full lg:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 lg:gap-8"
@@ -170,11 +177,20 @@ const Courses = () => {
           </div>
 
           <h3 
-          className="w-full lg:w-[90%] mx-auto text-xl md:text-2xl mt-16 font-bold"
+          className="w-full lg:w-[90%] mx-auto text-xl md:text-2xl mt-20 font-bold"
           data-aos="fade-up"
           >
           Recorded Courses
           </h3>
+          
+          <p
+          className="w-full lg:w-[90%] mx-auto mt-2 text-sm md:text-base text-gray-600 dark:text-gray-400"
+          data-aos="fade-up"
+          data-aos-delay="100"
+          >
+          Learn at your own pace with structured, high-quality recorded lectures
+          </p>
+
           <div
             className="mt-8 w-full lg:w-[90%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 lg:gap-8"
             data-aos="fade-up"
