@@ -93,12 +93,12 @@ const CheckOut = () => {
       return;
     }
     // --
-    if (!institute || institute.length < 5) {
+    if (!institute || institute.length < 3) {
       toast.warn("Enter a valid institute name");
       return;
     }
 
-    if (!course || course.length < 5) {
+    if (!course || course.length < 3) {
       toast.warn("Enter a valid course name");
       return;
     }
