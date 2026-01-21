@@ -13,7 +13,7 @@ const founders = [
     img: RohitPic,
     email: "rg954792@gmail.com",
     linkedin: "https://www.linkedin.com/in/rohit-gupta-a6a53222a/",
-    website: "https://www.facebook.com/profile.php?id=100026654993111", 
+    website: "https://portfolio-website-seven-ebon-92.vercel.app/", 
     instagram: "https://www.instagram.com/rohit_gupta_0810/",
   },
   {

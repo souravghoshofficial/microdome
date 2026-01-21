@@ -15,28 +15,28 @@ const faculties = [
   {
     id: 1,
     facultyName: "Sayan Ganguly",
-    facultyTitle: "Founder Of Microdome Classes | Life Science Researcher",
+    facultyTitle: "Founder Of Microdome Classes | Molecular Biology, Cell Biology Educator",
     facultyImage: sayanImg,
     facultyDescription:
-      "Sayan holds a B.Sc. (Hons) in Microbiology from Kalyani Mahavidyalaya and an M.Sc. in Virology from ICMR-National Institute of Virology, Pune. He has qualified top national-level exams including IIT-JAM, GATE, GAT-B, CUET-PG, and SPPU OEE. He received admission offers from reputed institutions like Pondicherry University, BHU, SPPU, and ICMR-NIV.",
+      "Sayan Ganguly is currently a Research Scholar at CSIR–IICB. He holds an M.Sc. degree in Virology from the ICMR–National Institute of Virology, Pune, and previously earned a B.Sc. (Hons.) degree in Microbiology from Kalyani Mahavidyalaya. He has qualified top national-level examinations including IIT-JAM, GATE, GAT-B, CUET-PG, and SPPU OEE, and received admission offers from reputed institutions such as Pondicherry University, BHU, SPPU, and ICMR–NIV.",
     experties: ["Molecular Biology", "Cell Biology", "Bio-Physics Techniques"],
   },
   {
     id: 2,
     facultyName: "Rupayan Bhattacharjee ",
-    facultyTitle: "Actogen Batch Mentor | Life Science Educator ",
+    facultyTitle: "Actogen Batch Mentor |  Biochemistry, Plant Biology Educator ",
     facultyImage: rupayanImg,
     facultyDescription:
-      "Rupayan holds a B.Sc. (Hons) in Biochemistry from Gurudas College, Kolkata, and an M.Sc. in Virology from ICMR-NIV, Pune. He has qualified CUET-PG, AIIMS, and SPPU OEE, and secured admission offers from Pondicherry University, BHU, AIIMS, and ICMR-NIV.",
+      "Rupayan Bhattacharjee is currently a Research Scholar at IIT Kharagpur. He holds an M.Sc. in Virology degree from ICMR–National Institute of Virology, Pune, and previously earned a B.Sc. (Hons.) degree in Biochemistry from Gurudas College, Kolkata. He has qualified national-level examinations including CUET-PG, AIIMS, and SPPU OEE, and received admission offers from reputed institutions such as Pondicherry University, BHU, AIIMS, and ICMR–NIV.",
     experties: ["Biochemistry", "Metabolism", "Plant Physiology "],
   },
   {
     id: 3,
     facultyName: "Subhadeep Podder",
-    facultyTitle: "Actogen Batch Mentor | DST INSPIRE Scholar ",
+    facultyTitle: "Actogen Batch Mentor |  Genetics, Evolution Educator ",
     facultyImage: subhadeepImg,
     facultyDescription:
-      "Subhadeep holds a B.Sc. (Hons) in Microbiology from St. Xavier's College, Kolkata, and an M.Sc. in Virology from ICMR-NIV, Pune. He is a recipient of the DST INSPIRE Scholarship for his academic excellence and research potential.",
+      "Subhadeep holds an M.Sc. degree in Virology from ICMR–National Institute of Virology, Pune, and previously earned a B.Sc. (Hons.) degree in Microbiology from St. Xavier’s College, Kolkata. He is a recipient of the DST INSPIRE Scholarship, awarded for his academic excellence and research potential.",
     experties: ["Genetics", "Ecology & Evolution", "Animal Physiology "],
   },
   {
@@ -45,7 +45,7 @@ const faculties = [
     facultyTitle: "Semester Batch Mentor | Biotechnology Educator ",
     facultyImage: akashImg,
     facultyDescription:
-      "Akash holds a B.Sc. (Hons) in Microbiology from Kalyani Mahavidyalaya and is currently pursuing postgraduation at Gujarat Biotechnology University. He has qualified TIFR, IIT-JAM, GATE, GAT-B, CUET-PG, and SPPU OEE.",
+      "Akash is currently a Research Scholar at Gujarat Biotechnology University. He holds a B.Sc. (Hons.) degree in Microbiology from Kalyani Mahavidyalaya and is pursuing his postgraduate studies at Gujarat Biotechnology University. He has qualified several national-level examinations, including TIFR, IIT-JAM, GATE, GAT-B, CUET-PG, and SPPU OEE.",
     experties: [
       "Microbiology",
       "Industrial Microbiology",
@@ -61,7 +61,7 @@ const adjunctFaculties = [
     facultyTitle: "Actogen Batch Mentor | Bioinformatics Educator",
     facultyImage: krishnenduImg,
     facultyDescription:
-      "Krishnendu holds a B.Sc. (Hons) in Microbiology from Ramakrishna Mission Vidyamandira, Belur, and an M.Sc. in Virology from ICMR-NIV, Pune. He has qualified IIT-JAM, GATE, GAT-B, CUET-PG, and SPPU OEE.",
+      "Krishnendu is currently a Research Scholar at ICMR–National Institute of Virology. He holds an M.Sc. degree in Virology from ICMR–NIV, Pune, and previously earned a B.Sc. (Hons.) degree in Microbiology from Ramakrishna Mission Vidyamandira, Belur. He has qualified several national-level examinations, including IIT-JAM, GATE, GAT-B, CUET-PG, and SPPU OEE.",
     experties: ["Bioinformatics"],
   },
 ];
