@@ -225,7 +225,7 @@ const sendMessage = async (req, res) => {
     subject: `New Contact from ${name}`,
     text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
     html: `
-      <h3>New Contact Form Submission</h3>
+      <h3>Message From User:</h3>
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Message:</strong></p>
