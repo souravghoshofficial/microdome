@@ -1,24 +1,253 @@
-import React from 'react'
-import { ContactItem } from '../components'
-import { RiMailLine , RiPhoneLine , RiMapPinLine } from "@remixicon/react"
+import React, { useState } from "react";
+import { FiMapPin, FiPhone, FiMail, FiSend } from "react-icons/fi";
+import {
+  FaGithub,
+  FaLinkedinIn,
+  FaTwitter,
+  FaInstagram,
+  FaYoutube,
+  FaFacebook,
+} from "react-icons/fa";
 
-const Contact = () => {
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
+function Contact() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [status, setStatus] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("sending");
+
+    try {
+      const response = await fetch(`${ApiUrl}/message/send-mail`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      setStatus(data.success ? "success" : "error");
+
+      if (data.success) {
+        setFormData({ name: "", email: "", message: "" });
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      setStatus("error");
+    }
+  };
+
+  const socialLinks = [
+    {
+      icon: <FaYoutube />,
+      url: "https://www.youtube.com/@MicroDomeClasses",
+      color: "hover:text-gray-200",
+    },
+    {
+      icon: <FaLinkedinIn />,
+      url: "https://in.linkedin.com/in/sayan-ganguly-5883831bb",
+      color: "hover:text-blue-400",
+    },
+    {
+      icon: <FaFacebook />,
+      url: "https://www.facebook.com/profile.php?id=100014111567971&ref=ig_profile_ac",
+      color: "hover:text-sky-400",
+    },
+    {
+      icon: <FaInstagram />,
+      url: "https://www.instagram.com/say_an_02?igsh=c2JocGhiODIxeDR4",
+      color: "hover:text-pink-400",
+    },
+  ];
+
+
   return (
-    <div className='mt-16 md:mt-32 w-full flex items-center justify-center'>
-        <div className='w-[90%] flex flex-col md:flex-row items-center justify-between'>
-            <div className='w-full md:w-[60%]'>
-                <p className='text-sm font-bold'>Connect</p>
-                <h2 className='mt-2 text-3xl md:text-4xl font-bold'>Get In Touch</h2>
-                <p className='mt-1 w-[90%] md:w-full'>We are here to help you with any inquiries or support you need.</p>
+  <section
+    id="contact"
+    className="
+      relative min-h-screen w-full py-20 px-0
+      bg-white text-gray-900
+      dark:bg-[#0B0F19] dark:text-white
+    "
+  >
+    <div className="max-w-7xl mx-auto px-6">
+
+      {/* Section Heading */}
+      <div className="text-center mb-16">
+        <h2 className="text-4xl font-bold tracking-tight">
+          Contact <span className="text-[#3EE0C5]">Us</span>
+        </h2>
+        <p className="mt-4 text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
+          We’d love to hear from you. Reach out for queries, collaborations,
+          or guidance.
+        </p>
+      </div>
+
+      {/* Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
+
+        {/* Contact Info */}
+        <div
+          className="
+            bg-white border border-gray-200
+            dark:bg-[#141A28] dark:border-gray-800
+            rounded-2xl p-10 shadow-md
+          "
+        >
+          <h3 className="text-2xl font-semibold mb-10">Get in Touch</h3>
+
+          <div className="space-y-8">
+
+            {/* Location */}
+            <div className="flex items-start gap-5">
+              <div className="bg-[#3EE0C5]/10 p-3 rounded-lg text-[#3EE0C5]">
+                <FiMapPin className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="font-medium">Location</p>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Serampore, Kolkata – 712203
+                </p>
+              </div>
             </div>
-            <div className='w-full md:w-[40%] flex flex-col'>
-                <ContactItem contactType="Email" logo={<RiMailLine size={24} />} desc="microdomeclasses2@gmail.com" />
-                <ContactItem contactType="Phone" logo={<RiPhoneLine size={24} />} desc="+91 84788 05171" />
-                <ContactItem contactType="Office" logo={<RiMapPinLine size={24} />} desc="Serampore, Kolkata - 712203" />
-            </div> 
+
+            {/* Phone */}
+            <div className="flex items-start gap-5">
+              <div className="bg-[#3EE0C5]/10 p-3 rounded-lg text-[#3EE0C5]">
+                <FiPhone className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="font-medium">Phone</p>
+                <a
+                  href="tel:+918478805171"
+                  className="text-gray-600 dark:text-gray-400 hover:text-[#3EE0C5] transition"
+                >
+                  +91 84788 05171
+                </a>
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="flex items-start gap-5">
+              <div className="bg-[#3EE0C5]/10 p-3 rounded-lg text-[#3EE0C5]">
+                <FiMail className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="font-medium">Email</p>
+                <a
+                  href="mailto:microdomeclasses2@gmail.com"
+                  className="text-gray-600 dark:text-gray-400 hover:text-[#3EE0C5] transition"
+                >
+                  microdomeclasses2@gmail.com
+                </a>
+              </div>
+            </div>
+
+            {/* Social */}
+            <div>
+              <p className="font-medium mb-4">Follow Us</p>
+              <div className="flex space-x-5">
+                {socialLinks.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-500 dark:text-gray-400 hover:text-[#3EE0C5] transition text-xl"
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Contact Form */}
+        <div
+          className="
+            bg-white border border-gray-200
+            dark:bg-[#141A28] dark:border-gray-800
+            rounded-2xl p-10 shadow-md
+          "
+        >
+          <h3 className="text-2xl font-semibold mb-10">Send a Message</h3>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+
+            {["name", "email"].map((field) => (
+              <input
+                key={field}
+                type={field === "email" ? "email" : "text"}
+                name={field}
+                value={formData[field]}
+                onChange={handleChange}
+                placeholder={`Your ${field.charAt(0).toUpperCase() + field.slice(1)}`}
+                required
+                className="
+                  w-full rounded-lg px-4 py-3
+                  bg-gray-50 text-gray-900 placeholder-gray-500
+                  border border-gray-300
+                  focus:ring-2 focus:ring-[#3EE0C5]
+                  dark:bg-[#0B0F19] dark:text-gray-200 dark:border-gray-700
+                "
+              />
+            ))}
+
+            <textarea
+              name="message"
+              rows="5"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="Your Message"
+              required
+              className="
+                w-full rounded-lg px-4 py-3
+                bg-gray-50 text-gray-900 placeholder-gray-500
+                border border-gray-300
+                focus:ring-2 focus:ring-[#3EE0C5]
+                dark:bg-[#0B0F19] dark:text-gray-200 dark:border-gray-700
+              "
+            />
+
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              className="
+                w-full bg-[#3EE0C5] text-black font-semibold py-3 rounded-lg
+                hover:bg-[#32cbb2] transition disabled:opacity-50
+              "
+            >
+              {status === "sending" ? "Sending..." : "Send Message"}
+            </button>
+
+            {status === "success" && (
+              <p className="text-green-500 text-sm mt-2">
+                Message sent successfully!
+              </p>
+            )}
+
+            {status === "error" && (
+              <p className="text-red-500 text-sm mt-2">
+                Failed to send message. Please try again.
+              </p>
+            )}
+          </form>
+        </div>
+      </div>
     </div>
-  )
+  </section>
+);
+
 }
 
-export default Contact
+export default Contact;

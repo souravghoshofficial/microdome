@@ -36,6 +36,7 @@ import courseRouter from "./routes/course.routes.js"
 import orderRouter from "./routes/order.routes.js";
 import adminRouter from "./routes/admin.routes.js";
 import quizRouter from "./routes/quiz.routes.js";
+import messageRouter from "./routes/message.routes.js"
 
 //route declaration
 app.use("/api/v1/users", userRouter);
@@ -43,6 +44,7 @@ app.use("/api/v1/courses",courseRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/admin", verifyJWT, adminRouter);
 app.use("/api/v1/quiz", quizRouter)
+app.use("/api/v1/message", messageRouter)
 export { app }
 
 
