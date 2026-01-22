@@ -52,7 +52,8 @@ import {
   LandingPageCourses,
   CheckOut,
   QuizResult,
-  QuizLeaderboard
+  QuizLeaderboard,
+  Exam
 } from "./pages";
 
 import {
@@ -131,6 +132,7 @@ const App = () => {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/faculties" element={<Faculties />} />
           <Route path="/developers" element={<Developers />} />
+          <Route path="/exams" element={<Exam />} />
         </Route>
         <Route path="/signup" element={<AuthLayout />}>
           <Route path="" element={[<Navbar />, <Signup />]} />

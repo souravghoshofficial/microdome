@@ -36,6 +36,10 @@ const navItems = [
     navItemName: "Resources",
     linkAddress: "/resources",
   },
+  {
+    navItemName: "Research Institutes",
+    linkAddress: "/exams",
+  },    
 ];
 
 const Navbar = () => {
@@ -213,6 +217,19 @@ const Navbar = () => {
            <FileText size={22}/>
            <span>Resources</span>
           </NavLink>
+
+
+          <NavLink
+            onClick={() => setShowSideNav(false)}
+            to="/exams"
+            className={({ isActive }) =>
+              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
+            }
+          >
+           <Info size={22}/>
+           <span>Research Institutes</span>
+          </NavLink>
+
 
                    
           {isLoggedIn && (
