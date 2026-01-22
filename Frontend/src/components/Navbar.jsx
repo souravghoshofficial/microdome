@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { RiMenuFill, RiCloseLine, RiLogoutBoxRLine } from "@remixicon/react";
-import { House, Book, Info, FileText, User, Users, Settings, LogOut,  FileQuestion } from "lucide-react"
+import { House, Book, Info, FileText, User, Users, Settings, LogOut,  FileQuestion, School } from "lucide-react"
 import Logo from "./Logo";
 import ThemeBtn from "./ThemeBtn";
 import UserCard from "./UserCard";
@@ -37,7 +37,7 @@ const navItems = [
     linkAddress: "/resources",
   },
   {
-    navItemName: "Research Institutes",
+    navItemName: "Institutes",
     linkAddress: "/exams",
   },    
 ];
@@ -226,8 +226,8 @@ const Navbar = () => {
               `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
             }
           >
-           <Info size={22}/>
-           <span>Research Institutes</span>
+           <School size={22}/>
+           <span>Institutes</span>
           </NavLink>
 
 
