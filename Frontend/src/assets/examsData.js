@@ -40,7 +40,30 @@ const examsData = [
       { collegeName: "NCBS Bangalore (TIFR)" },
       { collegeName: "NIBMG Kalyani" },
       { collegeName: "CFTRI Mysore" },
-      { collegeName: "NBRC Gurgaon" }
+      { collegeName: "NBRC Gurgaon" },
+    ]
+  },
+    {
+    examName: "GATE",
+    description:
+      "Graduate Aptitude Test in Engineering",
+    courses: ["M.Tech in Biotechnology"],
+    colleges: [
+      { collegeName: "IISc Bangalore" },
+      { collegeName: "IIT Delhi" },
+      { collegeName: "IIT Bombay" },
+      { collegeName: "IIT Madras" },
+      { collegeName: "IIT Kharagpur" },
+      { collegeName: "IIT Roorkee" },
+      { collegeName: "IIT Guwahati" },
+      { collegeName: "IIT Hyderabad" },
+      { collegeName: "NIT Rourkela" },
+      { collegeName: "NIT Warangal" },
+      { collegeName: "NIT Durgapur" },
+      { collegeName: "NIT Calicut" },
+      { collegeName: "ICT Mumbai (Institute of Chemical Technology)" },
+      { collegeName: "Jawaharlal Nehru University" },
+      { collegeName: "University of Hyderabad" },
     ]
   },
     {
@@ -96,27 +119,13 @@ const examsData = [
       { collegeName: "Savitribai Phule Pune University" },
       { collegeName: "South Asian University, Delhi" },
       { collegeName: "Indian Association for Cultivation of Science, Kolkata" },
-      { collegeName: "Tata Medical Center, Mumbai" }
-    ]
-  },
-
-  {
-    examName: "Prestigious Places to Pursue M.Sc. in West Bengal",
-    description: "Top institutes in West Bengal",
-    courses: ["M.Sc. Microbiology"],
-    colleges: [
-      { collegeName: "IIT Kharagpur" },
-      { collegeName: "NIT Durgapur" },
-      { collegeName: "IIEST Shibpur" },
-      { collegeName: "NIBMG Kalyani" },
-      { collegeName: "IACS Kolkata" },
+      { collegeName: "Tata Medical Center, Mumbai" },
       { collegeName: "RKMVERI Narendrapur" },
       { collegeName: "Jadavpur University" },
-      { collegeName: "St. Xavier's College" },
+      { collegeName: "St Xavier's College" },
       { collegeName: "Presidency University" },
-      { collegeName: "Visva-Bharati University" }
     ]
-  }
+  },
 ];
 
 export default examsData;
