@@ -75,11 +75,11 @@ const Landing = () => {
 
           {/* Subtext */}
           <div
-            className="mt-1 w-full md:w-[56%]"
+            className="mt-1 w-[98%] md:w-[60%]"
             data-aos="fade-up"
             data-aos-delay="200"
           >
-            <p className="text-center text-base md:text-lg">
+            <p className="text-center text-base md:text-lg leading-relaxed">
               At Microdome Classes, we specialize in online coaching for M.Sc
               and M.Tech entrance exams, including IIT JAM, GATE and CUET PG.
               Our comprehensive courses provide students with the tools they
@@ -90,7 +90,7 @@ const Landing = () => {
 
           {/* Buttons */}
           <div
-            className="mt-5 w-full md:w-[50%] flex items-center justify-center gap-5"
+            className="mt-5 w-full md:w-[50%] flex items-center justify-center gap-4 md:gap-5"
             data-aos="fade-up"
             data-aos-delay="400"
           >
@@ -98,7 +98,7 @@ const Landing = () => {
               to="courses"
               className="px-4 py-2.5 font-semibold bg-highlighted border rounded-md border-highlighted hover:bg-highlighted-hover hover:border-highlighted-hover text-white"
             >
-              Enroll Now
+              Explore Courses
             </Link>
             <Link
               to="/about-us"

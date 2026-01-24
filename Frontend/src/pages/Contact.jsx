@@ -78,34 +78,34 @@ function Contact() {
       dark:bg-[#0B0F19] dark:text-white
     "
     >
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-6">
         {/* Section Heading */}
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold tracking-tight">
-            Contact <span className="text-[#3EE0C5]">Us</span>
+            Contact <span className="text-highlighted">Us</span>
           </h2>
-          <p className="mt-4 text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
+          <p className="mt-4 text-gray-600 dark:text-gray-400 mx-auto">
             We’d love to hear from you. Reach out for queries, collaborations,
             or guidance.
           </p>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16">
           {/* Contact Info */}
           <div
             className="
             bg-white border border-gray-200
             dark:bg-[#141A28] dark:border-gray-800
-            rounded-2xl p-5 shadow-md
+            rounded-2xl p-6 md:p-10 shadow-md
           "
           >
-            <h3 className="text-2xl font-semibold mb-10">Get in Touch</h3>
+            <h3 className="text-2xl font-semibold mb-8 md:mb-10">Get in Touch</h3>
 
             <div className="space-y-8">
               {/* Location */}
               <div className="flex items-start gap-5">
-                <div className="bg-[#3EE0C5]/10 p-3 rounded-lg text-[#3EE0C5]">
+                <div className="bg-[#3EE0C5]/10 p-3 rounded-lg text-highlighted">
                   <FiMapPin className="w-6 h-6" />
                 </div>
                 <div>
@@ -118,7 +118,7 @@ function Contact() {
 
               {/* Phone */}
               <div className="flex items-start gap-5">
-                <div className="bg-[#3EE0C5]/10 p-3 rounded-lg text-[#3EE0C5]">
+                <div className="bg-[#3EE0C5]/10 p-3 rounded-lg text-highlighted">
                   <FiPhone className="w-6 h-6" />
                 </div>
                 <div>
@@ -134,16 +134,16 @@ function Contact() {
 
               {/* Email */}
               <div className="flex items-start gap-5">
-                <div className="bg-[#3EE0C5]/10 p-3 rounded-lg text-[#3EE0C5]">
+                <div className="bg-[#3EE0C5]/10 p-3 rounded-lg text-highlighted transition">
                   <FiMail className="w-6 h-6" />
                 </div>
                 <div>
                   <p className="font-medium">Email</p>
                   <a
-                    href="mailto:microdomeclasses2@gmail.com"
-                    className="text-gray-600 dark:text-gray-400 hover:text-[#3EE0C5] transition"
+                    href="mailto:info@microdomeclasses.in"
+                    className="text-gray-600 dark:text-gray-400 hover:text-highlighted transition"
                   >
-                    microdomeclasses2 @gmail.com
+                    info@microdomeclasses.in
                   </a>
                 </div>
               </div>
@@ -158,7 +158,7 @@ function Contact() {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-500 dark:text-gray-400 hover:text-[#3EE0C5] transition text-xl"
+                      className="text-gray-500 dark:text-gray-400 hover:text-highlighted transition text-xl"
                     >
                       {social.icon}
                     </a>
@@ -169,7 +169,7 @@ function Contact() {
           </div>
 
           {/* Contact Form */}
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-5 shadow-lg transition-all duration-300">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 md:p-10 shadow-lg transition-all duration-300">
             <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-8">
               Send a Message
             </h3>
@@ -184,8 +184,7 @@ function Contact() {
                  bg-white dark:bg-gray-800
                  text-gray-900 dark:text-white
                  placeholder-gray-500 dark:placeholder-gray-400
-                 focus:outline-none focus:ring-2
-                 focus:ring-teal-400 focus:border-teal-400"
+                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                 placeholder="Your Name"
                 required
               />
@@ -199,8 +198,7 @@ function Contact() {
                  bg-white dark:bg-gray-800
                  text-gray-900 dark:text-white
                  placeholder-gray-500 dark:placeholder-gray-400
-                 focus:outline-none focus:ring-2
-                 focus:ring-teal-400 focus:border-teal-400"
+                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                 placeholder="Your Email"
                 required
               />
@@ -214,8 +212,7 @@ function Contact() {
                  bg-white dark:bg-gray-800
                  text-gray-900 dark:text-white
                  placeholder-gray-500 dark:placeholder-gray-400
-                 resize-none focus:outline-none focus:ring-2
-                 focus:ring-teal-400 focus:border-teal-400"
+                 resize-none focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
                 placeholder="Your Message"
                 required
               />
@@ -227,7 +224,7 @@ function Contact() {
                 className={`w-full flex justify-center items-center px-6 py-3 font-semibold rounded-lg transition-all duration-300 ${
                   status === "sending"
                     ? "bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed"
-                    : "bg-teal-400 text-black hover:bg-teal-500 shadow-md"
+                    : "bg-highlighted text-white hover:bg-highlighted-hover shadow-md cursor-pointer"
                 }`}
               >
                 {status === "sending" ? (
