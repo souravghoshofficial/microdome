@@ -21,7 +21,10 @@ import {
   AllQuizzes,
   QuizResults,
   EditQuiz,
-  ResetQuizPrice
+  ResetQuizPrice,
+  AdminMockTests,
+  AdminMockTestSections,
+  AdminMockTestQuestions
 } from "./components/Admin";
 
 import {
@@ -53,7 +56,8 @@ import {
   CheckOut,
   QuizResult,
   QuizLeaderboard,
-  Exam
+  Exam,
+  PageNotFound
 } from "./pages";
 
 import {
@@ -170,6 +174,9 @@ const App = () => {
             <Route path="create-course" element={<CreateCourse />} />
             <Route path="coupons" element={<Coupons />} />
             <Route path="create-coupon" element={<CreateCoupon />} />
+            <Route path="mock-tests" element={<AdminMockTests />}/>
+            <Route path="mock-tests/:mockTestId" element={<AdminMockTestSections />}/>
+            <Route path="mock-tests/:mockTestId/:mockTestSectionId/questions" element={<AdminMockTestQuestions />}/>
           </Route>
         </Route>
         <Route path="/payment-success" element={<PaymentSuccess />} />
@@ -178,6 +185,7 @@ const App = () => {
         <Route path="/quiz/result/:quizId" element={<QuizResult />} />
         <Route path="/quiz/leaderboard/:quizId" element={[<QuizLeaderboard /> , <Navbar />]} />
         <Route path="/checkout/:id" element = {<CheckOut/>}/>
+        <Route path="*" element={<PageNotFound />}/>
       </Routes>
     </BrowserRouter>
   );

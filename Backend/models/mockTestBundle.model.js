@@ -18,7 +18,13 @@ const mockTestBundleSchema = new mongoose.Schema(
       required: true
     },
 
-    price: {
+    actualPrice: {
+      type: Number,
+      required: true,
+      min: 0
+    },
+
+    discountedPrice: {
       type: Number,
       required: true,
       min: 0

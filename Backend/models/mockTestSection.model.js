@@ -6,7 +6,7 @@ const mockTestSectionSchema = new Schema({
     ref: "MockTest",
     required: true
   },
-  mockTestTitle: {
+  title: {
     type: String,
     required: true,
     trim: true

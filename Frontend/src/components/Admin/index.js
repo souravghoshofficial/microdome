@@ -13,6 +13,9 @@ import AllQuizzes from "./AllQuizzes";
 import QuizResults from "./QuizResult";
 import EditQuiz from "./EditQuiz";
 import ResetQuizPrice from "./ResetQuizPrice";
+import AdminMockTests from "./AdminMockTests";
+import AdminMockTestSections from "./AdminMockTestSections";
+import AdminMockTestQuestions from "./AdminMockTestQuestions";
 
 export {
   Dashboard,
@@ -29,5 +32,8 @@ export {
   AllQuizzes,
   QuizResults,
   EditQuiz,
-  ResetQuizPrice
+  ResetQuizPrice,
+  AdminMockTests,
+  AdminMockTestSections,
+  AdminMockTestQuestions
 };

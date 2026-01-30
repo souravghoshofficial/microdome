@@ -1,0 +1,296 @@
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router";
+import axios from "axios";
+import { Plus, X, Loader2 } from "lucide-react";
+
+const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
+const MOCK_TEST_TYPE_LABELS = {
+  IIT_JAM: "IIT JAM",
+  CUET_PG: "CUET PG",
+  GAT_B: "GAT-B",
+  GATE: "GATE",
+};
+
+const AdminMockTestSections = () => {
+  const { mockTestId } = useParams();
+
+  const [mockTest, setMockTest] = useState(null);
+  const [sections, setSections] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [showSectionModal, setShowSectionModal] = useState(false);
+  const [creatingSection, setCreatingSection] = useState(false);
+
+  const [sectionForm, setSectionForm] = useState({
+    title: "",
+    questionType: "",
+    totalQuestions: "",
+    mandatoryQuestions: "",
+    sectionOrder: "",
+  });
+
+  const fetchData = async () => {
+    try {
+      const [mockTestRes, sectionRes] = await Promise.all([
+        axios.get(`${ApiUrl}/admin/mock-tests/${mockTestId}`, {
+          withCredentials: true,
+        }),
+        axios.get(`${ApiUrl}/admin/mock-tests/${mockTestId}/sections`, {
+          withCredentials: true,
+        }),
+      ]);
+
+      setMockTest(mockTestRes.data.data);
+      setSections(sectionRes.data.data);
+    } catch (error) {
+      console.error("Failed to load mock test data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [mockTestId]);
+
+  const handleSectionChange = (e) => {
+    setSectionForm({ ...sectionForm, [e.target.name]: e.target.value });
+  };
+
+  const handleCreateSection = async (e) => {
+    e.preventDefault();
+    setCreatingSection(true);
+
+    try {
+      await axios.post(
+        `${ApiUrl}/admin/mock-tests/${mockTestId}/sections`,
+        {
+          ...sectionForm,
+          totalQuestions: Number(sectionForm.totalQuestions),
+          mandatoryQuestions:
+            sectionForm.mandatoryQuestions === ""
+              ? null
+              : Number(sectionForm.mandatoryQuestions),
+          sectionOrder: Number(sectionForm.sectionOrder),
+        },
+        { withCredentials: true },
+      );
+
+      setShowSectionModal(false);
+      setSectionForm({
+        title: "",
+        questionType: "",
+        totalQuestions: "",
+        mandatoryQuestions: "",
+        sectionOrder: "",
+      });
+
+      fetchData();
+    } catch (error) {
+      console.error("Create section failed", error);
+      alert("Failed to create section");
+    } finally {
+      setCreatingSection(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Loading mock test...</p>
+      </div>
+    );
+  }
+
+  if (!mockTest) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-red-500">Mock test not found</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen w-full px-4">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold text-blue-800">
+          {mockTest.title}
+        </h1>
+        <p className="text-sm text-gray-600 mt-1">
+          {MOCK_TEST_TYPE_LABELS[mockTest.mockTestType]} •{" "}
+          {mockTest.durationMinutes} mins • {mockTest.totalMarks} marks
+        </p>
+
+        <div className="mt-2 flex gap-2">
+          <span
+            className={`text-xs font-semibold px-2 py-1 rounded ${
+              mockTest.accessType === "FREE"
+                ? "bg-green-100 text-green-700"
+                : "bg-yellow-100 text-yellow-700"
+            }`}
+          >
+            {mockTest.accessType}
+          </span>
+
+          <span
+            className={`text-xs font-semibold px-2 py-1 rounded ${
+              mockTest.status === "PUBLISHED"
+                ? "bg-blue-100 text-blue-700"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            {mockTest.status}
+          </span>
+        </div>
+      </div>
+
+      {/* Sections */}
+      <div className="bg-white rounded-xl shadow p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">Sections</h2>
+          <button
+            onClick={() => setShowSectionModal(true)}
+            className="flex items-center gap-2 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            Add Section
+          </button>
+        </div>
+
+        {sections.length === 0 ? (
+          <p className="text-gray-500 text-sm">No sections added yet.</p>
+        ) : (
+          <div className="space-y-3">
+            {sections.map((section) => (
+              <Link
+                key={section._id}
+                to={`/admin/mock-tests/${mockTestId}/${section._id}/questions`}
+                className="block"
+              >
+                <div
+                  className="
+                  border rounded-lg p-3 flex justify-between items-center cursor-pointer transition hover:bg-blue-50 hover:shadow hover:border-blue-300"
+                >
+                  <div>
+                    <p className="font-medium">{section.title}</p>
+                    <p className="text-sm text-gray-600">
+                      {section.questionType} • {section.totalQuestions}{" "}
+                      questions
+                    </p>
+                  </div>
+
+                  <span className="text-xs text-gray-500">
+                    Order: {section.sectionOrder}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Create Section Modal */}
+      {showSectionModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl w-full max-w-lg p-6 relative">
+            <button
+              onClick={() => setShowSectionModal(false)}
+              className="absolute top-4 right-4 cursor-pointer"
+            >
+              <X />
+            </button>
+
+            <h2 className="text-xl font-semibold mb-4">Add Section</h2>
+
+            <form onSubmit={handleCreateSection} className="space-y-3">
+              <div>
+                <label className="text-sm font-medium">Section Title</label>
+                <input
+                  name="title"
+                  placeholder="Section A"
+                  value={sectionForm.title}
+                  onChange={handleSectionChange}
+                  className="w-full border rounded px-3 py-2 mt-1"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Question Type</label>
+                <select
+                  name="questionType"
+                  value={sectionForm.questionType}
+                  onChange={handleSectionChange}
+                  className="w-full border rounded px-3 py-2 mt-1"
+                  required
+                >
+                  <option value="">Select type</option>
+                  <option value="MCQ">MCQ</option>
+                  <option value="MSQ">MSQ</option>
+                  <option value="NAT">NAT</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-sm font-medium">Total Questions</label>
+                  <input
+                    type="number"
+                    name="totalQuestions"
+                    placeholder="20"
+                    value={sectionForm.totalQuestions}
+                    onChange={handleSectionChange}
+                    className="w-full border rounded px-3 py-2 mt-1"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">
+                    Mandatory Questions
+                  </label>
+                  <input
+                    type="number"
+                    name="mandatoryQuestions"
+                    placeholder="(optional)"
+                    value={sectionForm.mandatoryQuestions}
+                    onChange={handleSectionChange}
+                    className="w-full border rounded px-3 py-2 mt-1"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Section Order</label>
+                <input
+                  type="number"
+                  name="sectionOrder"
+                  placeholder="1"
+                  value={sectionForm.sectionOrder}
+                  onChange={handleSectionChange}
+                  className="w-full border rounded px-3 py-2 mt-1"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={creatingSection}
+                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer"
+              >
+                {creatingSection && (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                )}
+                {creatingSection ? "Creating..." : "Create Section"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AdminMockTestSections;

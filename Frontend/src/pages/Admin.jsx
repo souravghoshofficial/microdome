@@ -20,19 +20,23 @@ const adminMenuItems = [
   { name: "All Users", icon: <Users size={20} />, href: "/admin/all-users" },
   { name: "Premium Users", icon: <Star size={20} />, href: "/admin/premium-users" },
   { name: "All Courses", icon: <BookOpen size={20} />, href: "/admin/all-courses" },
-  { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
+  { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
+  {name: "Mock Tests", icon: <FileQuestion size={20}/>, href: "/admin/mock-tests"},
   { name: "Coupons", icon: <Tickets size={20} />, href: "/admin/coupons" },
 ];
+
 const instructorMenuItems = [
   { name: "Dashboard", icon: <Home size={20} />, href: "/admin/dashboard" },
   { name: "All Users", icon: <Users size={20} />, href: "/admin/all-users" },
   { name: "Premium Users", icon: <Star size={20} />, href: "/admin/premium-users" },
   { name: "All Courses", icon: <BookOpen size={20} />, href: "/admin/all-courses" },
-  { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
+  { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
+  {name: "Mock Tests", icon: <FileQuestion size={20}/>, href: "/admin/mock-tests"}
+
 ];
 
 export default function Admin() {

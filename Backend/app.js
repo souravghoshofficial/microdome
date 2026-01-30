@@ -25,7 +25,7 @@ app.use(express.urlencoded({
 app.use(express.static("public"))
 
 app.use(cookieParser());
-
+verifyJWT,
 app.get("/" , (req,res) => {
     res.send("Server is running fine !!!");
 })
@@ -37,7 +37,8 @@ import orderRouter from "./routes/order.routes.js";
 import adminRouter from "./routes/admin.routes.js";
 import quizRouter from "./routes/quiz.routes.js";
 import messageRouter from "./routes/message.routes.js";
-import mockTestRouter from "./routes/mockTest.routes.js";
+import adminMockTestRouter from "./routes/admin.mockTest.routes.js";
+import userMockTestRouter from "./routes/user.mockTest.route.js";
 
 //route declaration
 app.use("/api/v1/users", userRouter);
@@ -46,7 +47,10 @@ app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/admin", verifyJWT, adminRouter);
 app.use("/api/v1/quiz", quizRouter);
 app.use("/api/v1/message", messageRouter);
-app.use("/api/v1/mock-tests", verifyJWT, mockTestRouter);
+app.use("/api/v1/admin/mock-tests", verifyJWT, adminMockTestRouter);
+app.use("/api/v1/user/mock-tests", userMockTestRouter);
+
+
 export { app }
 
 

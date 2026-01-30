@@ -1,0 +1,30 @@
+import { Router } from "express"
+import { authorizedRoles } from "../middlewares/authorizedRoles.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
+
+import { 
+    createMockTest,
+    createMockTestSection,
+    createMockTestQuestion, 
+    getMockTests, 
+    getMockTestById, 
+    getMockTestSections,
+    getMockTestSectionQuestions
+} from "../controllers/admin.mockTest.controller.js";
+
+
+const router = Router()
+
+router.route("/").post(authorizedRoles("admin","instructor"), createMockTest)
+router.route("/").get(authorizedRoles("admin","instructor"), getMockTests)
+router.route("/:mockTestId").get(authorizedRoles("admin","instructor"), getMockTestById)
+
+router.route("/:mockTestId/sections").post(authorizedRoles("admin","instructor"), createMockTestSection)
+router.route("/:mockTestId/sections").get(authorizedRoles("admin","instructor"), getMockTestSections)
+
+router.route("/:mockTestId/:mockTestSectionId/questions").post(authorizedRoles("admin","instructor"),upload.fields([{ name: "questionImage", maxCount: 1 }]), createMockTestQuestion)
+router.route("/:mockTestId/:mockTestSectionId/questions").get(authorizedRoles("admin","instructor"), getMockTestSectionQuestions)
+
+
+
+export default router;

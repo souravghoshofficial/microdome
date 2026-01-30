@@ -1,43 +1,53 @@
-import mongoose , {Schema} from "mongoose"
+import mongoose, { Schema } from "mongoose";
 
-const mockTestSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
+const mockTestSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true
+    },
+
+    mockTestType: {
+      type: String,
+      enum: ["IIT_JAM", "CUET_PG", "GAT_B", "GATE"],
+      required: true
+    },
+
+    description: {
+      type: String,
+      required: true
+    },
+
+    durationMinutes: {
+      type: Number,
+      required: true
+    },
+
+    totalMarks: {
+      type: Number,
+      required: true
+    },
+
+    accessType: {
+      type: String,
+      enum: ["FREE", "PAID"],
+      required: true
+    },
+
+    instructions: {
+      type: [String],
+      default: []
+    },
+
+    status: {
+      type: String,
+      enum: ["DRAFT", "PUBLISHED"],
+      default: "DRAFT",
+      required: true
+    }
   },
-  mockTestType: {
-    type: String,
-    enum: ["IIT-JAM","CUET-PG","GAT-B","GATE"],
-    required: true
-  },
-  description: {
-    type: String,
-    required: true
-  },
-  durationMinutes: {
-    type: Number,
-    required: true
-  },
-  totalMarks: {
-    type: Number,
-    requied: true
-  },
-  accessType: {
-    type: String,
-    enum: ["FREE","PAID"],
-    requied: true
-  },
-  instructions: {
-    type: [String],
-    required: true
-  },
-  status: {
-    type: String,
-    enum: ["DRAFT","PUBLISHED"]
-  },
-},
-{timestamps: true}
-)
+  { timestamps: true }
+);
 
 export const MockTest = mongoose.model("MockTest", mockTestSchema);
