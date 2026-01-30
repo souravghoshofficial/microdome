@@ -12,4 +12,5 @@ router.route("/:mockTestId/sections").post(authorizedRoles("admin","instructor")
 
 router.route("/:mockTestId/:mockTestSectionId/questions").post(authorizedRoles("admin","instructor"),upload.fields([{ name: "questionImage", maxCount: 1 }]), createMockTestQuestion)
 
+
 export default router;

@@ -38,7 +38,7 @@ import adminRouter from "./routes/admin.routes.js";
 import quizRouter from "./routes/quiz.routes.js";
 import messageRouter from "./routes/message.routes.js";
 import mockTestRouter from "./routes/mockTest.routes.js";
-
+import mockTestBundleRouter from "./routes/mockTestBundle.routes.js";
 //route declaration
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/courses",courseRouter);
@@ -47,6 +47,7 @@ app.use("/api/v1/admin", verifyJWT, adminRouter);
 app.use("/api/v1/quiz", quizRouter);
 app.use("/api/v1/message", messageRouter);
 app.use("/api/v1/mock-tests", verifyJWT, mockTestRouter);
+app.use("/api/v1/mock-test-bundles",verifyJWT,mockTestBundleRouter);
 export { app }
 
 
