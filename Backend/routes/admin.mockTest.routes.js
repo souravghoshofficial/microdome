@@ -9,7 +9,9 @@ import {
     getMockTests, 
     getMockTestById, 
     getMockTestSections,
-    getMockTestSectionQuestions
+    getMockTestSectionQuestions,
+    updateMockTest,
+    deleteMockTest
 } from "../controllers/admin.mockTest.controller.js";
 
 
@@ -17,7 +19,10 @@ const router = Router()
 
 router.route("/").post(authorizedRoles("admin","instructor"), createMockTest)
 router.route("/").get(authorizedRoles("admin","instructor"), getMockTests)
+
 router.route("/:mockTestId").get(authorizedRoles("admin","instructor"), getMockTestById)
+router.route("/:mockTestId").patch(authorizedRoles("admin","instructor"), updateMockTest)
+router.route("/:mockTestId").delete(authorizedRoles("admin","instructor"), deleteMockTest)
 
 router.route("/:mockTestId/sections").post(authorizedRoles("admin","instructor"), createMockTestSection)
 router.route("/:mockTestId/sections").get(authorizedRoles("admin","instructor"), getMockTestSections)

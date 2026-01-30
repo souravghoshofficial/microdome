@@ -474,3 +474,136 @@ export const getMockTestSectionQuestions = async (req, res) => {
     });
   }
 };
+
+
+
+export const updateMockTest = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
+
+    const {
+      title,
+      description,
+      instructions,
+      durationMinutes,
+      totalMarks,
+      accessType,
+      status
+    } = req.body;
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid mockTestId"
+      });
+    }
+
+    const mockTest = await MockTest.findById(mockTestId);
+    if (!mockTest) {
+      return res.status(404).json({
+        success: false,
+        message: "Mock test not found"
+      });
+    }
+
+    // Prevent editing mockTestType after sections exist
+    const sectionCount = await MockTestSection.countDocuments({ mockTestId });
+    if (sectionCount > 0 && req.body.mockTestType) {
+      return res.status(400).json({
+        success: false,
+        message: "mockTestType cannot be changed once sections are added"
+      });
+    }
+
+    /* ================= UPDATE ALLOWED FIELDS ================= */
+
+    if (title !== undefined) mockTest.title = title;
+    if (description !== undefined) mockTest.description = description;
+
+    if (instructions !== undefined) {
+    if (!Array.isArray(instructions)) {
+    return res.status(400).json({
+      success: false,
+      message: "Instructions must be an array of strings"
+    });
+  }
+
+  mockTest.instructions = instructions
+    .map(i => String(i).trim())
+    .filter(Boolean);
+}
+
+
+    if (durationMinutes !== undefined)
+      mockTest.durationMinutes = Number(durationMinutes);
+
+    if (totalMarks !== undefined)
+      mockTest.totalMarks = Number(totalMarks);
+
+    if (accessType !== undefined) mockTest.accessType = accessType;
+    if (status !== undefined) mockTest.status = status;
+
+    await mockTest.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Mock test updated successfully",
+      data: mockTest
+    });
+
+  } catch (error) {
+    console.error("Update MockTest Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+
+export const deleteMockTest = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid mockTestId"
+      });
+    }
+
+    const mockTest = await MockTest.findById(mockTestId);
+    if (!mockTest) {
+      return res.status(404).json({
+        success: false,
+        message: "Mock test not found"
+      });
+    }
+
+    // Block delete if sections exist
+    const sectionCount = await MockTestSection.countDocuments({ mockTestId });
+
+    if (sectionCount > 0) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Cannot delete mock test. Delete all sections first."
+      });
+    }
+
+    await mockTest.deleteOne();
+
+    return res.status(200).json({
+      success: true,
+      message: "Mock test deleted successfully"
+    });
+  } catch (error) {
+    console.error("Delete MockTest Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
