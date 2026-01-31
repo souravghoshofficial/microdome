@@ -8,7 +8,8 @@ import {
   BookOpen,
   Plus,
   Tickets,
-  FileQuestion
+  FileQuestion,
+  ClipboardList,
 } from "lucide-react";
 
 import { useSelector } from "react-redux";
@@ -23,7 +24,7 @@ const adminMenuItems = [
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
   { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
-  {name: "Mock Tests", icon: <FileQuestion size={20}/>, href: "/admin/mock-tests"},
+  {name: "Mock Tests", icon: <ClipboardList size={20}/>, href: "/admin/mock-tests"},
   { name: "Coupons", icon: <Tickets size={20} />, href: "/admin/coupons" },
 ];
 
@@ -35,7 +36,7 @@ const instructorMenuItems = [
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
   { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
-  {name: "Mock Tests", icon: <FileQuestion size={20}/>, href: "/admin/mock-tests"}
+  {name: "Mock Tests", icon: <ClipboardList size={20}/>, href: "/admin/mock-tests"}
 
 ];
 

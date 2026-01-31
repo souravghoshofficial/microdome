@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import { Plus, X, Loader2 } from "lucide-react";
+import { Plus, X, Loader2, Check, ImagePlus } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -32,7 +32,8 @@ const AdminMockTestQuestions = () => {
     marks: "",
     negativeMarks: 0,
     questionOrder: "",
-    questionImage: null
+    questionImage: null,
+    answerExplanation: ""
   });
 
   /* ================= FETCH ================= */
@@ -104,6 +105,7 @@ const AdminMockTestQuestions = () => {
       fd.append("marks", form.marks);
       fd.append("negativeMarks", form.negativeMarks);
       fd.append("questionOrder", form.questionOrder);
+      fd.append("answerExplanation", form.answerExplanation);
 
       if (form.questionImage) {
         fd.append("questionImage", form.questionImage);
@@ -147,7 +149,8 @@ const AdminMockTestQuestions = () => {
         marks: "",
         negativeMarks: 0,
         questionOrder: "",
-        questionImage: null
+        questionImage: null,
+        answerExplanation: ""
       });
       setImagePreview(null);
     } catch (error) {
@@ -221,9 +224,7 @@ const AdminMockTestQuestions = () => {
                     <li key={o.label}>
                       <strong>{o.label}.</strong> {o.text}
                       {q.correctAnswer.includes(o.label) && (
-                        <span className="ml-2 text-green-600 font-semibold">
-                          ✓
-                        </span>
+                        <Check className="inline-block w-4 h-4 ml-2 text-green-600" />
                       )}
                     </li>
                   ))}
@@ -241,6 +242,12 @@ const AdminMockTestQuestions = () => {
                 Marks: {q.marks}
                 {q.negativeMarks > 0 && ` | Negative: -${q.negativeMarks}`}
               </p>
+              {q.answerExplanation && (
+              <div className="mt-2 p-3 bg-gray-50 border-l-4 border-blue-600">
+                <h3 className="font-semibold text-sm mb-1">Answer Explanation:</h3>
+                <p className="text-sm text-gray-700">{q.answerExplanation}</p>
+              </div>
+              )}
             </div>
           ))}
         </div>
@@ -287,19 +294,7 @@ const AdminMockTestQuestions = () => {
   >
     {!imagePreview ? (
       <>
-        <svg
-          className="w-10 h-10 text-gray-400 mb-2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M7 16V4a1 1 0 011-1h8a1 1 0 011 1v12M5 20h14a2 2 0 002-2v-2H3v2a2 2 0 002 2z"
-          />
-        </svg>
+     <ImagePlus className="w-8 h-8 text-gray-400 mb-2" />
 
         <p className="text-sm text-gray-600">
           Click to upload or browse image
@@ -332,7 +327,7 @@ const AdminMockTestQuestions = () => {
         setImagePreview(null);
         setForm({ ...form, questionImage: null });
       }}
-      className="mt-2 text-sm text-red-600 hover:underline cursor-pointer"
+      className="mt-2 text-sm text-red-600 hover:underline cursor-pointer float-right"
     >
       Remove image
     </button>
@@ -418,6 +413,7 @@ const AdminMockTestQuestions = () => {
                     type="number"
                     name="negativeMarks"
                     value={form.negativeMarks}
+                    min={0}
                     onChange={handleChange}
                     className="w-full border rounded px-3 py-2 mt-1"
                   />
@@ -431,8 +427,22 @@ const AdminMockTestQuestions = () => {
                     onChange={handleChange}
                     className="w-full border rounded px-3 py-2 mt-1"
                     required
+                    max={section.totalQuestions}
+                    min={1}
                   />
                 </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="text-sm font-medium" htmlFor="answerExplanation">Answer Explanation (optional)</label>
+                <textarea
+                  id="answerExplanation"
+                  name="answerExplanation"
+                  value={form.answerExplanation}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mt-1"
+                  rows="3"
+                />
               </div>
 
               <button
