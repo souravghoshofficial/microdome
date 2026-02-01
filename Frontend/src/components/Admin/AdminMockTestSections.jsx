@@ -138,7 +138,7 @@ const AdminMockTestSections = () => {
             className={`text-xs font-semibold px-2 py-1 rounded ${
               mockTest.status === "PUBLISHED"
                 ? "bg-blue-100 text-blue-700"
-                : "bg-gray-100 text-gray-700"
+                : "bg-gray-200 text-gray-700"
             }`}
           >
             {mockTest.status}

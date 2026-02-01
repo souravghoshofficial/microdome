@@ -24,7 +24,8 @@ import {
   ResetQuizPrice,
   AdminMockTests,
   AdminMockTestSections,
-  AdminMockTestQuestions
+  AdminMockTestQuestions,
+  AdminMockTestBundles
 } from "./components/Admin";
 
 import {
@@ -177,6 +178,7 @@ const App = () => {
             <Route path="mock-tests" element={<AdminMockTests />}/>
             <Route path="mock-tests/:mockTestId" element={<AdminMockTestSections />}/>
             <Route path="mock-tests/:mockTestId/:mockTestSectionId/questions" element={<AdminMockTestQuestions />}/>
+            <Route path="mock-test-bundles" element={<AdminMockTestBundles />}/>
           </Route>
         </Route>
         <Route path="/payment-success" element={<PaymentSuccess />} />

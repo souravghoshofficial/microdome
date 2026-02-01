@@ -278,13 +278,13 @@ export const createMockTestQuestion = async (req, res) => {
 
     if (questionImageLocalPath) {
       const uploaded = await uploadOnCloudinary(questionImageLocalPath);
-      if (!uploaded?.url) {
+      if (!uploaded?.secure_url) {
         return res.status(500).json({
           success: false,
           message: "Image upload failed"
         });
       }
-      questionImageUrl = uploaded.url;
+      questionImageUrl = uploaded.secure_url;
     }
 
     // ================= CREATE =================

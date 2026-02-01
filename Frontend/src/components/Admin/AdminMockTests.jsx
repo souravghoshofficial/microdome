@@ -5,7 +5,8 @@ import {
   Loader2,
   ClipboardList,
   Pencil,
-  Trash2
+  Trash2,
+  Layers
 } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -236,6 +237,23 @@ const handleDeleteMockTest = async () => {
       </header>
 
       {/* Grid */}
+
+            {mockTests.length === 0 ? (
+        <div className="h-[70vh] flex flex-col items-center justify-center text-center px-4">
+    <ClipboardList className="w-16 h-16 text-gray-400 mb-4" />
+    <h2 className="text-xl font-semibold text-gray-700">
+      No Mock Test Yet
+    </h2>
+
+    <button
+      onClick={() => setShowModal(true)}
+      className="mt-6 flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+    >
+      <Plus className="w-4 h-4" />
+      Create Your First Mock Test
+    </button>
+  </div>
+      ) : (
       <div className="grid gap-2 md:gap-4 lg:gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-auto p-4">
         {mockTests.map((test) => (
           <div
@@ -318,7 +336,7 @@ const handleDeleteMockTest = async () => {
           </div>
         ))}
       </div>
-
+      )}
       {/* ================= MODAL ================= */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
