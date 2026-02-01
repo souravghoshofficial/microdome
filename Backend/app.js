@@ -40,6 +40,8 @@ import messageRouter from "./routes/message.routes.js";
 import adminMockTestRouter from "./routes/admin.mockTest.routes.js";
 import userMockTestRouter from "./routes/user.mockTest.route.js";
 
+import mockTestRouter from "./routes/mockTest.routes.js";
+import mockTestBundleRouter from "./routes/mockTestBundle.routes.js";
 //route declaration
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/courses",courseRouter);

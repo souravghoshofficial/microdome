@@ -33,8 +33,7 @@ const mockTestBundleSchema = new mongoose.Schema(
     mockTestIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "MockTest",
-        required: true
+        ref: "MockTest"
       }
     ],
 
