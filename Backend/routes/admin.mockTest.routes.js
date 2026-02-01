@@ -11,7 +11,10 @@ import {
     getMockTestSections,
     getMockTestSectionQuestions,
     updateMockTest,
-    deleteMockTest
+    deleteMockTest,
+    deleteMockTestSection,
+    deleteAllMockTestSections,
+    updateMockTestSection
 } from "../controllers/admin.mockTest.controller.js";
 
 
@@ -26,6 +29,12 @@ router.route("/:mockTestId").delete(authorizedRoles("admin","instructor"), delet
 
 router.route("/:mockTestId/sections").post(authorizedRoles("admin","instructor"), createMockTestSection)
 router.route("/:mockTestId/sections").get(authorizedRoles("admin","instructor"), getMockTestSections)
+
+router.route("/:mockTestId/sections/:mockTestSectionId").delete(authorizedRoles("admin","instructor"), deleteMockTestSection);
+
+router.route("/:mockTestId/sections").delete(authorizedRoles("admin","instructor"), deleteAllMockTestSections);
+
+router.route("/:mockTestId/sections/:mockTestSectionId").patch(authorizedRoles("admin","instructor"), updateMockTestSection);
 
 router.route("/:mockTestId/:mockTestSectionId/questions").post(authorizedRoles("admin","instructor"),upload.fields([{ name: "questionImage", maxCount: 1 }]), createMockTestQuestion)
 router.route("/:mockTestId/:mockTestSectionId/questions").get(authorizedRoles("admin","instructor"), getMockTestSectionQuestions)

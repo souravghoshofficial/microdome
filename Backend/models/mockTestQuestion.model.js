@@ -56,7 +56,10 @@ const mockTestQuestionSchema = new Schema(
       default: [],
       validate: {
         validator: function (v) {
-          if (this.questionType === "NAT") return v.length === 0;
+          if (this.questionType === "NAT"){
+            return v.length === 0;
+          }
+
           return v.length >= 2;
         },
         message: "Options invalid for question type"
@@ -68,7 +71,9 @@ const mockTestQuestionSchema = new Schema(
       default: [],
       validate: {
         validator: function (v) {
-          if (this.questionType === "NAT") return v.length === 0;
+          if (this.questionType === "NAT"){
+            return v.length === 0;
+          }
           return v.length >= 1;
         },
         message: "Correct answer required for MCQ/MSQ"

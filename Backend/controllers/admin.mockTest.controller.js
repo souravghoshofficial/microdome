@@ -131,6 +131,219 @@ export const createMockTestSection = async (req, res) => {
 };
 
 
+export const updateMockTestSection = async (req, res) => {
+  try {
+    const { mockTestId, mockTestSectionId } = req.params;
+    const {
+      title,
+      questionType,
+      totalQuestions,
+      mandatoryQuestions,
+      sectionOrder
+    } = req.body;
+
+    // Validate ObjectIds
+    if (
+      !mongoose.Types.ObjectId.isValid(mockTestId) ||
+      !mongoose.Types.ObjectId.isValid(mockTestSectionId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid mockTestId or mockTestSectionId"
+      });
+    }
+
+    // Find section
+    const section = await MockTestSection.findOne({
+      _id: mockTestSectionId,
+      mockTestId
+    });
+
+    if (!section) {
+      return res.status(404).json({
+        success: false,
+        message: "Mock test section not found"
+      });
+    }
+
+    // Count existing questions
+    const questionCount = await MockTestQuestion.countDocuments({
+      mockTestSectionId
+    });
+
+    // Prevent changing questionType if questions exist
+    if (
+      questionType !== undefined &&
+      questionType !== section.questionType &&
+      questionCount > 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot change questionType after questions are added"
+      });
+    }
+
+    // Prevent lowering totalQuestions below existing count
+    if (
+      totalQuestions !== undefined &&
+      totalQuestions < questionCount
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          `totalQuestions cannot be less than existing questions (${questionCount})`
+      });
+    }
+
+    /* ================= UPDATE FIELDS ================= */
+
+    if (title !== undefined) section.title = title;
+    if (questionType !== undefined) section.questionType = questionType;
+    if (totalQuestions !== undefined)
+      section.totalQuestions = Number(totalQuestions);
+
+    if (mandatoryQuestions !== undefined)
+      section.mandatoryQuestions = mandatoryQuestions ?? null;
+
+    if (sectionOrder !== undefined)
+      section.sectionOrder = Number(sectionOrder);
+
+    await section.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Mock test section updated successfully",
+      data: section
+    });
+
+  } catch (error) {
+    console.error("Update MockTestSection Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+
+export const deleteMockTestSection = async (req, res) => {
+  try {
+    const { mockTestId, mockTestSectionId } = req.params;
+
+    // Validate ObjectIds
+    if (!mongoose.Types.ObjectId.isValid(mockTestId) || !mongoose.Types.ObjectId.isValid(mockTestSectionId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid mockTestId or mockTestSectionId"
+      });
+    }
+
+    // Find section
+    const section = await MockTestSection.findOne({
+      _id: mockTestSectionId,
+      mockTestId
+    });
+
+    if (!section) {
+      return res.status(404).json({
+        success: false,
+        message: "Mock test section not found"
+      });
+    }
+
+    // Block delete if questions exist
+    const questionCount = await MockTestQuestion.countDocuments({
+      mockTestSectionId
+    });
+
+    if (questionCount > 0) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Cannot delete section. Delete all questions in this section first."
+      });
+    }
+
+    await section.deleteOne();
+
+    return res.status(200).json({
+      success: true,
+      message: "Mock test section deleted successfully"
+    });
+
+  } catch (error) {
+    console.error("Delete MockTestSection Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+export const deleteAllMockTestSections = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid mockTestId"
+      });
+    }
+
+    // Check mock test exists
+    const mockTestExists = await MockTest.findById(mockTestId);
+    if (!mockTestExists) {
+      return res.status(404).json({
+        success: false,
+        message: "Mock test not found"
+      });
+    }
+
+    // Fetch all sections
+    const sections = await MockTestSection.find({ mockTestId }).select("_id");
+
+    if (sections.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No sections found to delete"
+      });
+    }
+
+    const sectionIds = sections.map(s => s._id);
+
+    // Check if any section has questions
+    const questionExists = await MockTestQuestion.exists({
+      mockTestSectionId: { $in: sectionIds }
+    });
+
+    if (questionExists) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Cannot delete sections. One or more sections contain questions."
+      });
+    }
+
+    // Delete all sections
+    await MockTestSection.deleteMany({ mockTestId });
+
+    return res.status(200).json({
+      success: true,
+      message: "All mock test sections deleted successfully"
+    });
+
+  } catch (error) {
+    console.error("DeleteAllMockTestSections Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+
 export const createMockTestQuestion = async (req, res) => {
   try {
     const { mockTestId, mockTestSectionId } = req.params;
@@ -509,6 +722,7 @@ export const updateMockTest = async (req, res) => {
 
     // Prevent editing mockTestType after sections exist
     const sectionCount = await MockTestSection.countDocuments({ mockTestId });
+
     if (sectionCount > 0 && req.body.mockTestType) {
       return res.status(400).json({
         success: false,
