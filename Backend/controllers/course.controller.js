@@ -4,6 +4,7 @@ import { Section } from "../models/section.model.js";
 import { Lecture } from "../models/lecture.model.js";
 
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { notifyStudentsNewLecture } from "../utils/sendLectureNotification.js";
 
 const createCourse = async (req, res) => {
   const {
@@ -43,7 +44,7 @@ const createCourse = async (req, res) => {
 
   const uploadedcourseImage = await uploadOnCloudinary(courseImageLocalPath);
 
-  if (!uploadedcourseImage?.url) {
+  if (!uploadedcourseImage?.secure_url) {
     throw new ApiError(400, "Error while uploading the course image");
   }
 
@@ -58,7 +59,7 @@ const createCourse = async (req, res) => {
       language,
       actualPrice,
       discountedPrice,
-      courseImage: uploadedcourseImage.url,
+      courseImage: uploadedcourseImage.secure_url,
       linkAddress,
       courseTitle,
       courseDescription,
@@ -106,7 +107,7 @@ const addLecture = async (req, res) => {
 
     if (noteURLlocalPath) {
       uploadedNoteURL = await uploadOnCloudinary(noteURLlocalPath);
-      if (!uploadedNoteURL?.url) {
+      if (!uploadedNoteURL?.secure_url) {
         throw new ApiError(400, "Error while uploading the note");
       }
     }
@@ -115,7 +116,7 @@ const addLecture = async (req, res) => {
       title,
       videoURL,
       noteTitle: noteTitle || "",
-      noteURL: uploadedNoteURL?.url || "",
+      noteURL: uploadedNoteURL?.secure_url || "",
     });
 
     if (!lecture) {
@@ -127,6 +128,14 @@ const addLecture = async (req, res) => {
       { $push: { lectures: lecture._id } },
       { new: true }
     );
+
+    // Notify enrolled students about the new lecture
+    notifyStudentsNewLecture({
+       courseId: section.courseId,
+       lectureTitle: lecture.title
+    }).catch(err => {
+       console.error("Email notification failed:", err);
+    });
 
     res.status(201).json({
       message: "Lecture added successfully",
@@ -172,7 +181,7 @@ const addSection = async (req, res) => {
       title: lectureTitle,
       videoURL,
       noteTitle: noteTitle || "",
-      noteURL: uploadedNoteURL?.url || "",
+      noteURL: uploadedNoteURL?.secure_url || "",
     });
 
     if (!lecture) {
@@ -180,6 +189,7 @@ const addSection = async (req, res) => {
     }
 
     const section = await Section.create({
+      courseId: course._id,
       title: sectionTitle,
       lectures: [lecture._id],
     });
