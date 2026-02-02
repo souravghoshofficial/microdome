@@ -1,17 +1,18 @@
 import React from "react";
 
-const ResourceVideo = ({title,url}) => {
+const ResourceVideo = ({ title, url }) => {
   return (
-    <div className="w-[100%] gap-6 grid grid-cols-1 lg:grid-cols-2 mb-16">
+    <div className="w-full">
+      <div className="relative w-full overflow-hidden rounded-2xl shadow-lg bg-black aspect-video">
         <iframe
-          className="w-64 h-auto rounded-2xl lg:w-[560px] lg:h-80"
+          className="absolute inset-0 w-full h-full"
           src={url}
           title={title}
           frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerPolicy="strict-origin-when-cross-origin"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-        ></iframe>
+        />
+      </div>
     </div>
   );
 };

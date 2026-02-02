@@ -11,7 +11,7 @@ const ResourceTopic = ({ topic, videos, notes }) => {
         </h2>
 
         <div className='demo-videos w-full flex justify-center'>
-          <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
+          <div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-10'>
             {
               videos.map((video) => (
                 <ResourceVideo key={video.id} url={video.url} title={video.title} />
