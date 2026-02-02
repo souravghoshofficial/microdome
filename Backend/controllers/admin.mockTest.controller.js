@@ -628,7 +628,7 @@ export const deleteAllMockTestQuestions = async (req, res) => {
 export const updateMockTestQuestion = async (req, res) => {
   try {
     const { mockTestId, mockTestSectionId, questionId } = req.params;
-    console.log(req.body);
+
     let {
       questionText,
       correctAnswer,
@@ -667,7 +667,7 @@ export const updateMockTestQuestion = async (req, res) => {
     }
 
     if (correctAnswer && typeof correctAnswer === "string") {
-      try {
+      try { 
         correctAnswer = JSON.parse(correctAnswer);
       } catch {
         return res.status(400).json({
@@ -774,20 +774,34 @@ export const updateMockTestQuestion = async (req, res) => {
       }
     }
 
-    /* ================= IMAGE UPLOAD ================= */
+    /* ================= IMAGE UPDATE (SAFE REPLACE) ================= */
 
-    const questionImageLocalPath = req.files?.questionImage?.[0]?.path;
+const questionImageLocalPath = req.files?.questionImage?.[0]?.path;
 
-    if (questionImageLocalPath) {
-      const uploaded = await uploadOnCloudinary(questionImageLocalPath);
-      if (!uploaded?.secure_url) {
-        return res.status(500).json({
-          success: false,
-          message: "Image upload failed"
-        });
-      }
-      question.questionImageUrl = uploaded.secure_url;
+if (questionImageLocalPath) {
+  // Upload new image first
+  const uploaded = await uploadOnCloudinary(questionImageLocalPath);
+
+  if (!uploaded?.secure_url) {
+    return res.status(500).json({
+      success: false,
+      message: "Question image upload failed"
+    });
+  }
+
+  // Delete old image (NON-BLOCKING)
+  if (question.questionImageUrl) {
+    try {
+      await deleteFromCloudinary(question.questionImageUrl);
+    } catch (error) {
+      console.error("Error deleting old question image:", error);
+      // Do NOT stop execution
     }
+  }
+
+  // Save new image URL
+  question.questionImageUrl = uploaded.secure_url;
+}
 
     /* ================= UPDATE FIELDS ================= */
 
