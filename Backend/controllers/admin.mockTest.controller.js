@@ -533,8 +533,303 @@ export const createMockTestQuestion = async (req, res) => {
   }
 };
 
+export const deleteMockTestQuestion = async (req, res) => {
+  try {
+    const { mockTestId, mockTestSectionId, questionId } = req.params;
 
+    // Validate ObjectIds
+    if (
+      !mongoose.Types.ObjectId.isValid(mockTestId) ||
+      !mongoose.Types.ObjectId.isValid(mockTestSectionId) ||
+      !mongoose.Types.ObjectId.isValid(questionId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid IDs provided"
+      });
+    }
 
+    const question = await MockTestQuestion.findOne({
+      _id: questionId,
+      mockTestId,
+      mockTestSectionId
+    });
+
+    if (!question) {
+      return res.status(404).json({
+        success: false,
+        message: "Mock test question not found"
+      });
+    }
+
+    await question.deleteOne();
+
+    return res.status(200).json({
+      success: true,
+      message: "Mock test question deleted successfully"
+    });
+
+  } catch (error) {
+    console.error("Delete MockTestQuestion Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+export const deleteAllMockTestQuestions = async (req, res) => {
+  try {
+    const { mockTestId, mockTestSectionId } = req.params;
+
+    // Validate ObjectIds
+    if (
+      !mongoose.Types.ObjectId.isValid(mockTestId) ||
+      !mongoose.Types.ObjectId.isValid(mockTestSectionId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid IDs provided"
+      });
+    }
+
+    // Verify section belongs to mock test
+    const section = await MockTestSection.findOne({
+      _id: mockTestSectionId,
+      mockTestId
+    });
+
+    if (!section) {
+      return res.status(404).json({
+        success: false,
+        message: "Mock test section not found"
+      });
+    }
+
+    await MockTestQuestion.deleteMany({
+      mockTestId,
+      mockTestSectionId
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "All questions deleted successfully from this section"
+    });
+
+  } catch (error) {
+    console.error("DeleteAllMockTestQuestions Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+export const updateMockTestQuestion = async (req, res) => {
+  try {
+    const { mockTestId, mockTestSectionId, questionId } = req.params;
+    console.log(req.body);
+    let {
+      questionText,
+      correctAnswer,
+      numericAnswer,
+      tolerance,
+      marks,
+      negativeMarks,
+      questionOrder,
+      answerExplanation,
+      options
+    } = req.body;
+    /* ================= VALIDATE IDS ================= */
+
+    if (
+      !mongoose.Types.ObjectId.isValid(mockTestId) ||
+      !mongoose.Types.ObjectId.isValid(mockTestSectionId) ||
+      !mongoose.Types.ObjectId.isValid(questionId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid IDs provided"
+      });
+    }
+
+    /* ================= PARSE JSON FIELDS ================= */
+
+    if (options && typeof options === "string") {
+      try {
+        options = JSON.parse(options);
+      } catch {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid options format"
+        });
+      }
+    }
+
+    if (correctAnswer && typeof correctAnswer === "string") {
+      try {
+        correctAnswer = JSON.parse(correctAnswer);
+      } catch {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid correctAnswer format"
+        });
+      }
+    }
+
+    /* ================= FETCH QUESTION ================= */
+
+    const question = await MockTestQuestion.findOne({
+      _id: questionId,
+      mockTestId,
+      mockTestSectionId
+    });
+
+    if (!question) {
+      return res.status(404).json({
+        success: false,
+        message: "Mock test question not found"
+      });
+    }
+
+    /* ================= FETCH SECTION ================= */
+
+    const section = await MockTestSection.findOne({
+      _id: mockTestSectionId,
+      mockTestId
+    });
+
+    if (!section) {
+      return res.status(404).json({
+        success: false,
+        message: "Mock test section not found"
+      });
+    }
+
+    /* ================= QUESTION TYPE RULES ================= */
+
+    const questionType = question.questionType;
+
+    if (questionType !== section.questionType) {
+      return res.status(400).json({
+        success: false,
+        message: `Section only allows ${section.questionType} questions`
+      });
+    }
+
+    if (questionType === "NAT") {
+      if (options !== undefined || correctAnswer !== undefined) {
+        return res.status(400).json({
+          success: false,
+          message: "NAT questions cannot have options or correctAnswer"
+        });
+      }
+
+      if (numericAnswer === undefined && question.numericAnswer === null) {
+        return res.status(400).json({
+          success: false,
+          message: "numericAnswer is required for NAT questions"
+        });
+      }
+    } else {
+      if (options !== undefined) {
+        if (!Array.isArray(options) || options.length < 2) {
+          return res.status(400).json({
+            success: false,
+            message: "At least two options are required"
+          });
+        }
+      }
+
+      if (correctAnswer !== undefined) {
+        if (!Array.isArray(correctAnswer) || correctAnswer.length === 0) {
+          return res.status(400).json({
+            success: false,
+            message: "correctAnswer is required"
+          });
+        }
+
+        if (questionType === "MCQ" && correctAnswer.length !== 1) {
+          return res.status(400).json({
+            success: false,
+            message: "MCQ must have exactly one correct answer"
+          });
+        }
+      }
+    }
+
+    /* ================= QUESTION ORDER CHECK ================= */
+
+    if (questionOrder !== undefined && questionOrder !== question.questionOrder) {
+      const orderExists = await MockTestQuestion.findOne({
+        mockTestSectionId,
+        questionOrder
+      });
+
+      if (orderExists) {
+        return res.status(409).json({
+          success: false,
+          message: "Question order already exists in this section"
+        });
+      }
+    }
+
+    /* ================= IMAGE UPLOAD ================= */
+
+    const questionImageLocalPath = req.files?.questionImage?.[0]?.path;
+
+    if (questionImageLocalPath) {
+      const uploaded = await uploadOnCloudinary(questionImageLocalPath);
+      if (!uploaded?.secure_url) {
+        return res.status(500).json({
+          success: false,
+          message: "Image upload failed"
+        });
+      }
+      question.questionImageUrl = uploaded.secure_url;
+    }
+
+    /* ================= UPDATE FIELDS ================= */
+
+    if (questionText !== undefined) question.questionText = questionText;
+    if (marks !== undefined) question.marks = Number(marks);
+    if (negativeMarks !== undefined)
+      question.negativeMarks = Number(negativeMarks);
+
+    if (questionOrder !== undefined)
+      question.questionOrder = Number(questionOrder);
+
+    if (answerExplanation !== undefined)
+      question.answerExplanation = answerExplanation;
+
+    if (questionType === "NAT") {
+      if (numericAnswer !== undefined)
+        question.numericAnswer = Number(numericAnswer);
+
+      if (tolerance !== undefined)
+        question.tolerance = Number(tolerance);
+    } else {
+      if (options !== undefined) question.options = options;
+      if (correctAnswer !== undefined)
+        question.correctAnswer = correctAnswer;
+    }
+
+    await question.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Mock test question updated successfully",
+      data: question
+    });
+
+  } catch (error) {
+    console.error("Update MockTestQuestion Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
 
 export const getMockTests = async (req, res) => {
   try {
