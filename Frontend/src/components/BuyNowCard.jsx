@@ -13,7 +13,7 @@ const BuyNowCard = ({
   return (
     <div className="w-full bg-white dark:bg-zinc-900 text-black dark:text-white border border-zinc-900/10 dark:border-gray-700/25 rounded-lg overflow-hidden shadow-lg shadow-gray-300 dark:shadow-[0_4px_12px_rgba(0,0,0,0.6)_0_1px_3px_rgba(255,255,255,0.05)]">
       <img
-        className="h-65 w-full object-top object-cover"
+        className="h-72 w-full object-top object-cover"
         src={imageUrl}
         alt="course image"
       />
