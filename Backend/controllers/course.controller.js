@@ -130,11 +130,9 @@ const addLecture = async (req, res) => {
     );
 
     // Notify enrolled students about the new lecture
-    notifyStudentsNewLecture({
+    await notifyStudentsNewLecture({
        courseId: section.courseId,
        lectureTitle: lecture.title
-    }).catch(err => {
-       console.error("Email notification failed:", err);
     });
 
     res.status(201).json({

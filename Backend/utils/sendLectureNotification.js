@@ -22,72 +22,103 @@ const lectureEmailTemplate = ({
     <meta charset="UTF-8" />
     <title>New Lecture Added</title>
   </head>
-  <body style="margin:0; padding:0; background-color:#f4f6f8;">
+
+  <body style="margin:0; padding:0;">
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
-        <td align="center" style="padding:24px;">
+        <td align="center" style="padding:8px;">
+
+          <!-- Main Card -->
           <table
             width="100%"
             cellpadding="0"
             cellspacing="0"
-            style="max-width:600px; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);"
+            style="
+              max-width:600px;
+              background:#ffffff;
+              border-radius:16px;
+              overflow:hidden;
+              border:2px solid #3eb5a2;
+              box-shadow:0 6px 16px rgba(0,0,0,0.08);
+              font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            "
           >
+
             <!-- Header -->
             <tr>
-              <td style="background:#2563eb; padding:20px; text-align:center;">
-                <h1 style="color:#ffffff; margin:0; font-size:22px;">
-                  📚 New Lecture Added
-                </h1>
+              <td align="center" style="padding:20px;">
+                <table
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="
+                    background:#1c1c1c;
+                    border-radius:12px;
+                    border:1px solid #ffffff;
+                    padding:14px 20px;
+                    width:100%;
+                  "
+                >
+                  <tr>
+                    <td align="center">
+                      <img
+                        src="https://res.cloudinary.com/dpsmiqy61/image/upload/v1770138895/mylogo_l8q7ql.png"
+                        alt="Microdome Classes"
+                        height="48"
+                        style="display:block; margin:0 auto;"
+                      />
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
 
-            <!-- Body -->
+            <!-- Body --> 
             <tr>
-              <td style="padding:24px; font-family:Arial, sans-serif; color:#333;">
-                <p style="font-size:15px;">
-                  Hi <strong>${studentName || "there"}</strong>,
+              <td style="padding:28px; color:#111827;">
+                <p style="font-size:15px; margin:0 0 12px;">
+                  Hi <strong>${studentName || "Student"}</strong>,
                 </p>
 
-                <p style="font-size:15px; line-height:1.6;">
+                <p style="font-size:15px; line-height:1.6; margin:0 0 16px;">
                   A new lecture titled
-                  <strong>"${lectureTitle}"</strong> has just been added to your
-                  course:
+                  <strong>"${lectureTitle}"</strong> has just been added to your course:
                 </p>
 
-                <p style="font-size:16px; font-weight:bold; margin:16px 0;">
-                  ${courseTitle}
+                <p style="font-size:17px; font-weight:600; margin:0 0 20px;">
+                  ${courseTitle}      
                 </p>
 
-                <p style="font-size:14px; color:#555;">
-                  Log in to your dashboard to watch the lecture and continue your
-                  learning.
+                <p style="font-size:14px; color:#4b5563; margin:0 0 28px;">
+                  Log in to your dashboard to watch the lecture and continue your learning.
                 </p>
 
-                <!-- CTA Button -->
-                <div style="text-align:center; margin:28px 0;">
-                  <a
-                    href="https://microdomeclasses.in/my-courses/${courseId}"
-                    target="_blank"
-                    style="
-                      display:inline-block;
-                      padding:12px 24px;
-                      background:#2563eb;
-                      color:#ffffff;
-                      text-decoration:none;
-                      font-weight:bold;
-                      border-radius:6px;
-                      font-size:14px;
-                    "
-                  >
-                    ▶ View Course
-                  </a>
-                </div>
+                <!-- CTA -->
+                <table cellpadding="0" cellspacing="0" width="100%">
+                  <tr>
+                    <td align="center">
+                      <a
+                        href="https://microdomeclasses.in/my-courses/${courseId}"
+                        target="_blank"
+                        style="
+                          background:#3eb5a2;
+                          color:#ffffff;
+                          text-decoration:none;
+                          padding:12px 26px;
+                          font-size:14px;
+                          font-weight:600;
+                          border-radius:8px;
+                          display:inline-block;
+                        "
+                      >
+                        ▶ View Course
+                      </a>
+                    </td>
+                  </tr>
+                </table>
 
-                <hr style="border:none; border-top:1px solid #eee; margin:24px 0;" />
-
-                <p style="font-size:13px; color:#777;">
+                <p style="font-size:13px; color:#6b7280; margin-top:32px;">
                   Happy learning,<br />
-                  <strong>Team Microdome</strong>
+                  <strong>Microdome Classes</strong>
                 </p>
               </td>
             </tr>
@@ -95,11 +126,18 @@ const lectureEmailTemplate = ({
             <!-- Footer -->
             <tr>
               <td
-                style="background:#f9fafb; padding:14px; text-align:center; font-size:12px; color:#999;"
+                align="center"
+                style="
+                  background:#f9fafb;
+                  padding:14px;
+                  font-size:12px;
+                  color:#9ca3af;
+                "
               >
                 © ${new Date().getFullYear()} Microdome Classes
               </td>
             </tr>
+
           </table>
         </td>
       </tr>
@@ -141,13 +179,7 @@ export const notifyStudentsNewLecture = async ({
       })
     }));
 
-  // 4. Batch send (MAX 100 per batch – Resend limit)
-  const BATCH_SIZE = 50;
-
-  for (let i = 0; i < emails.length; i += BATCH_SIZE) {
-    const chunk = emails.slice(i, i + BATCH_SIZE);
-
-    // DO NOT await inside map / loop heavy logic
-    await resend.batch.send(chunk);
-  }
+  // 4. Send emails in batch 
+  const { data } = await resend.batch.send(emails);
+  console.log("Lecture notification emails sent: ", data);
 };
