@@ -11,7 +11,7 @@ const AllUsers = () => {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(8);
+  const [usersPerPage] = useState(12);
 
   function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -67,7 +67,7 @@ const AllUsers = () => {
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-lg shadow-md">
+    <div className="h-[90vh] flex flex-col bg-white rounded-lg shadow-md">
       <Toaster position="top-right" />
 
       {/* Header with search */}
@@ -88,9 +88,9 @@ const AllUsers = () => {
       </div>
 
       {/* Table */}
-      <div className="flex-1 overflow-auto">
-        <div className="overflow-x-auto">
-          <table className="min-w-[800px] w-full border-collapse">
+      <div className="flex-1 overflow-auto scrollbar-none">
+        <div className="overflow-x-auto scrollbar-none ">
+          <table className="min-w-[800px] w-full border-collapse ">
             <thead className="bg-gray-100 sticky top-0 z-10">
               <tr className="text-left text-gray-600 border-b text-sm md:text-base">
                 <th className="px-4 py-2">Name</th>

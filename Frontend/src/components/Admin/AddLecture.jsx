@@ -101,7 +101,7 @@ const AddLecture = () => {
       {loading ? (
         <p className="text-gray-600">Loading...</p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-scroll scrollbar-none">
+        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-scroll scrollbar-none py-4">
           {courses.map((course) => (
             <div
               key={course._id}

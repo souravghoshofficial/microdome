@@ -19,14 +19,14 @@ export const mentors = [
   {
     name: "Rupayan Bhattacharjee",
     image: Rupayan,
-    subject: "Actogen Batch Mentor",
+    subject: "Biochemistry & Microbiology Mentor",
     description: " Research Scholar at IIT Kharagpur",
     backgroundColor: "bg-mint-green",
   },
   {
     name: "Subhadeep Podder",
     image: Subhadeep,
-    subject: "Actogen Batch Mentor",
+    subject: "Genomics & Immunology Mentor",
     description: "M.Sc. in Virology from ICMR-NIV, Pune.",
     backgroundColor: "bg-warm-salmon",
   },
@@ -42,7 +42,7 @@ export const mentors = [
   {
     name: "Krishnendu Das",
     image: KrishnenduPicNew,
-    subject: "Actogen Batch Mentor (Adjunct Faculty)",
+    subject: "Bioinformatics Mentor",
     description: "Research scholar at ICMR-NIV, Pune",
     backgroundColor: "bg-baby-blue",
   },

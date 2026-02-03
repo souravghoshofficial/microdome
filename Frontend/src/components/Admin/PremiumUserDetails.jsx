@@ -19,7 +19,7 @@ const PremiumUserDetails = () => {
   // Search + Pagination
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(8);
+  const [usersPerPage] = useState(10);
 
   useEffect(() => {
     axios
@@ -90,7 +90,7 @@ const PremiumUserDetails = () => {
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-lg shadow-md">
+    <div className="h-[90vh] flex flex-col bg-white rounded-lg shadow-md">
       <Toaster position="top-right" />
 
       {/* Header with search */}
@@ -109,7 +109,7 @@ const PremiumUserDetails = () => {
       </div>
 
       {/* Table */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto scrollbar-none">
         <div className="overflow-x-auto">
           <table className="min-w-[800px] w-full border-collapse">
             <thead className="bg-gray-100 sticky top-0 z-10">

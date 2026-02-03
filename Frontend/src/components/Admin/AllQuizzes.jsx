@@ -267,7 +267,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 const AllQuizzes = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [quizzesPerPage] = useState(8);
+  const [quizzesPerPage] = useState(10);
 
   const user = useSelector((state) => state.auth.userData);
 
@@ -361,7 +361,7 @@ const AllQuizzes = () => {
   const totalPages = Math.ceil(quizzes.length / quizzesPerPage);
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-lg shadow-md">
+    <div className="h-[90vh] flex flex-col bg-white rounded-lg shadow-md">
       <Toaster position="top-right" />
 
       {/* Header */}
@@ -387,7 +387,7 @@ const AllQuizzes = () => {
       </div>
 
       {/* Table */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto scrollbar-none">
         <div className="overflow-x-auto">
           <table className="min-w-[800px] w-full border-collapse">
             <thead className="bg-gray-100 sticky top-0 z-10">

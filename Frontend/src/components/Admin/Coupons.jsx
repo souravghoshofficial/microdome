@@ -11,7 +11,7 @@ const Coupons = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [confirmCoupon, setConfirmCoupon] = useState(null);
 
-  const couponsPerPage = 5;
+  const couponsPerPage = 10;
 
   // Fetch all coupons
   useEffect(() => {
@@ -62,7 +62,7 @@ const Coupons = () => {
   const totalPages = Math.ceil(coupons.length / couponsPerPage);
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-lg shadow-md">
+    <div className="h-[90vh] flex flex-col bg-white rounded-lg shadow-md">
       <Toaster position="top-right" />
 
       {/* Header */}
@@ -79,7 +79,7 @@ const Coupons = () => {
       </div>
 
       {/* Scrollable Table */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto scrollbar-none">
         <div className="overflow-x-auto">
           <table className="min-w-[700px] w-full border-collapse">
             <thead className="bg-gray-100 sticky top-0 z-10">
