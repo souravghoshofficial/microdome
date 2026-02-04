@@ -25,7 +25,8 @@ import {
   AdminMockTests,
   AdminMockTestSections,
   AdminMockTestQuestions,
-  AdminMockTestBundles
+  AdminMockTestBundles,
+  AdminManageMockTestBundle
 } from "./components/Admin";
 
 import {
@@ -179,6 +180,8 @@ const App = () => {
             <Route path="mock-tests/:mockTestId" element={<AdminMockTestSections />}/>
             <Route path="mock-tests/:mockTestId/:mockTestSectionId/questions" element={<AdminMockTestQuestions />}/>
             <Route path="mock-test-bundles" element={<AdminMockTestBundles />}/>
+            <Route path="mock-test-bundles/:bundleId" element={<AdminManageMockTestBundle />}/>
+            
           </Route>
         </Route>
         <Route path="/payment-success" element={<PaymentSuccess />} />
