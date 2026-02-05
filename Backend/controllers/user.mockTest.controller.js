@@ -1,13 +1,15 @@
 import { MockTest } from "../models/mockTest.model.js";
 
-
 export const getMockTests = async (req, res) => {
   try {
-    const mockTests = await MockTest.find().populate("sections");
+    const mockTests = await MockTest.find({
+      accessType: "FREE",
+      status: "PUBLISHED"
+    })
 
     return res.status(200).json({
       success: true,
-      message: "Mock tests retrieved successfully",
+      message: "Free & published mock tests retrieved successfully",
       data: mockTests
     });
   } catch (error) {
@@ -19,3 +21,5 @@ export const getMockTests = async (req, res) => {
     });
   }
 };
+
+

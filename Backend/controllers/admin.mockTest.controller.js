@@ -847,11 +847,21 @@ if (questionImageLocalPath) {
 
 export const getMockTests = async (req, res) => {
   try {
-    const mockTests = await MockTest.find({});
+    const { accessType } = req.query;
+
+    const filter = {};
+
+    // Optional filter: FREE / PAID
+    if (accessType) {
+      filter.accessType = accessType;
+    }
+
+    const mockTests = await MockTest.find(filter)
+  
 
     return res.status(200).json({
       success: true,
-      message: "All mock tests fetched successfully",
+      message: "Mock tests fetched successfully",
       mockTests
     });
   } catch (error) {
@@ -862,6 +872,7 @@ export const getMockTests = async (req, res) => {
     });
   }
 };
+
 
 export const getMockTestById = async (req, res) => {
   try {

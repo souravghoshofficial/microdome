@@ -28,6 +28,8 @@ import QuizResult from "./QuizResult";
 import QuizLeaderboard from "./QuizLeaderboard";
 import Exam from "./Exam";
 import PageNotFound from "./PageNotFound";
+import MockTests from "./MockTests";
+
 
 export {
   Landing,
@@ -59,5 +61,6 @@ export {
   QuizResult,
   QuizLeaderboard,
   Exam,
-  PageNotFound
+  PageNotFound,
+  MockTests
 };

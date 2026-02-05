@@ -17,6 +17,7 @@ import AdminMockTests from "./AdminMockTests";
 import AdminMockTestSections from "./AdminMockTestSections";
 import AdminMockTestQuestions from "./AdminMockTestQuestions";
 import AdminMockTestBundles from "./AdminMockTestBundles";
+import AdminManageMockTestBundle from "./AdminManageMockTestBundle";
 
 export {
   Dashboard,
@@ -38,4 +39,5 @@ export {
   AdminMockTestSections,
   AdminMockTestQuestions,
   AdminMockTestBundles,
+  AdminManageMockTestBundle
 };

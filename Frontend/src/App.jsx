@@ -25,7 +25,8 @@ import {
   AdminMockTests,
   AdminMockTestSections,
   AdminMockTestQuestions,
-  AdminMockTestBundles
+  AdminMockTestBundles,
+  AdminManageMockTestBundle
 } from "./components/Admin";
 
 import {
@@ -58,7 +59,8 @@ import {
   QuizResult,
   QuizLeaderboard,
   Exam,
-  PageNotFound
+  PageNotFound,
+  MockTests
 } from "./pages";
 
 import {
@@ -132,6 +134,7 @@ const App = () => {
               />
             </Route>
           </Route>
+          <Route path="/mock-tests" element={<MockTests/>}/>
 
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
@@ -179,6 +182,8 @@ const App = () => {
             <Route path="mock-tests/:mockTestId" element={<AdminMockTestSections />}/>
             <Route path="mock-tests/:mockTestId/:mockTestSectionId/questions" element={<AdminMockTestQuestions />}/>
             <Route path="mock-test-bundles" element={<AdminMockTestBundles />}/>
+            <Route path="mock-test-bundles/:bundleId" element={<AdminManageMockTestBundle />}/>
+            
           </Route>
         </Route>
         <Route path="/payment-success" element={<PaymentSuccess />} />
