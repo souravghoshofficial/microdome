@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import { Plus, X, Loader2, Check, ImagePlus } from "lucide-react";
+import { Plus, X, Loader2, Check, ImagePlus, Trash2, Edit, Trash, AlertTriangle } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -17,6 +17,17 @@ const AdminMockTestQuestions = () => {
   const [creating, setCreating] = useState(false);
 
   const [imagePreview, setImagePreview] = useState(null);
+
+  const [editMode, setEditMode] = useState(false);
+  const [editingQuestionId, setEditingQuestionId] = useState(null);
+  const [updating, setUpdating] = useState(false);
+
+  const [deleting, setDeleting] = useState(null);
+  const [deletingAll, setDeletingAll] = useState(false);
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteType, setDeleteType] = useState(null);
 
   const [form, setForm] = useState({
     questionText: "",
@@ -160,6 +171,199 @@ const AdminMockTestQuestions = () => {
     }
   };
 
+  /* ================= DELETE SINGLE QUESTION ================= */
+  const handleDeleteQuestion = async (questionId) => {
+    setDeleteTarget(questionId);
+    setDeleteType("single");
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDeleteQuestion = async () => {
+    setDeleting(deleteTarget);
+    setShowDeleteConfirm(false);
+    
+    try {
+      await axios.delete(
+        `${ApiUrl}/admin/mock-tests/${mockTestId}/sections/${mockTestSectionId}/${deleteTarget}`,
+        { withCredentials: true }
+      );
+
+      toast.success("Question deleted successfully");
+      fetchQuestions();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to delete question");
+    } finally {
+      setDeleting(null);
+      setDeleteTarget(null);
+      setDeleteType(null);
+    }
+  };
+
+  /* ================= DELETE ALL QUESTIONS ================= */
+  const handleDeleteAllQuestions = async () => {
+    setDeleteType("all");
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDeleteAllQuestions = async () => {
+    setDeletingAll(true);
+    setShowDeleteConfirm(false);
+    
+    try {
+      await axios.delete(
+        `${ApiUrl}/admin/mock-tests/${mockTestId}/${mockTestSectionId}/questions`,
+        { withCredentials: true }
+      );
+
+      toast.success("All questions deleted successfully");
+      fetchQuestions();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to delete all questions");
+    } finally {
+      setDeletingAll(false);
+      setDeleteType(null);
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteType === "single") {
+      confirmDeleteQuestion();
+    } else if (deleteType === "all") {
+      confirmDeleteAllQuestions();
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
+    setDeleteTarget(null);
+    setDeleteType(null);
+  };
+
+  /* ================= EDIT QUESTION ================= */
+  const handleEditQuestion = (question) => {
+    setEditMode(true);
+    setEditingQuestionId(question._id);
+    setShowModal(true);
+
+    setForm({
+      questionText: question.questionText,
+      options: question.options.length > 0 
+        ? question.options 
+        : [
+            { label: "A", text: "" },
+            { label: "B", text: "" },
+            { label: "C", text: "" },
+            { label: "D", text: "" }
+          ],
+      correctAnswer: question.correctAnswer || [],
+      numericAnswer: question.numericAnswer || "",
+      tolerance: question.tolerance || "",
+      marks: question.marks,
+      negativeMarks: question.negativeMarks,
+      questionOrder: question.questionOrder,
+      questionImage: null,
+      answerExplanation: question.answerExplanation || ""
+    });
+
+    if (question.questionImageUrl) {
+      setImagePreview(question.questionImageUrl);
+    }
+  };
+
+  /* ================= UPDATE QUESTION ================= */
+  const handleUpdateQuestion = async (e) => {
+    e.preventDefault();
+    setUpdating(true);
+
+    try {
+      const fd = new FormData();
+      fd.append("questionType", section.questionType);
+      fd.append("questionText", form.questionText);
+      fd.append("marks", form.marks);
+      fd.append("negativeMarks", form.negativeMarks);
+      fd.append("questionOrder", form.questionOrder);
+      fd.append("answerExplanation", form.answerExplanation);
+
+      if (form.questionImage) {
+        fd.append("questionImage", form.questionImage);
+      }
+
+      if (section.questionType === "NAT") {
+        fd.append("numericAnswer", form.numericAnswer);
+        if (form.tolerance) fd.append("tolerance", form.tolerance);
+      } else {
+        fd.append(
+          "options",
+          JSON.stringify(form.options.filter((o) => o.text.trim()))
+        );
+        fd.append("correctAnswer", JSON.stringify(form.correctAnswer));
+      }
+
+      await axios.patch(
+        `${ApiUrl}/admin/mock-tests/${mockTestId}/${mockTestSectionId}/${editingQuestionId}`,
+        fd,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" }
+        }
+      );
+
+      toast.success("Question updated successfully");
+      setShowModal(false);
+      setEditMode(false);
+      setEditingQuestionId(null);
+      fetchQuestions();
+
+      setForm({
+        questionText: "",
+        options: [
+          { label: "A", text: "" },
+          { label: "B", text: "" },
+          { label: "C", text: "" },
+          { label: "D", text: "" }
+        ],
+        correctAnswer: [],
+        numericAnswer: "",
+        tolerance: "",
+        marks: "",
+        negativeMarks: 0,
+        questionOrder: "",
+        questionImage: null,
+        answerExplanation: ""
+      });
+      setImagePreview(null);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to update question");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  /* ================= CANCEL EDIT ================= */
+  const handleCancelEdit = () => {
+    setShowModal(false);
+    setEditMode(false);
+    setEditingQuestionId(null);
+    setForm({
+      questionText: "",
+      options: [
+        { label: "A", text: "" },
+        { label: "B", text: "" },
+        { label: "C", text: "" },
+        { label: "D", text: "" }
+      ],
+      correctAnswer: [],
+      numericAnswer: "",
+      tolerance: "",
+      marks: "",
+      negativeMarks: 0,
+      questionOrder: "",
+      questionImage: null,
+      answerExplanation: ""
+    });
+    setImagePreview(null);
+  };
+
   /* ================= UI ================= */
 
   if (loading) {
@@ -185,13 +389,29 @@ const AdminMockTestQuestions = () => {
       {/* Actions */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Questions</h2>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          Add Question
-        </button>
+        <div className="flex gap-2">
+          {questions.length > 0 && (
+            <button
+              onClick={handleDeleteAllQuestions}
+              disabled={deletingAll}
+              className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded cursor-pointer disabled:opacity-50"
+            >
+              {deletingAll ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Trash className="w-4 h-4" />
+              )}
+              Delete All
+            </button>
+          )}
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            Add Question
+          </button>
+        </div>
       </div>
 
       {/* ================= QUESTIONS LIST ================= */}
@@ -206,9 +426,32 @@ const AdminMockTestQuestions = () => {
               key={q._id}
               className="bg-white rounded-xl shadow p-4"
             >
-              <p className="font-semibold">
-                Q{q.questionOrder}. {q.questionText}
-              </p>
+              <div className="flex justify-between items-start">
+                <p className="font-semibold flex-1">
+                  Q{q.questionOrder}. {q.questionText}
+                </p>
+                <div className="flex gap-2 ml-4">
+                  <button
+                    onClick={() => handleEditQuestion(q)}
+                    className="p-2 text-blue-600 hover:bg-blue-50 rounded cursor-pointer"
+                    title="Edit question"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteQuestion(q._id)}
+                    disabled={deleting === q._id}
+                    className="p-2 text-red-600 hover:bg-red-50 rounded cursor-pointer disabled:opacity-50"
+                    title="Delete question"
+                  >
+                    {deleting === q._id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
 
               {q.questionImageUrl && (
                 <img
@@ -253,22 +496,57 @@ const AdminMockTestQuestions = () => {
         </div>
       )}
 
+      {/* ================= DELETE CONFIRMATION MODAL ================= */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-full max-w-md p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
+              </div>
+              <h2 className="text-xl font-semibold">Confirm Action</h2>
+            </div>
+            
+            <p className="text-gray-600 mb-6">
+              {deleteType === "single" 
+                ? "Are you sure you want to delete this question?"
+                : "Are you sure you want to delete all questions from this section?"}
+            </p>
+
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={handleCancelDelete}
+                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ================= MODAL ================= */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl w-full max-w-2xl p-6 relative max-h-[90vh] overflow-y-auto scrollbar-none">
             <button
-              onClick={() => setShowModal(false)}
+              onClick={handleCancelEdit}
               className="absolute top-4 right-4 cursor-pointer"
             >
               <X />
             </button>
 
             <h2 className="text-xl font-semibold mb-4">
-              Add Question ({section.questionType})
+              {editMode ? "Edit Question" : `Add Question (${section.questionType})`}
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={editMode ? handleUpdateQuestion : handleSubmit} className="space-y-4">
               <div>
                 <label className="text-sm font-medium">Question</label>
                 <textarea
@@ -447,11 +725,14 @@ const AdminMockTestQuestions = () => {
 
               <button
                 type="submit"
-                disabled={creating}
+                disabled={editMode ? updating : creating}
                 className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2 cursor-pointer"
               >
-                {creating && <Loader2 className="w-4 h-4 animate-spin" />}
-                {creating ? "Adding..." : "Add Question"}
+                {(editMode ? updating : creating) && <Loader2 className="w-4 h-4 animate-spin" />}
+                {editMode 
+                  ? (updating ? "Updating..." : "Update Question")
+                  : (creating ? "Adding..." : "Add Question")
+                }
               </button>
             </form>
           </div>

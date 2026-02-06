@@ -2,7 +2,7 @@ import { MockTest } from "../models/mockTest.model.js";
 import { MockTestSection } from "../models/mockTestSection.model.js";
 import { MockTestQuestion } from "../models/mockTestQuestion.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-
+import { deleteFromCloudinary } from "../utils/cloudinary.js";
 import mongoose from "mongoose";
 
 export const createMockTest = async (req, res) => {
@@ -533,6 +533,7 @@ export const createMockTestQuestion = async (req, res) => {
   }
 };
 
+
 export const deleteMockTestQuestion = async (req, res) => {
   try {
     const { mockTestId, mockTestSectionId, questionId } = req.params;
@@ -560,6 +561,30 @@ export const deleteMockTestQuestion = async (req, res) => {
         success: false,
         message: "Mock test question not found"
       });
+    }
+
+    // Delete question image if exists
+    if (question.questionImageUrl) {
+      try {
+        await deleteFromCloudinary(question.questionImageUrl);
+      } catch (error) {
+        console.error("Error deleting question image:", error);
+        // Continue with deletion even if image deletion fails
+      }
+    }
+
+    // Delete option images if exist
+    if (question.options && question.options.length > 0) {
+      for (const option of question.options) {
+        if (option.imageUrl) {
+          try {
+            await deleteFromCloudinary(option.imageUrl);
+          } catch (error) {
+            console.error("Error deleting option image:", error);
+            // Continue with deletion even if image deletion fails
+          }
+        }
+      }
     }
 
     await question.deleteOne();
@@ -606,6 +631,40 @@ export const deleteAllMockTestQuestions = async (req, res) => {
       });
     }
 
+    // Fetch all questions to delete their images
+    const questions = await MockTestQuestion.find({
+      mockTestId,
+      mockTestSectionId
+    });
+
+    // Delete all images from Cloudinary
+    for (const question of questions) {
+      // Delete question image if exists
+      if (question.questionImageUrl) {
+        try {
+          await deleteFromCloudinary(question.questionImageUrl);
+        } catch (error) {
+          console.error("Error deleting question image:", error);
+          // Continue with deletion even if image deletion fails
+        }
+      }
+
+      // Delete option images if exist
+      if (question.options && question.options.length > 0) {
+        for (const option of question.options) {
+          if (option.imageUrl) {
+            try {
+              await deleteFromCloudinary(option.imageUrl);
+            } catch (error) {
+              console.error("Error deleting option image:", error);
+              // Continue with deletion even if image deletion fails
+            }
+          }
+        }
+      }
+    }
+
+    // Delete all questions from database
     await MockTestQuestion.deleteMany({
       mockTestId,
       mockTestSectionId
@@ -760,10 +819,11 @@ export const updateMockTestQuestion = async (req, res) => {
 
     /* ================= QUESTION ORDER CHECK ================= */
 
-    if (questionOrder !== undefined && questionOrder !== question.questionOrder) {
+    if (questionOrder !== undefined && Number(questionOrder) !== question.questionOrder) {
       const orderExists = await MockTestQuestion.findOne({
         mockTestSectionId,
-        questionOrder
+        questionOrder: Number(questionOrder),
+        _id: { $ne: questionId } // Exclude the current question being updated
       });
 
       if (orderExists) {
@@ -776,32 +836,32 @@ export const updateMockTestQuestion = async (req, res) => {
 
     /* ================= IMAGE UPDATE (SAFE REPLACE) ================= */
 
-const questionImageLocalPath = req.files?.questionImage?.[0]?.path;
+    const questionImageLocalPath = req.files?.questionImage?.[0]?.path;
 
-if (questionImageLocalPath) {
-  // Upload new image first
-  const uploaded = await uploadOnCloudinary(questionImageLocalPath);
+    if (questionImageLocalPath) {
+      // Upload new image first
+      const uploaded = await uploadOnCloudinary(questionImageLocalPath);
 
-  if (!uploaded?.secure_url) {
-    return res.status(500).json({
-      success: false,
-      message: "Question image upload failed"
-    });
-  }
+      if (!uploaded?.secure_url) {
+        return res.status(500).json({
+          success: false,
+          message: "Question image upload failed"
+        });
+      }
 
-  // Delete old image (NON-BLOCKING)
-  if (question.questionImageUrl) {
-    try {
-      await deleteFromCloudinary(question.questionImageUrl);
-    } catch (error) {
-      console.error("Error deleting old question image:", error);
-      // Do NOT stop execution
+      // Delete old image (NON-BLOCKING)
+      if (question.questionImageUrl) {
+        try {
+          await deleteFromCloudinary(question.questionImageUrl);
+        } catch (error) {
+          console.error("Error deleting old question image:", error);
+          // Do NOT stop execution
+        }
+      }
+
+      // Save new image URL
+      question.questionImageUrl = uploaded.secure_url;
     }
-  }
-
-  // Save new image URL
-  question.questionImageUrl = uploaded.secure_url;
-}
 
     /* ================= UPDATE FIELDS ================= */
 
