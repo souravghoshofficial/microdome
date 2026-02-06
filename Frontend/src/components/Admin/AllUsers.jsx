@@ -35,9 +35,10 @@ const AllUsers = () => {
                 year: "numeric",
               }),
               mobile: u?.mobileNumber || "---",
-              university: u?.instituteName || "---",
+              instituteName: u?.instituteName || "---",
               role: u.role,
               isPremium: u.isPremiumMember ? "Yes" : "No",
+              presentCourseOfStudy: u?.presentCourseOfStudy || "---",
             }))
           );
           toast.success(res.data.message || "Users fetched successfully");
@@ -104,7 +105,8 @@ const AllUsers = () => {
                 <th className="px-4 py-2 text-center whitespace-nowrap">
                   Is Premium
                 </th>
-                <th className="px-4 py-2 text-center">Institute Name</th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">Institute Name</th>
+                <th className="px-4 py-2 text-center">Present Course of Study</th>
               </tr>
             </thead>
             <tbody>
@@ -142,8 +144,12 @@ const AllUsers = () => {
                     <td className="px-4 py-3 text-center">{user.isPremium}</td>
 
                     {/* Institute */}
+                    <td className="px-4 py-3 text-center text-wrap max-w-md">
+                      {user.instituteName}
+                    </td>
+                    {/* Present Course of Study */}
                     <td className="px-4 py-3 text-center">
-                      {user.university}
+                      {user.presentCourseOfStudy}
                     </td>
                   </tr>
                 ))

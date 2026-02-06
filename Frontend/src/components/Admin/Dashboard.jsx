@@ -81,7 +81,8 @@ const Dashboard = () => {
               role: u.role,
               mobile: u?.mobileNumber || "---",
               isPremium: u.isPremiumMember ? "Yes" : "No",
-              instituteName: u?.instituteName || "---"
+              instituteName: u?.instituteName || "---",
+              presentCourseOfStudy: u?.presentCourseOfStudy || "---",
             }))
           );
         }
@@ -157,7 +158,8 @@ const Dashboard = () => {
                 <th className="px-4 py-2 text-center whitespace-nowrap">Mobile No.</th>
                 <th className="px-4 py-2 text-center whitespace-nowrap">Date Joined</th>
                 <th className="px-4 py-2 text-center whitespace-nowrap">Is Premium</th>
-                <th className="px-4 py-2 text-center">Institute Name</th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">Institute Name</th>
+                <th className="px-4 py-2 text-center ">Present Course of Study</th>
               </tr>
             </thead>
             <tbody>
@@ -179,7 +181,8 @@ const Dashboard = () => {
                     <td className="px-4 py-3 text-center">{user.mobile}</td>
                     <td className="px-4 py-3 text-center">{user.dateJoined}</td>
                     <td className="px-4 py-3 text-center">{user.isPremium}</td>
-                    <td className="px-4 py-3 text-center">{user.instituteName}</td>
+                    <td className="px-4 py-3 text-center text-wrap max-w-md">{user.instituteName}</td>
+                    <td className="px-4 py-3 text-center">{user.presentCourseOfStudy}</td>
                   </tr>
                 ))
               ) : (

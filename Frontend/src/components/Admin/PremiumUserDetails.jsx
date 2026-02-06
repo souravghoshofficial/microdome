@@ -40,8 +40,9 @@ const PremiumUserDetails = () => {
                   })
                 : "---",
               mobile: u?.mobileNumber || "---",
-              university: u?.instituteName || "---",
+              instituteName: u?.instituteName || "---",
               access: u.isActive,
+              presentCourseOfStudy: u?.presentCourseOfStudy || "---",
             }))
           );
           setCourseName(res.data.courseName || "---");
@@ -121,7 +122,8 @@ const PremiumUserDetails = () => {
                 <th className="px-4 py-2 text-center whitespace-nowrap">
                   Mobile No.
                 </th>
-                <th className="px-4 py-2 text-center">Institute Name</th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">Institute Name</th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">Present Course of Study</th>
                 <th className="px-4 py-2 text-center">Status</th>
               </tr>
             </thead>
@@ -153,7 +155,8 @@ const PremiumUserDetails = () => {
                     <td className="px-4 py-3 text-center whitespace-nowrap">
                       {user.mobile}
                     </td>
-                    <td className="px-4 py-3 text-center">{user.university}</td>
+                    <td className="px-4 py-3 text-center text-wrap max-w-md">{user.instituteName}</td>
+                    <td className="px-4 py-3 text-center">{user.presentCourseOfStudy}</td>
 
                     {/* ✅ Role-based Access Control */}
                     <td className="px-4 py-3 text-center">

@@ -25,7 +25,7 @@ export const getAllUsers = async (req, res) => {
 
     let query = User.find({})
       .select(
-        "-password -__v -updatedAt -enrolledCourses -presentCourseOfStudy"
+        "-password -__v -updatedAt -enrolledCourses"
       )
       .sort({ createdAt: -1 }); // newest first
 
@@ -420,7 +420,7 @@ export const getUserDetailsByCourseId = async (req, res) => {
       .sort({ createdAt: -1 }) // ✅ Sort by newest first
       .populate(
         "userId",
-        "name email mobileNumber profileImage instituteName createdAt"
+        "name email mobileNumber profileImage instituteName presentCourseOfStudy createdAt"
       )
       .lean();
 
@@ -441,6 +441,7 @@ export const getUserDetailsByCourseId = async (req, res) => {
       mobileNumber: enrollment.userId.mobileNumber,
       profileImage: enrollment.userId.profileImage,
       instituteName: enrollment.userId.instituteName,
+      presentCourseOfStudy: enrollment.userId.presentCourseOfStudy,
       createdAt: enrollment.createdAt,
       isActive: enrollment.isActive,
     }));
