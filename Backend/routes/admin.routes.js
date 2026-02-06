@@ -18,7 +18,8 @@ import {
   editQuiz,
   generateQuiz,
   deleteQuiz,
-  resetQuizPrice
+  resetQuizPrice,
+  changeUserRole
 } from "../controllers/admin.controller.js";
 import { authorizedRoles } from "../middlewares/authorizedRoles.middleware.js";
 
@@ -58,5 +59,9 @@ router.route("/grant-access").post(authorizedRoles("admin"), grantAccess);
 router.route("/stats/users").get(authorizedRoles("admin", "instructor"), getTotalUserCount)
 router.route("/stats/premium-users").get(authorizedRoles("admin", "instructor"), getPremiumUserCount)
 router.route("/stats/courses").get(authorizedRoles("admin", "instructor"), getTotalCourses)
+
+
+// --- change user role --- //
+router.route("/change-user-role/:userId").patch(authorizedRoles("admin"), changeUserRole);
 
 export default router;

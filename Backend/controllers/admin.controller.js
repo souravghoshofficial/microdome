@@ -711,3 +711,42 @@ export const getTotalCourses = async (req, res) => {
     });
   }
 };
+
+
+export const changeUserRole = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { role } = req.body;
+
+    if (!["admin", "instructor", "user"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+
+    // Prevent self-demotion / self-promotion
+    if (req.user._id.toString() === userId) {
+      return res.status(400).json({
+        message: "You cannot change your own role"
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.role = role;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Role updated to ${role}`,
+      user: {
+        _id: user._id,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    console.error("Change role error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

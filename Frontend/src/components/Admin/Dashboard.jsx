@@ -16,6 +16,12 @@ const Dashboard = () => {
 
   const [latestUsers, setLatestUsers] = useState([]);
 
+   const roleStyles = {
+  admin: "bg-red-100 text-red-700",
+  instructor: "bg-blue-100 text-blue-700",
+  user: "bg-green-100 text-green-700"
+};
+
   useEffect(() => {
     // Fetch total users
     axios
@@ -170,17 +176,24 @@ const Dashboard = () => {
                       <img
                         src={user.profilePic}
                         alt={user.name}
-                        className="w-8 h-8 rounded-full object-cover"
+                        className="w-8 h-8 md:h-10 md:w-10 rounded-full object-cover"
                       />
                       <div>
                         <p className="font-medium">{user.name}</p>
                         <p className="text-xs text-gray-500">{user.email}</p>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-center">{capitalizeFirst(user.role)}</td>
+
+                    <td >
+                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${roleStyles[user.role]}`}>
+                        {capitalizeFirst(user.role)}
+                      </span>
+                    </td>
                     <td className="px-4 py-3 text-center">{user.mobile}</td>
                     <td className="px-4 py-3 text-center">{user.dateJoined}</td>
-                    <td className="px-4 py-3 text-center">{user.isPremium}</td>
+                    <td className="px-4 py-2 text-center">
+                      <span className={`inline-block text-xs font-medium px-4 py-1 rounded-full text-center ${user.isPremium === "Yes" ? "text-amber-700 bg-amber-100" : "text-gray-700 bg-gray-200"}`}>{user.isPremium}</span>
+                    </td>
                     <td className="px-4 py-3 text-center text-wrap max-w-md">{user.instituteName}</td>
                     <td className="px-4 py-3 text-center">{user.presentCourseOfStudy}</td>
                   </tr>

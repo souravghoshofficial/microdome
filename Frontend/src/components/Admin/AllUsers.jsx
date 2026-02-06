@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import userImage from "../../assets/user-img.jpeg";
+import { useSelector } from "react-redux"
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const AllUsers = () => {
+  const currentUser = useSelector((state) => state.auth?.userData)
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -13,9 +15,53 @@ const AllUsers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(12);
 
+  const [openRoleMenu, setOpenRoleMenu] = useState(null);
+
+  const roleStyles = {
+  admin: "bg-red-100 text-red-700",
+  instructor: "bg-blue-100 text-blue-700",
+  user: "bg-green-100 text-green-700"
+};
+
+  const [confirmData, setConfirmData] = useState(null);
+  const [updatingRole, setUpdatingRole] = useState(false);
+
   function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
   }
+
+
+   // 🔹 FINAL role update after confirmation
+  const confirmRoleChange = async () => {
+    if (!confirmData) return;
+
+    const { userId, newRole } = confirmData;
+    setUpdatingRole(true);
+
+    try {
+      await axios.patch(
+        `${ApiUrl}/admin/change-user-role/${userId}`,
+        { role: newRole },
+        { withCredentials: true }
+      );
+
+      toast.success("User role updated");
+
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === userId ? { ...u, role: newRole } : u
+        )
+      );
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || "Failed to update role"
+      );
+    } finally {
+      setUpdatingRole(false);
+      setConfirmData(null);
+    }
+  };
+
 
 
   useEffect(() => {
@@ -91,7 +137,7 @@ const AllUsers = () => {
       {/* Table */}
       <div className="flex-1 overflow-auto scrollbar-none">
         <div className="overflow-x-auto scrollbar-none ">
-          <table className="min-w-[800px] w-full border-collapse ">
+          <table className="min-w-full border-collapse ">
             <thead className="bg-gray-100 sticky top-0 z-10">
               <tr className="text-left text-gray-600 border-b text-sm md:text-base">
                 <th className="px-4 py-2">Name</th>
@@ -105,8 +151,8 @@ const AllUsers = () => {
                 <th className="px-4 py-2 text-center whitespace-nowrap">
                   Is Premium
                 </th>
-                <th className="px-4 py-2 text-center whitespace-nowrap">Institute Name</th>
-                <th className="px-4 py-2 text-center">Present Course of Study</th>
+                <th className="px-4 py-2 text-center">Institute Name</th>
+                <th className="px-4 py-2 text-center ">Present Course of Study</th>
               </tr>
             </thead>
             <tbody>
@@ -121,18 +167,75 @@ const AllUsers = () => {
                       <img
                         src={user.profilePic}
                         alt={user.name}
-                        className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
+                        className="w-8 h-8 md:h-10 md:w-10 rounded-full object-cover"
                       />
-                      <div className="min-w-[150px]">
+                      <div>
                         <p className="font-medium">{user.name}</p>
-                        <p className="text-[11px] md:text-xs text-gray-500 truncate">
+                        <p className="text-xs text-gray-500">
                           {user.email}
                         </p>
                       </div>
                     </td>
 
-                    {/* Role */}
-                    <td className="px-4 py-3 text-center">{capitalizeFirst(user.role)}</td>
+                     {/* Role */}
+                <td className="px-4 py-3 text-center relative">
+                  {currentUser?.role === "admin" ? (
+                    user.id === currentUser._id ? (
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${roleStyles[user.role]}`}
+                      >
+                        {capitalizeFirst(user.role)}
+                      </span>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() =>
+                            setOpenRoleMenu(openRoleMenu === user.id ? null : user.id)
+                          }
+                          className={`px-3 py-1 rounded-full text-xs font-medium cursor-pointer ${roleStyles[user.role]}`}
+                        >
+                          {capitalizeFirst(user.role)}
+                        </button>
+
+                        {openRoleMenu === user.id && (
+                          <div className="absolute z-20 mt-2 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow overflow-hidden px-1.5 py-2">
+                            <div className="px-2 pt-1 text-left">
+                              <span className="text-xs font-bold">Change Role</span>
+                            </div>
+                           <hr className="my-1.5 text-gray-400" />
+                            {["user", "instructor", "admin"].map((role) => (
+                              <button
+                                key={role}
+                                onClick={() => {
+                                  setOpenRoleMenu(null);
+                                  if (role !== user.role) {
+                                    setConfirmData({
+                                      userId: user.id,
+                                      userName: user.name,
+                                      newRole: role
+                                    });
+                                  }
+                                }}
+                                className={`p-2 text-left w-full hover:bg-gray-100 rounded-lg cursor-pointer`}
+                              >
+                                <span className={`px-4 py-1.5 rounded-full text-xs font-medium text-left ${roleStyles[role]} cursor-pointer`}>{capitalizeFirst(role)}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )
+                  ) : (
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${roleStyles[user.role]}`}
+                    >
+                      {capitalizeFirst(user.role)}
+                    </span>
+                  )}
+                </td>
+
+
+
 
                     {/* Mobile */}
                     <td className="px-4 py-3 text-center">{user.mobile}</td>
@@ -141,10 +244,12 @@ const AllUsers = () => {
                     <td className="px-4 py-3 text-center">{user.dateJoined}</td>
 
                     {/* Is Premium */}
-                    <td className="px-4 py-3 text-center">{user.isPremium}</td>
+                    <td className="px-4 py-2 text-center">
+                      <span className={`inline-block text-xs font-medium px-4 py-1 rounded-full text-center ${user.isPremium === "Yes" ? "text-amber-700 bg-amber-100" : "text-gray-700 bg-gray-200"}`}>{user.isPremium}</span>
+                    </td>
 
                     {/* Institute */}
-                    <td className="px-4 py-3 text-center text-wrap max-w-md">
+                    <td className="px-1 py-3 text-center text-wrap max-w-md">
                       {user.instituteName}
                     </td>
                     {/* Present Course of Study */}
@@ -200,6 +305,42 @@ const AllUsers = () => {
           >
             Next
           </button>
+        </div>
+      )}
+
+
+      {/* 🔹 CONFIRMATION MODAL */}
+      {confirmData && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold mb-2">
+              Confirm Role Change
+            </h3>
+
+            <p className="text-sm text-gray-600">
+              Are you sure you want to make{" "}
+              <strong>"{confirmData.userName}"</strong>{" "}
+              <strong className="capitalize">"{confirmData.newRole}"</strong>?
+            </p>
+
+            <div className="mt-5 flex justify-end gap-3">
+              <button
+                onClick={() => setConfirmData(null)}
+                className="px-3 py-1.5 border rounded hover:bg-gray-100 cursor-pointer"
+                disabled={updatingRole}
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={confirmRoleChange}
+                disabled={updatingRole}
+                className={`px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer ${updatingRole ? "opacity-50 cursor-not-allowed" : ""}`}
+              >
+                {updatingRole ? "Updating..." : "Confirm"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
