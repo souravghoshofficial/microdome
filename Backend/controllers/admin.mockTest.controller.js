@@ -70,7 +70,7 @@ export const createMockTestSection = async (req, res) => {
       title,
       questionType,
       totalQuestions,
-      mandatoryQuestions,
+      questionsToAttempt,
       sectionOrder
     } = req.body;
 
@@ -95,6 +95,26 @@ export const createMockTestSection = async (req, res) => {
       });
     }
 
+    // Validate questionsToAttempt
+    if (questionsToAttempt !== undefined && questionsToAttempt !== null) {
+      const qta = Number(questionsToAttempt);
+      const tq = Number(totalQuestions);
+
+      if (Number.isNaN(qta) || qta <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "questionsToAttempt must be a positive number"
+        });
+      }
+
+      if (qta > tq) {
+        return res.status(400).json({
+          success: false,
+          message: "questionsToAttempt cannot be greater than totalQuestions"
+        });
+      }
+    }
+
     // Check if MockTest exists
     const mockTestExists = await MockTest.findById(mockTestId);
     if (!mockTestExists) {
@@ -109,8 +129,9 @@ export const createMockTestSection = async (req, res) => {
       mockTestId,
       title,
       questionType,
-      totalQuestions,
-      mandatoryQuestions: mandatoryQuestions ?? null,
+      totalQuestions: Number(totalQuestions),
+      questionsToAttempt:
+        questionsToAttempt !== undefined ? Number(questionsToAttempt) : null,
       sectionOrder
     });
 
@@ -131,6 +152,7 @@ export const createMockTestSection = async (req, res) => {
 };
 
 
+
 export const updateMockTestSection = async (req, res) => {
   try {
     const { mockTestId, mockTestSectionId } = req.params;
@@ -138,7 +160,7 @@ export const updateMockTestSection = async (req, res) => {
       title,
       questionType,
       totalQuestions,
-      mandatoryQuestions,
+      questionsToAttempt,
       sectionOrder
     } = req.body;
 
@@ -195,15 +217,42 @@ export const updateMockTestSection = async (req, res) => {
       });
     }
 
+    // Validate questionsToAttempt
+    if (questionsToAttempt !== undefined && questionsToAttempt !== null) {
+      const qta = Number(questionsToAttempt);
+
+      const effectiveTotalQuestions =
+        totalQuestions !== undefined
+          ? Number(totalQuestions)
+          : section.totalQuestions;
+
+      if (Number.isNaN(qta) || qta <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "questionsToAttempt must be a positive number"
+        });
+      }
+
+      if (qta > effectiveTotalQuestions) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "questionsToAttempt cannot be greater than totalQuestions"
+        });
+      }
+    }
+
     /* ================= UPDATE FIELDS ================= */
 
     if (title !== undefined) section.title = title;
     if (questionType !== undefined) section.questionType = questionType;
+
     if (totalQuestions !== undefined)
       section.totalQuestions = Number(totalQuestions);
 
-    if (mandatoryQuestions !== undefined)
-      section.mandatoryQuestions = mandatoryQuestions ?? null;
+    if (questionsToAttempt !== undefined)
+      section.questionsToAttempt =
+        questionsToAttempt !== null ? Number(questionsToAttempt) : null;
 
     if (sectionOrder !== undefined)
       section.sectionOrder = Number(sectionOrder);
@@ -224,6 +273,7 @@ export const updateMockTestSection = async (req, res) => {
     });
   }
 };
+
 
 
 export const deleteMockTestSection = async (req, res) => {

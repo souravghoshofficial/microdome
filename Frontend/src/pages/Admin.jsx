@@ -25,8 +25,8 @@ const adminMenuItems = [
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
   { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
-  {name: "Mock Tests", icon: <ClipboardList size={20}/>, href: "/admin/mock-tests"},
-  {name: "Mock Test Bundles", icon: <Folder size={20}/>, href: "/admin/mock-test-bundles"},
+  { name: "Mock Tests", icon: <ClipboardList size={20}/>, href: "/admin/mock-tests"},
+  { name: "Mock Test Bundles", icon: <Folder size={20}/>, href: "/admin/mock-test-bundles"},
   { name: "Coupons", icon: <Tickets size={20} />, href: "/admin/coupons" },
 ];
 
@@ -38,7 +38,6 @@ const instructorMenuItems = [
   { name: "Add Section", icon: <Layers size={20} />, href: "/admin/add-section" },
   { name: "Add Lecture", icon: <Video size={20} />, href: "/admin/add-lecture" },
   { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
-  {name: "Mock Tests", icon: <ClipboardList size={20}/>, href: "/admin/mock-tests"}
 
 ];
 

@@ -99,18 +99,20 @@ const AdminManageMockTestBundle = () => {
     <div className="p-6">
       <Toaster position="top-right" />
 
-      <h1 className="text-2xl font-bold mb-4">
-        Manage Bundle: {bundle.title}
+      <h1 className="text-2xl md:text-3xl font-bold text-blue-800">
+        {bundle.title}
       </h1>
 
       {/* ADD BUTTON */}
-      <button
+      <div className="flex justify-end">
+        <button
         onClick={() => setShowAdd(!showAdd)}
         className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
       >
         <Plus className="w-4 h-4" />
         Add Mock Tests
       </button>
+      </div>
 
       {/* ADD FORM */}
       {showAdd && (
@@ -135,12 +137,14 @@ const AdminManageMockTestBundle = () => {
             ))}
           </select>
 
-          <button
+         <div className="flex justify-end">
+           <button
             onClick={addMockTests}
             className="mt-3 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer"
           >
             Add Selected
           </button>
+         </div>
         </div>
       )}
 

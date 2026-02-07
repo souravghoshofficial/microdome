@@ -20,7 +20,7 @@ const mockTestSectionSchema = new Schema({
     type: Number,
     required: true
   },
-  mandatoryQuestions: {
+  questionsToAttempt: {
     type: Number,
     default: null
   },
