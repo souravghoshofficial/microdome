@@ -222,11 +222,11 @@ const AdminMockTestBundles = () => {
                 className="h-48 rounded object-cover"
               />
 
-              <h2 className="mt-2 text-xl font-semibold text-center">
+              <h2 className="mt-2 text-xl font-semibold text-left">
                 {bundle.title}
               </h2>
 
-              <p className="text-sm text-gray-600 text-center line-clamp-2">
+              <p className="text-sm text-gray-600 text-left line-clamp-2">
                 {bundle.description}
               </p>
 
