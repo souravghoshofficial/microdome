@@ -581,7 +581,7 @@ const AdminMockTestSections = () => {
         {sections.map((section) => (
           <div
             key={section._id}
-            className="border rounded-lg p-3 flex justify-between items-center mb-4 hover:shadow hover:border-blue-500 hover:border-2"
+            className="border rounded-lg p-3 flex justify-between items-center mb-4 hover:shadow hover:border-blue-600 hover:-translate-y-1 transition-all duration-300"
           >
             <Link
               to={`/admin/mock-tests/${mockTestId}/${section._id}/questions`}

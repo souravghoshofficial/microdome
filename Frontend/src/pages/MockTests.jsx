@@ -77,7 +77,7 @@ const MockTests = () => {
           {/* ================= NO TESTS AVAILABLE ================= */}
           {freeMockTests.length === 0 && bundles.length === 0 && (
             <div className="mt-8 min-h-[80vh] text-center">
-              <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">
+              <p data-aos="fade-up" data-aos-delay="200" className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">
                 No mock tests available at the moment.
               </p>
             </div>
@@ -233,7 +233,7 @@ const MockTests = () => {
                   </h3>
 
                   {/* DESCRIPTION */}
-                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                  <p className="text-sm my-1 text-gray-600 dark:text-gray-400 line-clamp-2">
                     {test.description}
                   </p>
 

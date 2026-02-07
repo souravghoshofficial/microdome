@@ -1,6 +1,7 @@
 import { MockTest } from "../models/mockTest.model.js";
 import { MockTestSection } from "../models/mockTestSection.model.js";
 import { MockTestQuestion } from "../models/mockTestQuestion.model.js";
+import { MockTestBundle } from "../models/mockTestBundle.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/cloudinary.js";
 import mongoose from "mongoose";
@@ -1218,6 +1219,7 @@ export const deleteMockTest = async (req, res) => {
       });
     }
 
+    // Check mock test exists
     const mockTest = await MockTest.findById(mockTestId);
     if (!mockTest) {
       return res.status(404).json({
@@ -1227,22 +1229,32 @@ export const deleteMockTest = async (req, res) => {
     }
 
     // Block delete if sections exist
-    const sectionCount = await MockTestSection.countDocuments({ mockTestId });
+    const sectionCount = await MockTestSection.countDocuments({
+      mockTestId
+    });
 
     if (sectionCount > 0) {
       return res.status(400).json({
         success: false,
-        message:
-          "Cannot delete mock test. Delete all sections first."
+        message: "Cannot delete mock test. Delete all sections first."
       });
     }
 
+    // REMOVE MOCK TEST FROM ALL BUNDLES
+    await MockTestBundle.updateMany(
+      { mockTestIds: mockTestId },
+      { $pull: { mockTestIds: mockTestId } }
+    );
+
+    // DELETE MOCK TEST
     await mockTest.deleteOne();
 
     return res.status(200).json({
       success: true,
-      message: "Mock test deleted successfully"
+      message:
+        "Mock test deleted successfully and removed from all bundles"
     });
+
   } catch (error) {
     console.error("Delete MockTest Error:", error);
     return res.status(500).json({
@@ -1251,3 +1263,4 @@ export const deleteMockTest = async (req, res) => {
     });
   }
 };
+

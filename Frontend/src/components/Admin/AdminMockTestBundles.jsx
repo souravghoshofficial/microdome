@@ -6,7 +6,7 @@ import {
   ImagePlus,
   Pencil,
   AlertTriangle,
-  Layers
+  Layers,
 } from "lucide-react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -33,17 +33,16 @@ const AdminMockTestBundles = () => {
     actualPrice: "",
     discountedPrice: "",
     thumbnailImage: null,
-    isActive: true
+    isActive: true,
   });
 
   /* ================= FETCH ================= */
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(
-        `${ApiUrl}/admin/mock-test-bundles`,
-        { withCredentials: true }
-      );
+      const res = await axios.get(`${ApiUrl}/admin/mock-test-bundles`, {
+        withCredentials: true,
+      });
       setBundles(res.data.data || []);
     } catch {
       toast.error("Failed to load bundles");
@@ -65,7 +64,7 @@ const AdminMockTestBundles = () => {
       actualPrice: "",
       discountedPrice: "",
       thumbnailImage: null,
-      isActive: true
+      isActive: true,
     });
     setThumbnailPreview(null);
     setEditingBundle(null);
@@ -79,7 +78,7 @@ const AdminMockTestBundles = () => {
       actualPrice: bundle.actualPrice,
       discountedPrice: bundle.discountedPrice,
       thumbnailImage: null,
-      isActive: bundle.isActive
+      isActive: bundle.isActive,
     });
     setThumbnailPreview(bundle.thumbnail);
     setShowModal(true);
@@ -116,15 +115,13 @@ const AdminMockTestBundles = () => {
         await axios.patch(
           `${ApiUrl}/admin/mock-test-bundles/${editingBundle._id}`,
           fd,
-          { withCredentials: true }
+          { withCredentials: true },
         );
         toast.success("Bundle updated successfully");
       } else {
-        await axios.post(
-          `${ApiUrl}/admin/mock-test-bundles`,
-          fd,
-          { withCredentials: true }
-        );
+        await axios.post(`${ApiUrl}/admin/mock-test-bundles`, fd, {
+          withCredentials: true,
+        });
         toast.success("Bundle created successfully");
       }
 
@@ -148,7 +145,7 @@ const AdminMockTestBundles = () => {
       await axios.patch(
         `${ApiUrl}/admin/mock-test-bundles/${confirmBundle._id}/status`,
         { isActive: !confirmBundle.isActive },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       toast.success("Bundle status updated");
@@ -177,9 +174,7 @@ const AdminMockTestBundles = () => {
 
       {/* HEADER */}
       <header className="mb-4 flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-blue-800">
-          Mock Test Bundles
-        </h1>
+        <h1 className="text-3xl font-bold text-blue-800">Mock Test Bundles</h1>
         <button
           onClick={() => setShowModal(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded
@@ -193,23 +188,23 @@ const AdminMockTestBundles = () => {
       {/* EMPTY STATE */}
       {bundles.length === 0 ? (
         <div className="h-[70vh] flex flex-col items-center justify-center text-center px-4">
-    <Layers className="w-16 h-16 text-gray-400 mb-4" />
-    <h2 className="text-xl font-semibold text-gray-700">
-      No Mock Test Bundles Yet
-    </h2>
-    <p className="text-sm text-gray-500 mt-2 max-w-md">
-      Bundles let you group multiple paid mock tests and sell them together
-      at a discounted price.
-    </p>
+          <Layers className="w-16 h-16 text-gray-400 mb-4" />
+          <h2 className="text-xl font-semibold text-gray-700">
+            No Mock Test Bundles Yet
+          </h2>
+          <p className="text-sm text-gray-500 mt-2 max-w-md">
+            Bundles let you group multiple paid mock tests and sell them
+            together at a discounted price.
+          </p>
 
-    <button
-      onClick={() => setShowModal(true)}
-      className="mt-6 flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
-    >
-      <Plus className="w-4 h-4" />
-      Create Your First Bundle
-    </button>
-  </div>
+          <button
+            onClick={() => setShowModal(true)}
+            className="mt-6 flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            Create Your First Bundle
+          </button>
+        </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-auto py-4 scrollbar-none">
           {bundles.map((bundle) => (
@@ -302,8 +297,8 @@ const AdminMockTestBundles = () => {
 
             <p className="text-sm text-gray-600">
               Are you sure you want to{" "}
-              <b>{confirmBundle.isActive ? "deactivate" : "activate"}</b>{" "}
-              this bundle?
+              <b>{confirmBundle.isActive ? "deactivate" : "activate"}</b> this
+              bundle?
             </p>
 
             <div className="mt-5 flex justify-end gap-2">
@@ -331,14 +326,13 @@ const AdminMockTestBundles = () => {
       {/* CREATE / EDIT MODAL */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-full max-w-xl p-6 relative">
+          <div className="bg-white rounded-xl max-h-[90vh] w-full max-w-xl p-6 relative overflow-y-scroll scrollbar-none">
             <button
               onClick={() => {
                 setShowModal(false);
                 resetForm();
               }}
-              className="absolute top-4 right-4 hover:bg-gray-100
-                         p-1 rounded cursor-pointer"
+              className="absolute top-4 right-4 hover:bg-gray-100 p-1 rounded cursor-pointer"
             >
               <X />
             </button>
@@ -377,30 +371,31 @@ const AdminMockTestBundles = () => {
               <label className="text-sm font-medium mb-1 block">
                 Thumbnail Image
               </label>
-              <label className="flex flex-col items-center justify-center h-40
+              <label
+                className="flex flex-col items-center justify-center h-40
                                 border-2 border-dashed rounded-lg
                                 border-gray-300 bg-gray-50
-                                hover:bg-gray-100 transition cursor-pointer">
+                                hover:bg-gray-100 transition cursor-pointer"
+              >
                 {thumbnailPreview ? (
-                  <img src={thumbnailPreview} className="h-full object-contain" />
+                  <img
+                    src={thumbnailPreview}
+                    className="h-full object-contain"
+                  />
                 ) : (
                   <>
                     <ImagePlus className="w-8 h-8 text-gray-400 mb-2" />
                     <p className="text-sm text-gray-600">
                       Click to upload or browse image
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      PNG, JPG, JPEG
-                    </p>
+                    <p className="text-xs text-gray-400 mt-1">PNG, JPG, JPEG</p>
                   </>
                 )}
                 <input
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={(e) =>
-                    handleThumbnailChange(e.target.files[0])
-                  }
+                  onChange={(e) => handleThumbnailChange(e.target.files[0])}
                 />
               </label>
 
