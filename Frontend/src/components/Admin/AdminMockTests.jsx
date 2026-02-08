@@ -367,7 +367,7 @@ const AdminMockTests = () => {
                       : "PUBLISHED",
                 })
               }
-              className={`w-[95%] mx-auto mt-2 py-2 rounded font-semibold cursor-pointer ${
+              className={`w-[95%] mx-auto mt-2 py-2 rounded cursor-pointer ${
                 test.status === "PUBLISHED"
                   ? "border border-red-500 text-red-600 hover:bg-red-50"
                   : "border border-green-500 text-green-600 hover:bg-green-50"
