@@ -1264,3 +1264,42 @@ export const deleteMockTest = async (req, res) => {
   }
 };
 
+export const updateMockTestStatus = async (req, res) => {
+  const { mockTestId } = req.params;
+  const { status } = req.body;
+
+  if (!["DRAFT", "PUBLISHED"].includes(status)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid status"
+    });
+  }
+
+  const mockTest = await MockTest.findById(mockTestId);
+  if (!mockTest) {
+    return res.status(404).json({
+      success: false,
+      message: "Mock test not found"
+    });
+  }
+
+  // Safety check before publishing
+  // if (status === "PUBLISHED") {
+  //   const sectionCount = await MockTestSection.countDocuments({ mockTestId: id });
+
+  //   if (sectionCount === 0) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       message: "Cannot publish mock test without sections"
+  //     });
+  //   }
+  // }
+
+  mockTest.status = status;
+  await mockTest.save();
+
+  res.json({
+    success: true,
+    message: `Mock test ${status.toLowerCase()} successfully`
+  });
+};

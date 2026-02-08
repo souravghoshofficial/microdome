@@ -593,18 +593,18 @@ const AdminMockTestSections = () => {
               </p>
             </Link>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 md:gap-3">
               <button
                 onClick={() => openEditModal(section)}
                 className="p-2 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded cursor-pointer"
               >
-                <Pencil size={16} />
+                <Pencil size={20} />
               </button>
               <button
                 onClick={() => handleDeleteSection(section._id)}
                 className="p-2 bg-red-100 text-red-700 hover:bg-red-200 rounded cursor-pointer"
               >
-                <Trash2 size={16} />
+                <Trash2 size={20} />
               </button>
             </div>
           </div>

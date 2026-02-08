@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getMockTestBundles } from "../controllers/user.mockTestBundle.controller.js";
+import { getMockTestBundles, getMockTestBundleById } from "../controllers/user.mockTestBundle.controller.js";
 
 const router = Router();
 
 router.route("/").get(getMockTestBundles);
+router.route("/:bundleId").get(getMockTestBundleById);
 
 export default router;

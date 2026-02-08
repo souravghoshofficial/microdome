@@ -60,7 +60,8 @@ import {
   QuizLeaderboard,
   Exam,
   PageNotFound,
-  MockTests
+  MockTests,
+  MockTestBundleDetails
 } from "./pages";
 
 import {
@@ -134,7 +135,10 @@ const App = () => {
               />
             </Route>
           </Route>
+
+          {/* Mock Test Routes*/}
           <Route path="/mock-tests" element={<MockTests/>}/>
+          <Route path="/mock-tests/bundles/:bundleId" element={<MockTestBundleDetails/>}/>
 
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />

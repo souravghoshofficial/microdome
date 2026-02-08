@@ -163,6 +163,13 @@ const AdminManageMockTestBundle = () => {
                 <p className="text-xs text-gray-500">
                   {test.durationMinutes} mins · {test.totalMarks} marks
                 </p>
+                <div className="mt-1">
+                  {test.status === "DRAFT" ? (
+                    <span className="text-xs text-gray-700 bg-gray-200 px-3 py-1 rounded">DRAFT</span>
+                  ) : (
+                    <span className="text-xs text-blue-600 bg-blue-100 px-3 py-1 rounded">PUBLISHED</span>
+                  )}
+                </div>
               </div>
 
               <button

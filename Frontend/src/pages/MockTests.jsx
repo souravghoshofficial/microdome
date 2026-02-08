@@ -5,6 +5,7 @@ import "aos/dist/aos.css";
 import { Helmet } from "react-helmet-async";
 
 import { Clock, Target, PlayCircle, ClipboardList, Loader2 } from "lucide-react";
+import { Link } from "react-router";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -120,7 +121,7 @@ const MockTests = () => {
                   return (
                     <div
                       key={bundle._id}
-                      className="group cursor-pointer hover:-translate-y-3 flex flex-col overflow-hidden rounded-xl border border-zinc-900/10 dark:border-gray-700/25 bg-white dark:bg-zinc-900 shadow-lg hover:border-blue-500 transition-all duration-300"
+                      className="group hover:-translate-y-3 flex flex-col overflow-hidden rounded-xl border border-zinc-900/10 dark:border-gray-700/25 bg-white dark:bg-zinc-900 shadow-lg hover:border-blue-500 transition-all duration-300"
                     >
                       {/* IMAGE */}
                       <div className="p-4">
@@ -167,9 +168,9 @@ const MockTests = () => {
                           </div>
                         </div>
 
-                        <button className="mt-4 w-full px-3 py-2 text-center text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-md transition">
+                        <Link to={`/mock-tests/bundles/${bundle._id}`} className="mt-4 w-full px-3 py-2 text-center text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-md transition">
                           View Series
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   );

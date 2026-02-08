@@ -229,7 +229,7 @@ export const getMockTestBundleById = async (req, res) => {
   const bundle = await MockTestBundle.findById(bundleId)
     .populate({
       path: "mockTestIds",
-      select: "title totalMarks durationMinutes accessType createdAt"
+      select: "title status totalMarks durationMinutes accessType createdAt"
     });
 
   if (!bundle) {

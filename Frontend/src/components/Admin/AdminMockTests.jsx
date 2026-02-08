@@ -6,7 +6,7 @@ import {
   ClipboardList,
   Pencil,
   Trash2,
-  Layers
+  Layers,
 } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -19,7 +19,7 @@ const MOCK_TEST_TYPE_LABELS = {
   IIT_JAM: "IIT JAM",
   CUET_PG: "CUET PG",
   GAT_B: "GAT-B",
-  GATE: "GATE"
+  GATE: "GATE",
 };
 
 const AdminMockTests = () => {
@@ -37,6 +37,9 @@ const AdminMockTests = () => {
   const [deleting, setDeleting] = useState(false);
 
 
+  const [statusModal, setStatusModal] = useState(null);
+  const [statusUpdating, setStatusUpdating] = useState(false);
+
   const user = useSelector((state) => state.auth?.userData);
 
   const [formData, setFormData] = useState({
@@ -47,7 +50,7 @@ const AdminMockTests = () => {
     totalMarks: "",
     accessType: "FREE",
     instructions: "",
-    status: "DRAFT"
+    status: "DRAFT",
   });
 
   /* ================= FETCH ================= */
@@ -55,7 +58,7 @@ const AdminMockTests = () => {
   const fetchMockTests = async () => {
     try {
       const res = await axios.get(`${ApiUrl}/admin/mock-tests`, {
-        withCredentials: true
+        withCredentials: true,
       });
       setMockTests(res.data.mockTests);
     } catch {
@@ -84,7 +87,7 @@ const AdminMockTests = () => {
       totalMarks: "",
       accessType: "FREE",
       instructions: "",
-      status: "DRAFT"
+      status: "DRAFT",
     });
     setEditingTest(null);
   };
@@ -104,37 +107,33 @@ const AdminMockTests = () => {
       totalMarks: test.totalMarks,
       accessType: test.accessType,
       instructions: (test.instructions || []).join("\n"),
-      status: test.status
+      status: test.status,
     });
     setShowModal(true);
   };
 
+  const handleDeleteMockTest = async () => {
+    if (!deletingTestId) return;
 
-const handleDeleteMockTest = async () => {
-  if (!deletingTestId) return;
+    setDeleting(true);
 
-  setDeleting(true);
+    try {
+      await axios.delete(`${ApiUrl}/admin/mock-tests/${deletingTestId}`, {
+        withCredentials: true,
+      });
 
-  try {
-    await axios.delete(
-      `${ApiUrl}/admin/mock-tests/${deletingTestId}`,
-      { withCredentials: true }
-    );
-
-    toast.success("Mock test deleted");
-    setShowDeleteModal(false);
-    setDeletingTestId(null);
-    fetchMockTests();
-  } catch (error) {
-    toast.error(
-      error?.response?.data?.message || "Failed to delete mock test"
-    );
-  } finally {
-    setDeleting(false);
-  }
-};
-
-
+      toast.success("Mock test deleted");
+      setShowDeleteModal(false);
+      setDeletingTestId(null);
+      fetchMockTests();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to delete mock test",
+      );
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   /* ================= CREATE ================= */
 
@@ -152,9 +151,9 @@ const handleDeleteMockTest = async () => {
           instructions: formData.instructions
             .split("\n")
             .map((i) => i.trim())
-            .filter(Boolean)
+            .filter(Boolean),
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       toast.success("Mock test created successfully");
@@ -187,9 +186,9 @@ const handleDeleteMockTest = async () => {
           instructions: formData.instructions
             .split("\n")
             .map((i) => i.trim())
-            .filter(Boolean)
+            .filter(Boolean),
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       toast.success("Mock test updated successfully");
@@ -200,6 +199,34 @@ const handleDeleteMockTest = async () => {
       toast.error("Failed to update mock test");
     } finally {
       setUpdating(false);
+    }
+  };
+
+
+  /* ================= STATUS UPDATE ================= */
+
+  const handleConfirmStatusChange = async () => {
+    if (!statusModal) return;
+    setStatusUpdating(true);
+
+    try {
+      await axios.patch(
+        `${ApiUrl}/admin/mock-tests/${statusModal.id}/status`,
+        { status: statusModal.status },
+        { withCredentials: true },
+      );
+
+      toast.success(
+        `Mock test ${statusModal.status === "PUBLISHED" ? "published" : "unpublished"} successfully`,
+      );
+      setStatusModal(null);
+      fetchMockTests();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to update status",
+      );
+    } finally {
+      setStatusUpdating(false);
     }
   };
 
@@ -220,9 +247,7 @@ const handleDeleteMockTest = async () => {
       {/* Header */}
       <header className="mb-4 px-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-blue-800">
-            All Mock Tests
-          </h1>
+          <h1 className="text-3xl font-bold text-blue-800">All Mock Tests</h1>
 
           {user?.role === "admin" && (
             <button
@@ -238,104 +263,121 @@ const handleDeleteMockTest = async () => {
 
       {/* Grid */}
 
-            {mockTests.length === 0 ? (
+      {mockTests.length === 0 ? (
         <div className="h-[70vh] flex flex-col items-center justify-center text-center px-4">
-    <ClipboardList className="w-16 h-16 text-gray-400 mb-4" />
-    <h2 className="text-xl font-semibold text-gray-700">
-      No Mock Test Yet
-    </h2>
+          <ClipboardList className="w-16 h-16 text-gray-400 mb-4" />
+          <h2 className="text-xl font-semibold text-gray-700">
+            No Mock Test Yet
+          </h2>
 
-    <button
-      onClick={() => setShowModal(true)}
-      className="mt-6 flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
-    >
-      <Plus className="w-4 h-4" />
-      Create Your First Mock Test
-    </button>
-  </div>
-      ) : (
-      <div className="grid gap-2 md:gap-4 lg:gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-auto p-4">
-        {mockTests.map((test) => (
-          <div
-            key={test._id}
-            className="bg-white rounded-xl shadow-md p-4 flex flex-col"
+          <button
+            onClick={() => setShowModal(true)}
+            className="mt-6 flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
           >
-            <div className="flex justify-center mb-2">
-              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
-                <ClipboardList className="w-8 h-8 text-blue-600" />
+            <Plus className="w-4 h-4" />
+            Create Your First Mock Test
+          </button>
+        </div>
+      ) : (
+        <div className="grid gap-2 md:gap-4 lg:gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-auto p-4">
+          {mockTests.map((test) => (
+            <div
+              key={test._id}
+              className="bg-white rounded-xl shadow-md p-4 flex flex-col"
+            >
+              <div className="flex justify-center mb-2">
+                <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
+                  <ClipboardList className="w-8 h-8 text-blue-600" />
+                </div>
               </div>
-            </div>
 
-            <h2 className="text-xl font-semibold text-center">
-              {test.title}
-            </h2>
+              <h2 className="text-xl font-semibold text-center">
+                {test.title}
+              </h2>
 
-            <p className="text-sm text-gray-600 text-center mt-1">
-              {MOCK_TEST_TYPE_LABELS[test.mockTestType]} •{" "}
-              {test.durationMinutes} mins • {test.totalMarks} marks
-            </p>
+              <p className="text-sm text-gray-600 text-center mt-1">
+                {MOCK_TEST_TYPE_LABELS[test.mockTestType]} •{" "}
+                {test.durationMinutes} mins • {test.totalMarks} marks
+              </p>
 
-            <div className="mt-3 flex justify-center gap-2">
-  {/* Access Type */}
-  <span
-    className={`text-xs font-semibold px-2 py-1 rounded
+              <div className="mt-3 flex justify-center gap-2">
+                {/* Access Type */}
+                <span
+                  className={`text-xs font-semibold px-2 py-1 rounded
       ${
         test.accessType === "FREE"
           ? "bg-green-100 text-green-700"
           : "bg-yellow-100 text-yellow-700"
       }`}
-  >
-    {test.accessType}
-  </span>
+                >
+                  {test.accessType}
+                </span>
 
-  {/* Status */}
-  <span
-    className={`text-xs font-semibold px-2 py-1 rounded
+                {/* Status */}
+                <span
+                  className={`text-xs font-semibold px-2 py-1 rounded
       ${
         test.status === "PUBLISHED"
           ? "bg-blue-100 text-blue-700"
           : "bg-gray-100 text-gray-700"
       }`}
-  >
-    {test.status}
-  </span>
-</div>
+                >
+                  {test.status}
+                </span>
+              </div>
 
+              <div className="mt-4 w-[95%] mx-auto flex items-center gap-2">
+                {/* Primary action */}
+                <Link
+                  to={`/admin/mock-tests/${test._id}`}
+                  className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 text-center cursor-pointer"
+                >
+                  Manage
+                </Link>
 
-  <div className="mt-4 w-[95%] mx-auto flex items-center gap-2">
-  {/* Primary action */}
-  <Link
-    to={`/admin/mock-tests/${test._id}`}
-    className="flex-1 bg-blue-600 text-white py-1.5 rounded hover:bg-blue-700 text-center cursor-pointer"
-  >
-    Manage
-  </Link>
+                {/* Edit */}
+                <button
+                  onClick={() => openEditModal(test)}
+                  title="Edit mock test"
+                  className="p-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-50 cursor-pointer"
+                >
+                  <Pencil className="w-5 h-5" />
+                </button>
 
-  {/* Edit */}
-  <button
-    onClick={() => openEditModal(test)}
-    title="Edit mock test"
-    className="p-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-50 cursor-pointer"
-  >
-    <Pencil className="w-4 h-4" />
-  </button>
-
-  {/* Delete */}
-  <button
-  onClick={() => {
-    setDeletingTestId(test._id);
-    setShowDeleteModal(true);
-  }}
-  className="p-2 border border-red-600 text-red-600 rounded hover:bg-red-50 cursor-pointer"
->
-  <Trash2 className="w-4 h-4" />
-</button>
-
-</div>
-
-          </div>
-        ))}
-      </div>
+                {/* Delete */}
+                <button
+                  title="Delete mock test"
+                  onClick={() => {
+                    setDeletingTestId(test._id);
+                    setShowDeleteModal(true);
+                  }}
+                  className="p-2 border border-red-600 text-red-600 rounded hover:bg-red-50 cursor-pointer"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              </div>
+              {/* PUBLISH / UNPUBLISH */}
+            <button
+              onClick={() =>
+                setStatusModal({
+                  id: test._id,
+                  status:
+                    test.status === "PUBLISHED"
+                      ? "DRAFT"
+                      : "PUBLISHED",
+                })
+              }
+              className={`w-[95%] mx-auto mt-2 py-2 rounded font-semibold cursor-pointer ${
+                test.status === "PUBLISHED"
+                  ? "border border-red-500 text-red-600 hover:bg-red-50"
+                  : "border border-green-500 text-green-600 hover:bg-green-50"
+              }`}
+            >
+              {test.status === "PUBLISHED" ? "Unpublish" : "Publish"}
+            </button>
+            </div>
+          ))}
+        </div>
       )}
       {/* ================= MODAL ================= */}
       {showModal && (
@@ -449,21 +491,6 @@ const handleDeleteMockTest = async () => {
                 </select>
               </div>
 
-              {/* Status */}
-              {editingTest && (
-                <div>
-                  <label className="text-sm font-medium">Status</label>
-                  <select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    className="w-full border rounded px-3 py-2 mt-1 cursor-pointer"
-                  >
-                    <option value="DRAFT">DRAFT</option>
-                    <option value="PUBLISHED">PUBLISHED</option>
-                  </select>
-                </div>
-              )}
 
               {/* Instructions */}
               <div>
@@ -490,8 +517,8 @@ const handleDeleteMockTest = async () => {
                     ? "Updating..."
                     : "Update Mock Test"
                   : creating
-                  ? "Creating..."
-                  : "Create Mock Test"}
+                    ? "Creating..."
+                    : "Create Mock Test"}
               </button>
             </form>
           </div>
@@ -499,44 +526,79 @@ const handleDeleteMockTest = async () => {
       )}
       {/* ================= DELETE MODAL ================= */}
       {showDeleteModal && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div className="bg-white rounded-xl w-full max-w-md p-6 relative">
-      <h3 className="text-lg font-semibold text-gray-800">
-        Delete Mock Test?
-      </h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl w-full max-w-md p-6 relative">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Delete Mock Test?
+            </h3>
 
-      <p className="text-sm text-gray-600 mt-2">
-        This action cannot be undone. All sections and questions
-        under this mock test will be permanently deleted.
-      </p>
+            <p className="text-sm text-gray-600 mt-2">
+              This action cannot be undone. All sections and questions under
+              this mock test will be permanently deleted.
+            </p>
 
-      <div className="mt-6 flex justify-end gap-3">
-        <button
-          onClick={() => {
-            setShowDeleteModal(false);
-            setDeletingTestId(null);
-          }}
-          disabled={deleting}
-          className="px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 cursor-pointer"
-        >
-          Cancel
-        </button>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setDeletingTestId(null);
+                }}
+                disabled={deleting}
+                className="px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 cursor-pointer"
+              >
+                Cancel
+              </button>
 
-        <button
-          onClick={handleDeleteMockTest}
-          disabled={deleting}
-          className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 flex items-center gap-2 cursor-pointer disabled:opacity-70"
-        >
-          {deleting && (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          )}
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+              <button
+                onClick={handleDeleteMockTest}
+                disabled={deleting}
+                className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 flex items-center gap-2 cursor-pointer disabled:opacity-70"
+              >
+                {deleting && <Loader2 className="w-4 h-4 animate-spin" />}
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
+
+      {/* ================= STATUS MODAL ================= */}
+      {statusModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl w-full max-w-md p-6">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Confirm Status Change
+            </h3>
+
+            <p className="text-sm text-gray-600 mt-2">
+              Are you sure you want to{" "}
+              <b>{statusModal.status === "PUBLISHED" ? "Publish" : "Unpublish"}</b> this mock test?
+            </p>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setStatusModal(null)}
+                disabled={statusUpdating}
+                className="px-4 py-2 rounded border border-gray-300 cursor-pointer hover:bg-gray-100 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleConfirmStatusChange}
+                disabled={statusUpdating}
+                className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {statusUpdating && (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                )}
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
