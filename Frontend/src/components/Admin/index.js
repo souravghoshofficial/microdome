@@ -13,6 +13,11 @@ import AllQuizzes from "./AllQuizzes";
 import QuizResults from "./QuizResult";
 import EditQuiz from "./EditQuiz";
 import ResetQuizPrice from "./ResetQuizPrice";
+import AdminMockTests from "./AdminMockTests";
+import AdminMockTestSections from "./AdminMockTestSections";
+import AdminMockTestQuestions from "./AdminMockTestQuestions";
+import AdminMockTestBundles from "./AdminMockTestBundles";
+import AdminManageMockTestBundle from "./AdminManageMockTestBundle";
 
 export {
   Dashboard,
@@ -29,5 +34,10 @@ export {
   AllQuizzes,
   QuizResults,
   EditQuiz,
-  ResetQuizPrice
+  ResetQuizPrice,
+  AdminMockTests,
+  AdminMockTestSections,
+  AdminMockTestQuestions,
+  AdminMockTestBundles,
+  AdminManageMockTestBundle
 };

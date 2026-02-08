@@ -27,6 +27,10 @@ import CheckOut from "./CheckOut";
 import QuizResult from "./QuizResult";
 import QuizLeaderboard from "./QuizLeaderboard";
 import Exam from "./Exam";
+import PageNotFound from "./PageNotFound";
+import MockTests from "./MockTests";
+import MockTestBundleDetails from "./MockTestBundleDetails";
+
 
 export {
   Landing,
@@ -57,5 +61,8 @@ export {
   CheckOut,
   QuizResult,
   QuizLeaderboard,
-  Exam
+  Exam,
+  PageNotFound,
+  MockTests,
+  MockTestBundleDetails,
 };

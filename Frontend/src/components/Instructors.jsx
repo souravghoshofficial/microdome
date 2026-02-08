@@ -38,7 +38,7 @@ const Instructors = () => {
         data-aos="fade-up"
         data-aos-delay="150"
       >
-        Your <span className="text-button">Instructors</span>
+         Our <span className="text-button">Instructors</span>
       </h1>
       <p
         className="text-center mt-4"

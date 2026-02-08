@@ -21,7 +21,12 @@ import {
   AllQuizzes,
   QuizResults,
   EditQuiz,
-  ResetQuizPrice
+  ResetQuizPrice,
+  AdminMockTests,
+  AdminMockTestSections,
+  AdminMockTestQuestions,
+  AdminMockTestBundles,
+  AdminManageMockTestBundle
 } from "./components/Admin";
 
 import {
@@ -53,7 +58,10 @@ import {
   CheckOut,
   QuizResult,
   QuizLeaderboard,
-  Exam
+  Exam,
+  PageNotFound,
+  MockTests,
+  MockTestBundleDetails
 } from "./pages";
 
 import {
@@ -128,6 +136,10 @@ const App = () => {
             </Route>
           </Route>
 
+          {/* Mock Test Routes*/}
+          <Route path="/mock-tests" element={<MockTests/>}/>
+          <Route path="/mock-tests/bundles/:bundleId" element={<MockTestBundleDetails/>}/>
+
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/faculties" element={<Faculties />} />
@@ -170,6 +182,12 @@ const App = () => {
             <Route path="create-course" element={<CreateCourse />} />
             <Route path="coupons" element={<Coupons />} />
             <Route path="create-coupon" element={<CreateCoupon />} />
+            <Route path="mock-tests" element={<AdminMockTests />}/>
+            <Route path="mock-tests/:mockTestId" element={<AdminMockTestSections />}/>
+            <Route path="mock-tests/:mockTestId/:mockTestSectionId/questions" element={<AdminMockTestQuestions />}/>
+            <Route path="mock-test-bundles" element={<AdminMockTestBundles />}/>
+            <Route path="mock-test-bundles/:bundleId" element={<AdminManageMockTestBundle />}/>
+            
           </Route>
         </Route>
         <Route path="/payment-success" element={<PaymentSuccess />} />
@@ -178,6 +196,7 @@ const App = () => {
         <Route path="/quiz/result/:quizId" element={<QuizResult />} />
         <Route path="/quiz/leaderboard/:quizId" element={[<QuizLeaderboard /> , <Navbar />]} />
         <Route path="/checkout/:id" element = {<CheckOut/>}/>
+        <Route path="*" element={<PageNotFound />}/>
       </Routes>
     </BrowserRouter>
   );
