@@ -14,12 +14,13 @@ const PremiumUserDetails = () => {
   const [confirmUser, setConfirmUser] = useState(null);
 
   const user = useSelector((state) => state.auth?.userData);
-  const role = user?.role; 
+  const role = user?.role;
 
   // Search + Pagination
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(10);
+  const [isLiveCourse, setIsLiveCourse] = useState(false);
 
   useEffect(() => {
     axios
@@ -43,9 +44,10 @@ const PremiumUserDetails = () => {
               instituteName: u?.instituteName || "---",
               access: u.isActive,
               presentCourseOfStudy: u?.presentCourseOfStudy || "---",
-            }))
+            })),
           );
           setCourseName(res.data.courseName || "---");
+          setIsLiveCourse(res.data.courseMode.toLowerCase() === "live");
         }
       })
       .catch((err) => {
@@ -61,13 +63,15 @@ const PremiumUserDetails = () => {
         ? "/admin/revoke-access"
         : "/admin/grant-access";
       const { data } = await axios.post(
-        ` ${ApiUrl}${endpoint}`, { userId, courseId: id }, { withCredentials: true } 
+        ` ${ApiUrl}${endpoint}`,
+        { userId, courseId: id },
+        { withCredentials: true },
       );
       if (data.success) {
         setUsers((prev) =>
           prev.map((user) =>
-            user.id === userId ? { ...user, access: !currentAccess } : user
-          )
+            user.id === userId ? { ...user, access: !currentAccess } : user,
+          ),
         );
         toast.success(data.message);
       } else {
@@ -81,7 +85,7 @@ const PremiumUserDetails = () => {
 
   // Filter users by search
   const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    user.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // Pagination logic
@@ -97,7 +101,13 @@ const PremiumUserDetails = () => {
       {/* Header with search */}
       <div className="flex flex-col md:flex-row justify-between items-center px-4 md:px-6 py-4 border-b gap-3">
         <h2 className="text-base md:text-lg font-semibold">{courseName}</h2>
-        <input
+        <div className="flex items-center gap-2">
+          {(role === "admin" && isLiveCourse) && (
+            <button className="text-xs md:text-sm text-white bg-blue-500 hover:bg-blue-600 cursor-pointer px-3 py-1.5 rounded">
+              Monthly Fee Sheet
+            </button>
+          )}
+          <input
           type="text"
           placeholder="Search by name..."
           value={searchQuery}
@@ -105,8 +115,9 @@ const PremiumUserDetails = () => {
             setSearchQuery(e.target.value);
             setCurrentPage(1);
           }}
-          className="border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
+        </div>
       </div>
 
       {/* Table */}
@@ -122,8 +133,12 @@ const PremiumUserDetails = () => {
                 <th className="px-4 py-2 text-center whitespace-nowrap">
                   Mobile No.
                 </th>
-                <th className="px-4 py-2 text-center whitespace-nowrap">Institute Name</th>
-                <th className="px-4 py-2 text-center whitespace-nowrap">Present Course of Study</th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">
+                  Institute Name
+                </th>
+                <th className="px-4 py-2 text-center whitespace-nowrap">
+                  Present Course of Study
+                </th>
                 <th className="px-4 py-2 text-center">Status</th>
               </tr>
             </thead>
@@ -139,8 +154,9 @@ const PremiumUserDetails = () => {
                       <img
                         src={user.profilePic}
                         alt={user.name}
-                        className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
+                        className={`w-8 h-8 md:w-10 md:h-10 rounded-full object-cover ring-2 ring-offset-2 ring-offset-white ${false ? "ring-green-500" : "ring-red-500"}`}
                       />
+
                       <div className="min-w-[150px]">
                         <p className="font-medium">{user.name}</p>
                         <p className="text-[11px] md:text-xs text-gray-500 truncate">
@@ -155,8 +171,12 @@ const PremiumUserDetails = () => {
                     <td className="px-4 py-3 text-center whitespace-nowrap">
                       {user.mobile}
                     </td>
-                    <td className="px-4 py-3 text-center text-wrap max-w-md">{user.instituteName}</td>
-                    <td className="px-4 py-3 text-center">{user.presentCourseOfStudy}</td>
+                    <td className="px-4 py-3 text-center text-wrap max-w-md">
+                      {user.instituteName}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {user.presentCourseOfStudy}
+                    </td>
 
                     {/* ✅ Role-based Access Control */}
                     <td className="px-4 py-3 text-center">
@@ -254,7 +274,8 @@ const PremiumUserDetails = () => {
               ) : (
                 <span className="text-green-600 font-semibold">grant</span>
               )}{" "}
-              access for <span className="font-medium">{confirmUser.name}</span>?
+              access for <span className="font-medium">{confirmUser.name}</span>
+              ?
             </p>
             <div className="flex justify-end gap-3">
               <button
@@ -269,7 +290,7 @@ const PremiumUserDetails = () => {
                     ? "bg-red-500 hover:bg-red-600"
                     : "bg-green-500 hover:bg-green-600"
                 }`}
-                 onClick={() => {
+                onClick={() => {
                   toggleAccess(confirmUser.id, confirmUser.access);
                   setConfirmUser(null);
                 }}
@@ -285,4 +306,3 @@ const PremiumUserDetails = () => {
 };
 
 export default PremiumUserDetails;
-

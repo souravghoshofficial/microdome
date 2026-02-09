@@ -431,7 +431,7 @@ export const getUserDetailsByCourseId = async (req, res) => {
       });
     }
 
-    const course = await Course.findById(courseId).select("cardTitle");
+    const course = await Course.findById(courseId);
 
     // Map to extract only the necessary details
     const users = enrollments.map((enrollment) => ({
@@ -451,7 +451,8 @@ export const getUserDetailsByCourseId = async (req, res) => {
       courseId,
       totalUsers: users.length,
       users,
-      courseName: course.cardTitle,
+      courseName: course.courseTitle,
+      courseMode: course.mode,
     });
   } catch (error) {
     console.error("Error fetching users by courseId:", error);
@@ -564,11 +565,12 @@ export const getCourseDetailsWithUserCounts = async (req, res) => {
       {
         $project: {
           _id: 1,
-          cardTitle: 1,
+          courseTitle: 1,
           studentCount: 1,
           courseImage: 1,
         },
       },
+      { $sort: { _id: -1 } }
     ]);
 
     res.status(200).json({
