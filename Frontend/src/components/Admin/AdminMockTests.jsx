@@ -248,8 +248,6 @@ const AdminMockTests = () => {
       <header className="mb-4 px-4">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-blue-800">All Mock Tests</h1>
-
-          {user?.role === "admin" && (
             <button
               onClick={openCreateModal}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow cursor-pointer"
@@ -257,7 +255,7 @@ const AdminMockTests = () => {
               <Plus className="w-4 h-4" />
               Create Mock Test
             </button>
-          )}
+         
         </div>
       </header>
 
