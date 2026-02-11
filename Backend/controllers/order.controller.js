@@ -3,9 +3,13 @@ import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
 import { Course } from "../models/course.model.js";
 import crypto from "crypto";
-import { sendCourseConfirmationEmail, sendQuizConfirmationEmail } from "../utils/sendEmail.js";
+import {
+  sendCourseConfirmationEmail,
+  sendQuizConfirmationEmail,
+} from "../utils/sendEmail.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Coupon } from "../models/coupon.model.js";
+import { MonthlyFee } from "../models/monthlyFee.model.js";
 
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -61,7 +65,7 @@ const createOrder = async (req, res) => {
       await User.findByIdAndUpdate(
         req.user._id,
         { mobileNumber: phone },
-        { new: true }
+        { new: true },
       );
     }
 
@@ -70,7 +74,7 @@ const createOrder = async (req, res) => {
       await User.findByIdAndUpdate(
         req.user._id,
         { instituteName: institute },
-        { new: true }
+        { new: true },
       );
     }
 
@@ -78,7 +82,7 @@ const createOrder = async (req, res) => {
       await User.findByIdAndUpdate(
         req.user._id,
         { presentCourseOfStudy: course },
-        { new: true }
+        { new: true },
       );
     }
 
@@ -96,7 +100,6 @@ const createOrder = async (req, res) => {
   }
 };
 
-
 const verifyPayment = async (req, res) => {
   try {
     const body = JSON.stringify(req.body);
@@ -109,14 +112,18 @@ const verifyPayment = async (req, res) => {
 
     if (signature !== expectedSignature) {
       console.error("Invalid signature, possible spoofing attempt");
-      return res.status(200).json({ success: false, message: "Invalid signature" });
+      return res
+        .status(200)
+        .json({ success: false, message: "Invalid signature" });
     }
 
     const event = req.body;
 
     if (event.event !== "payment.captured") {
       console.warn("Ignored non-payment event:", event.event);
-      return res.status(200).json({ success: false, message: "Unexpected event" });
+      return res
+        .status(200)
+        .json({ success: false, message: "Unexpected event" });
     }
 
     const payment = event.payload.payment.entity;
@@ -125,7 +132,9 @@ const verifyPayment = async (req, res) => {
     const order = await Order.findOne({ razorpayOrderId: payment.order_id });
     if (!order) {
       console.error("Order not found for payment:", payment.order_id);
-      return res.status(200).json({ success: false, message: "Order not found" });
+      return res
+        .status(200)
+        .json({ success: false, message: "Order not found" });
     }
 
     // Update order
@@ -137,7 +146,9 @@ const verifyPayment = async (req, res) => {
     const user = await User.findById(order.user);
     if (!user) {
       console.error("User not found for order:", order._id);
-      return res.status(200).json({ success: false, message: "User not found" });
+      return res
+        .status(200)
+        .json({ success: false, message: "User not found" });
     }
 
     // Handle itemType
@@ -156,6 +167,44 @@ const verifyPayment = async (req, res) => {
         userId: user._id,
       });
 
+      // Only for LIVE courses
+      if (courseDetails.mode?.toLowerCase() === "live") {
+        const MONTH_KEYS = [
+          "jan",
+          "feb",
+          "mar",
+          "apr",
+          "may",
+          "jun",
+          "jul",
+          "aug",
+          "sep",
+          "oct",
+          "nov",
+          "dec",
+        ];
+
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonthKey = MONTH_KEYS[currentDate.getMonth()];
+
+        // Check if already exists (important safeguard)
+        const exists = await MonthlyFee.findOne({
+          userId: user._id,
+          courseId: courseDetails._id,
+          year: currentYear,
+        });
+
+        if (!exists) {
+          await MonthlyFee.create({
+            userId: user._id,
+            courseId: courseDetails._id,
+            year: currentYear,
+            startedFromMonth: currentMonthKey,
+          });
+        }
+      }
+
       // 1. Send course confirmation email
       await sendCourseConfirmationEmail({
         to: user.email,
@@ -168,7 +217,7 @@ const verifyPayment = async (req, res) => {
       // 2. Check if this course is an MSc Entrance batch
       const MSC_ENTRANCE_BATCH_IDS = [
         "68a3910c37c7e92815cbac12",
-        "68a6cdeefa66a524a5255dcd"
+        "68a6cdeefa66a524a5255dcd",
       ];
 
       if (MSC_ENTRANCE_BATCH_IDS.includes(order.course.toString())) {
@@ -179,10 +228,9 @@ const verifyPayment = async (req, res) => {
         await sendQuizConfirmationEmail({
           to: user.email,
           studentName: user.name,
-          quizLink: "https://microdomeclasses.in/quizzes"
+          quizLink: "https://microdomeclasses.in/quizzes",
         });
       }
-
     } else if (order.itemType === "quiz") {
       user.hasAccessToQuizzes = true;
       await user.save();
@@ -190,7 +238,7 @@ const verifyPayment = async (req, res) => {
       await sendQuizConfirmationEmail({
         to: user.email,
         studentName: user.name,
-        quizLink: "https://microdomeclasses.in/quizzes"
+        quizLink: "https://microdomeclasses.in/quizzes",
       });
     }
 
@@ -212,7 +260,6 @@ const verifyPayment = async (req, res) => {
   }
 };
 
-
 export const validateCouponCode = async (req, res) => {
   try {
     const { courseId, couponCode } = req.body;
@@ -228,9 +275,9 @@ export const validateCouponCode = async (req, res) => {
     const normalizedCode = couponCode.toLowerCase();
 
     // Find coupon by courseId and normalized couponCode
-    const coupon = await Coupon.findOne({ 
-      courseId, 
-      couponCode: normalizedCode 
+    const coupon = await Coupon.findOne({
+      courseId,
+      couponCode: normalizedCode,
     });
 
     if (!coupon) {

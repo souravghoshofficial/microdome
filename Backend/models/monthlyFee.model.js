@@ -1,61 +1,108 @@
 import mongoose, { Schema } from "mongoose";
 
+const MONTHS = [
+  "jan",
+  "feb",
+  "mar",
+  "apr",
+  "may",
+  "jun",
+  "jul",
+  "aug",
+  "sep",
+  "oct",
+  "nov",
+  "dec",
+];
+
 const monthlyFeeSchema = new Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true
+      index: true,
     },
 
     courseId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Course",
       required: true,
-      index: true
+      index: true,
     },
 
     year: {
       type: Number,
       required: true,
-      index: true
+      index: true,
     },
 
-    // One entry per month
+    // Month from which fee tracking starts
+    startedFromMonth: {
+      type: String,
+      enum: MONTHS,
+      required: true,
+    },
+
+    // Monthly payment tracking
     months: {
-      jan: { type: Boolean, default: false },
-      feb: { type: Boolean, default: false },
-      mar: { type: Boolean, default: false },
-      apr: { type: Boolean, default: false },
-      may: { type: Boolean, default: false },
-      jun: { type: Boolean, default: false },
-      jul: { type: Boolean, default: false },
-      aug: { type: Boolean, default: false },
-      sep: { type: Boolean, default: false },
-      oct: { type: Boolean, default: false },
-      nov: { type: Boolean, default: false },
-      dec: { type: Boolean, default: false }
+      jan: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      feb: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      mar: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      apr: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      may: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      jun: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      jul: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      aug: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      sep: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      oct: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      nov: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
+      dec: {
+        paid: { type: Boolean, default: false },
+        paidAt: { type: Date, default: null },
+      },
     },
-
-    // Optional but VERY useful
-    lastPaidMonth: {
-      type: String,
-      enum: [
-        "jan","feb","mar","apr","may","jun",
-        "jul","aug","sep","oct","nov","dec"
-      ]
-    },
-
-    remarks: {
-      type: String,
-      trim: true
-    }
   },
   { timestamps: true }
 );
 
-// One document per user per course per year
+/**
+ * One document per user + course + year
+ * Prevents duplicates and data corruption
+ */
 monthlyFeeSchema.index(
   { userId: 1, courseId: 1, year: 1 },
   { unique: true }

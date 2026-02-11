@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import userImage from "../../assets/user-img.jpeg";
+import { Link } from "react-router";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -16,15 +17,17 @@ const PremiumUserDetails = () => {
   const user = useSelector((state) => state.auth?.userData);
   const role = user?.role;
 
-  // Search + Pagination
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(10);
+
   const [isLiveCourse, setIsLiveCourse] = useState(false);
 
   useEffect(() => {
     axios
-      .get(`${ApiUrl}/admin/get-user-details/${id}`, { withCredentials: true })
+      .get(`${ApiUrl}/admin/get-user-details/${id}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         if (res.data.success && res.data.users) {
           setUsers(
@@ -42,12 +45,17 @@ const PremiumUserDetails = () => {
                 : "---",
               mobile: u?.mobileNumber || "---",
               instituteName: u?.instituteName || "---",
-              access: u.isActive,
               presentCourseOfStudy: u?.presentCourseOfStudy || "---",
-            })),
+              access: u.isActive,
+              currentMonthPaid: u.currentMonthPaid, 
+            }))
           );
+
           setCourseName(res.data.courseName || "---");
-          setIsLiveCourse(res.data.courseMode.toLowerCase() === "live");
+
+          const live =
+            res.data.courseMode?.toLowerCase() === "live" && !res.data.courseIsArchived;
+          setIsLiveCourse(live);
         }
       })
       .catch((err) => {
@@ -56,22 +64,25 @@ const PremiumUserDetails = () => {
       });
   }, [id]);
 
-  // Toggle Access
+  /* ================= TOGGLE ACCESS ================= */
+
   const toggleAccess = async (userId, currentAccess) => {
     try {
       const endpoint = currentAccess
         ? "/admin/revoke-access"
         : "/admin/grant-access";
+
       const { data } = await axios.post(
-        ` ${ApiUrl}${endpoint}`,
+        `${ApiUrl}${endpoint}`,
         { userId, courseId: id },
-        { withCredentials: true },
+        { withCredentials: true }
       );
+
       if (data.success) {
         setUsers((prev) =>
-          prev.map((user) =>
-            user.id === userId ? { ...user, access: !currentAccess } : user,
-          ),
+          prev.map((u) =>
+            u.id === userId ? { ...u, access: !currentAccess } : u
+          )
         );
         toast.success(data.message);
       } else {
@@ -83,132 +94,152 @@ const PremiumUserDetails = () => {
     }
   };
 
-  // Filter users by search
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  /* ================= SEARCH ================= */
+
+  const filteredUsers = users.filter((u) =>
+    u.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Pagination logic
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers = filteredUsers.slice(
+    indexOfFirstUser,
+    indexOfLastUser
+  );
+
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   return (
     <div className="h-[90vh] flex flex-col bg-white rounded-lg shadow-md">
       <Toaster position="top-right" />
 
-      {/* Header with search */}
+      {/* ================= HEADER ================= */}
       <div className="flex flex-col md:flex-row justify-between items-center px-4 md:px-6 py-4 border-b gap-3">
-        <h2 className="text-base md:text-lg font-semibold">{courseName}</h2>
+        <h2 className="text-base md:text-lg font-semibold">
+          {courseName}
+        </h2>
+
         <div className="flex items-center gap-2">
-          {(role === "admin" && isLiveCourse) && (
-            <button className="text-xs md:text-sm text-white bg-blue-500 hover:bg-blue-600 cursor-pointer px-3 py-1.5 rounded">
+          {role === "admin" && isLiveCourse &&  currentUsers.length > 0 && (
+            <Link
+              to={`/admin/monthly-fee-sheet/${id}`}
+              className="text-xs md:text-sm text-white bg-blue-500 hover:bg-blue-600 px-3 py-1.5 rounded cursor-pointer"
+            >
               Monthly Fee Sheet
-            </button>
+            </Link>
           )}
+
           <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
+            type="text"
+            placeholder="Search by name..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
         </div>
       </div>
 
-      {/* Table */}
+      {/* ================= TABLE ================= */}
       <div className="flex-1 overflow-auto scrollbar-none">
         <div className="overflow-x-auto">
           <table className="min-w-[800px] w-full border-collapse">
             <thead className="bg-gray-100 sticky top-0 z-10">
               <tr className="text-left text-gray-600 border-b text-sm md:text-base">
                 <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2 text-center whitespace-nowrap">
-                  Date Joined
-                </th>
-                <th className="px-4 py-2 text-center whitespace-nowrap">
-                  Mobile No.
-                </th>
-                <th className="px-4 py-2 text-center whitespace-nowrap">
-                  Institute Name
-                </th>
-                <th className="px-4 py-2 text-center whitespace-nowrap">
-                  Present Course of Study
+                <th className="px-4 py-2 text-center">Date Joined</th>
+                <th className="px-4 py-2 text-center">Mobile</th>
+                <th className="px-4 py-2 text-center">Institute</th>
+                <th className="px-4 py-2 text-center">
+                  Present Course
                 </th>
                 <th className="px-4 py-2 text-center">Status</th>
               </tr>
             </thead>
+
             <tbody>
               {currentUsers.length > 0 ? (
-                currentUsers.map((user) => (
+                currentUsers.map((u) => (
                   <tr
-                    key={user.id}
+                    key={u.id}
                     className="border-b hover:bg-gray-50 text-xs md:text-sm"
                   >
-                    {/* Name + Email */}
+                    {/* Name + Payment Ring */}
                     <td className="px-4 py-3 flex items-center gap-3 whitespace-nowrap">
                       <img
-                        src={user.profilePic}
-                        alt={user.name}
-                        className={`w-8 h-8 md:w-10 md:h-10 rounded-full object-cover ring-2 ring-offset-2 ring-offset-white ${false ? "ring-green-500" : "ring-red-500"}`}
+                        src={u.profilePic}
+                        alt={u.name}
+                        className={`w-8 h-8 md:w-10 md:h-10 rounded-full object-cover
+                          ${
+                            isLiveCourse
+                              ? u.currentMonthPaid
+                                ? "ring-2 ring-offset-2 ring-offset-white ring-green-500"
+                                : "ring-2 ring-offset-2 ring-offset-white ring-red-500"
+                              : ""
+                          }`}
                       />
 
                       <div className="min-w-[150px]">
-                        <p className="font-medium">{user.name}</p>
+                        <p className="font-medium">{u.name}</p>
                         <p className="text-[11px] md:text-xs text-gray-500 truncate">
-                          {user.email}
+                          {u.email}
                         </p>
                       </div>
                     </td>
 
-                    <td className="px-4 py-3 text-center whitespace-nowrap">
-                      {user.dateJoined}
-                    </td>
-                    <td className="px-4 py-3 text-center whitespace-nowrap">
-                      {user.mobile}
-                    </td>
-                    <td className="px-4 py-3 text-center text-wrap max-w-md">
-                      {user.instituteName}
-                    </td>
                     <td className="px-4 py-3 text-center">
-                      {user.presentCourseOfStudy}
+                      {u.dateJoined}
                     </td>
 
-                    {/* ✅ Role-based Access Control */}
+                    <td className="px-4 py-3 text-center">
+                      {u.mobile}
+                    </td>
+
+                    <td className="px-4 py-3 text-center max-w-md">
+                      {u.instituteName}
+                    </td>
+
+                    <td className="px-4 py-3 text-center">
+                      {u.presentCourseOfStudy}
+                    </td>
+
+                    {/* ACCESS TOGGLE */}
                     <td className="px-4 py-3 text-center">
                       {role === "admin" ? (
                         <label className="inline-flex items-center cursor-pointer">
                           <input
                             type="checkbox"
                             className="sr-only"
-                            checked={user.access}
-                            onChange={() => setConfirmUser(user)}
+                            checked={u.access}
+                            onChange={() => setConfirmUser(u)}
                           />
                           <div
                             className={`w-11 h-6 flex items-center rounded-full p-1 duration-300 ${
-                              user.access ? "bg-green-500" : "bg-gray-300"
+                              u.access
+                                ? "bg-green-500"
+                                : "bg-gray-300"
                             }`}
                           >
                             <div
                               className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ${
-                                user.access ? "translate-x-5" : ""
+                                u.access
+                                  ? "translate-x-5"
+                                  : ""
                               }`}
-                            ></div>
+                            />
                           </div>
                         </label>
                       ) : (
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded ${
-                            user.access
+                            u.access
                               ? "text-green-600 bg-green-100"
                               : "text-red-600 bg-red-100"
                           }`}
                         >
-                          {user.access ? "Active" : "Inactive"}
+                          {u.access ? "Active" : "Inactive"}
                         </span>
                       )}
                     </td>
@@ -217,8 +248,8 @@ const PremiumUserDetails = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="5"
-                    className="text-center py-6 text-gray-500 text-sm"
+                    colSpan="6"
+                    className="text-center py-6 text-gray-500"
                   >
                     No users found
                   </td>
@@ -229,16 +260,19 @@ const PremiumUserDetails = () => {
         </div>
       </div>
 
-      {/* Pagination */}
+      {/* ================= PAGINATION ================= */}
       {filteredUsers.length > usersPerPage && (
         <div className="flex justify-center items-center gap-2 py-4 border-t">
           <button
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
             disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
+            onClick={() =>
+              setCurrentPage((prev) => prev - 1)
+            }
           >
             Prev
           </button>
+
           {[...Array(totalPages)].map((_, i) => (
             <button
               key={i}
@@ -252,46 +286,64 @@ const PremiumUserDetails = () => {
               {i + 1}
             </button>
           ))}
+
           <button
-            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
             disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => prev + 1)}
+            onClick={() =>
+              setCurrentPage((prev) => prev + 1)
+            }
           >
             Next
           </button>
         </div>
       )}
 
-      {/* Confirmation Modal (only for Admins) */}
+      {/* ================= CONFIRM MODAL ================= */}
       {role === "admin" && confirmUser && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg p-6 w-80 shadow-lg">
-            <h3 className="text-lg font-semibold mb-4">Confirm Action</h3>
+            <h3 className="text-lg font-semibold mb-4">
+              Confirm Action
+            </h3>
+
             <p className="mb-6 text-gray-600">
               Are you sure you want to{" "}
               {confirmUser.access ? (
-                <span className="text-red-600 font-semibold">revoke</span>
+                <span className="text-red-600 font-semibold">
+                  revoke
+                </span>
               ) : (
-                <span className="text-green-600 font-semibold">grant</span>
+                <span className="text-green-600 font-semibold">
+                  grant
+                </span>
               )}{" "}
-              access for <span className="font-medium">{confirmUser.name}</span>
+              access for{" "}
+              <span className="font-medium">
+                {confirmUser.name}
+              </span>
               ?
             </p>
+
             <div className="flex justify-end gap-3">
               <button
-                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 cursor-pointer"
+                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
                 onClick={() => setConfirmUser(null)}
               >
                 No
               </button>
+
               <button
-                className={`cursor-pointer px-4 py-2 rounded text-white ${
+                className={`px-4 py-2 rounded text-white ${
                   confirmUser.access
                     ? "bg-red-500 hover:bg-red-600"
                     : "bg-green-500 hover:bg-green-600"
                 }`}
                 onClick={() => {
-                  toggleAccess(confirmUser.id, confirmUser.access);
+                  toggleAccess(
+                    confirmUser.id,
+                    confirmUser.access
+                  );
                   setConfirmUser(null);
                 }}
               >
