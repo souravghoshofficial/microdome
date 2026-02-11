@@ -8,6 +8,8 @@ import { Course } from "../models/course.model.js";
 import { QuizResult } from "../models/quizResult.model.js";
 import { QuizPrice } from "../models/quizPrice.model.js";
 import { GoogleGenAI } from "@google/genai";
+import { MonthlyFee } from "../models/monthlyFee.model.js";
+import mongoose from "mongoose";
 import {
   sendAccessRevokedEmail,
   sendAccessGrantedEmail,
@@ -415,9 +417,18 @@ export const getUserDetailsByCourseId = async (req, res) => {
   try {
     const courseId = req.params.id;
 
-    // Find all enrollments for this course and populate user details
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    // Find enrollments
     const enrollments = await CourseEnrollment.find({ courseId })
-      .sort({ createdAt: -1 }) // ✅ Sort by newest first
+      .sort({ createdAt: -1 })
       .populate(
         "userId",
         "name email mobileNumber profileImage instituteName presentCourseOfStudy createdAt"
@@ -425,15 +436,46 @@ export const getUserDetailsByCourseId = async (req, res) => {
       .lean();
 
     if (!enrollments || enrollments.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No users found for this course",
+      return res.status(200).json({
+        success: true,
+        courseId,
+        totalUsers: 0,
+        users: [],
+        courseName: course.courseTitle,
+        courseMode: course.mode,
       });
     }
 
-    const course = await Course.findById(courseId).select("cardTitle");
+    const isLiveActiveCourse =
+      course.mode?.toLowerCase() === "live" && course.isArchived === false;
 
-    // Map to extract only the necessary details
+    let monthlyFeeMap = {};
+
+    if (isLiveActiveCourse) {
+      const MONTH_KEYS = [
+        "jan","feb","mar","apr","may","jun",
+        "jul","aug","sep","oct","nov","dec"
+      ];
+
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonthKey = MONTH_KEYS[currentDate.getMonth()];
+
+      const userIds = enrollments.map(e => e.userId._id);
+
+      const monthlyFees = await MonthlyFee.find({
+        courseId,
+        year: currentYear,
+        userId: { $in: userIds }
+      }).lean();
+
+      monthlyFeeMap = monthlyFees.reduce((acc, record) => {
+        acc[record.userId.toString()] =
+          record.months?.[currentMonthKey]?.paid || false;
+        return acc;
+      }, {});
+    }
+
     const users = enrollments.map((enrollment) => ({
       userId: enrollment.userId._id,
       name: enrollment.userId.name,
@@ -444,6 +486,11 @@ export const getUserDetailsByCourseId = async (req, res) => {
       presentCourseOfStudy: enrollment.userId.presentCourseOfStudy,
       createdAt: enrollment.createdAt,
       isActive: enrollment.isActive,
+
+      // ✅ Payment status for current month
+      currentMonthPaid: isLiveActiveCourse
+        ? monthlyFeeMap[enrollment.userId._id.toString()] || false
+        : null,
     }));
 
     res.status(200).json({
@@ -451,8 +498,11 @@ export const getUserDetailsByCourseId = async (req, res) => {
       courseId,
       totalUsers: users.length,
       users,
-      courseName: course.cardTitle,
+      courseName: course.courseTitle,
+      courseMode: course.mode,
+      courseIsArchived: course.isArchived,
     });
+
   } catch (error) {
     console.error("Error fetching users by courseId:", error);
     res.status(500).json({
@@ -461,6 +511,7 @@ export const getUserDetailsByCourseId = async (req, res) => {
     });
   }
 };
+
 
 export const revokeAccess = async (req, res) => {
   try {
@@ -564,11 +615,12 @@ export const getCourseDetailsWithUserCounts = async (req, res) => {
       {
         $project: {
           _id: 1,
-          cardTitle: 1,
+          courseTitle: 1,
           studentCount: 1,
           courseImage: 1,
         },
       },
+      { $sort: { _id: -1 } }
     ]);
 
     res.status(200).json({

@@ -32,12 +32,12 @@ const PremiumUsers = () => {
           >
             <img
               src={course.courseImage}
-              alt={course.cardTitle}
+              alt={course.courseTitle}
               className="h-56 w-full object-cover rounded-md"
             />
 
             <h2 className="text-xl font-semibold text-center mt-4">
-              {course.cardTitle}
+              {course.courseTitle}
             </h2>
 
             <p className="mt-2 text-gray-600">

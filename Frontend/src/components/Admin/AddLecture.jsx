@@ -110,7 +110,7 @@ const AddLecture = () => {
               <img
                 src={course.courseImage}
                 alt={course.courseTitle}
-                className="h-40 w-full object-cover rounded-md"
+                className="h-56 w-full object-cover rounded-md"
               />
               <h2 className="text-xl font-semibold mt-4">
                 {course.courseTitle}

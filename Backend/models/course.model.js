@@ -57,6 +57,10 @@ const courseSchema = new Schema({
       ref: "Section",
     },
   ],
+  isArchived: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export const Course = mongoose.model("Course", courseSchema);
