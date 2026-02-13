@@ -10,6 +10,7 @@ import {
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Coupon } from "../models/coupon.model.js";
 import { MonthlyFee } from "../models/monthlyFee.model.js";
+import { mockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
 
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -17,14 +18,14 @@ const instance = new Razorpay({
 });
 
 const createOrder = async (req, res) => {
-  const { courseId, amount, phone, institute, course, itemType } = req.body;
+  const { itemId, itemType, amount, mobileNumber, instituteName, presentCourseOfStudy } = req.body;
 
   try {
     // ✅ Validate itemType
-    if (!itemType || !["course", "quiz"].includes(itemType)) {
+    if (!itemType || !["course", "quiz", "mock_test_bundle"].includes(itemType)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid or missing itemType. Must be 'course' or 'quiz'.",
+        message: "Invalid or missing itemType. Must be 'course' or 'quiz' or mock_test_bundle.",
       });
     }
 
@@ -35,7 +36,7 @@ const createOrder = async (req, res) => {
       notes: {
         userId: req.user._id,
         itemType: itemType,
-        courseId: courseId || "", // may be empty for quiz
+        itemId: itemId || "", // may be empty for quiz
       },
     };
 
@@ -50,8 +51,7 @@ const createOrder = async (req, res) => {
 
     // ✅ Save order in DB
     const newOrder = new Order({
-      user: req.user._id,
-      course: itemType === "course" ? courseId : null, // only save courseId for course
+      userId: req.user._id,
       itemType,
       amount,
       razorpayOrderId: order.id,
@@ -61,27 +61,27 @@ const createOrder = async (req, res) => {
     await newOrder.save();
 
     // ✅ Update user phone if provided
-    if (phone) {
+    if (mobileNumber) {
       await User.findByIdAndUpdate(
         req.user._id,
-        { mobileNumber: phone },
+        { mobileNumber: mobileNumber },
         { new: true },
       );
     }
 
     // ✅ Update institute if provided
-    if (institute) {
+    if (instituteName) {
       await User.findByIdAndUpdate(
         req.user._id,
-        { instituteName: institute },
+        { instituteName: instituteName },
         { new: true },
       );
     }
 
-    if (course) {
+    if (presentCourseOfStudy) {
       await User.findByIdAndUpdate(
         req.user._id,
-        { presentCourseOfStudy: course },
+        { presentCourseOfStudy: presentCourseOfStudy },
         { new: true },
       );
     }
@@ -130,6 +130,7 @@ const verifyPayment = async (req, res) => {
 
     // Find order
     const order = await Order.findOne({ razorpayOrderId: payment.order_id });
+
     if (!order) {
       console.error("Order not found for payment:", payment.order_id);
       return res
@@ -139,11 +140,13 @@ const verifyPayment = async (req, res) => {
 
     // Update order
     order.razorpayPaymentId = payment.id;
+
     order.status = "Completed";
     await order.save();
 
     // Get user
-    const user = await User.findById(order.user);
+    const user = await User.findById(order.userId);
+    
     if (!user) {
       console.error("User not found for order:", order._id);
       return res
@@ -155,12 +158,12 @@ const verifyPayment = async (req, res) => {
     if (order.itemType === "course") {
       user.isPremiumMember = true;
 
-      if (!user.enrolledCourses.includes(order.course)) {
-        user.enrolledCourses.push(order.course);
+      if (!user.enrolledCourses.includes(order.itemId)) {
+        user.enrolledCourses.push(order.itemId);
       }
       await user.save();
 
-      const courseDetails = await Course.findById(order.course);
+      const courseDetails = await Course.findById(order.itemId);
 
       await CourseEnrollment.create({
         courseId: courseDetails._id,
@@ -220,7 +223,7 @@ const verifyPayment = async (req, res) => {
         "68a6cdeefa66a524a5255dcd",
       ];
 
-      if (MSC_ENTRANCE_BATCH_IDS.includes(order.course.toString())) {
+      if (MSC_ENTRANCE_BATCH_IDS.includes(order.itemId.toString())) {
         user.hasAccessToQuizzes = true;
         await user.save();
 
@@ -240,6 +243,12 @@ const verifyPayment = async (req, res) => {
         studentName: user.name,
         quizLink: "https://microdomeclasses.in/quizzes",
       });
+    } else if(order.itemType === "mock_test_bundle") {
+      const mockTestBundleEnrollment = await mockTestBundleEnrollment.create({
+        bundleId: order.itemId,
+        userId: user._id
+      })
+      //mock test confirmation email 
     }
 
     // Always respond 200 to Razorpay

@@ -213,10 +213,10 @@ const addSection = async (req, res) => {
 };
 
 const getCourseDetails = async (req, res) => {
-  const { linkAddress } = req.body;
+  const { id } = req.params;
 
   try {
-    const courseDetails = await Course.findOne({ linkAddress });
+    const courseDetails = await Course.findOne({ _id: id });
 
     if (!courseDetails) {
       throw new ApiError(404, "Course does not exist!");

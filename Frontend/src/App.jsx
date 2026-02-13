@@ -197,7 +197,7 @@ const App = () => {
         <Route path="/quiz/:quizId" element={<QuizLayout />} />
         <Route path="/quiz/result/:quizId" element={<QuizResult />} />
         <Route path="/quiz/leaderboard/:quizId" element={[<QuizLeaderboard /> , <Navbar />]} />
-        <Route path="/checkout/:id" element = {<CheckOut/>}/>
+        <Route path="/checkout/:itemType/:id" element = {<CheckOut/>}/>
         <Route path="*" element={<PageNotFound />}/>
       </Routes>
     </BrowserRouter>

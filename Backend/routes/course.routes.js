@@ -37,7 +37,7 @@ router.route("/add-new-course").post(addNewCourse);
 
 router.route("/get-full-course/:id").get(verifyJWT, isEnrolledInCourse, getFullCourse);
 
-router.route("/get-course-details").post(getCourseDetails);
+router.route("/get-course-details/:id").get(getCourseDetails);
 
 router.route("/get-enrolled-courses").post(getEnrolledCourses);
 

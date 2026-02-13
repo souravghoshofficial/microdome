@@ -9,16 +9,16 @@ import { login } from "../features/auth/authSlice";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const CheckOut = () => {
-  const { id } = useParams();
+  const { id,itemType } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.status);
   const userData = useSelector((state) => state.auth.userData);
-
-  const [courseDetails, setCourseDetails] = useState(null);
-  const [phone, setPhone] = useState("");
-  const [institute, setInstitute] = useState("");
-  const [course, setCourse] = useState("");
+  const theme = useSelector((state) => state.theme.theme)
+  const [item, setItem] = useState(null);
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [instituteName, setInstituteName] = useState("");
+  const [presentCourseOfStudy, setPresentCourseOfStudy] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [finalAmount, setFinalAmount] = useState(null);
@@ -30,22 +30,44 @@ const CheckOut = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    axios
-      .post(
-        `${ApiUrl}/courses/get-course-details`,
-        { linkAddress: id },
-        { withCredentials: true },
-      )
-      .then((res) => {
-        setCourseDetails(res.data.courseDetails);
-        setFinalAmount(res.data.courseDetails.discountedPrice);
-      })
-      .catch(() => console.log("Error fetching course details"))
-      .finally(() => setLoading(false));
-  }, [id]);
+    const fetchItem = async () => {
+      try {
+        setLoading(true);
 
-  const isEnrolled = userData?.enrolledCourses.includes(courseDetails?._id);
+        let url = "";
+
+        if (itemType === "course") {
+          url = `${ApiUrl}/courses/get-course-details/${id}`;
+        }
+
+        if (itemType === "mock-test-bundle") {
+          url = `${ApiUrl}/user/mock-test-bundles/${id}`;
+        }
+
+        const res =
+          itemType === "course"
+            ? await axios.get(url, { withCredentials: true })
+            : await axios.get(url);
+    
+        const data =
+          itemType === "course"
+            ? res.data.courseDetails
+            : res.data.data;
+
+        setItem(data);
+        setFinalAmount(data.discountedPrice);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItem();
+  }, [itemType, id]);
+
+  const isEnrolled = userData?.enrolledCourses.includes(item?._id);
 
   const handleApplyCoupon = async () => {
     if (!couponCode) {
@@ -88,17 +110,17 @@ const CheckOut = () => {
       toast.warn("Please login to enroll");
       return;
     }
-    if (!phone || phone.length < 10) {
+    if (!mobileNumber || (mobileNumber.length < 10 && mobileNumber.length>10)) {
       toast.warn("Enter a valid phone number");
       return;
     }
     // --
-    if (!institute || institute.length < 3) {
+    if (!instituteName || instituteName.length < 3) {
       toast.warn("Enter a valid institute name");
       return;
     }
 
-    if (!course || course.length < 3) {
+    if (!presentCourseOfStudy || presentCourseOfStudy.length < 3) {
       toast.warn("Enter a valid course name");
       return;
     }
@@ -165,7 +187,14 @@ const CheckOut = () => {
     }
   };
 
+  console.log(item)
+  const title = item.courseTitle || item.title;
+  const image = item.courseImage || item.thumbnail;
+  const actualPrice = item.actualPrice;
+  const price = finalAmount;
+  const description = item.subTitle || item.description;
   return (
+    <div className={`min-h-screen w-full ${theme}`}>
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 dark:from-black dark:to-gray-900 px-4 sm:px-6">
       <ToastContainer />
       <div className="my-10 w-full max-w-5xl bg-white dark:bg-[#1b1e27] shadow-2xl rounded-2xl">
@@ -178,8 +207,8 @@ const CheckOut = () => {
             {/* Left: Course Image */}
             <div className="relative h-64 md:h-full p-4 mt-4 md:mt-0 flex items-center justify-center">
               <img
-                src={courseDetails.courseImage}
-                alt={courseDetails.courseTitle}
+                src={image}
+                alt={title}
                 className="max-h-80 md:max-h-[500px] w-auto object-contain rounded-lg"
               />
             </div>
@@ -188,21 +217,21 @@ const CheckOut = () => {
             <div className="p-6 sm:p-10 flex flex-col justify-between">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
-                  {courseDetails.courseTitle}
+                  {title}
                 </h2>
-                {courseDetails.subTitle && (
+                
                   <p className="text-gray-600 dark:text-gray-400 mb-4 text-base sm:text-lg">
-                    {courseDetails.subTitle}
+                    {description}
                   </p>
-                )}
+                
 
                 {/* Price Section */}
                 <div className="flex items-baseline gap-3 mb-4">
                   <span className="text-lg sm:text-xl line-through text-gray-500">
-                    ₹{courseDetails.actualPrice}
+                    ₹{actualPrice}
                   </span>
                   <span className="text-3xl sm:text-4xl font-extrabold text-green-600 dark:text-green-400">
-                    ₹{finalAmount}
+                    ₹{price}
                   </span>
                 </div>
 
@@ -258,8 +287,8 @@ const CheckOut = () => {
                   </label>
                   <input
                     type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
                     placeholder="Enter your whatsapp number"
                     className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
                   />
@@ -272,8 +301,8 @@ const CheckOut = () => {
                   </label>
                   <input
                     type="text"
-                    value={institute}
-                    onChange={(e) => setInstitute(e.target.value)}
+                    value={instituteName}
+                    onChange={(e) => setInstituteName(e.target.value)}
                     placeholder="Enter your Institute Name"
                     className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
                   />
@@ -286,8 +315,8 @@ const CheckOut = () => {
                   </label>
                   <input
                     type="text"
-                    value={course}
-                    onChange={(e) => setCourse(e.target.value)}
+                    value={presentCourseOfStudy}
+                    onChange={(e) => setPresentCourseOfStudy(e.target.value)}
                     placeholder="Enter Present Course of Study"
                     className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-gray-600 dark:text-gray-100"
                   />
@@ -346,6 +375,7 @@ const CheckOut = () => {
           <p className="text-center text-red-600 py-12">Course not found</p>
         )}
       </div>
+    </div>
     </div>
   );
 };

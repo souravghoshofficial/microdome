@@ -2,19 +2,18 @@ import mongoose, { Schema } from "mongoose";
 
 const orderSchema = new Schema(
   {
-    user: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    course: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
-    },
     itemType: {
       type: String,
-      enum: ["course", "quiz"],
+      enum: ["course", "quiz","mock_test_bundle"],
       default: "course",  
+    },
+    itemId: {
+      type: mongoose.Schema.Types.ObjectId
     },
     amount: {
       type: Number,

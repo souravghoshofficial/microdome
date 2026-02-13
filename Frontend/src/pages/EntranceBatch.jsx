@@ -95,7 +95,7 @@ const EntranceBatch = () => {
       navigate(`/my-courses/${courseDetails?._id}`);
       return;
     }
-    navigate(`/checkout/${id}`);
+    navigate(`/checkout/course/${id}`);
   };
 
   if(!courseDetails){

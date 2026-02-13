@@ -225,7 +225,7 @@ const SemesterCourseLayout = () => {
       return;
     }
     // Redirect to Checkout page
-    navigate(`/checkout/${id}`);
+    navigate(`/checkout/course/${courseDetails._id}`);
   };
 
     if(!courseDetails){
