@@ -3,6 +3,8 @@ import { useParams,useNavigate } from "react-router";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { Clock, Target, Lock, Check } from "lucide-react";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -11,6 +13,13 @@ const MockTestBundleDetails = () => {
   const navigate=useNavigate();
   const [bundle, setBundle] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isLoggedIn = useSelector((state) => state.auth.status);
+  const enrolledMockTestBundles = useSelector((state) => state.enrolledMockTestBundles.MockTestBundleDetails)
+  const isEnrolledInThisBundle = enrolledMockTestBundles.some(
+    bundle => bundle._id.toString() === bundleId.toString()
+  );
+
+  console.log(isEnrolledInThisBundle)
 
   useEffect(() => {
     const fetchBundle = async () => {
@@ -55,7 +64,15 @@ const MockTestBundleDetails = () => {
       : 0;
 
       const handleClick = ()=>{
-        navigate(`/checkout/mock-test-bundle/${bundleId}`)
+        if(!isLoggedIn){
+          toast.warn("Login to continue.")
+          return 
+        } 
+        if(!isEnrolledInThisBundle){
+          navigate(`/checkout/mock-test-bundle/${bundleId}`)
+          return 
+        }
+        navigate('/my-mock-test-bundles')
       }
   return (
     <>
@@ -123,7 +140,7 @@ const MockTestBundleDetails = () => {
                 <button onClick={handleClick}
                   className="mt-6 w-full md:w-fit px-10 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition shadow-md cursor-pointer"
                 >
-                  Buy Now
+                  {isEnrolledInThisBundle ? 'View Test' : 'Buy Now'}
                 </button>
               </div>
             </div>

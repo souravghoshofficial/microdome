@@ -52,7 +52,7 @@ const userSchema = new Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",
       },
-    ],
+    ],              
 
     role: {
       type: String,

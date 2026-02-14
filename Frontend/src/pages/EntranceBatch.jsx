@@ -72,16 +72,6 @@ const EntranceBatch = () => {
     setCourseDetails(null)
   }
     
-    // axios
-    //   .post(
-    //     `${ApiUrl}/courses/get-course-details`,
-    //     { linkAddress: id },
-    //     { withCredentials: true }
-    //   )
-    //   .then((res) => {
-    //     setCourseDetails(res.data.courseDetails);
-    //   })
-    //   .catch(() => console.log("Error fetching course details"));
   }, [id, courses]);
 
   const isEnrolled = userData?.enrolledCourses.includes(courseDetails?._id);

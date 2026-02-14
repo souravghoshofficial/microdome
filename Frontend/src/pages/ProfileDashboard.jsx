@@ -17,6 +17,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const ProfileDashboard = () => {
   const userData = useSelector((state) => state.auth.userData);
+  const enrolledMockTestBundles = useSelector((state) => state.enrolledMockTestBundles.MockTestBundleDetails)
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
@@ -109,11 +110,34 @@ const ProfileDashboard = () => {
           </div>
 
           {/* Mock Test Series */}
+
+          {
+            enrolledMockTestBundles?.length>0 && 
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
+            <div className="flex items-center gap-2 mb-4 text-green-600 font-semibold">
+              <RiQuestionAnswerLine size={20} />
+              Test Series
+            </div>
+            <div className="text-sm space-y-2">    
+                    {enrolledMockTestBundles?.map(bundle=>(
+                      <Link key={bundle._id}
+                      to={`/my-bundles/${bundle._id}`}
+                      className="text-blue-600 hover:underline flex items-center gap-1"
+                    >
+                      <RiExternalLinkLine size={14} />
+                      {bundle.title}
+                    </Link>
+                    ))}
+            </div>
+          </div>
+          }
+
+          {/* Quizzes */}
            {
             userData?.hasAccessToQuizzes && <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
             <div className="flex items-center gap-2 mb-4 text-green-600 font-semibold">
               <RiQuestionAnswerLine size={20} />
-              Mock Test Series
+              Purchased Quizzes
             </div>
             <div className="text-sm space-y-2">    
                     <Link
@@ -121,7 +145,7 @@ const ProfileDashboard = () => {
                       className="text-blue-600 hover:underline flex items-center gap-1"
                     >
                       <RiExternalLinkLine size={14} />
-                      {"Mock Test Series"}
+                      {"Go to Quizzes"}
                     </Link>
             </div>
           </div>

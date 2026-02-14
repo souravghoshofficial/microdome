@@ -77,28 +77,14 @@ import {
 
 import { useCourses } from "./hooks/courses.js";
 import { useAuth } from "./hooks/auth.js";
+import { useEnrolledTestBundles } from './hooks/getEnrolledMockTestBundles.js';
 
 const App = () => {
   const isProfileCardHidden = useSelector((state) => state.profileCard.show)
   const dispatch = useDispatch();
   const { loading } = useAuth();
+  useEnrolledTestBundles();
   useCourses();
-
-  // useEffect(() => {
-  //   const handleClick = (event) => {
-  //     if (event.button === 0) {
-  //       if(!isProfileCardHidden){
-  //         dispatch(hideCard())
-  //       }
-  //     }
-  //   };
-
-  //   window.addEventListener("mousedown", handleClick);
-
-  //   return () => {
-  //     window.removeEventListener("mousedown", handleClick);
-  //   };
-  // }, []);
 
   if (loading) {
     return (

@@ -1,4 +1,5 @@
 import { MockTestBundle } from "../models/mockTestBundle.model.js";
+import { mockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
 
 export const getMockTestBundles = async (req, res) => {
   try {
@@ -59,3 +60,35 @@ export const getMockTestBundleById = async (req, res) => {
     });
   }
 };
+
+
+export const getEnrolledMockTestBundles = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const enrollments = await mockTestBundleEnrollment
+      .find({ userId })
+      .populate({
+        path: "bundleId",
+        match: { isActive: true } // only active bundles
+      });
+
+    // Remove null bundles (in case some are inactive)
+    const bundles = enrollments
+      .map((enrollment) => enrollment.bundleId)
+      .filter((bundle) => bundle !== null);
+
+    return res.status(200).json({
+      bundles,
+      message: "Enrolled mock test bundles fetched successfully."
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch enrolled bundles",
+      error: error.message
+    });
+  }
+};
+
+

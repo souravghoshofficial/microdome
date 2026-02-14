@@ -15,6 +15,8 @@ import {
   updateAccountsDetails,
 } from "../controllers/user.controller.js";
 
+import { getEnrolledMockTestBundles } from "../controllers/user.mockTestBundle.controller.js"
+
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 const router = Router();
@@ -29,7 +31,7 @@ router.route("/resend-forgot-password-otp").post(resendForgotPasswordOTP);
 router.route("/reset-password").post(resetPassword);
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/current-user").get(verifyJWT, getCurrentUser);
-
+router.route("/enrolled-mock-test-bundles").get(verifyJWT,getEnrolledMockTestBundles);
 router
   .route("/update-user-profile-image")
   .post(

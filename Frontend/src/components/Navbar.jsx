@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toogleCard } from "../features/profileCard/profileCardSlice";
 import { logout } from "../features/auth/authSlice.js";
 import axios from "axios";
-
+import { removeBundles } from "../features/enrolledMockTestBundles/enrolledMockTestBundlesSlice.js";
 const navItems = [
   {
     navItemName: "Home",
@@ -81,6 +81,7 @@ const Navbar = () => {
       .then((res) => {
         if (res.data.statusCode === 200) {
           dispatch(logout());
+          dispatch(removeBundles());
           navigate("/");
         }
       });
