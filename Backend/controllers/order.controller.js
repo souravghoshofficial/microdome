@@ -6,11 +6,13 @@ import crypto from "crypto";
 import {
   sendCourseConfirmationEmail,
   sendQuizConfirmationEmail,
+  sendMockTestConfirmationEmail
 } from "../utils/sendEmail.js";
 import { CourseEnrollment } from "../models/courseEnrollment.model.js";
 import { Coupon } from "../models/coupon.model.js";
 import { MonthlyFee } from "../models/monthlyFee.model.js";
-import { mockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
+import { MockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
+import { MockTestBundle } from "../models/mockTestBundle.model.js";
 
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -244,11 +246,18 @@ const verifyPayment = async (req, res) => {
         quizLink: "https://microdomeclasses.in/quizzes",
       });
     } else if(order.itemType === "mock_test_bundle") {
-      const mockTestBundleEnrollment = await mockTestBundleEnrollment.create({
+      const mockTestBundleEnrollment = await MockTestBundleEnrollment.create({
         bundleId: order.itemId,
         userId: user._id
       })
+      const bundle = await MockTestBundle.find({_id: order.itemId})
       //mock test confirmation email 
+      await sendMockTestConfirmationEmail({
+        to: user.email,
+        name: user.name,
+        mockTestBundleTitle: bundle.title,
+        bundleId: bundle._id
+      })
     }
 
     // Always respond 200 to Razorpay

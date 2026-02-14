@@ -44,7 +44,12 @@ const ProfileDashboard = () => {
       <div className="w-full max-w-5xl mt-8 md:mt-4 bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row">
 
         {/* Left: Profile Section */}
-        <div className="bg-blue-600 text-white p-10 md:w-1/3 flex flex-col items-center justify-center relative">
+          <div className="relative md:w-1/3 p-10 
+          bg-gradient-to-br from-slate-800 via-slate-900 to-black
+          text-white
+          flex flex-col items-center justify-center
+          rounded-l-3xl
+          shadow-xl">
           <img
             src={userData?.profileImage || userImg}
             alt="Profile"

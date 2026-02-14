@@ -1,5 +1,5 @@
 import { MockTestBundle } from "../models/mockTestBundle.model.js";
-import { mockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
+import { MockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
 
 export const getMockTestBundles = async (req, res) => {
   try {
@@ -66,7 +66,7 @@ export const getEnrolledMockTestBundles = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    const enrollments = await mockTestBundleEnrollment
+    const enrollments = await MockTestBundleEnrollment
       .find({ userId })
       .populate({
         path: "bundleId",

@@ -3,18 +3,20 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
+export const transporter = nodemailer.createTransport({
+  host: "smtp.zoho.in",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER, // your email
     pass: process.env.EMAIL_PASS, // your generated app password
   },
 });
 
-const sendOtpEmail = async (to, otp) => {
+export const sendOtpEmail = async (to, otp) => {
   try {
     await transporter.sendMail({
-      from: `"Microdome Classes" <${process.env.EMAIL_USER}>`,
+      from: `"Microdome Classes" <no-reply@microdomeclasses.in>`,
       to,
       subject: "Your OTP Code",
       text: `Your One-Time Password is: ${otp}. It is valid for 5 minutes.`,
@@ -25,7 +27,7 @@ const sendOtpEmail = async (to, otp) => {
   }
 };
 
-const sendCourseConfirmationEmail = async ({
+export const sendCourseConfirmationEmail = async ({
   to,
   studentName,
   courseTitle,
@@ -64,7 +66,7 @@ const sendCourseConfirmationEmail = async ({
 
     <p>Best regards,<br/>
     Microdome Classes Team<br/>
-    📧 microdomeclasses2@gmail.com</p>
+    📧 team@microdomeclasses.in</p>
 
     <hr/>
     <small>This is an automated message. If you did not make this purchase, please contact us immediately.</small>
@@ -73,7 +75,7 @@ const sendCourseConfirmationEmail = async ({
 
   try {
     await transporter.sendMail({
-      from: `"Microdome Classes" <${process.env.EMAIL_USER}>`,
+      from: `"Microdome Classes" <no-reply@microdomeclasses.in>`,
       to,
       subject,
       html,
@@ -85,7 +87,7 @@ const sendCourseConfirmationEmail = async ({
   }
 };
 
-const sendAccessRevokedEmail = async ({ to, studentName, courseTitle }) => {
+export const sendAccessRevokedEmail = async ({ to, studentName, courseTitle }) => {
   const subject = `⚠️ Access Revoked: ${courseTitle}`;
 
   const html = `
@@ -100,7 +102,7 @@ const sendAccessRevokedEmail = async ({ to, studentName, courseTitle }) => {
 
     <p>Best regards,<br/>
     Microdome Classes Team<br/>
-    📧 microdomeclasses2@gmail.com</p>
+    📧 team@microdomeclasses.in</p>
 
     <hr/>
     <small>This is an automated message. Please do not reply directly to this email.</small>
@@ -109,7 +111,7 @@ const sendAccessRevokedEmail = async ({ to, studentName, courseTitle }) => {
 
   try {
     await transporter.sendMail({
-      from: `"Microdome Classes" <${process.env.EMAIL_USER}>`,
+      from: `"Microdome Classes" <no-reply@microdomeclasses.in>`,
       to,
       subject,
       html,
@@ -121,7 +123,7 @@ const sendAccessRevokedEmail = async ({ to, studentName, courseTitle }) => {
   }
 };
 
-const sendAccessGrantedEmail = async ({
+export const sendAccessGrantedEmail = async ({
   to,
   studentName,
   courseTitle,
@@ -150,7 +152,7 @@ const sendAccessGrantedEmail = async ({
 
     <p>Best regards,<br/>
     Microdome Classes Team<br/>
-    📧 microdomeclasses2@gmail.com</p>
+    📧 team@microdomeclasses.in</p>
 
     <hr/>
     <small>This is an automated message. Please do not reply directly to this email.</small>
@@ -159,7 +161,7 @@ const sendAccessGrantedEmail = async ({
 
   try {
     await transporter.sendMail({
-      from: `"Microdome Classes" <${process.env.EMAIL_USER}>`,
+      from: `"Microdome Classes" <no-reply@microdomeclasses.in>`,
       to,
       subject,
       html,
@@ -171,7 +173,7 @@ const sendAccessGrantedEmail = async ({
   }
 };
 
-const sendQuizConfirmationEmail = async ({
+export const sendQuizConfirmationEmail = async ({
   to,
   studentName,
   quizLink,
@@ -195,7 +197,7 @@ const sendQuizConfirmationEmail = async ({
 
     <p>Best regards,<br/>
     Microdome Classes Team<br/>
-    📧 microdomeclasses2@gmail.com</p>
+    📧 team@microdomeclasses.in</p>
 
     <hr/>
     <small>This is an automated message. If you did not enroll in this test, please contact us immediately.</small>
@@ -204,7 +206,7 @@ const sendQuizConfirmationEmail = async ({
 
   try {
     await transporter.sendMail({
-      from: `"Microdome Classes" <${process.env.EMAIL_USER}>`,
+      from: `"Microdome Classes" <no-reply@microdomeclasses.in>`,
       to,
       subject,
       html,
@@ -216,11 +218,11 @@ const sendQuizConfirmationEmail = async ({
   }
 };
 
-const sendMessage = async (req, res) => {
+export const sendMessage = async (req, res) => {
   const { name, email, message } = req.body;
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: 'no-reply@microdomeclasses.in',
     to: process.env.EMAIL_USER,
     subject: `New Contact from ${name}`,
     text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
@@ -242,12 +244,60 @@ const sendMessage = async (req, res) => {
   }
 };
 
+export const sendMockTestConfirmationEmail = async ({
+  to,
+  mockTestBundleTitle,
+  bundleId,
+  name,
+}) => {
+  try {
+    const dashboardLink = `${process.env.FRONTEND_URL}/my-bundles/${bundleId}`;
 
-export {
-  sendOtpEmail,
-  sendCourseConfirmationEmail,
-  sendAccessRevokedEmail,
-  sendAccessGrantedEmail,
-  sendQuizConfirmationEmail,
-  sendMessage
+    const mailOptions = {
+      from: `"Microdome Classes" <no-reply@microdomeclasses.in>`,
+      to,
+      subject: "🎉 Mock Test Bundle Enrolled Successfully",
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8fafc;">
+          <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            
+            <h2 style="color: #2563eb; margin-bottom: 10px;">
+              Congratulations ${name} 🎉
+            </h2>
+
+            <p style="color: #334155; font-size: 15px;">
+              You have successfully enrolled in:
+            </p>
+
+            <h3 style="color: #111827; margin-top: 10px;">
+              ${mockTestBundleTitle}
+            </h3>
+
+            <p style="margin-top: 20px; font-size: 14px; color: #475569;">
+              You can now start practicing and access your test series from your dashboard.
+            </p>
+
+            <a href="${dashboardLink}"
+               style="display: inline-block; margin-top: 20px; padding: 12px 20px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold;">
+              Go to My Test Series
+            </a>
+
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #e2e8f0;" />
+
+            <p style="font-size: 12px; color: #94a3b8;">
+              This is an automated email. Please do not reply to this message.
+            </p>
+
+
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    console.log("Mock test confirmation email sent successfully");
+  } catch (error) {
+    console.error("Error sending mock test confirmation email:", error.message);
+  }
 };

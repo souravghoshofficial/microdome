@@ -4,7 +4,8 @@ import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { Clock, Target, Lock, Check } from "lucide-react";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { toast,ToastContainer }  from "react-toastify";
+
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -15,7 +16,7 @@ const MockTestBundleDetails = () => {
   const [loading, setLoading] = useState(true);
   const isLoggedIn = useSelector((state) => state.auth.status);
   const enrolledMockTestBundles = useSelector((state) => state.enrolledMockTestBundles.MockTestBundleDetails)
-  const isEnrolledInThisBundle = enrolledMockTestBundles.some(
+  const isEnrolledInThisBundle = enrolledMockTestBundles?.some(
     bundle => bundle._id.toString() === bundleId.toString()
   );
 
@@ -82,7 +83,7 @@ const MockTestBundleDetails = () => {
 
       <div className="w-full flex justify-center bg-white dark:bg-gray-950 text-black dark:text-white">
         <div className="my-32 w-[90%] max-w-6xl">
-
+          <ToastContainer />
           {/* ================= HERO CARD ================= */}
           <div className="relative rounded-2xl border bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-zinc-900 shadow-lg overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 p-4 md:p-8">

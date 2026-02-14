@@ -16,4 +16,4 @@ const mockTestBundleEnrollmentSchema = new Schema({
   timestamps: true
 })
 
-export const mockTestBundleEnrollment = mongoose.model("mockTestBundleEnrollment", mockTestBundleEnrollmentSchema)
+export const MockTestBundleEnrollment = mongoose.model("MockTestBundleEnrollment", mockTestBundleEnrollmentSchema)
