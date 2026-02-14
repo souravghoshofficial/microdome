@@ -182,7 +182,7 @@ const App = () => {
             <Route path="reset-quiz-price" element={<ResetQuizPrice />} />
             <Route path="create-course" element={<CreateCourse />} />
             <Route path="coupons" element={<Coupons />} />
-            <Route path="create-coupon" element={<CreateCoupon />} />
+            <Route path="coupons/create" element={<CreateCoupon />} />
             <Route path="mock-tests" element={<AdminMockTests />}/>
             <Route path="mock-tests/:mockTestId" element={<AdminMockTestSections />}/>
             <Route path="mock-tests/:mockTestId/:mockTestSectionId/questions" element={<AdminMockTestQuestions />}/>

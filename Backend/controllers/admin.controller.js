@@ -638,14 +638,14 @@ export const getCourseDetailsWithUserCounts = async (req, res) => {
 
 export const createCouponCode = async (req, res) => {
   try {
-    const { couponCode, courseId, discount } = req.body;
-    if (!couponCode || !courseId || !discount) {
+    const { couponCode, itemId, discount, itemType } = req.body;
+    if (!couponCode || !itemId || !discount || !itemType) {
       return res.status(400).json({
         success: false,
         message: "All fields are required.",
       });
     }
-    const coupon = await Coupon.create({ couponCode, courseId, discount });
+    const coupon = await Coupon.create({ couponCode, itemId, discount, itemType });
     if (!coupon) {
       return res.status(400).json({
         success: false,
@@ -665,12 +665,12 @@ export const createCouponCode = async (req, res) => {
     });
   }
 };
-
 export const getAllCoupons = async (_, res) => {
   try {
-    const coupons = await Coupon.find({}).populate("courseId", "cardTitle"); // fetch only cardTitle from Course
+    const coupons = await Coupon.find({})
+      .populate("itemId");
 
-    if (!coupons || coupons.length === 0) {
+    if (!coupons.length) {
       return res.status(404).json({
         success: false,
         message: "No coupons found.",
@@ -690,6 +690,7 @@ export const getAllCoupons = async (_, res) => {
     });
   }
 };
+
 
 export const deleteCoupon = async (req, res) => {
   try {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams,useNavigate } from "react-router";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { Clock, Target, Lock, Check } from "lucide-react";
@@ -8,7 +8,7 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const MockTestBundleDetails = () => {
   const { bundleId } = useParams();
-
+  const navigate=useNavigate();
   const [bundle, setBundle] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -54,6 +54,9 @@ const MockTestBundleDetails = () => {
         )
       : 0;
 
+      const handleClick = ()=>{
+        navigate(`/checkout/mock-test-bundle/${bundleId}`)
+      }
   return (
     <>
       <Helmet>
@@ -115,10 +118,10 @@ const MockTestBundleDetails = () => {
                     <span>Performance analysis and leaderboards</span>
                   </div>
                 </div>
-
+                
                 {/* CTA */}
-                <button
-                  className="mt-6 w-full md:w-fit px-10 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition shadow-md"
+                <button onClick={handleClick}
+                  className="mt-6 w-full md:w-fit px-10 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition shadow-md cursor-pointer"
                 >
                   Buy Now
                 </button>

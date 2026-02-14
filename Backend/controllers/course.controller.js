@@ -222,7 +222,7 @@ const getCourseDetails = async (req, res) => {
       throw new ApiError(404, "Course does not exist!");
     }
 
-    res.status(200).json({ courseDetails });
+    res.status(200).json({ course: courseDetails });
   } catch (error) {
     console.log(error);
     throw new ApiError(500, "Internal Server Error");

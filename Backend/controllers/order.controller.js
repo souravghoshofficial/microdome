@@ -271,21 +271,22 @@ const verifyPayment = async (req, res) => {
 
 export const validateCouponCode = async (req, res) => {
   try {
-    const { courseId, couponCode } = req.body;
+    const { itemId, itemType, couponCode } = req.body;
 
-    if (!courseId || !couponCode) {
+    if (!itemId || !itemType || !couponCode) {
       return res.status(400).json({
         success: false,
         message: "All fields are required.",
       });
     }
 
-    // Convert to lowercase before checking
-    const normalizedCode = couponCode.toLowerCase();
+    // Normalize coupon code
+    const normalizedCode = couponCode.toLowerCase().trim();
 
-    // Find coupon by courseId and normalized couponCode
+    // 🔎 Find coupon by itemId + itemType + code
     const coupon = await Coupon.findOne({
-      courseId,
+      itemId,
+      itemType,
       couponCode: normalizedCode,
     });
 
@@ -310,5 +311,6 @@ export const validateCouponCode = async (req, res) => {
     });
   }
 };
+
 
 export { createOrder, verifyPayment };

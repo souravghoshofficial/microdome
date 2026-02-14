@@ -9,11 +9,17 @@ const couponSchema = new Schema({
     },
     discount: {
         type: Number,
-        required: true
+        required: true  
     },
-    courseId: {
+    itemId: {
         type: mongoose.Schema.ObjectId,
-        ref: "Course"
+        required: true,
+        refPath: "itemType" 
+    },
+    itemType: {
+        type: String,
+        enum: ['Course','MockTestBundle'],
+        required: true
     }
 })
 
