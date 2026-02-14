@@ -10,6 +10,8 @@ const PaymentSuccess = () => {
   const paymentId = location.state?.paymentId || "XXXXXXXXXXXX";
   const itemType = location.state?.itemType || "course";
 
+  const { width, height } = useWindowSize();
+
 
   return (
     <div className="relative min-h-screen bg-black flex items-center justify-center text-white overflow-hidden">
