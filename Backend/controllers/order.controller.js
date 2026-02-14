@@ -55,6 +55,7 @@ const createOrder = async (req, res) => {
     const newOrder = new Order({
       userId: req.user._id,
       itemType,
+      itemId,
       amount,
       razorpayOrderId: order.id,
       razorpayPaymentId: "", // will be updated after verification
