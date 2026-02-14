@@ -8,9 +8,8 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
 
   const paymentId = location.state?.paymentId || "XXXXXXXXXXXX";
+  const itemType = location.state?.itemType || "course";
 
-  // Get window size for Confetti to fill screen
-  const { width, height } = useWindowSize();
 
   return (
     <div className="relative min-h-screen bg-black flex items-center justify-center text-white overflow-hidden">
@@ -24,7 +23,7 @@ const PaymentSuccess = () => {
 
         <h2 className="text-2xl font-bold mb-2">Woohooo!</h2>
         <p className="text-sm text-gray-300 mb-4">
-          Your course purchase was successful.<br />
+          Your {itemType} purchase was successful.<br />
           Enjoy your learning journey! 🎉
         </p>
 

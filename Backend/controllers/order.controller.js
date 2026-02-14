@@ -251,7 +251,7 @@ const verifyPayment = async (req, res) => {
         bundleId: order.itemId,
         userId: user._id
       })
-      const bundle = await MockTestBundle.find({_id: order.itemId})
+      const bundle = await MockTestBundle.findById(order.itemId)
       //mock test confirmation email 
       await sendMockTestConfirmationEmail({
         to: user.email,

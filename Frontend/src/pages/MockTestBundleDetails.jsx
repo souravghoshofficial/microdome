@@ -11,16 +11,18 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const MockTestBundleDetails = () => {
   const { bundleId } = useParams();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+
   const [bundle, setBundle] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const isLoggedIn = useSelector((state) => state.auth.status);
   const enrolledMockTestBundles = useSelector((state) => state.enrolledMockTestBundles.MockTestBundleDetails)
+
   const isEnrolledInThisBundle = enrolledMockTestBundles?.some(
     bundle => bundle._id.toString() === bundleId.toString()
   );
 
-  console.log(isEnrolledInThisBundle)
 
   useEffect(() => {
     const fetchBundle = async () => {
