@@ -203,7 +203,7 @@ const CreateCoupon = () => {
 
               {items.map((item) => (
                 <option key={item._id} value={item._id}>
-                  {item.cardTitle || item.courseTitle || item.title}
+                  {item.courseTitle || item.cardTitle || item.title}
                 </option>
               ))}
             </select>
