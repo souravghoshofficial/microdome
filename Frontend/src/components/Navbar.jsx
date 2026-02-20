@@ -121,7 +121,7 @@ const Navbar = () => {
           </div>
           {isLoggedIn && (
             <div onClick={() => dispatch(toogleCard())}>
-              <UserIcon className="w-8 h-8 cursor-pointer" />
+              <UserIcon className="w-9 h-9 cursor-pointer" />
             </div>
           )}
           {!isLoggedIn && (

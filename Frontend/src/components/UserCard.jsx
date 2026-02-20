@@ -33,11 +33,11 @@ const UserCard = ({ className = "" }) => {
     <div
       className={`${showProfileCard ? "block" : "hidden"}  ${
         isLoggedIn ? "block" : "hidden"
-      } ${className} w-60  border border-gray-200 dark:border-gray-50/[.1] rounded-sm bg-white dark:bg-zinc-900 text-black dark:text-white`}
+      } ${className} w-60  border border-gray-200 dark:border-gray-50/[.1] rounded-md bg-white dark:bg-zinc-900 text-black dark:text-white`}
     >
       <div className="relative px-4 py-6 flex flex-col items-center">
         <UserIcon className="w-16 h-16" />
-        <h3 className="text-lg font-bold mt-3">Hi , {userData?.name}</h3>
+        <h3 className="text-xl font-bold mt-4">{userData?.name}</h3>
         <Link
           to="/profile"
           onClick={() => dispatch(hideCard())}

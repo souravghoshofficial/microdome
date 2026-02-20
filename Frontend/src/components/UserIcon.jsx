@@ -8,7 +8,7 @@ const UserIcon = ({ className = "" }) => {
   const userData = useSelector((state) => state.auth.userData);
 
   return (
-    <div className={`${isLoggedIn ? "block" : "hidden"} ${className} border-2 border-transparent ring-1 ring-black dark:ring-white  rounded-full overflow-hidden`} >
+    <div className={`${isLoggedIn ? "block" : "hidden"} ${className}  ring-2 ring-offset-2 ring-offset-white dark:ring-offset-gray-950 ring-highlighted  rounded-full overflow-hidden`} >
       <img className="w-full object-center object-cover" src={userData?.profileImage || userImage} alt="user image" />
     </div>
   );

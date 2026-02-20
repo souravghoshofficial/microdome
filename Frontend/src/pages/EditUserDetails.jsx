@@ -86,7 +86,7 @@ const EditUserDetails = () => {
             <div className="relative w-28 h-28 group">
               <label htmlFor="profileImage">
                 <img
-                  className="w-full h-full rounded-full object-cover border-4 border-white shadow-md cursor-pointer"
+                  className="w-full h-full rounded-full object-cover border-2 border-highlighted p-1 shadow-md cursor-pointer"
                   src={imageSrc}
                   alt="Upload Profile"
                 />
@@ -118,7 +118,7 @@ const EditUserDetails = () => {
                 <button
                   disabled={loading}
                   type="submit"
-                  className="mt-3 px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
+                  className="mt-3 px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                   {loading ? "Uploading..." : "Upload"}
                 </button>
