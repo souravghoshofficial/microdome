@@ -743,9 +743,9 @@
 			"typeName": "shape"
 		},
 		{
-			"x": 754.3188647924075,
-			"y": -5439.537944668537,
-			"z": 0.848894850762546,
+			"x": 926.7340774097381,
+			"y": -4392.784255356298,
+			"z": 0.6193810911506594,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
@@ -1353,10 +1353,10 @@
 			"typeName": "shape"
 		},
 		{
-			"editingShapeId": "shape:vvmlbXUYhd68uzQ7p6O2y",
+			"editingShapeId": null,
 			"croppingShapeId": null,
 			"selectedShapeIds": [
-				"shape:vvmlbXUYhd68uzQ7p6O2y"
+				"shape:tt1cj5rwn-_vxGL_tuwnx"
 			],
 			"hoveredShapeId": null,
 			"erasingShapeIds": [],
@@ -1513,8 +1513,8 @@
 			"typeName": "shape"
 		},
 		{
-			"x": -529.7395194656862,
-			"y": 4792.971961881109,
+			"x": -528.4479272546896,
+			"y": 4800.7216136892575,
 			"rotation": 0,
 			"isLocked": false,
 			"opacity": 1,
@@ -1589,6 +1589,48 @@
 			},
 			"parentId": "page:page",
 			"index": "aR4C74VV",
+			"typeName": "shape"
+		},
+		{
+			"x": -682.7837322219375,
+			"y": 5023.681806519556,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:tt1cj5rwn-_vxGL_tuwnx",
+			"type": "text",
+			"props": {
+				"color": "black",
+				"size": "m",
+				"w": 281.8999938964844,
+				"font": "draw",
+				"textAlign": "start",
+				"autoSize": true,
+				"scale": 1,
+				"richText": {
+					"type": "doc",
+					"attrs": {
+						"dir": "auto"
+					},
+					"content": [
+						{
+							"type": "paragraph",
+							"attrs": {
+								"dir": "auto"
+							},
+							"content": [
+								{
+									"type": "text",
+									"text": "/my-bundles/:bundleId"
+								}
+							]
+						}
+					]
+				}
+			},
+			"parentId": "page:page",
+			"index": "b0ahwscfV",
 			"typeName": "shape"
 		},
 		{
@@ -3876,14 +3918,11 @@
 		{
 			"followingUserId": null,
 			"opacityForNextShape": 1,
-			"stylesForNextShape": {
-				"tldraw:fill": "none",
-				"tldraw:geo": "rectangle"
-			},
+			"stylesForNextShape": {},
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
-				"type": "default",
+				"type": "move",
 				"rotation": 0
 			},
 			"isFocusMode": false,
@@ -3894,7 +3933,7 @@
 				"x": 0,
 				"y": 0,
 				"w": 961.6000366210938,
-				"h": 602.4000244140625
+				"h": 589.6000366210938
 			},
 			"insets": [
 				false,
@@ -4625,8 +4664,8 @@
 			"typeName": "shape"
 		},
 		{
-			"x": -526.9563800447252,
-			"y": 5029.688299204018,
+			"x": -400.79518810168497,
+			"y": 5024.521831817862,
 			"rotation": 0,
 			"isLocked": false,
 			"opacity": 1,
