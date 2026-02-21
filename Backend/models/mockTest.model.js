@@ -5,47 +5,53 @@ const mockTestSchema = new Schema(
     title: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
 
     mockTestType: {
       type: String,
       enum: ["IIT_JAM", "CUET_PG", "GAT_B", "GATE"],
-      required: true
+      required: true,
     },
 
     description: {
       type: String,
-      required: true
+      required: true,
     },
 
     durationMinutes: {
       type: Number,
-      required: true
+      required: true,
     },
 
     totalMarks: {
       type: Number,
-      required: true
+      required: true,
     },
 
     accessType: {
       type: String,
       enum: ["FREE", "PAID"],
-      required: true
+      required: true,
     },
 
     instructions: {
       type: [String],
-      default: []
+      default: [],
     },
 
     status: {
       type: String,
       enum: ["DRAFT", "PUBLISHED"],
       default: "DRAFT",
-      required: true
-    }
+      required: true,
+    },
+
+    allowedAttempts: {
+      type: Number,
+      default: 1,
+      min: 1,
+    },
   },
   { timestamps: true }
 );

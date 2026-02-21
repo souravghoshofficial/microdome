@@ -1303,3 +1303,51 @@ export const updateMockTestStatus = async (req, res) => {
     message: `Mock test ${status.toLowerCase()} successfully`
   });
 };
+
+
+
+export const increaseMockTestAttempt = async (req,res) => {
+  const {mockTestId} = req.params;
+
+  const mocktest=await MockTest.findById(mockTestId);
+
+  if(!mocktest){
+    return res.status(404).json({
+      message: "Mock test not found"
+    })
+  }
+
+  mocktest.allowedAttempts=mocktest.allowedAttempts+1;
+
+  mocktest.save();
+
+  return res.status(200).json({
+    message: "Mock test allowed attempts increased successfully."
+  })
+}
+
+
+export const decreaseMockTestAttempt = async (req,res) => {
+  const {mockTestId} = req.params;
+
+  const mocktest=await MockTest.findById(mockTestId);
+
+  if(!mocktest){
+    return res.status(404).json({
+      message: "Mock test not found"
+    })
+  }
+  if(mocktest.allowedAttempts===1){
+    return res.status(400).json({
+      message: "Mock test allowed attempts can not be decreased."
+    })
+  } 
+
+  mocktest.allowedAttempts=mocktest.allowedAttempts-1;
+
+  mocktest.save();
+
+  return res.status(200).json({
+    message: "Mock test allowed attempts decreased successfully."
+  })
+}

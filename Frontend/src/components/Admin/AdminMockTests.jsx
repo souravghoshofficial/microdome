@@ -7,6 +7,7 @@ import {
   Pencil,
   Trash2,
   Layers,
+  Minus
 } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -35,8 +36,7 @@ const AdminMockTests = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingTestId, setDeletingTestId] = useState(null);
   const [deleting, setDeleting] = useState(false);
-
-
+  const [updatingMockTestAllowedAttempts,setUpdatingMocktestAllowedAttempts] = useState(false);
   const [statusModal, setStatusModal] = useState(null);
   const [statusUpdating, setStatusUpdating] = useState(false);
 
@@ -135,6 +135,39 @@ const AdminMockTests = () => {
     }
   };
 
+  const handleIncreaseAllowedAttempts = async (mockTestId)=>{
+    try {
+      setUpdatingMocktestAllowedAttempts(true)
+      await axios.patch(`${ApiUrl}/admin/mock-tests/${mockTestId}/increase-allowed-attempt`,
+        {},
+        { withCredentials: true }
+      )
+      toast.success("Allowed attempts increased successfully")
+      fetchMockTests()
+    } catch (error) {
+      toast.error("Something went wrong.")
+    }
+    finally{
+      setUpdatingMocktestAllowedAttempts(false)
+    }
+  }
+
+  const handleDecreaseAllowedAttempts = async (mockTestId)=>{
+      try {
+        setUpdatingMocktestAllowedAttempts(true)
+      await axios.patch(`${ApiUrl}/admin/mock-tests/${mockTestId}/decrease-allowed-attempt`,
+        {},
+        { withCredentials: true }
+      )
+      toast.success("Allowed attempts decreased successfully")
+      fetchMockTests()
+    } catch (error) {
+      toast.error("Something went wrong.")
+    }
+    finally{
+      setUpdatingMocktestAllowedAttempts(false)
+    }
+  }
   /* ================= CREATE ================= */
 
   const handleCreateMockTest = async (e) => {
@@ -323,6 +356,23 @@ const AdminMockTests = () => {
                   {test.status}
                 </span>
               </div>
+
+              {/* Manage Mock Test Attempts */}
+
+              {user?.role === "admin" && (
+                <div className="mt-4 w-[95%] mx-auto flex items-center justify-center gap-2">
+                <p className="text-xs font-semibold px-2 py-1 rounded bg-blue-100 text-blue-700">Allowed Attempts: {test.allowedAttempts}</p>
+                
+                <button onClick={()=>{handleDecreaseAllowedAttempts(test._id)}}  title="Decrease attempts" disabled={test.allowedAttempts <= 1 || updatingMockTestAllowedAttempts} className="p-1 border border-green-600 text-green-600 rounded-full hover:bg-green-50 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                  <Minus className="w-3 h-3" />
+                </button>
+                <button onClick={()=>{handleIncreaseAllowedAttempts(test._id)}} 
+                disabled={updatingMockTestAllowedAttempts} title="Increase attempts" className="p-1 border border-red-600 text-red-600 rounded-full hover:bg-red-50
+                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                  <Plus className="w-3 h-3" />
+                </button>
+              </div>
+              )}
 
               <div className="mt-4 w-[95%] mx-auto flex items-center gap-2">
                 {/* Primary action */}
@@ -598,7 +648,6 @@ const AdminMockTests = () => {
         </div>
       )}
     </div>
-  );
+);
 };
-
 export default AdminMockTests;
