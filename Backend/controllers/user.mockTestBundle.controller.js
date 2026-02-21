@@ -1,6 +1,9 @@
 import { MockTestBundle } from "../models/mockTestBundle.model.js";
 import { MockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
 
+import mongoose from "mongoose";
+import { MockTest } from "../models/mockTest.model.js";
+
 export const getMockTestBundles = async (req, res) => {
   try {
     const bundles = await MockTestBundle.find({ isActive: true })
@@ -92,8 +95,51 @@ export const getEnrolledMockTestBundles = async (req, res) => {
 };
 
 
-export const getEnrolledBundleDetailsByBundleId = async (req, res) =>{
-  // fetch all the published mock tests available in this bundle
-  const {bundleId } = req.params
+export const getEnrolledBundleDetailsByBundleId = async (req, res) => {
+
+    // fetch all the published mock tests available in this bundle
+  try {
+    const { bundleId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(bundleId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid bundleId"
+      });
+    }
+
+    const bundle = await MockTestBundle.findById(bundleId);
+
+    if (!bundle || !bundle.isActive) {
+      return res.status(404).json({
+        success: false,
+        message: "Bundle not found or inactive"
+      });
+    }
+
+    // Fetch only PUBLISHED mock tests in this bundle
+    const mockTests = await MockTest.find({
+      _id: { $in: bundle.mockTestIds },
+      status: "PUBLISHED"
+    }).select("-instructions"); // optional: hide heavy fields
+
+    return res.status(200).json({
+      success: true,
+      bundle: {
+        _id: bundle._id,
+        title: bundle.title,
+        description: bundle.description,
+        thumbnail: bundle.thumbnail,
+      },
+      mockTests
+    });
+
+  } catch (error) {
+    console.error("Get Enrolled Bundle Details Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
 };
 
