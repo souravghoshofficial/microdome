@@ -2,6 +2,12 @@ import mongoose, { Schema } from "mongoose";
 
 const mockTestSchema = new Schema(
   {
+
+    bundleId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "MockTestBundle",
+      default: null,
+    },
     title: {
       type: String,
       required: true,

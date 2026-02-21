@@ -20,7 +20,8 @@ import {
     updateMockTestQuestion,
     updateMockTestStatus,
     increaseMockTestAttempt,
-    decreaseMockTestAttempt
+    decreaseMockTestAttempt,
+    getPaidAvailableMockTest,
 } from "../controllers/admin.mockTest.controller.js";
 
 
@@ -28,6 +29,9 @@ const router = Router()
 
 router.route("/").post(authorizedRoles("admin","instructor"), createMockTest)
 router.route("/").get(authorizedRoles("admin","instructor"), getMockTests)
+
+router.route("/get-paid-available-mocktest").get(authorizedRoles("admin","instructor"), getPaidAvailableMockTest)
+
 
 router.route("/:mockTestId").get(authorizedRoles("admin","instructor"), getMockTestById)
 router.route("/:mockTestId").patch(authorizedRoles("admin","instructor"), updateMockTest)

@@ -243,6 +243,63 @@ export const getMockTestBundleById = async (req, res) => {
 };
 
 
+// export const addMockTestsToBundle = async (req, res) => {
+//   try {
+//     const { bundleId } = req.params;
+//     const { mockTestIds } = req.body;
+
+//     if (!mongoose.Types.ObjectId.isValid(bundleId)) {
+//       return res.status(400).json({ message: "Invalid bundleId" });
+//     }
+
+//     if (!Array.isArray(mockTestIds) || mockTestIds.length === 0) {
+//       return res.status(400).json({
+//         message: "mockTestIds must be a non-empty array"
+//       });
+//     }
+
+//     const bundle = await MockTestBundle.findById(bundleId);
+//     if (!bundle) {
+//       return res.status(404).json({ message: "Mock test bundle not found" });
+//     }
+
+//     // Filter valid ObjectIds only
+//     const validMockTestIds = mockTestIds.filter(id =>
+//       mongoose.Types.ObjectId.isValid(id)
+//     );
+
+//     if (validMockTestIds.length === 0) {
+//       return res.status(400).json({
+//         message: "No valid mockTestIds provided"
+//       });
+//     }
+
+//     // $addToSet prevents duplicates automatically
+//     await MockTestBundle.findByIdAndUpdate(
+//       bundleId,
+//       {
+//         $addToSet: {
+//           mockTestIds: { $each: validMockTestIds }
+//         }
+//       },
+//       { new: true }
+//     );
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Mock tests added to bundle successfully"
+//     });
+
+//   } catch (error) {
+//     console.error("Add MockTests To Bundle Error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal server error"
+//     });
+//   }
+// };
+
+
 export const addMockTestsToBundle = async (req, res) => {
   try {
     const { bundleId } = req.params;
@@ -254,7 +311,7 @@ export const addMockTestsToBundle = async (req, res) => {
 
     if (!Array.isArray(mockTestIds) || mockTestIds.length === 0) {
       return res.status(400).json({
-        message: "mockTestIds must be a non-empty array"
+        message: "mockTestIds must be a non-empty array",
       });
     }
 
@@ -263,41 +320,87 @@ export const addMockTestsToBundle = async (req, res) => {
       return res.status(404).json({ message: "Mock test bundle not found" });
     }
 
-    // Filter valid ObjectIds only
-    const validMockTestIds = mockTestIds.filter(id =>
+    const validMockTestIds = mockTestIds.filter((id) =>
       mongoose.Types.ObjectId.isValid(id)
     );
 
     if (validMockTestIds.length === 0) {
       return res.status(400).json({
-        message: "No valid mockTestIds provided"
+        message: "No valid mockTestIds provided",
       });
     }
 
-    // $addToSet prevents duplicates automatically
+    // 1️⃣ Add mock tests to bundle (no duplicates)
     await MockTestBundle.findByIdAndUpdate(
       bundleId,
       {
         $addToSet: {
-          mockTestIds: { $each: validMockTestIds }
-        }
+          mockTestIds: { $each: validMockTestIds },
+        },
       },
       { new: true }
     );
 
+    // 2️⃣ Update MockTests with bundleId
+    await MockTest.updateMany(
+      { _id: { $in: validMockTestIds } },
+      { $set: { bundleId } }
+    );
+
     return res.status(200).json({
       success: true,
-      message: "Mock tests added to bundle successfully"
+      message: "Mock tests added to bundle and updated successfully",
     });
-
   } catch (error) {
     console.error("Add MockTests To Bundle Error:", error);
     return res.status(500).json({
       success: false,
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 };
+
+// export const removeMockTestFromBundle = async (req, res) => {
+//   try {
+//     const { bundleId, mockTestId } = req.params;
+
+//     if (
+//       !mongoose.Types.ObjectId.isValid(bundleId) ||
+//       !mongoose.Types.ObjectId.isValid(mockTestId)
+//     ) {
+//       return res.status(400).json({
+//         message: "Invalid bundleId or mockTestId"
+//       });
+//     }
+
+//     const bundle = await MockTestBundle.findById(bundleId);
+//     if (!bundle) {
+//       return res.status(404).json({
+//         message: "Mock test bundle not found"
+//       });
+//     }
+
+//     await MockTestBundle.findByIdAndUpdate(
+//       bundleId,
+//       {
+//         $pull: { mockTestIds: mockTestId }
+//       },
+//       { new: true }
+//     );
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Mock test removed from bundle successfully"
+//     });
+
+//   } catch (error) {
+//     console.error("Remove MockTest From Bundle Error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal server error"
+//     });
+//   }
+// };
 
 
 export const removeMockTestFromBundle = async (req, res) => {
@@ -320,12 +423,15 @@ export const removeMockTestFromBundle = async (req, res) => {
       });
     }
 
-    await MockTestBundle.findByIdAndUpdate(
-      bundleId,
-      {
-        $pull: { mockTestIds: mockTestId }
-      },
-      { new: true }
+    // Remove from bundle
+    await MockTestBundle.findByIdAndUpdate(bundleId, {
+      $pull: { mockTestIds: mockTestId }
+    });
+
+    // Remove bundleId ONLY if it matches
+    await MockTest.updateOne(
+      { _id: mockTestId, bundleId },
+      { $set: { bundleId: null } }
     );
 
     return res.status(200).json({

@@ -92,3 +92,8 @@ export const getEnrolledMockTestBundles = async (req, res) => {
 };
 
 
+export const getEnrolledBundleDetailsByBundleId = async (req, res) =>{
+  // fetch all the published mock tests available in this bundle
+  const {bundleId } = req.params
+};
+

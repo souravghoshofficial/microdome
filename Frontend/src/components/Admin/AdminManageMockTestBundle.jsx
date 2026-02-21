@@ -30,13 +30,12 @@ const AdminManageMockTestBundle = () => {
 
   const fetchPaidTests = async () => {
     const res = await axios.get(
-      `${ApiUrl}/admin/mock-tests`,
+      `${ApiUrl}/admin/mock-tests/get-paid-available-mocktest`,
       {
-        params: { accessType: "PAID" },
         withCredentials: true
       }
     );
-    setPaidTests(res.data.mockTests);
+    setPaidTests(res.data.data);
   };
 
   useEffect(() => {

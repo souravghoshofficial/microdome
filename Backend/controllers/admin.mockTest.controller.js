@@ -984,6 +984,31 @@ export const getMockTests = async (req, res) => {
   }
 };
 
+export const getPaidAvailableMockTest = async (req, res) => {
+
+  // fetch all the paid mocktests that does not belong to any mocktest bundle
+  try {
+    const mockTests = await MockTest.find({
+      accessType: "PAID",
+      bundleId: null,            // not part of any bundle
+      status: "PUBLISHED"        // optional but recommended
+    }).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: mockTests.length,
+      data: mockTests
+    });
+
+  } catch (error) {
+    console.error("Get Paid Available MockTests Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
 
 export const getMockTestById = async (req, res) => {
   try {
@@ -1364,3 +1389,4 @@ export const decreaseMockTestAttempt = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
