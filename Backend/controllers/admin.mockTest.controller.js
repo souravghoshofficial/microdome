@@ -1306,48 +1306,61 @@ export const updateMockTestStatus = async (req, res) => {
 
 
 
-export const increaseMockTestAttempt = async (req,res) => {
-  const {mockTestId} = req.params;
+export const increaseMockTestAttempt = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
 
-  const mocktest=await MockTest.findById(mockTestId);
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({ message: "Invalid mockTestId" });
+    }
 
-  if(!mocktest){
-    return res.status(404).json({
-      message: "Mock test not found"
-    })
+    const mocktest = await MockTest.findByIdAndUpdate(
+      mockTestId,
+      { $inc: { allowedAttempts: 1 } },
+      { new: true }
+    );
+
+    if (!mocktest) {
+      return res.status(404).json({ message: "Mock test not found" });
+    }
+
+    return res.status(200).json({
+      message: "Allowed attempts increased",
+      allowedAttempts: mocktest.allowedAttempts,
+    });
+  } catch (error) {
+    console.error("Increase attempt error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
-
-  mocktest.allowedAttempts=mocktest.allowedAttempts+1;
-
-  mocktest.save();
-
-  return res.status(200).json({
-    message: "Mock test allowed attempts increased successfully."
-  })
-}
+};
 
 
-export const decreaseMockTestAttempt = async (req,res) => {
-  const {mockTestId} = req.params;
+export const decreaseMockTestAttempt = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
 
-  const mocktest=await MockTest.findById(mockTestId);
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({ message: "Invalid mockTestId" });
+    }
 
-  if(!mocktest){
-    return res.status(404).json({
-      message: "Mock test not found"
-    })
+    const mocktest = await MockTest.findOneAndUpdate(
+      { _id: mockTestId, allowedAttempts: { $gt: 1 } },
+      { $inc: { allowedAttempts: -1 } },
+      { new: true }
+    );
+
+    if (!mocktest) {
+      return res.status(400).json({
+        message: "Cannot decrease attempts below 1 or test not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Allowed attempts decreased",
+      allowedAttempts: mocktest.allowedAttempts,
+    });
+  } catch (error) {
+    console.error("Decrease attempt error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
-  if(mocktest.allowedAttempts===1){
-    return res.status(400).json({
-      message: "Mock test allowed attempts can not be decreased."
-    })
-  } 
-
-  mocktest.allowedAttempts=mocktest.allowedAttempts-1;
-
-  mocktest.save();
-
-  return res.status(200).json({
-    message: "Mock test allowed attempts decreased successfully."
-  })
-}
+};
