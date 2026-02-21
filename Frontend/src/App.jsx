@@ -62,7 +62,8 @@ import {
   Exam,
   PageNotFound,
   MockTests,
-  MockTestBundleDetails
+  MockTestBundleDetails, 
+  MyBundleTests
 } from "./pages";
 
 import {
@@ -126,6 +127,7 @@ const App = () => {
           {/* Mock Test Routes*/}
           <Route path="/mock-tests" element={<MockTests/>}/>
           <Route path="/mock-tests/bundles/:bundleId" element={<MockTestBundleDetails/>}/>
+         
 
           <Route path="/resources" element={<Resources />} />
           <Route path="/about-us" element={<AboutUs />} />
@@ -185,6 +187,9 @@ const App = () => {
         <Route path="/quiz/leaderboard/:quizId" element={[<QuizLeaderboard /> , <Navbar />]} />
         <Route path="/checkout/:itemType/:id" element = {<CheckOut/>}/>
         <Route path="*" element={<PageNotFound />}/>
+
+
+         <Route path="/my-bundles/:bundleId" element={[<MyBundleTests />, <Navbar />]}/>
       </Routes>
     </BrowserRouter>
   );

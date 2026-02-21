@@ -310,7 +310,7 @@ const AdminMockTests = () => {
           </button>
         </div>
       ) : (
-        <div className="grid gap-2 md:gap-4 lg:gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-auto p-4">
+        <div className="grid gap-2 md:gap-4 lg:gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 h-[80vh] overflow-y-auto p-4 scrollbar-none">
           {mockTests.map((test) => (
             <div
               key={test._id}

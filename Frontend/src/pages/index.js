@@ -30,6 +30,7 @@ import Exam from "./Exam";
 import PageNotFound from "./PageNotFound";
 import MockTests from "./MockTests";
 import MockTestBundleDetails from "./MockTestBundleDetails";
+import MyBundleTests from "./MyBundleTests";
 
 
 export {
@@ -65,4 +66,5 @@ export {
   PageNotFound,
   MockTests,
   MockTestBundleDetails,
+  MyBundleTests
 };

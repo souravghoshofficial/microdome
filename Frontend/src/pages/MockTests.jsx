@@ -252,7 +252,8 @@ const MockTests = () => {
                   </div>
 
                   {/* CTA */}
-                  <button
+                  <Link
+                    to={`/mock-tests/${test._id}`}
                     className="mt-3 w-full flex items-center justify-center gap-2
                bg-blue-600 hover:bg-blue-700 
                text-white py-2 rounded-lg 
@@ -260,7 +261,7 @@ const MockTests = () => {
                   >
                     <PlayCircle className="w-5 h-5" />
                     Start Test
-                  </button>
+                  </Link>
                 </div>
               ))}
             </div>

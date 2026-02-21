@@ -75,7 +75,7 @@ const MockTestBundleDetails = () => {
           navigate(`/checkout/mock-test-bundle/${bundleId}`)
           return 
         }
-        navigate('/my-mock-test-bundles')
+        navigate(`/my-bundles/${bundleId}`)
       }
   return (
     <>
@@ -143,7 +143,7 @@ const MockTestBundleDetails = () => {
                 <button onClick={handleClick}
                   className="mt-6 w-full md:w-fit px-10 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition shadow-md cursor-pointer"
                 >
-                  {isEnrolledInThisBundle ? 'View Test' : 'Buy Now'}
+                  {isEnrolledInThisBundle ? 'View Tests' : 'Enroll Now'}
                 </button>
               </div>
             </div>
