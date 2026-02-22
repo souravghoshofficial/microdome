@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import { MockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
 import { MockTest } from "../models/mockTest.model.js";
+import { MockTestAttempt } from "../models/mockTestAttempt.model.js";
+
+
 export const checkMockTestBundleEnrollment = async (req, res, next) => {
   try {
     const user = req.user;
@@ -111,4 +114,17 @@ export const checkMockTestEnrollment = async (req, res, next) => {
       message: "Internal server error.",
     });
   }
+};
+
+
+export const checkAttemptOwnership = async (req,res,next)=>{
+  const { attemptId } = req.params;
+  const attempt = await MockTestAttempt.findById(attemptId);
+
+  if (!attempt || attempt.userId.toString() !== req.user._id.toString()) {
+    return res.status(403).json({ message:"Forbidden" });
+  }
+
+  req.attempt = attempt;
+  next();
 };

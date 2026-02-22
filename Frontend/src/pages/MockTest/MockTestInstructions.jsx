@@ -86,7 +86,7 @@ const MockTestInstructions = () => {
         theme === "dark" ? "dark" : ""
       }`}
     >
-      <div className="my-24 md:my-32 w-[90%] max-w-4xl">
+      <div className="my-16 w-[90%] max-w-4xl">
 
         {/* 🔵 Loading */}
         {loading && (

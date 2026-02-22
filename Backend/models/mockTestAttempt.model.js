@@ -30,35 +30,25 @@ const mockTestAttemptSchema = new Schema(
     status: {
       type: String,
       enum: ["IN_PROGRESS", "SUBMITTED", "EXPIRED"],
-      default: "IN_PROGRESS"
+      default: "IN_PROGRESS",
+      index: true
     },
 
     startedAt: {
       type: Date,
-      default: Date.now
+      default: Date.now,
+      required: true
     },
 
-    submittedAt: Date,
+    durationSeconds: {
+      type: Number,
+      required: true
+    },
 
-    // =========================
-    // TIMER FIELDS
-    // =========================
-
-    lastActiveAt: {
+    submittedAt: {
       type: Date,
-      default: Date.now
-    },
-
-    totalActiveSeconds: {
-      type: Number,
-      default: 0
-    },
-
-    remainingSeconds: {
-      type: Number,
       default: null
     }
-
   },
   { timestamps: true }
 );

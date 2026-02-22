@@ -1,3 +1,6 @@
+import mongoose, { Schema } from "mongoose";
+
+
 const mockTestAnswerSchema = new Schema(
   {
     attemptId: {
