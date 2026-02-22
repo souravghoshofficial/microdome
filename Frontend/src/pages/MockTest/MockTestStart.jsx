@@ -1,11 +1,18 @@
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
+import { useFullscreen } from "../../hooks/useFullScreen";
+import { useExamSecurity } from "../../hooks/useExamSecurity";
+import { useTabSwitchWarning } from "../../hooks/useTabSwitchWarning";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const MockTestStart = () => {
   const { testId } = useParams();
   const theme = useSelector((state) => state.theme.theme);
+
+  useFullscreen();
+  // useExamSecurity();
+  // useTabSwitchWarning();
 
   return (
     <div className={`w-full h-screen bg-white dark:bg-gray-950 text-black dark:text-white ${theme === 'dark' ? 'dark' : ''}`}>
