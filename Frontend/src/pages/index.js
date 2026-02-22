@@ -28,9 +28,13 @@ import QuizResult from "./QuizResult";
 import QuizLeaderboard from "./QuizLeaderboard";
 import Exam from "./Exam";
 import PageNotFound from "./PageNotFound";
-import MockTests from "./MockTests";
-import MockTestBundleDetails from "./MockTestBundleDetails";
-import MyBundleTests from "./MyBundleTests";
+import MockTests from "./MockTest/MockTests";
+import MockTestBundleDetails from "./MockTest/MockTestBundleDetails";
+import MyBundleTests from "./MockTest/MyBundleTests";
+import MockTestInstructions from "./MockTest/MockTestInstructions";
+import MockTestStart from "./MockTest/MockTestStart";
+import MockTestResult from "./MockTest/MockTestResult";
+import MockTestLeaderboard from "./MockTest/MockTestLeaderboard";
 
 
 export {
@@ -66,5 +70,9 @@ export {
   PageNotFound,
   MockTests,
   MockTestBundleDetails,
-  MyBundleTests
+  MyBundleTests,
+  MockTestInstructions,
+  MockTestStart,
+  MockTestResult,
+  MockTestLeaderboard
 };

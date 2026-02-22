@@ -3,6 +3,7 @@ import { Logo, CourseSection } from "../components";
 import axios from "axios";
 import { useParams, Link } from "react-router";
 import { TriangleAlert } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -24,6 +25,7 @@ const CourseViewPage = () => {
   const [course, setCourse] = useState(null);
   const [videoURL, setVideoURL] = useState(null);
   const [loadingText, setLoadingText] = useState("Loading...");
+  const theme = useSelector((state) => state.theme.theme);
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -45,7 +47,7 @@ const CourseViewPage = () => {
 
   if (!course)
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-white text-black dark:bg-black dark:text-white flex-col md:flex-row p-6">
+      <div className={`w-full h-screen flex items-center justify-center bg-white text-black dark:bg-black dark:text-white flex-col md:flex-row p-6 ${theme === "dark" ? "dark" : ""}`}>
         {loadingText !== "Loading..." ? (
           <TriangleAlert className="text-yellow-600 h-15 w-15 mr-1" />
         ) : (
@@ -57,7 +59,7 @@ const CourseViewPage = () => {
     );
 
   return (
-    <div className="w-full h-screen overflow-hidden bg-white dark:bg-zinc-900 text-black dark:text-gray-100">
+    <div className={`w-full h-screen overflow-hidden bg-white dark:bg-zinc-900 text-black dark:text-gray-100 ${theme === "dark" ? "dark" : ""}`}>
       <div className="w-full px-4 md:px-8 py-3 flex items-center gap-3">
         <Link to="/">
           <Logo className={"w-7 md:w-9"} />
