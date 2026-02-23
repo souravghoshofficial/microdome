@@ -109,13 +109,14 @@ function SectionTabs({ sections, active, setActive }) {
         <button
           key={s.sectionId}
           onClick={() => setActive(i)}
-          className={`px-4 py-2 rounded-xl whitespace-nowrap border transition ${
+          className={`px-5 py-1.5 rounded-xl whitespace-nowrap border transition flex flex-col items-center cursor-pointer ${
             i === active
               ? "bg-blue-600 text-white border-blue-600"
               : "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
           }`}
         >
           {s.sectionTitle}
+          <span className="text-xs">({s.questionType})</span>
         </button>
       ))}
     </div>
@@ -136,7 +137,7 @@ function Palette({ questions, answers, marked, currentIndex, setIndex }) {
           const isActive = i === currentIndex;
 
           let cls =
-            "border rounded-lg text-sm h-9 flex items-center justify-center";
+            "border rounded-lg text-sm p-2 flex items-center justify-center cursor-pointer";
           if (isActive) cls += " bg-blue-600 text-white";
           else if (isMarked) cls += " bg-purple-500 text-white";
           else if (attempted) cls += " bg-green-500 text-white";
@@ -172,6 +173,15 @@ function QuestionView({ q, answer, setAnswer }) {
     <Card className="p-6 mb-6">
       <div className="mb-4 font-semibold">Question {q.questionOrder}</div>
       <div className="mb-4">{q.questionText}</div>
+      <div className="mb-4">
+        {q.questionImageUrl && (
+          <img
+            src={q.questionImageUrl}
+            alt="Question Image"
+            className="w-full h-48 object-contain"
+          />
+        )}
+      </div>
 
       {q.questionType !== "NAT" && (
         <div className="grid gap-2">
@@ -182,10 +192,10 @@ function QuestionView({ q, answer, setAnswer }) {
               className={`border rounded-xl p-3 cursor-pointer ${
                 q.questionType === "MCQ"
                   ? answer === op.label
-                    ? "bg-blue-50 border-blue-500"
+                    ? "bg-blue-50 border-blue-500 dark:bg-blue-500/15 dark:border-blue-400"
                     : ""
                   : answer?.includes(op.label)
-                    ? "bg-blue-50 border-blue-500"
+                    ? "bg-blue-50 border-blue-500 dark:bg-blue-500/15 dark:border-blue-400"
                     : ""
               }`}
             >
@@ -224,7 +234,7 @@ function ActionBar({ onPrev, onNext, onMark, onClear, onSubmit }) {
           Mark For Review
         </Button>
         <Button variant="danger" onClick={onClear}>
-          Clear
+          Clear Response
         </Button>
       </div>
       <Button className="flex items-center gap-2" variant="primary" onClick={onSubmit}>

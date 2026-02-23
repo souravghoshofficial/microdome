@@ -157,7 +157,7 @@ const MockTestInstructions = () => {
 
       {/* 🔥 Confirmation Modal */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-lg bg-black/50 z-50">
           <div className="bg-white dark:bg-gray-900 p-6 rounded-xl w-[90%] max-w-md shadow-lg">
             <h2 className="text-xl font-bold mb-4">
               {modalType === "start"
@@ -174,14 +174,14 @@ const MockTestInstructions = () => {
             <div className="flex justify-end gap-4">
               <button
                 onClick={closeModal}
-                className="px-4 py-2 rounded-lg border border-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer"
+                className="px-5 py-1.5 rounded-lg border border-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer"
               >
                 No
               </button>
 
               <button
                 onClick={handleConfirm}
-                className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                className="px-5 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
               >
                 Yes
               </button>
