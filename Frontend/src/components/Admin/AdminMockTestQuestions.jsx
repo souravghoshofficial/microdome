@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import { Plus, X, Loader2, Check, ImagePlus, Trash2, Edit, Trash, AlertTriangle } from "lucide-react";
+import {
+  Plus,
+  X,
+  Loader2,
+  Check,
+  ImagePlus,
+  Trash2,
+  Edit,
+  Trash,
+  AlertTriangle,
+} from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -35,7 +45,7 @@ const AdminMockTestQuestions = () => {
       { label: "A", text: "" },
       { label: "B", text: "" },
       { label: "C", text: "" },
-      { label: "D", text: "" }
+      { label: "D", text: "" },
     ],
     correctAnswer: [],
     numericAnswer: "",
@@ -44,7 +54,7 @@ const AdminMockTestQuestions = () => {
     negativeMarks: 0,
     questionOrder: "",
     questionImage: null,
-    answerExplanation: ""
+    answerExplanation: "",
   });
 
   /* ================= FETCH ================= */
@@ -53,7 +63,7 @@ const AdminMockTestQuestions = () => {
     try {
       const res = await axios.get(
         `${ApiUrl}/admin/mock-tests/${mockTestId}/${mockTestSectionId}/questions`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       setSection(res.data.data.section);
@@ -79,8 +89,8 @@ const AdminMockTestQuestions = () => {
     setForm((prev) => ({
       ...prev,
       options: prev.options.map((o) =>
-        o.label === label ? { ...o, text: value } : o
-      )
+        o.label === label ? { ...o, text: value } : o,
+      ),
     }));
   };
 
@@ -93,7 +103,7 @@ const AdminMockTestQuestions = () => {
         ...prev,
         correctAnswer: prev.correctAnswer.includes(label)
           ? prev.correctAnswer.filter((a) => a !== label)
-          : [...prev.correctAnswer, label]
+          : [...prev.correctAnswer, label],
       };
     });
   };
@@ -128,7 +138,7 @@ const AdminMockTestQuestions = () => {
       } else {
         fd.append(
           "options",
-          JSON.stringify(form.options.filter((o) => o.text.trim()))
+          JSON.stringify(form.options.filter((o) => o.text.trim())),
         );
         fd.append("correctAnswer", JSON.stringify(form.correctAnswer));
       }
@@ -138,8 +148,8 @@ const AdminMockTestQuestions = () => {
         fd,
         {
           withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" }
-        }
+          headers: { "Content-Type": "multipart/form-data" },
+        },
       );
 
       toast.success("Question added successfully");
@@ -152,7 +162,7 @@ const AdminMockTestQuestions = () => {
           { label: "A", text: "" },
           { label: "B", text: "" },
           { label: "C", text: "" },
-          { label: "D", text: "" }
+          { label: "D", text: "" },
         ],
         correctAnswer: [],
         numericAnswer: "",
@@ -161,7 +171,7 @@ const AdminMockTestQuestions = () => {
         negativeMarks: 0,
         questionOrder: "",
         questionImage: null,
-        answerExplanation: ""
+        answerExplanation: "",
       });
       setImagePreview(null);
     } catch (error) {
@@ -181,17 +191,19 @@ const AdminMockTestQuestions = () => {
   const confirmDeleteQuestion = async () => {
     setDeleting(deleteTarget);
     setShowDeleteConfirm(false);
-    
+
     try {
       await axios.delete(
         `${ApiUrl}/admin/mock-tests/${mockTestId}/sections/${mockTestSectionId}/${deleteTarget}`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       toast.success("Question deleted successfully");
       fetchQuestions();
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to delete question");
+      toast.error(
+        error?.response?.data?.message || "Failed to delete question",
+      );
     } finally {
       setDeleting(null);
       setDeleteTarget(null);
@@ -208,17 +220,19 @@ const AdminMockTestQuestions = () => {
   const confirmDeleteAllQuestions = async () => {
     setDeletingAll(true);
     setShowDeleteConfirm(false);
-    
+
     try {
       await axios.delete(
         `${ApiUrl}/admin/mock-tests/${mockTestId}/${mockTestSectionId}/questions`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       toast.success("All questions deleted successfully");
       fetchQuestions();
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to delete all questions");
+      toast.error(
+        error?.response?.data?.message || "Failed to delete all questions",
+      );
     } finally {
       setDeletingAll(false);
       setDeleteType(null);
@@ -247,14 +261,15 @@ const AdminMockTestQuestions = () => {
 
     setForm({
       questionText: question.questionText,
-      options: question.options.length > 0 
-        ? question.options 
-        : [
-            { label: "A", text: "" },
-            { label: "B", text: "" },
-            { label: "C", text: "" },
-            { label: "D", text: "" }
-          ],
+      options:
+        question.options.length > 0
+          ? question.options
+          : [
+              { label: "A", text: "" },
+              { label: "B", text: "" },
+              { label: "C", text: "" },
+              { label: "D", text: "" },
+            ],
       correctAnswer: question.correctAnswer || [],
       numericAnswer: question.numericAnswer || "",
       tolerance: question.tolerance || "",
@@ -262,7 +277,7 @@ const AdminMockTestQuestions = () => {
       negativeMarks: question.negativeMarks,
       questionOrder: question.questionOrder,
       questionImage: null,
-      answerExplanation: question.answerExplanation || ""
+      answerExplanation: question.answerExplanation || "",
     });
 
     if (question.questionImageUrl) {
@@ -294,7 +309,7 @@ const AdminMockTestQuestions = () => {
       } else {
         fd.append(
           "options",
-          JSON.stringify(form.options.filter((o) => o.text.trim()))
+          JSON.stringify(form.options.filter((o) => o.text.trim())),
         );
         fd.append("correctAnswer", JSON.stringify(form.correctAnswer));
       }
@@ -304,8 +319,8 @@ const AdminMockTestQuestions = () => {
         fd,
         {
           withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" }
-        }
+          headers: { "Content-Type": "multipart/form-data" },
+        },
       );
 
       toast.success("Question updated successfully");
@@ -320,7 +335,7 @@ const AdminMockTestQuestions = () => {
           { label: "A", text: "" },
           { label: "B", text: "" },
           { label: "C", text: "" },
-          { label: "D", text: "" }
+          { label: "D", text: "" },
         ],
         correctAnswer: [],
         numericAnswer: "",
@@ -329,11 +344,13 @@ const AdminMockTestQuestions = () => {
         negativeMarks: 0,
         questionOrder: "",
         questionImage: null,
-        answerExplanation: ""
+        answerExplanation: "",
       });
       setImagePreview(null);
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to update question");
+      toast.error(
+        error?.response?.data?.message || "Failed to update question",
+      );
     } finally {
       setUpdating(false);
     }
@@ -350,7 +367,7 @@ const AdminMockTestQuestions = () => {
         { label: "A", text: "" },
         { label: "B", text: "" },
         { label: "C", text: "" },
-        { label: "D", text: "" }
+        { label: "D", text: "" },
       ],
       correctAnswer: [],
       numericAnswer: "",
@@ -359,7 +376,7 @@ const AdminMockTestQuestions = () => {
       negativeMarks: 0,
       questionOrder: "",
       questionImage: null,
-      answerExplanation: ""
+      answerExplanation: "",
     });
     setImagePreview(null);
   };
@@ -422,10 +439,7 @@ const AdminMockTestQuestions = () => {
       ) : (
         <div className="space-y-4 h-[72vh] overflow-y-scroll scrollbar-none pb-4">
           {questions.map((q) => (
-            <div
-              key={q._id}
-              className="bg-white rounded-xl shadow p-4"
-            >
+            <div key={q._id} className="bg-white rounded-xl shadow p-4">
               <div className="flex justify-between items-start">
                 <p className="font-semibold flex-1">
                   Q{q.questionOrder}. {q.questionText}
@@ -486,10 +500,12 @@ const AdminMockTestQuestions = () => {
                 {q.negativeMarks > 0 && ` | Negative: -${q.negativeMarks}`}
               </p>
               {q.answerExplanation && (
-              <div className="mt-2 p-3 bg-gray-50 border-l-4 border-blue-600">
-                <h3 className="font-semibold text-sm mb-1">Answer Explanation:</h3>
-                <p className="text-sm text-gray-700">{q.answerExplanation}</p>
-              </div>
+                <div className="mt-2 p-3 bg-gray-50 border-l-4 border-blue-600">
+                  <h3 className="font-semibold text-sm mb-1">
+                    Answer Explanation:
+                  </h3>
+                  <p className="text-sm text-gray-700">{q.answerExplanation}</p>
+                </div>
               )}
             </div>
           ))}
@@ -506,9 +522,9 @@ const AdminMockTestQuestions = () => {
               </div>
               <h2 className="text-xl font-semibold">Confirm Action</h2>
             </div>
-            
+
             <p className="text-gray-600 mb-6">
-              {deleteType === "single" 
+              {deleteType === "single"
                 ? "Are you sure you want to delete this question?"
                 : "Are you sure you want to delete all questions from this section?"}
             </p>
@@ -543,10 +559,15 @@ const AdminMockTestQuestions = () => {
             </button>
 
             <h2 className="text-xl font-semibold mb-4">
-              {editMode ? "Edit Question" : `Add Question (${section.questionType})`}
+              {editMode
+                ? "Edit Question"
+                : `Add Question (${section.questionType})`}
             </h2>
 
-            <form onSubmit={editMode ? handleUpdateQuestion : handleSubmit} className="space-y-4">
+            <form
+              onSubmit={editMode ? handleUpdateQuestion : handleSubmit}
+              className="space-y-4"
+            >
               <div>
                 <label className="text-sm font-medium">Question</label>
                 <textarea
@@ -559,59 +580,58 @@ const AdminMockTestQuestions = () => {
                 />
               </div>
 
-             {/* Question Image */}
-<div>
-  <label className="text-sm font-medium block mb-1">
-    Question Image (optional)
-  </label>
+              {/* Question Image */}
+              <div>
+                <label className="text-sm font-medium block mb-1">
+                  Question Image (optional)
+                </label>
 
-  <label
-    htmlFor="questionImage"
-    className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-lg cursor-pointer
+                <label
+                  htmlFor="questionImage"
+                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-lg cursor-pointer
                border-gray-300 bg-gray-50 hover:bg-gray-100 transition"
-  >
-    {!imagePreview ? (
-      <>
-     <ImagePlus className="w-8 h-8 text-gray-400 mb-2" />
+                >
+                  {!imagePreview ? (
+                    <>
+                      <ImagePlus className="w-8 h-8 text-gray-400 mb-2" />
 
-        <p className="text-sm text-gray-600">
-          Click to upload or browse image
-        </p>
-        <p className="text-xs text-gray-400 mt-1">
-          PNG, JPG, JPEG
-        </p>
-      </>
-    ) : (
-      <img
-        src={imagePreview}
-        alt="Preview"
-        className="h-full object-contain rounded"
-      />
-    )}
-  </label>
+                      <p className="text-sm text-gray-600">
+                        Click to upload or browse image
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        PNG, JPG, JPEG
+                      </p>
+                    </>
+                  ) : (
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="h-full object-contain rounded"
+                    />
+                  )}
+                </label>
 
-  <input
-    id="questionImage"
-    type="file"
-    accept="image/*"
-    className="hidden"
-    onChange={(e) => handleImageChange(e.target.files[0])}
-  />
+                <input
+                  id="questionImage"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => handleImageChange(e.target.files[0])}
+                />
 
-  {imagePreview && (
-    <button
-      type="button"
-      onClick={() => {
-        setImagePreview(null);
-        setForm({ ...form, questionImage: null });
-      }}
-      className="mt-2 text-sm text-red-600 hover:underline cursor-pointer float-right"
-    >
-      Remove image
-    </button>
-  )}
-</div>
-
+                {imagePreview && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImagePreview(null);
+                      setForm({ ...form, questionImage: null });
+                    }}
+                    className="mt-2 text-sm text-red-600 hover:underline cursor-pointer float-right"
+                  >
+                    Remove image
+                  </button>
+                )}
+              </div>
 
               {/* Options */}
               {section.questionType !== "NAT" &&
@@ -621,7 +641,7 @@ const AdminMockTestQuestions = () => {
                       Option {opt.label}
                     </label>
                     <div className="flex gap-2 items-center mt-1">
-                        <input
+                      <input
                         type={
                           section.questionType === "MCQ" ? "radio" : "checkbox"
                         }
@@ -647,7 +667,9 @@ const AdminMockTestQuestions = () => {
               {section.questionType === "NAT" && (
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-sm font-medium">Numeric Answer</label>
+                    <label className="text-sm font-medium">
+                      Numeric Answer
+                    </label>
                     <input
                       type="number"
                       value={form.numericAnswer}
@@ -691,10 +713,10 @@ const AdminMockTestQuestions = () => {
                     type="number"
                     name="negativeMarks"
                     value={form.negativeMarks}
-                    min={0}
                     onChange={handleChange}
                     className="w-full border rounded px-3 py-2 mt-1"
                   />
+                  <span className="text-xs text-gray-500">Enter positive number only</span>
                 </div>
                 <div>
                   <label className="text-sm font-medium">Question Order</label>
@@ -712,7 +734,12 @@ const AdminMockTestQuestions = () => {
               </div>
 
               <div className="mt-4">
-                <label className="text-sm font-medium" htmlFor="answerExplanation">Answer Explanation (optional)</label>
+                <label
+                  className="text-sm font-medium"
+                  htmlFor="answerExplanation"
+                >
+                  Answer Explanation (optional)
+                </label>
                 <textarea
                   id="answerExplanation"
                   name="answerExplanation"
@@ -728,11 +755,16 @@ const AdminMockTestQuestions = () => {
                 disabled={editMode ? updating : creating}
                 className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2 cursor-pointer"
               >
-                {(editMode ? updating : creating) && <Loader2 className="w-4 h-4 animate-spin" />}
-                {editMode 
-                  ? (updating ? "Updating..." : "Update Question")
-                  : (creating ? "Adding..." : "Add Question")
-                }
+                {(editMode ? updating : creating) && (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                )}
+                {editMode
+                  ? updating
+                    ? "Updating..."
+                    : "Update Question"
+                  : creating
+                    ? "Adding..."
+                    : "Add Question"}
               </button>
             </form>
           </div>
