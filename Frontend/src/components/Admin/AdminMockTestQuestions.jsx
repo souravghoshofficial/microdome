@@ -401,6 +401,15 @@ const AdminMockTestQuestions = () => {
         <p className="text-sm text-gray-600">
           {section.questionType} • {questions.length}/{section.totalQuestions}
         </p>
+        {section.questionsToAttempt !== null ? (
+          <p className="text-sm text-gray-600">
+            Student can attempt any {section.questionsToAttempt} questions in this section
+          </p>
+        ) : (
+          <p className="text-sm text-gray-600">
+            Student can attempt all questions in this section
+          </p>
+        )}
       </div>
 
       {/* Actions */}

@@ -1115,6 +1115,7 @@ export const getMockTestSectionQuestions = async (req, res) => {
           title: section.title,
           questionType: section.questionType,
           totalQuestions: section.totalQuestions,
+          questionsToAttempt: section.questionsToAttempt,
         },
         questions,
       },
