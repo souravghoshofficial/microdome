@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
-import { Clock, CheckCircle2 } from "lucide-react";
+import { Clock, CheckCircle2, ChevronDown } from "lucide-react";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -127,30 +127,62 @@ function SectionTabs({ sections, active, setActive }) {
 // QUESTION PALETTE
 // =====================================================
 function Palette({ questions, answers, marked, currentIndex, setIndex }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Card className="p-4 mb-6">
-      <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
-        {questions.map((q, i) => {
-          const attempted =
-            answers[q._id] !== undefined && answers[q._id] !== "";
-          const isMarked = marked[q._id];
-          const isActive = i === currentIndex;
+    <div className="mb-6 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 p-2.5">
+      {/* Header */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-3 text-left 
+             border border-gray-300 dark:border-gray-700 
+             bg-gray-50 dark:bg-gray-800/60
+             rounded-lg cursor-pointer 
+             hover:border-blue-500 dark:hover:border-blue-400
+             transition-all duration-200"
+      >
+        <span className="font-medium text-gray-800 dark:text-gray-200">
+          Question Navigation
+        </span>
 
-          let cls =
-            "border rounded-lg text-sm p-2 flex items-center justify-center cursor-pointer";
-          if (isActive) cls += " bg-blue-600 text-white";
-          else if (isMarked) cls += " bg-purple-500 text-white";
-          else if (attempted) cls += " bg-green-500 text-white";
-          else cls += " bg-gray-200 dark:bg-gray-800";
+        <ChevronDown
+          className={`w-6 h-6 text-gray-600 dark:text-gray-400 transition-transform duration-300 ${
+            open ? "-rotate-180" : ""
+          }`}
+        />
+      </button>
 
-          return (
-            <button key={q._id} className={cls} onClick={() => setIndex(i)}>
-              {i + 1}
-            </button>
-          );
-        })}
-      </div>
-    </Card>
+      {/* Body */}
+      {open && (
+        <div className="pt-4">
+          <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
+            {questions.map((q, i) => {
+              const attempted =
+                answers[q._id] !== undefined && answers[q._id] !== "";
+              const isMarked = marked[q._id];
+              const isActive = i === currentIndex;
+
+              let cls =
+                "rounded-lg text-sm h-9 flex items-center justify-center cursor-pointer transition";
+
+              if (isActive) cls += " bg-blue-600 text-white";
+              else if (isMarked) cls += " bg-purple-600 text-white";
+              else if (attempted) cls += " bg-green-600 text-white";
+              else
+                cls +=
+                  " bg-gray-200 text-gray-800 hover:bg-gray-300 " +
+                  "dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700";
+
+              return (
+                <button key={q._id} className={cls} onClick={() => setIndex(i)}>
+                  {i + 1}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -237,7 +269,11 @@ function ActionBar({ onPrev, onNext, onMark, onClear, onSubmit }) {
           Clear Response
         </Button>
       </div>
-      <Button className="flex items-center gap-2" variant="primary" onClick={onSubmit}>
+      <Button
+        className="flex items-center gap-2"
+        variant="primary"
+        onClick={onSubmit}
+      >
         <CheckCircle2 className="w-4 h-4" /> Submit
       </Button>
     </div>
