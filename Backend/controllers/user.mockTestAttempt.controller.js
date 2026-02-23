@@ -2,7 +2,9 @@ import { MockTest } from "../models/mockTest.model.js";
 import { MockTestAttempt } from "../models/mockTestAttempt.model.js";
 import { MockTestAnswer } from "../models/mockTestAnswers.model.js";
 import { MockTestQuestion } from "../models/mockTestQuestion.model.js";
-
+import { MockTestSection } from "../models/mockTestSection.model.js";
+import mongoose from "mongoose";
+import { MockTestResult } from "../models/mockTestResult.model.js";
 // ===============================
 // helper: compute remaining
 // ===============================
@@ -15,17 +17,156 @@ const computeRemainingSeconds = (attempt) => {
 // ===============================
 // helper: evaluate attempt
 // ===============================
+
 const evaluateAttempt = async (attemptId) => {
+
+  const attempt = await MockTestAttempt.findById(attemptId).lean();
+  if (!attempt) throw new Error("Attempt not found");
+
   const answers = await MockTestAnswer.find({ attemptId }).lean();
+
   const questions = await MockTestQuestion.find({
-    mockTestId: answers[0]?.mockTestId
+    mockTestId: attempt.mockTestId
   }).lean();
 
-  // TODO: your scoring logic here
-  // For now placeholder
-  const score = 0;
+  const sections = await MockTestSection.find({
+    mockTestId: attempt.mockTestId
+  }).lean();
 
-  return { score };
+  // ===============================
+  // Build Question Map
+  // ===============================
+  const questionMap = {};
+  questions.forEach(q => {
+    questionMap[q._id.toString()] = q;
+  });
+
+  // ===============================
+  // SECTION-WISE VALID ANSWER FILTERING
+  // ===============================
+  const validAnswerIds = new Set();
+
+  for (const section of sections) {
+
+    // All questions of this section
+    const sectionQuestions = questions
+      .filter(q =>
+        q.mockTestSectionId.toString() === section._id.toString()
+      )
+      .sort((a, b) => a.questionOrder - b.questionOrder);
+
+    // All ANSWERED answers of this section
+    const sectionAnswers = answers
+      .filter(a => {
+        const q = questionMap[a.questionId.toString()];
+        return (
+          q &&
+          q.mockTestSectionId.toString() === section._id.toString() &&
+          a.isAnswered
+        );
+      })
+      .sort((a, b) => {
+        const qa = questionMap[a.questionId.toString()];
+        const qb = questionMap[b.questionId.toString()];
+        return qa.questionOrder - qb.questionOrder;
+      });
+
+    if (section.questionsToAttempt !== null) {
+      const allowed = sectionAnswers.slice(0, section.questionsToAttempt);
+      allowed.forEach(a => validAnswerIds.add(a._id.toString()));
+    } else {
+      sectionAnswers.forEach(a => validAnswerIds.add(a._id.toString()));
+    }
+  }
+
+  // ===============================
+  // SCORING
+  // ===============================
+  let totalScore = 0;
+  let correct = 0;
+  let wrong = 0;
+  let skipped = 0;
+
+  for (const answer of answers) {
+
+    const question = questionMap[answer.questionId.toString()];
+    if (!question) continue;
+
+    // Not answered → skipped
+    if (!answer.isAnswered) {
+      skipped++;
+      continue;
+    }
+
+    // If exceeded section limit → ignore silently
+    if (!validAnswerIds.has(answer._id.toString())) {
+      continue;
+    }
+
+    let isCorrect = false;
+
+    // =====================
+    // MCQ
+    // =====================
+    if (question.questionType === "MCQ") {
+      if (
+        answer.selectedOptions.length === 1 &&
+        answer.selectedOptions[0] === question.correctAnswer[0]
+      ) {
+        isCorrect = true;
+      }
+    }
+
+    // =====================
+    // MSQ (Exact Match)
+    // =====================
+    if (question.questionType === "MSQ") {
+      const selected = [...answer.selectedOptions].sort();
+      const correctAns = [...question.correctAnswer].sort();
+
+      if (JSON.stringify(selected) === JSON.stringify(correctAns)) {
+        isCorrect = true;
+      }
+    }
+
+    // =====================
+    // NAT (With Tolerance)
+    // =====================
+    if (question.questionType === "NAT") {
+      if (question.numericAnswer !== null &&
+          answer.numericAnswer !== null) {
+
+        const diff = Math.abs(
+          answer.numericAnswer - question.numericAnswer
+        );
+
+        if (question.tolerance !== null) {
+          if (diff <= question.tolerance) {
+            isCorrect = true;
+          }
+        } else {
+          if (answer.numericAnswer === question.numericAnswer) {
+            isCorrect = true;
+          }
+        }
+      }
+    }
+
+    if (isCorrect) {
+      totalScore += question.marks;
+      correct++;
+    } else {
+      totalScore -= question.negativeMarks || 0;
+      wrong++;
+    }
+  }
+
+  return {
+    totalScore,
+    correct,
+    wrong,
+    skipped
+  };
 };
 
 // ===============================
@@ -56,23 +197,56 @@ export const startMockTestAttempt = async (req, res) => {
       const remaining = computeRemainingSeconds(latest);
 
       // EXPIRED
-      if (remaining <= 0) {
-        latest.status = "EXPIRED";
-        latest.submittedAt = new Date(
-          latest.startedAt.getTime() +
-            latest.durationSeconds * 1000
-        );
-        await latest.save();
+if (remaining <= 0) {
 
-        const result = await evaluateAttempt(latest._id);
+  // Prevent double processing
+  if (latest.status === "SUBMITTED" || latest.status === "EXPIRED") {
+    return res.json({
+      expired: true,
+      attemptId: latest._id,
+      mockTest
+    });
+  }
 
-        return res.json({
-          expired: true,
-          attemptId: latest._id,
-          mockTest,
-          result
-        });
-      }
+  // Lock attempt
+  latest.status = "EXPIRED";
+
+  // Set exact submission time
+  latest.submittedAt = new Date(
+    latest.startedAt.getTime() +
+    latest.durationSeconds * 1000
+  );
+
+  await latest.save();
+
+  // ===============================
+  // Evaluate Attempt
+  // ===============================
+  const result = await evaluateAttempt(latest._id);
+
+  // ===============================
+  // Save Result in MockTestResult
+  // ===============================
+
+  const savedResult = await MockTestResult.create({
+    attemptId: latest._id,
+    userId: latest.userId,
+    mockTestId: latest.mockTestId,
+    bundleId: latest.bundleId || null,
+
+    score: result.totalScore,
+    correctCount: result.correct,
+    incorrectCount: result.wrong,
+    unattemptedCount: result.skipped
+  });
+
+  return res.json({
+    expired: true,
+    attemptId: latest._id,
+    mockTest,
+    result: savedResult
+  });
+}
 
       // STILL ACTIVE
       return res.json({
@@ -231,5 +405,153 @@ const sections = Object.values(sectionMap);
   } catch (err) {
     console.error("Get session error:", err);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+export const saveAnswer = async (req, res) => {
+  try {
+    const { attemptId, questionId } = req.params;
+    const {
+      questionType,
+      selectedOptions,
+      numericAnswer,
+      isMarkedForReview
+    } = req.body;
+
+    // Validate ObjectIds
+    if (
+      !mongoose.Types.ObjectId.isValid(attemptId) ||
+      !mongoose.Types.ObjectId.isValid(questionId)
+    ) {
+      return res.status(400).json({ message: "Invalid IDs" });
+    }
+
+    let updateData = {
+      questionType,
+      isMarkedForReview: isMarkedForReview ?? false,
+      isVisited: true
+    };
+
+    let isAnswered = false;
+
+    // MCQ / MSQ logic
+    if (questionType === "MCQ" || questionType === "MSQ") {
+      const options = Array.isArray(selectedOptions)
+        ? selectedOptions
+        : [];
+
+      updateData.selectedOptions = options;
+      updateData.numericAnswer = null;
+
+      // Determine if answered
+      if (options.length > 0) {
+        isAnswered = true;
+      }
+    }
+
+    // NAT logic
+    if (questionType === "NAT") {
+      const value =
+        numericAnswer !== undefined && numericAnswer !== null
+          ? Number(numericAnswer)
+          : null;
+
+      updateData.numericAnswer = value;
+      updateData.selectedOptions = [];
+
+      // Determine if answered
+      if (value !== null && !isNaN(value)) {
+        isAnswered = true;
+      }
+    }
+
+    updateData.isAnswered = isAnswered;
+
+    const answer = await MockTestAnswer.findOneAndUpdate(
+      { attemptId, questionId },
+      updateData,
+      {
+        new: true,
+        upsert: true,
+        runValidators: true,
+        setDefaultsOnInsert: true
+      }
+    );
+
+    return res.status(200).json({
+      message: isAnswered
+        ? "Answer saved successfully"
+        : "Answer cleared successfully",
+      answer
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error"
+    });
+  }
+};
+
+export const submitMockTest = async (req, res) => {
+  try {
+    const { attemptId } = req.params;
+
+    const attempt = await MockTestAttempt.findById(attemptId);
+
+    if (!attempt) {
+      return res.status(404).json({ message: "Attempt not found" });
+    }
+
+    if (attempt.status === "SUBMITTED") {
+      return res.status(400).json({
+        message: "Test already submitted"
+      });
+    }
+
+    if (attempt.status === "EXPIRED") {
+      return res.status(400).json({
+        message: "Test already expired"
+      });
+    }
+
+    // =============================
+    // Evaluate Attempt
+    // =============================
+    const evaluation = await evaluateAttempt(attemptId);
+
+    // =============================
+    // Update Attempt Status
+    // =============================
+    attempt.status = "SUBMITTED";
+    attempt.submittedAt = new Date();
+    await attempt.save();
+
+    // =============================
+    // Save Result in Result Schema
+    // =============================
+    const resultDoc = await MockTestResult.create({
+      attemptId: attempt._id,
+      userId: attempt.userId,
+      mockTestId: attempt.mockTestId,
+      bundleId: attempt.bundleId || null,
+
+      score: evaluation.totalScore,
+      correctCount: evaluation.correct,
+      incorrectCount: evaluation.wrong,
+      unattemptedCount: evaluation.skipped,
+    });
+
+    return res.status(200).json({
+      message: "Mock test submitted successfully",
+      result: resultDoc
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message
+    });
   }
 };
