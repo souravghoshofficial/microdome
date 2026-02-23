@@ -46,62 +46,6 @@ const mockTestResultSchema = new Schema(
       type: Number,
       default: 0
     },
-
-    percentage: Number,
-    rank: Number,
-
-    answersSnapshot: [
-      {
-        questionId: {
-          type: Schema.Types.ObjectId,
-          ref: "MockTestQuestion",
-          required: true
-        },
-
-        questionType: {
-          type: String,
-          enum: ["MCQ", "MSQ", "NAT"],
-          required: true
-        },
-
-        // MCQ/MSQ
-        selectedOptions: {
-          type: [String],
-          default: []
-        },
-
-        correctOptions: {
-          type: [String],
-          default: []
-        },
-
-        // NAT
-        numericAnswer: {
-          type: Number,
-          default: null
-        },
-
-        correctNumericAnswer: {
-          type: Number,
-          default: null
-        },
-
-        tolerance: {
-          type: Number,
-          default: null
-        },
-
-        marksAwarded: {
-          type: Number,
-          default: 0
-        },
-
-        isCorrect: {
-          type: Boolean,
-          default: false
-        }
-      }
-    ]
   },
   { timestamps: true }
 );

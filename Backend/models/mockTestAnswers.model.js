@@ -37,6 +37,16 @@ const mockTestAnswerSchema = new Schema(
     isMarkedForReview: {
       type: Boolean,
       default: false
+    },
+
+    isVisited: {
+      type: Boolean,
+      default: true
+    },
+
+    isAnswered: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }
