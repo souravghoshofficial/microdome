@@ -42,42 +42,66 @@ const evaluateAttempt = async (attemptId) => {
   });
 
   // ===============================
-  // SECTION-WISE VALID ANSWER FILTERING
+  // Group Questions Section-wise
   // ===============================
-  const validAnswerIds = new Set();
-
-  for (const section of sections) {
-
-    // All questions of this section
-    const sectionQuestions = questions
+  const sectionQuestionMap = {};
+  sections.forEach(section => {
+    sectionQuestionMap[section._id.toString()] = questions
       .filter(q =>
         q.mockTestSectionId.toString() === section._id.toString()
       )
       .sort((a, b) => a.questionOrder - b.questionOrder);
+  });
 
-    // All ANSWERED answers of this section
-    const sectionAnswers = answers
-      .filter(a => {
-        const q = questionMap[a.questionId.toString()];
-        return (
-          q &&
-          q.mockTestSectionId.toString() === section._id.toString() &&
-          a.isAnswered
-        );
-      })
-      .sort((a, b) => {
-        const qa = questionMap[a.questionId.toString()];
-        const qb = questionMap[b.questionId.toString()];
-        return qa.questionOrder - qb.questionOrder;
-      });
+  // ===============================
+  // Group Answers Section-wise
+  // ===============================
+  const sectionAnswerMap = {};
+
+  answers.forEach(ans => {
+    const question = questionMap[ans.questionId.toString()];
+    if (!question) return;
+
+    const sectionId = question.mockTestSectionId.toString();
+
+    if (!sectionAnswerMap[sectionId]) {
+      sectionAnswerMap[sectionId] = [];
+    }
+
+    if (ans.isAnswered) {
+      sectionAnswerMap[sectionId].push(ans);
+    }
+  });
+
+  // Sort answers by question order
+  Object.keys(sectionAnswerMap).forEach(sectionId => {
+    sectionAnswerMap[sectionId].sort((a, b) => {
+      const qa = questionMap[a.questionId.toString()];
+      const qb = questionMap[b.questionId.toString()];
+      return qa.questionOrder - qb.questionOrder;
+    });
+  });
+
+  // ===============================
+  // Determine Valid Answers (Section Limit Logic)
+  // ===============================
+  const validAnswerIds = new Set();
+
+  sections.forEach(section => {
+    const sectionId = section._id.toString();
+    const sectionAnswers = sectionAnswerMap[sectionId] || [];
 
     if (section.questionsToAttempt !== null) {
-      const allowed = sectionAnswers.slice(0, section.questionsToAttempt);
-      allowed.forEach(a => validAnswerIds.add(a._id.toString()));
+      const allowedAnswers = sectionAnswers.slice(0, section.questionsToAttempt);
+      allowedAnswers.forEach(a =>
+        validAnswerIds.add(a._id.toString())
+      );
     } else {
-      sectionAnswers.forEach(a => validAnswerIds.add(a._id.toString()));
+      sectionAnswers.forEach(a =>
+        validAnswerIds.add(a._id.toString())
+      );
     }
-  }
+  });
 
   // ===============================
   // SCORING
@@ -85,23 +109,22 @@ const evaluateAttempt = async (attemptId) => {
   let totalScore = 0;
   let correct = 0;
   let wrong = 0;
-  let skipped = 0;
+
+  const attemptedQuestionIds = new Set();
 
   for (const answer of answers) {
+
+    if (!answer.isAnswered) continue;
 
     const question = questionMap[answer.questionId.toString()];
     if (!question) continue;
 
-    // Not answered → skipped
-    if (!answer.isAnswered) {
-      skipped++;
-      continue;
-    }
-
-    // If exceeded section limit → ignore silently
+    // Ignore answers beyond section limit
     if (!validAnswerIds.has(answer._id.toString())) {
       continue;
     }
+
+    attemptedQuestionIds.add(answer.questionId.toString());
 
     let isCorrect = false;
 
@@ -118,7 +141,7 @@ const evaluateAttempt = async (attemptId) => {
     }
 
     // =====================
-    // MSQ (Exact Match)
+    // MSQ (Exact match)
     // =====================
     if (question.questionType === "MSQ") {
       const selected = [...answer.selectedOptions].sort();
@@ -130,12 +153,13 @@ const evaluateAttempt = async (attemptId) => {
     }
 
     // =====================
-    // NAT (With Tolerance)
+    // NAT (With tolerance)
     // =====================
     if (question.questionType === "NAT") {
-      if (question.numericAnswer !== null &&
-          answer.numericAnswer !== null) {
-
+      if (
+        question.numericAnswer !== null &&
+        answer.numericAnswer !== null
+      ) {
         const diff = Math.abs(
           answer.numericAnswer - question.numericAnswer
         );
@@ -160,6 +184,13 @@ const evaluateAttempt = async (attemptId) => {
       wrong++;
     }
   }
+
+  // ===============================
+  // FINAL COUNTS
+  // ===============================
+  const totalQuestions = questions.length;
+  const attemptedCount = attemptedQuestionIds.size;
+  const skipped = totalQuestions - attemptedCount;
 
   return {
     totalScore,
