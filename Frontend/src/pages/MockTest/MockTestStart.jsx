@@ -153,35 +153,37 @@ function Palette({ questions, answers, marked, currentIndex, setIndex }) {
       </button>
 
       {/* Body */}
-      {open && (
-        <div className="pt-4">
-          <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
-            {questions.map((q, i) => {
-              const attempted =
-                answers[q._id] !== undefined && answers[q._id] !== "";
-              const isMarked = marked[q._id];
-              const isActive = i === currentIndex;
+      <div
+        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          open ? "max-h-96 opacity-100 pt-4" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
+          {questions.map((q, i) => {
+            const attempted =
+              answers[q._id] !== undefined && answers[q._id] !== "";
+            const isMarked = marked[q._id];
+            const isActive = i === currentIndex;
 
-              let cls =
-                "rounded-lg text-sm h-9 flex items-center justify-center cursor-pointer transition";
+            let cls =
+              "rounded-lg text-sm h-9 flex items-center justify-center cursor-pointer transition";
 
-              if (isActive) cls += " bg-blue-600 text-white";
-              else if (isMarked) cls += " bg-purple-600 text-white";
-              else if (attempted) cls += " bg-green-600 text-white";
-              else
-                cls +=
-                  " bg-gray-200 text-gray-800 hover:bg-gray-300 " +
-                  "dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700";
+            if (isActive) cls += " bg-blue-600 text-white";
+            else if (isMarked) cls += " bg-purple-600 text-white";
+            else if (attempted) cls += " bg-green-600 text-white";
+            else
+              cls +=
+                " bg-gray-200 text-gray-800 hover:bg-gray-300 " +
+                "dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700";
 
-              return (
-                <button key={q._id} className={cls} onClick={() => setIndex(i)}>
-                  {i + 1}
-                </button>
-              );
-            })}
-          </div>
+            return (
+              <button key={q._id} className={cls} onClick={() => setIndex(i)}>
+                {i + 1}
+              </button>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -221,7 +223,7 @@ function QuestionView({ q, answer, setAnswer }) {
             <div
               key={op.label}
               onClick={() => toggle(op.label)}
-              className={`border rounded-xl p-3 cursor-pointer ${
+              className={`border rounded-xl p-3 cursor-pointer hover:border-blue-500 ${
                 q.questionType === "MCQ"
                   ? answer === op.label
                     ? "bg-blue-50 border-blue-500 dark:bg-blue-500/15 dark:border-blue-400"
