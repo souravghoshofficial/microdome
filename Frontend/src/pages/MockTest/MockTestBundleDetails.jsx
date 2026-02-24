@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams,useNavigate } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
-import { Clock, Target, Lock, Check } from "lucide-react";
+import { Clock, Target, Lock, Check, LockOpen } from "lucide-react";
 import { useSelector } from "react-redux";
-import { toast,ToastContainer }  from "react-toastify";
-
+import { toast, ToastContainer } from "react-toastify";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -17,18 +16,19 @@ const MockTestBundleDetails = () => {
   const [loading, setLoading] = useState(true);
 
   const isLoggedIn = useSelector((state) => state.auth.status);
-  const enrolledMockTestBundles = useSelector((state) => state.enrolledMockTestBundles.MockTestBundleDetails)
-
-  const isEnrolledInThisBundle = enrolledMockTestBundles?.some(
-    bundle => bundle._id.toString() === bundleId.toString()
+  const enrolledMockTestBundles = useSelector(
+    (state) => state.enrolledMockTestBundles.MockTestBundleDetails,
   );
 
+  const isEnrolledInThisBundle = enrolledMockTestBundles?.some(
+    (bundle) => bundle._id.toString() === bundleId.toString(),
+  );
 
   useEffect(() => {
     const fetchBundle = async () => {
       try {
         const res = await axios.get(
-          `${ApiUrl}/user/mock-test-bundles/${bundleId}`
+          `${ApiUrl}/user/mock-test-bundles/${bundleId}`,
         );
         setBundle(res.data.data);
       } catch (err) {
@@ -60,23 +60,22 @@ const MockTestBundleDetails = () => {
   const discount =
     bundle.actualPrice > bundle.discountedPrice
       ? Math.floor(
-          ((bundle.actualPrice - bundle.discountedPrice) /
-            bundle.actualPrice) *
-            100
+          ((bundle.actualPrice - bundle.discountedPrice) / bundle.actualPrice) *
+            100,
         )
       : 0;
 
-      const handleClick = ()=>{
-        if(!isLoggedIn){
-          toast.warn("Login to continue.")
-          return 
-        } 
-        if(!isEnrolledInThisBundle){
-          navigate(`/checkout/mock-test-bundle/${bundleId}`)
-          return 
-        }
-        navigate(`/my-bundles/${bundleId}`)
-      }
+  const handleClick = () => {
+    if (!isLoggedIn) {
+      toast.warn("Login to continue.");
+      return;
+    }
+    if (!isEnrolledInThisBundle) {
+      navigate(`/checkout/mock-test-bundle/${bundleId}`);
+      return;
+    }
+    navigate(`/my-bundles/${bundleId}`);
+  };
   return (
     <>
       <Helmet>
@@ -89,7 +88,6 @@ const MockTestBundleDetails = () => {
           {/* ================= HERO CARD ================= */}
           <div className="relative rounded-2xl border bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-zinc-900 shadow-lg overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 p-4 md:p-8">
-
               {/* IMAGE */}
               <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900">
                 <img
@@ -131,19 +129,22 @@ const MockTestBundleDetails = () => {
 
                   <div className="mt-3 text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
                     <Check className="w-4 h-4 text-green-500 inline-block" />
-                    <span>{bundle.mockTestIds.length} full-length mock tests</span>
+                    <span>
+                      {bundle.mockTestIds.length} full-length mock tests
+                    </span>
                   </div>
                   <div className="mt-1 text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
                     <Check className="w-4 h-4 text-green-500 inline-block" />
                     <span>Performance analysis and leaderboards</span>
                   </div>
                 </div>
-                
+
                 {/* CTA */}
-                <button onClick={handleClick}
+                <button
+                  onClick={handleClick}
                   className="mt-6 w-full md:w-fit px-10 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition shadow-md cursor-pointer"
                 >
-                  {isEnrolledInThisBundle ? 'View Tests' : 'Enroll Now'}
+                  {isEnrolledInThisBundle ? "View Tests" : "Enroll Now"}
                 </button>
               </div>
             </div>
@@ -151,12 +152,11 @@ const MockTestBundleDetails = () => {
 
           {/* ================= MOCK TEST LIST ================= */}
           <div className="mt-24">
-            <h2 className="text-2xl font-semibold">
-              What’s Included
-            </h2>
+            <h2 className="text-2xl font-semibold">What’s Included</h2>
 
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              You’ll get access to the following published mock tests after purchase.
+              You’ll get access to the following published mock tests after
+              purchase.
             </p>
 
             <div className="mt-8 space-y-4">
@@ -188,16 +188,22 @@ const MockTestBundleDetails = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-                      <Lock className="w-3.5 h-3.5" />
-                      Locked
-                    </div>
+                    {isEnrolledInThisBundle ? (
+                      <div className="flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-gray-200 dark:text-gray-800">
+                        <LockOpen className="w-3.5 h-3.5" />
+                        Unlocked
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                        <Lock className="w-3.5 h-3.5" />
+                        Locked
+                      </div>
+                    )}
                   </div>
                 ))
               )}
             </div>
           </div>
-
         </div>
       </div>
     </>
