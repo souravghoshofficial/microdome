@@ -2,11 +2,79 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
-import { Clock, CheckCircle2, ChevronDown } from "lucide-react";
+import {
+  Clock,
+  CheckCircle2,
+  ChevronDown,
+  AlertTriangle,
+  AlertCircle,
+  Lock,
+  ShieldX,
+  SearchX,
+  ServerCrash,
+} from "lucide-react";
 import { toast, Toaster } from "react-hot-toast";
 import debounce from "lodash.debounce";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
+// ================ ERROR SCREEN ================ //
+
+function ErrorScreen({ error, errorCode, navigate, theme }) {
+  const config = {
+    400: {
+      title: "Invalid Test",
+      icon: AlertCircle,
+    },
+    401: {
+      title: "Login Required",
+      icon: Lock,
+    },
+    403: {
+      title: "Access Denied",
+      icon: ShieldX,
+    },
+    404: {
+      title: "Test Not Found",
+      icon: SearchX,
+    },
+    500: {
+      title: "Server Error",
+      icon: ServerCrash,
+    },
+  };
+
+  const { title, icon: Icon } = config[errorCode] || config[500];
+
+  return (
+    <div
+      className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
+    >
+      <div className="text-center max-w-md px-6">
+        {/* Icon */}
+        <div className="mx-auto mb-4 w-14 h-14 rounded-full bg-red-100 dark:bg-red-500/15 flex items-center justify-center">
+          <Icon className="w-7 h-7 text-red-600 dark:text-red-400" />
+        </div>
+
+        {/* Title */}
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          {title}
+        </h2>
+
+        {/* Message */}
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{error}</p>
+
+        {/* Action */}
+        <button
+          onClick={() => navigate("/mock-tests")}
+          className="mt-6 px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
+        >
+          Back to Mock Tests
+        </button>
+      </div>
+    </div>
+  );
+}
 
 /* ================= UI ================= */
 
@@ -343,6 +411,8 @@ export default function MockTestStart() {
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [autoSubmitted, setAutoSubmitted] = useState(false);
+  const [error, setError] = useState(null);
+  const [errorCode, setErrorCode] = useState(null);
 
   const remaining = useExamTimer(startedAt, durationSeconds);
 
@@ -420,27 +490,50 @@ export default function MockTestStart() {
   }, []);
 
   const init = async () => {
-    const startRes = await axios.post(
-      `${ApiUrl}/user/mock-tests/${testId}/start`,
-      {},
-      { withCredentials: true },
-    );
+    try {
+      setLoading(true);
+      setError(null);
+      setErrorCode(null);
 
-    const { attemptId, startedAt, durationSeconds, mockTest } = startRes.data;
-    setAttemptId(attemptId);
-    setStartedAt(startedAt);
-    setDurationSeconds(durationSeconds);
-    setMockTest(mockTest);
+      const startRes = await axios.post(
+        `${ApiUrl}/user/mock-tests/${testId}/start`,
+        {},
+        { withCredentials: true },
+      );
 
-    const sessionRes = await axios.get(
-      `${ApiUrl}/user/mock-tests/attempt/${attemptId}`,
-      { withCredentials: true },
-    );
+      const data = startRes.data;
 
-    setSections(sessionRes.data.sections);
-    setLoading(false);
+      // ===== CASE 1: expired attempt =====
+      if (data.expired) {
+        navigate(`/mock-tests/${testId}/result`, { replace: true });
+        return;
+      }
+
+      setAttemptId(data.attemptId);
+      setStartedAt(data.startedAt);
+      setDurationSeconds(data.durationSeconds);
+      setMockTest(data.mockTest);
+
+      const sessionRes = await axios.get(
+        `${ApiUrl}/user/mock-tests/attempt/${data.attemptId}`,
+        { withCredentials: true },
+      );
+
+      setSections(sessionRes.data.sections);
+    } catch (err) {
+      console.error(err);
+
+      if (err.response) {
+        setErrorCode(err.response.status);
+        setError(err.response.data?.message || "Something went wrong.");
+      } else {
+        setErrorCode(500);
+        setError("Server not responding. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
-
 
   /* ===== TIMER EFFECT ===== */
   useEffect(() => {
@@ -454,7 +547,6 @@ export default function MockTestStart() {
       handleAutoSubmit();
     }
   }, [remaining, attemptId, timerReady]);
-
 
   /* ===== VISIT ===== */
 
@@ -713,6 +805,17 @@ export default function MockTestStart() {
         </div>
       </div>
     );
+
+  if (error) {
+    return (
+      <ErrorScreen
+        error={error}
+        errorCode={errorCode}
+        navigate={navigate}
+        theme={theme}
+      />
+    );
+  }
 
   return (
     <div
