@@ -14,6 +14,24 @@ const computeRemainingSeconds = (attempt) => {
   return attempt.durationSeconds - elapsed;
 };
 
+
+function computeSectionMaxScore(section) {
+  const questions = section.questions || [];
+  if (!questions.length) return 0;
+
+  // Choice section (attempt N out of M)
+  if (section.questionsToAttempt !== null) {
+    const marksPerQ = questions[0].marks; // guaranteed equal
+    return section.questionsToAttempt * marksPerQ;
+  }
+
+  // Full section
+  return questions.reduce(
+    (sum, q) => sum + (q.marks || 0),
+    0
+  );
+}
+
 // ===============================
 // helper: evaluate attempt
 // ===============================
@@ -605,6 +623,242 @@ export const submitMockTest = async (req, res) => {
     return res.status(500).json({
       message: "Internal Server Error",
       error: error.message
+    });
+  }
+};
+
+
+export const getAttemptResult = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
+    const { attempt: attemptQuery } = req.query;
+    const userId = req.user._id;
+
+    /* ---------- validate ---------- */
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({
+        message: "Invalid mock test id",
+      });
+    }
+
+    /* ===============================
+       FETCH MOCK TEST META
+    =============================== */
+    const mockTest = await MockTest.findById(mockTestId)
+      .select("title totalMarks durationMinutes mockTestType allowedAttempts")
+      .lean();
+
+    if (!mockTest) {
+      return res.status(404).json({
+        message: "Mock test not found",
+      });
+    }
+
+    /* ===============================
+       FETCH ATTEMPTS
+    =============================== */
+    const attempts = await MockTestAttempt.find({
+      userId,
+      mockTestId,
+      status: { $in: ["SUBMITTED", "EXPIRED"] },
+    })
+      .sort({ attemptNumber: -1 })
+      .lean();
+
+    if (!attempts.length) {
+      return res.status(404).json({
+        message: "No completed attempts found",
+      });
+    }
+
+    /* ===============================
+       SELECT ATTEMPT
+    =============================== */
+    let attemptDoc;
+
+    if (attemptQuery) {
+      attemptDoc = attempts.find(
+        (a) => a.attemptNumber === Number(attemptQuery)
+      );
+
+      if (!attemptDoc) {
+        return res.status(404).json({
+          message: "Attempt not found",
+        });
+      }
+    } else {
+      attemptDoc = attempts[0];
+    }
+
+    const attemptId = attemptDoc._id;
+
+    /* ===============================
+       FETCH SECTION META
+    =============================== */
+    const sectionsMeta = await MockTestSection.find({
+      mockTestId,
+    })
+      .sort({ sectionOrder: 1 })
+      .lean();
+
+    const sectionMetaMap = new Map();
+    sectionsMeta.forEach((s) =>
+      sectionMetaMap.set(s._id.toString(), s)
+    );
+
+    /* ===============================
+       FETCH QUESTIONS
+    =============================== */
+    const questions = await MockTestQuestion.find({
+      mockTestId,
+    })
+      .sort({ questionOrder: 1 })
+      .lean();
+
+    /* ===============================
+       FETCH ANSWERS
+    =============================== */
+    const answers = await MockTestAnswer.find({
+      attemptId,
+    }).lean();
+
+    const answerMap = new Map();
+    answers.forEach((a) =>
+      answerMap.set(a.questionId.toString(), a)
+    );
+
+    /* ===============================
+       BUILD SECTIONS
+    =============================== */
+    const sectionsMap = new Map();
+
+    for (const q of questions) {
+      const ans = answerMap.get(q._id.toString());
+      const meta = sectionMetaMap.get(
+        q.mockTestSectionId.toString()
+      );
+
+      if (!meta) continue;
+
+      let state = "UNATTEMPTED";
+      let marksAwarded = 0;
+
+      /* evaluate */
+      if (ans && ans.isAnswered) {
+        if (q.questionType === "NAT") {
+          const val = ans.numericAnswer;
+          if (val != null) {
+            const tol = q.tolerance ?? 0;
+            const correct =
+              Math.abs(val - q.numericAnswer) <= tol;
+
+            if (correct) {
+              state = "CORRECT";
+              marksAwarded = q.marks;
+            } else {
+              state = "INCORRECT";
+              marksAwarded = -q.negativeMarks;
+            }
+          }
+        } else {
+          const user = ans.selectedOptions || [];
+          const correct = q.correctAnswer || [];
+
+          const match =
+            user.length === correct.length &&
+            user.every((o) => correct.includes(o));
+
+          if (match) {
+            state = "CORRECT";
+            marksAwarded = q.marks;
+          } else {
+            state = "INCORRECT";
+            marksAwarded = -q.negativeMarks;
+          }
+        }
+      }
+
+      const secId = q.mockTestSectionId.toString();
+
+      if (!sectionsMap.has(secId)) {
+        sectionsMap.set(secId, {
+          sectionId: secId,
+          sectionTitle: meta.title,
+          questionType: meta.questionType,
+          questionsToAttempt: meta.questionsToAttempt,
+          sectionOrder: meta.sectionOrder,
+          questions: [],
+          score: 0,
+          maxScore: 0,
+        });
+      }
+
+      const sec = sectionsMap.get(secId);
+
+      sec.questions.push({
+        ...q,
+        userAnswer: ans || null,
+        resultState: state,
+        marksAwarded,
+      });
+
+      sec.score += marksAwarded;
+    }
+
+    /* ===============================
+       COMPUTE MAX SCORE
+    =============================== */
+    for (const sec of sectionsMap.values()) {
+      sec.maxScore = computeSectionMaxScore(sec);
+    }
+
+    /* ===============================
+       ORDER SECTIONS
+    =============================== */
+    const sections = Array.from(sectionsMap.values()).sort(
+      (a, b) => a.sectionOrder - b.sectionOrder
+    );
+
+    /* ===============================
+       RESULT SUMMARY
+    =============================== */
+    const result = await MockTestResult.findOne({
+      attemptId,
+    }).lean();
+
+    /* ===============================
+       RESPONSE
+    =============================== */
+    return res.json({
+      mockTest: {
+        id: mockTestId,
+        title: mockTest.title,
+        totalMarks: mockTest.totalMarks,
+        durationMinutes: mockTest.durationMinutes,
+        mockTestType: mockTest.mockTestType,
+        allowedAttempts: mockTest.allowedAttempts,
+      },
+
+      attempt: {
+        attemptNumber: attemptDoc.attemptNumber,
+        submittedAt: attemptDoc.submittedAt,
+      },
+
+      result,
+      sections,
+
+      attempts: attempts.map((a) => ({
+        attemptNumber: a.attemptNumber,
+        submittedAt: a.submittedAt,
+      })),
+
+      latestAttemptNumber: attempts[0].attemptNumber,
+      selectedAttemptNumber: attemptDoc.attemptNumber,
+    });
+  } catch (e) {
+    console.error("getAttemptResult error:", e);
+    return res.status(500).json({
+      message: "Failed to load result",
     });
   }
 };

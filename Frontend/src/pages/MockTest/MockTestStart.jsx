@@ -723,7 +723,7 @@ export default function MockTestStart() {
 
       // redirect after short delay
       setTimeout(() => {
-        navigate(`/mock-tests/${attemptId}/result`);
+        navigate(`/mock-tests/${testId}/result`);
       }, 1800);
     } catch (e) {
       console.error("Auto submit failed", e);
@@ -742,7 +742,7 @@ export default function MockTestStart() {
         { withCredentials: true },
       );
 
-      navigate(`/mock-tests/${attemptId}/result`);
+      navigate(`/mock-tests/${testId}/result`);
     } catch (e) {
       console.error(e);
       setIsSubmitting(false);
