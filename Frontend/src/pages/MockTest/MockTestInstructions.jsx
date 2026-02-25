@@ -26,10 +26,9 @@ const MockTestInstructions = () => {
         setLoading(true);
         setError(null);
 
-        const res = await axios.get(
-          `${ApiUrl}/user/mock-tests/${testId}`,
-          { withCredentials: true }
-        );
+        const res = await axios.get(`${ApiUrl}/user/mock-tests/${testId}`, {
+          withCredentials: true,
+        });
 
         setMockTestDetails(res.data.data);
       } catch (error) {
@@ -69,13 +68,20 @@ const MockTestInstructions = () => {
     setModalType(null);
   };
 
-  // ✅ Confirm Action
+  // ✅ Confirm Action and Navigate with Fullscreen for Start
   const handleConfirm = () => {
     if (modalType === "cancel") {
-      navigate(-1); // Go back to previous page
+      navigate(-1);
+      return;
     }
 
     if (modalType === "start") {
+      // request fullscreen
+      const el = document.documentElement;
+      if (el.requestFullscreen) {
+        el.requestFullscreen().catch(() => {});
+      }
+
       navigate(`/mock-tests/${testId}/start`);
     }
   };
@@ -87,27 +93,22 @@ const MockTestInstructions = () => {
       }`}
     >
       <div className="my-16 w-[90%] max-w-4xl">
-
         {/* 🔵 Loading */}
         {loading && (
-          <div className="text-center text-lg font-semibold">
-            Loading instructions...
+          <div className="flex items-center justify-center h-screen">
+            <div className="w-9 h-9 rounded-full border-4 border-gray-200 border-t-blue-600 animate-spin" />
           </div>
         )}
 
         {/* 🔴 Error */}
         {!loading && error && (
-          <div className="text-center text-red-500 font-semibold">
-            {error}
-          </div>
+          <div className="text-center text-red-500 font-semibold">{error}</div>
         )}
 
         {/* 🟢 Success */}
         {!loading && !error && mockTestDetails && (
           <>
-            <h1 className="text-3xl font-bold">
-              {mockTestDetails.title}
-            </h1>
+            <h1 className="text-3xl font-bold">{mockTestDetails.title}</h1>
 
             <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
               <p>Duration: {mockTestDetails.durationMinutes} Minutes</p>
@@ -155,26 +156,24 @@ const MockTestInstructions = () => {
         )}
       </div>
 
-      {/* 🔥 Confirmation Modal */}
+      {/* Confirmation Modal */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center backdrop-blur-lg bg-black/50 z-50">
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl w-[90%] max-w-md shadow-lg">
+          <div className="bg-white dark:bg-zinc-800 p-6 rounded-xl w-[90%] max-w-md shadow-lg">
             <h2 className="text-xl font-bold mb-4">
-              {modalType === "start"
-                ? "Start Mock Test?"
-                : "Cancel Mock Test?"}
+              {modalType === "start" ? "Start Mock Test?" : "Cancel Mock Test?"}
             </h2>
 
             <p className="text-gray-600 dark:text-gray-300 mb-6">
               {modalType === "start"
-                ? "Once started, the timer will begin immediately and cannot be paused. Are you sure you want to proceed?"
+                ? "Once started, the test will run in full-screen mode and cannot be paused. Continue?"
                 : "Are you sure you want to cancel and go back?"}
             </p>
 
             <div className="flex justify-end gap-4">
               <button
                 onClick={closeModal}
-                className="px-5 py-1.5 rounded-lg border border-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer"
+                className="px-5 py-1.5 rounded-lg border border-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-600 cursor-pointer"
               >
                 No
               </button>

@@ -1,9 +1,10 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { Clock, CheckCircle2, ChevronDown } from "lucide-react";
 import { toast, Toaster } from "react-hot-toast";
+import debounce from "lodash.debounce";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -20,7 +21,7 @@ function Card({ children, className = "" }) {
 }
 
 function Button({ children, onClick, variant = "primary", className = "" }) {
-  const base = "px-4 py-1.5 rounded-xl font-medium transition";
+  const base = "px-4 py-2 rounded-xl font-medium transition";
   const styles = {
     primary: "bg-blue-600 text-white hover:bg-blue-700",
     success: "bg-green-600 text-white hover:bg-green-700",
@@ -107,6 +108,7 @@ function ExamHeader({
             color="bg-purple-600 text-white"
             text="Marked for Review"
             count={stats.markedOnly}
+            className="ml-1.5 sm:ml-0"
           />
 
           <LegendItem
@@ -136,19 +138,22 @@ function LegendItem({
   subText = "",
   count,
   isAnsweredMarked = false,
+  className = "",
 }) {
   return (
     <div className="flex items-center gap-2">
       <div
-        className={`w-10 h-10 rounded-sm flex items-center justify-center font-bold ${color} relative`}
+        className={`w-10 h-10 rounded-sm flex items-center justify-center font-bold ${color} relative ${className}`}
       >
         {count}
         {isAnsweredMarked && (
-          <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white" />
+          <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 border border-white rounded-full" />
         )}
       </div>
       <div className="text-sm flex flex-col items-center">
-        <span className="text-gray-700 dark:text-gray-300">{text}</span>
+        <span className="text-gray-700 dark:text-gray-300 font-medium">
+          {text}
+        </span>
         <span className="text-gray-500 dark:text-gray-400 text-xs">
           {subText}
         </span>
@@ -228,7 +233,7 @@ function Palette({ questions, currentIndex, setIndex }) {
                 {i + 1}
 
                 {q.state?.isAnswered && q.state?.isMarkedForReview && (
-                  <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white" />
+                  <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 border border-white rounded-full" />
                 )}
               </button>
             );
@@ -260,7 +265,7 @@ function QuestionView({ q, answer, onAnswer }) {
       <div className="mb-4 font-semibold flex items-center justify-between">
         Question {q.questionOrder}
         <span className="ml-3 text-sm font-normal text-gray-500">
-          ({q.marks} marks)
+          ({q.marks} {q.marks > 1 ? "marks" : "mark"})
         </span>
       </div>
 
@@ -399,14 +404,6 @@ export default function MockTestStart() {
     );
 
     setSections(sessionRes.data.sections);
-    const first = sessionRes.data.sections?.[0]?.questions?.[0];
-    if (first && !first.state?.isVisited) {
-      axios.put(
-        `${ApiUrl}/user/mock-tests/attempt/${attemptId}/question/${first._id}/visit`,
-        {},
-        { withCredentials: true },
-      );
-    }
     setLoading(false);
   };
 
@@ -414,38 +411,46 @@ export default function MockTestStart() {
 
   useEffect(() => {
     if (!attemptId || !currentQuestion?._id) return;
-
-    // already visited → skip
     if (currentQuestion.state?.isVisited) return;
 
-    markVisited(currentQuestion._id);
-  }, [attemptId, currentQuestion?._id]);
+    const qid = currentQuestion._id;
 
-  const markVisited = async (qid) => {
-    try {
-      await axios.put(
+    // optimistic
+    setSections((prev) =>
+      prev.map((sec) => ({
+        ...sec,
+        questions: sec.questions.map((q) =>
+          q._id === qid ? { ...q, state: { ...q.state, isVisited: true } } : q,
+        ),
+      })),
+    );
+
+    axios
+      .put(
         `${ApiUrl}/user/mock-tests/attempt/${attemptId}/question/${qid}/visit`,
         {},
         { withCredentials: true },
-      );
-
-      // update local state instantly (no refetch)
-      setSections((prev) =>
-        prev.map((sec) => ({
-          ...sec,
-          questions: sec.questions.map((q) =>
-            q._id === qid
-              ? { ...q, state: { ...q.state, isVisited: true } }
-              : q,
-          ),
-        })),
-      );
-    } catch (e) {
-      console.error("visit update failed", e);
-    }
-  };
+      )
+      .catch(() => {});
+  }, [attemptId, currentQuestion?._id]);
 
   /* ===== ANSWER ===== */
+
+  const debouncedSaveRef = useRef(null);
+
+  useEffect(() => {
+    debouncedSaveRef.current = debounce((qid, payload) => {
+      axios
+        .put(
+          `${ApiUrl}/user/mock-tests/attempt/${attemptId}/question/${qid}/answer`,
+          payload,
+          { withCredentials: true },
+        )
+        .catch(() => {});
+    }, 500);
+
+    return () => debouncedSaveRef.current?.cancel();
+  }, [attemptId]);
 
   const handleAnswer = (selectedOptions, numericAnswer) => {
     const limit = currentSection?.questionsToAttempt;
@@ -458,83 +463,106 @@ export default function MockTestStart() {
       );
       return;
     }
+
     const qid = currentQuestion._id;
+    const qType = currentQuestion.questionType;
 
-    // optimistic update
-    setSections((prev) =>
-      prev.map((sec) => ({
-        ...sec,
-        questions: sec.questions.map((q) =>
-          q._id === qid ? { ...q, state: { ...q.state, isAnswered: true } } : q,
-        ),
-      })),
-    );
-
-    saveAnswer(qid, selectedOptions, numericAnswer);
-  };
-
-  const saveAnswer = async (qid, selectedOptions, numericAnswer) => {
-    const res = await axios.put(
-      `${ApiUrl}/user/mock-tests/attempt/${attemptId}/question/${qid}/answer`,
-      {
-        questionType: currentQuestion.questionType,
-        selectedOptions,
-        numericAnswer,
-        isMarkedForReview: currentQuestion.state?.isMarkedForReview || false,
-      },
-      { withCredentials: true },
-    );
-
-    // 🔄 update section state locally
-    setSections((prev) =>
-      prev.map((sec) => ({
-        ...sec,
-        questions: sec.questions.map((q) =>
-          q._id === qid ? { ...q, state: res.data.answer } : q,
-        ),
-      })),
-    );
-  };
-
-  /* ===== MARK ===== */
-
-  const toggleMark = async () => {
-    const newVal = !currentQuestion.state?.isMarkedForReview;
-
-    await axios.put(
-      `${ApiUrl}/user/mock-tests/attempt/${attemptId}/question/${currentQuestion._id}/answer`,
-      {
-        questionType: currentQuestion.questionType,
-        selectedOptions: currentQuestion.state?.selectedOptions || [],
-        numericAnswer: currentQuestion.state?.numericAnswer || null,
-        isMarkedForReview: newVal,
-      },
-      { withCredentials: true },
-    );
-
-    currentQuestion.state.isMarkedForReview = newVal;
-    setSections([...sections]);
-  };
-
-  /* ===== CLEAR ===== */
-
-  const clearAnswer = async () => {
-    const qid = currentQuestion._id;
-
-    // 🔄 optimistic update FIRST
+    // optimistic UI
     setSections((prev) =>
       prev.map((sec) => ({
         ...sec,
         questions: sec.questions.map((q) =>
           q._id === qid
-            ? { ...q, state: { ...q.state, isAnswered: false } }
+            ? {
+                ...q,
+                state: {
+                  ...q.state,
+                  isAnswered: true,
+                  selectedOptions,
+                  numericAnswer,
+                },
+              }
             : q,
         ),
       })),
     );
 
-    // then backend
-    await saveAnswer(qid, [], null);
+    // debounced backend save
+    debouncedSaveRef.current?.(qid, {
+      questionType: qType,
+      selectedOptions,
+      numericAnswer,
+      isMarkedForReview: currentQuestion.state?.isMarkedForReview || false,
+    });
+  };
+
+  /* ===== MARK ===== */
+
+  const toggleMark = () => {
+    const qid = currentQuestion._id;
+    const newVal = !currentQuestion.state?.isMarkedForReview;
+
+    setSections((prev) =>
+      prev.map((sec) => ({
+        ...sec,
+        questions: sec.questions.map((q) =>
+          q._id === qid
+            ? { ...q, state: { ...q.state, isMarkedForReview: newVal } }
+            : q,
+        ),
+      })),
+    );
+
+    axios
+      .put(
+        `${ApiUrl}/user/mock-tests/attempt/${attemptId}/question/${qid}/answer`,
+        {
+          questionType: currentQuestion.questionType,
+          selectedOptions: currentQuestion.state?.selectedOptions || [],
+          numericAnswer: currentQuestion.state?.numericAnswer || null,
+          isMarkedForReview: newVal,
+        },
+        { withCredentials: true },
+      )
+      .catch(() => {});
+  };
+
+  /* ===== CLEAR ===== */
+
+  const clearAnswer = () => {
+    const qid = currentQuestion._id;
+
+    setSections((prev) =>
+      prev.map((sec) => ({
+        ...sec,
+        questions: sec.questions.map((q) =>
+          q._id === qid
+            ? {
+                ...q,
+                state: {
+                  ...q.state,
+                  isAnswered: false,
+                  selectedOptions: [],
+                  numericAnswer: null,
+                },
+              }
+            : q,
+        ),
+      })),
+    );
+
+    axios
+      .put(
+        `${ApiUrl}/user/mock-tests/attempt/${attemptId}/question/${qid}/answer`,
+        {
+          questionType: currentQuestion.questionType,
+          selectedOptions: [],
+          numericAnswer: null,
+          isMarkedForReview: currentQuestion.state?.isMarkedForReview || false,
+        },
+        { withCredentials: true },
+      )
+      .catch(() => {});
   };
 
   /* ===== SUBMIT ===== */
@@ -551,9 +579,13 @@ export default function MockTestStart() {
   if (loading)
     return (
       <div
-        className={`${theme === "dark" ? "dark" : ""} h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 dark:text-gray-200`}
+        className={`${theme === "dark" ? "dark" : ""} h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
       >
-        Loading…
+        <div className="flex space-x-2">
+          <span className="w-2.5 h-2.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
+          <span className="w-2.5 h-2.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.15s]" />
+          <span className="w-2.5 h-2.5 bg-blue-600 rounded-full animate-bounce" />
+        </div>
       </div>
     );
 
@@ -625,34 +657,49 @@ export default function MockTestStart() {
           />
         )}
 
-        <div className="flex flex-wrap gap-2 justify-between">
-          <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          {/* left actions */}
+          <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:gap-2">
             <Button
               variant="ghost"
               onClick={() => setQIndex((i) => Math.max(0, i - 1))}
+              className="w-full md:w-auto"
             >
               Previous
             </Button>
+
             <Button
               variant="success"
               onClick={() =>
                 setQIndex((i) => Math.min(currentQuestions.length - 1, i + 1))
               }
+              className="w-full md:w-auto"
             >
               Save & Next
             </Button>
-            <Button variant="purple" onClick={toggleMark}>
+
+            <Button
+              variant="purple"
+              onClick={toggleMark}
+              className="w-full md:w-auto"
+            >
               Mark For Review
             </Button>
-            <Button variant="danger" onClick={clearAnswer}>
+
+            <Button
+              variant="danger"
+              onClick={clearAnswer}
+              className="w-full md:w-auto"
+            >
               Clear Response
             </Button>
           </div>
 
+          {/* submit */}
           <Button
             variant="primary"
             onClick={submitTest}
-            className="flex items-center gap-2"
+            className="w-full md:w-auto flex items-center justify-center gap-2"
           >
             <CheckCircle2 className="w-4 h-4" /> Submit
           </Button>
