@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { Clock, CheckCircle2, ChevronDown } from "lucide-react";
 import { toast, Toaster } from "react-hot-toast";
@@ -20,13 +20,24 @@ function Card({ children, className = "" }) {
   );
 }
 
+function Stat({ label, value, color }) {
+  return (
+    <>
+      <div className="text-gray-500 dark:text-gray-400">{label}</div>
+      <div className={`font-semibold ${color}`}>{value}</div>
+    </>
+  );
+}
+
 function Button({ children, onClick, variant = "primary", className = "" }) {
-  const base = "px-4 py-2 rounded-xl font-medium transition";
+  const base =
+    "px-4 py-2.5 md:py-2 rounded-xl font-medium transition hover:translate-y-[-2px]";
   const styles = {
     primary: "bg-blue-600 text-white hover:bg-blue-700",
     success: "bg-green-600 text-white hover:bg-green-700",
     danger: "bg-red-600 text-white hover:bg-red-700",
-    ghost: "bg-gray-200 dark:bg-gray-800",
+    ghost:
+      "border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800",
     purple: "bg-purple-600 text-white hover:bg-purple-700",
   };
   return (
@@ -42,14 +53,19 @@ function Button({ children, onClick, variant = "primary", className = "" }) {
 /* ================= TIMER ================= */
 
 function useExamTimer(startedAt, durationSeconds) {
-  const [remaining, setRemaining] = useState(durationSeconds);
+  const [remaining, setRemaining] = useState(null);
 
   useEffect(() => {
     if (!startedAt || !durationSeconds) return;
+
     const end = new Date(startedAt).getTime() + durationSeconds * 1000;
-    const id = setInterval(() => {
+
+    const tick = () =>
       setRemaining(Math.max(0, Math.floor((end - Date.now()) / 1000)));
-    }, 1000);
+
+    tick(); // immediate sync
+    const id = setInterval(tick, 1000);
+
     return () => clearInterval(id);
   }, [startedAt, durationSeconds]);
 
@@ -314,6 +330,7 @@ function QuestionView({ q, answer, onAnswer }) {
 export default function MockTestStart() {
   const { testId } = useParams();
   const theme = useSelector((s) => s.theme.theme);
+  const navigate = useNavigate();
 
   const [attemptId, setAttemptId] = useState(null);
   const [mockTest, setMockTest] = useState(null);
@@ -323,8 +340,13 @@ export default function MockTestStart() {
   const [startedAt, setStartedAt] = useState(null);
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [autoSubmitted, setAutoSubmitted] = useState(false);
 
   const remaining = useExamTimer(startedAt, durationSeconds);
+
+  const timerReady = durationSeconds > 0 && startedAt;
 
   const currentSection = sections[activeSection];
   const currentQuestions = currentSection?.questions || [];
@@ -379,6 +401,18 @@ export default function MockTestStart() {
     };
   }, [sections]);
 
+  const sectionStats = useMemo(() => {
+    return sections.map((sec) => {
+      const answered = sec.questions.filter((q) => q.state?.isAnswered).length;
+
+      return {
+        title: sec.sectionTitle,
+        answered,
+        limit: sec.questionsToAttempt,
+      };
+    });
+  }, [sections]);
+
   /* ===== INIT ===== */
 
   useEffect(() => {
@@ -406,6 +440,21 @@ export default function MockTestStart() {
     setSections(sessionRes.data.sections);
     setLoading(false);
   };
+
+
+  /* ===== TIMER EFFECT ===== */
+  useEffect(() => {
+    if (!attemptId || !timerReady) return;
+
+    if (remaining === 300) {
+      toast("Only 5 minutes remaining", { icon: "⏱️" });
+    }
+
+    if (remaining === 0) {
+      handleAutoSubmit();
+    }
+  }, [remaining, attemptId, timerReady]);
+
 
   /* ===== VISIT ===== */
 
@@ -567,13 +616,89 @@ export default function MockTestStart() {
 
   /* ===== SUBMIT ===== */
 
+  const handleAutoSubmit = async () => {
+    if (isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+      setAutoSubmitted(true);
+
+      await axios.post(
+        `${ApiUrl}/user/mock-tests/attempt/${attemptId}/submit`,
+        {},
+        { withCredentials: true },
+      );
+
+      // redirect after short delay
+      setTimeout(() => {
+        navigate(`/mock-tests/${attemptId}/result`);
+      }, 1800);
+    } catch (e) {
+      console.error("Auto submit failed", e);
+    }
+  };
+
   const submitTest = async () => {
-    await axios.post(
-      `${ApiUrl}/user/mock-tests/attempt/${attemptId}/submit`,
-      {},
-      { withCredentials: true },
-    );
-    alert("Test submitted");
+    if (isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+
+      await axios.post(
+        `${ApiUrl}/user/mock-tests/attempt/${attemptId}/submit`,
+        {},
+        { withCredentials: true },
+      );
+
+      navigate(`/mock-tests/${attemptId}/result`);
+    } catch (e) {
+      console.error(e);
+      setIsSubmitting(false);
+    }
+  };
+
+  /* ===== PREVIOUS AND NEXT ===== */
+
+  const goNext = () => {
+    if (!sections.length) return;
+
+    const isLastQuestion = qIndex === currentQuestions.length - 1;
+
+    const isLastSection = activeSection === sections.length - 1;
+
+    // normal next
+    if (!isLastQuestion) {
+      setQIndex((i) => i + 1);
+      return;
+    }
+
+    // last question → next section
+    if (!isLastSection) {
+      setActiveSection((s) => s + 1);
+      setQIndex(0);
+      return;
+    }
+
+    // last question of last section
+    toast("You are at the last question of the test.", { icon: null });
+  };
+
+  const goPrev = () => {
+    if (!sections.length) return;
+
+    const isFirstQuestion = qIndex === 0;
+
+    if (!isFirstQuestion) {
+      setQIndex((i) => i - 1);
+      return;
+    }
+
+    // move to previous section last question
+    if (activeSection > 0) {
+      const prevSection = sections[activeSection - 1];
+      setActiveSection((s) => s - 1);
+      setQIndex(prevSection.questions.length - 1);
+    }
   };
 
   if (loading)
@@ -662,20 +787,18 @@ export default function MockTestStart() {
           <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:gap-2">
             <Button
               variant="ghost"
-              onClick={() => setQIndex((i) => Math.max(0, i - 1))}
+              onClick={goPrev}
               className="w-full md:w-auto"
             >
-              Previous
+              Previous Question
             </Button>
 
             <Button
               variant="success"
-              onClick={() =>
-                setQIndex((i) => Math.min(currentQuestions.length - 1, i + 1))
-              }
+              onClick={goNext}
               className="w-full md:w-auto"
             >
-              Save & Next
+              Next Question
             </Button>
 
             <Button
@@ -698,12 +821,131 @@ export default function MockTestStart() {
           {/* submit */}
           <Button
             variant="primary"
-            onClick={submitTest}
+            onClick={() => setShowSubmitModal(true)}
             className="w-full md:w-auto flex items-center justify-center gap-2"
           >
             <CheckCircle2 className="w-4 h-4" /> Submit
           </Button>
         </div>
+
+        {showSubmitModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+            <div className="w-full max-w-lg mx-4 rounded-2xl bg-white dark:bg-zinc-900 shadow-2xl border border-gray-200 dark:border-zinc-700">
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-zinc-700 flex items-center gap-3">
+                <div className="w-9 h-9 flex items-center justify-center rounded-full bg-red-100 dark:bg-red-500/15">
+                  <CheckCircle2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  Submit Test
+                </h2>
+              </div>
+
+              {/* Body */}
+              <div className="px-6 py-5 space-y-4 text-sm text-gray-600 dark:text-gray-300">
+                <p>
+                  Once submitted, you will{" "}
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                    not be able to change
+                  </span>{" "}
+                  your answers.
+                </p>
+
+                {/* ===== Stats Box ===== */}
+                <div className="rounded-xl border border-dashed border-gray-300 dark:border-zinc-600 p-4 bg-gray-50 dark:bg-zinc-800/40">
+                  <div className="grid grid-cols-2 gap-y-2 text-sm">
+                    <Stat
+                      label="Answered"
+                      value={stats.answered}
+                      color="text-green-600"
+                    />
+                    <Stat
+                      label="Not Answered"
+                      value={stats.notAnswered}
+                      color="text-orange-500"
+                    />
+                    <Stat
+                      label="Marked"
+                      value={stats.markedOnly}
+                      color="text-purple-600"
+                    />
+                    <Stat
+                      label="Marked & Answered"
+                      value={stats.answeredMarked}
+                      color="text-purple-600"
+                    />
+                    <Stat
+                      label="Not Visited"
+                      value={stats.notVisited}
+                      color="text-gray-500"
+                    />
+                  </div>
+                </div>
+
+                {sectionStats.some((s) => s.limit !== null) && (
+                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-zinc-600 space-y-1 text-xs">
+                    {sectionStats.map((s, i) =>
+                      s.limit !== null ? (
+                        <div key={i} className="flex justify-between">
+                          <span className="text-gray-500 dark:text-gray-400">
+                            {s.title}
+                          </span>
+                          <span className="font-medium text-gray-700 dark:text-gray-200">
+                            {s.answered}/{s.limit}
+                          </span>
+                        </div>
+                      ) : null,
+                    )}
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Please review unanswered or marked questions before
+                  confirming.
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="px-6 py-4 border-t border-gray-200 dark:border-zinc-700 flex justify-end gap-3">
+                <button
+                  onClick={() => setShowSubmitModal(false)}
+                  className="px-4 py-2 cursor-pointer rounded-lg border border-gray-300 dark:border-zinc-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition"
+                >
+                  Review
+                </button>
+
+                <button
+                  onClick={async () => {
+                    setShowSubmitModal(false);
+                    await submitTest();
+                  }}
+                  className="px-4 py-2 cursor-pointer rounded-lg bg-red-600 text-white hover:bg-red-700 transition font-medium shadow-sm"
+                >
+                  Submit Test
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isSubmitting && (
+          <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="bg-white dark:bg-zinc-900 rounded-2xl px-8 py-7 shadow-2xl border border-gray-200 dark:border-zinc-700 text-center">
+              {/* Spinner */}
+              <div className="mx-auto mb-4 w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin" />
+
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                {autoSubmitted ? "Time is up" : "Submitting Test"}
+              </h3>
+
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {autoSubmitted
+                  ? "Your test is being submitted automatically"
+                  : "Please wait while we submit your answers"}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
