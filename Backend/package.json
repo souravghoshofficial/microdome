@@ -19,6 +19,7 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "lodash.debounce": "^4.0.8",
     "mongoose": "^8.14.1",
     "mongoose-aggregate-paginate-v2": "^1.1.4",
     "multer": "^2.0.0",

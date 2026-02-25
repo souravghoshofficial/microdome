@@ -329,116 +329,220 @@ if (remaining <= 0) {
 
 
 
+// export const getMockTestAttemptSession = async (req, res) => {
+//   try {
+//     const { attemptId } = req.params;
+
+//     const attempt = await MockTestAttempt.findById(attemptId);
+//     if (!attempt) {
+//       return res.status(404).json({ message: "Attempt not found" });
+//     }
+
+//     const mockTest = await MockTest.findById(attempt.mockTestId).select("-instructions").lean();
+//     if (!mockTest) {
+//       return res.status(404).json({ message: "Mock test not found" });
+//     }
+
+//     // =====================
+//     // expiry check
+//     // =====================
+//     const remaining = computeRemainingSeconds(attempt);
+
+//     if (attempt.status === "IN_PROGRESS" && remaining <= 0) {
+//       attempt.status = "EXPIRED";
+//       attempt.submittedAt = new Date(
+//         attempt.startedAt.getTime() +
+//           attempt.durationSeconds * 1000
+//       );
+//       await attempt.save();
+
+//       const result = await evaluateAttempt(attempt._id);
+
+//       return res.json({
+//         expired: true,
+//         attemptId,
+//         mockTest,
+//         result
+//       });
+//     }
+
+//     // =====================
+//     // fetch questions
+//     // =====================
+//    const questionsRaw = await MockTestQuestion.find(
+//   { mockTestId: attempt.mockTestId },
+//   {
+//     correctAnswer: 0,
+//     numericAnswer: 0,
+//     tolerance: 0,
+//     answerExplanation: 0,
+//     __v: 0
+//   }
+// )
+// .populate("mockTestSectionId", "title questionType totalQuestions questionsToAttempt sectionOrder")
+// .lean();
+
+// // ===============================
+// // sort by sectionOrder -> questionOrder
+// // ===============================
+// questionsRaw.sort((a, b) => {
+//   const secA = a.mockTestSectionId.sectionOrder;
+//   const secB = b.mockTestSectionId.sectionOrder;
+
+//   if (secA !== secB) return secA - secB;
+//   return a.questionOrder - b.questionOrder;
+// });
+
+// // ===============================
+// // group into sections
+// // ===============================
+// const sectionMap = {};
+
+// questionsRaw.forEach(q => {
+//   const sec = q.mockTestSectionId;
+//   const secId = sec._id.toString();
+
+//   if (!sectionMap[secId]) {
+//     sectionMap[secId] = {
+//       sectionId: secId,
+//       sectionTitle: sec.title,
+//       questionType: sec.questionType,
+//       totalQuestions: sec.totalQuestions,
+//       questionsToAttempt: sec.questionsToAttempt,
+//       questions: []
+//     };
+//   }
+
+//   delete q.mockTestSectionId;
+
+//   sectionMap[secId].questions.push(q);
+// });
+
+// const sections = Object.values(sectionMap);
+
+//     const answers = await MockTestAnswer.find({
+//       attemptId
+//     });
+
+//     return res.json({
+//       attemptId,
+//       mockTest,
+//       startedAt: attempt.startedAt,
+//       durationSeconds: attempt.durationSeconds,
+//       remainingSeconds: remaining,
+//       sections,
+//       answers
+//     });
+
+//   } catch (err) {
+//     console.error("Get session error:", err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 export const getMockTestAttemptSession = async (req, res) => {
   try {
     const { attemptId } = req.params;
 
-    const attempt = await MockTestAttempt.findById(attemptId);
+    if (!mongoose.Types.ObjectId.isValid(attemptId)) {
+      return res.status(400).json({ message: "Invalid attemptId" });
+    }
+
+    const attempt = await MockTestAttempt.findById(attemptId)
+      .populate("mockTestId");
+
     if (!attempt) {
       return res.status(404).json({ message: "Attempt not found" });
     }
 
-    const mockTest = await MockTest.findById(attempt.mockTestId).select("-instructions").lean();
-    if (!mockTest) {
-      return res.status(404).json({ message: "Mock test not found" });
-    }
+    // sections
+    const sections = await MockTestSection.find({
+      mockTestId: attempt.mockTestId
+    }).sort({ sectionOrder: 1 });
 
-    // =====================
-    // expiry check
-    // =====================
-    const remaining = computeRemainingSeconds(attempt);
+    // questions
+    const questions = await MockTestQuestion.find({
+      mockTestId: attempt.mockTestId
+    }).sort({ questionOrder: 1 });
 
-    if (attempt.status === "IN_PROGRESS" && remaining <= 0) {
-      attempt.status = "EXPIRED";
-      attempt.submittedAt = new Date(
-        attempt.startedAt.getTime() +
-          attempt.durationSeconds * 1000
-      );
-      await attempt.save();
-
-      const result = await evaluateAttempt(attempt._id);
-
-      return res.json({
-        expired: true,
-        attemptId,
-        mockTest,
-        result
-      });
-    }
-
-    // =====================
-    // fetch questions
-    // =====================
-   const questionsRaw = await MockTestQuestion.find(
-  { mockTestId: attempt.mockTestId },
-  {
-    correctAnswer: 0,
-    numericAnswer: 0,
-    tolerance: 0,
-    answerExplanation: 0,
-    __v: 0
-  }
-)
-.populate("mockTestSectionId", "title questionType totalQuestions questionsToAttempt sectionOrder")
-.lean();
-
-// ===============================
-// sort by sectionOrder -> questionOrder
-// ===============================
-questionsRaw.sort((a, b) => {
-  const secA = a.mockTestSectionId.sectionOrder;
-  const secB = b.mockTestSectionId.sectionOrder;
-
-  if (secA !== secB) return secA - secB;
-  return a.questionOrder - b.questionOrder;
-});
-
-// ===============================
-// group into sections
-// ===============================
-const sectionMap = {};
-
-questionsRaw.forEach(q => {
-  const sec = q.mockTestSectionId;
-  const secId = sec._id.toString();
-
-  if (!sectionMap[secId]) {
-    sectionMap[secId] = {
-      sectionId: secId,
-      sectionTitle: sec.title,
-      questionType: sec.questionType,
-      totalQuestions: sec.totalQuestions,
-      questions: []
-    };
-  }
-
-  delete q.mockTestSectionId;
-
-  sectionMap[secId].questions.push(q);
-});
-
-const sections = Object.values(sectionMap);
-
+    // answers
     const answers = await MockTestAnswer.find({
       attemptId
     });
 
+    // map answers by questionId
+    const ansMap = {};
+    answers.forEach(a => {
+      ansMap[a.questionId.toString()] = a;
+    });
+
+    // merge questions into sections with state
+    const sectionMap = {};
+
+    sections.forEach(s => {
+      sectionMap[s._id] = {
+        sectionId: s._id,
+        sectionTitle: s.title,
+        questionType: s.questionType,
+        questionsToAttempt: s.questionsToAttempt,
+        questions: []
+      };
+    });
+
+    questions.forEach(q => {
+      const a = ansMap[q._id.toString()];
+
+      const state = {
+        isVisited: a?.isVisited || false,
+        isAnswered: a?.isAnswered || false,
+        isMarkedForReview: a?.isMarkedForReview || false,
+        selectedOptions: a?.selectedOptions || [],
+        numericAnswer: a?.numericAnswer ?? null
+      };
+
+      sectionMap[q.mockTestSectionId].questions.push({
+        _id: q._id,
+        questionText: q.questionText,
+        questionType: q.questionType,
+        questionImageUrl: q.questionImageUrl,
+        options: q.options,
+        marks: q.marks,
+        negativeMarks: q.negativeMarks,
+        questionOrder: q.questionOrder,
+        state
+      });
+    });
+
     return res.json({
-      attemptId,
-      mockTest,
+      attemptId: attempt._id,
+      mockTest: attempt.mockTestId,
       startedAt: attempt.startedAt,
-      durationSeconds: attempt.durationSeconds,
-      remainingSeconds: remaining,
-      sections,
-      answers
+      durationSeconds: attempt.mockTestId.durationMinutes * 60,
+      sections: Object.values(sectionMap)
     });
 
   } catch (err) {
-    console.error("Get session error:", err);
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
+export const markVisited = async (req, res) => {
+  try {
+    const { attemptId, questionId } = req.params;
+
+    await MockTestAnswer.findOneAndUpdate(
+      { attemptId, questionId },
+      { isVisited: true },
+      { upsert: true, new: true }
+    );
+
+    res.json({ ok: true });
+
+  } catch (e) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 export const saveAnswer = async (req, res) => {
   try {
@@ -522,6 +626,36 @@ export const saveAnswer = async (req, res) => {
     return res.status(500).json({
       message: "Internal Server Error"
     });
+  }
+};
+
+export const getAttemptStats = async (req, res) => {
+  try {
+    const { attemptId } = req.params;
+
+    const answers = await MockTestAnswer.find({ attemptId });
+
+    let visited = 0;
+    let answered = 0;
+    let marked = 0;
+    let answeredMarked = 0;
+
+    answers.forEach(a => {
+      if (a.isVisited) visited++;
+      if (a.isAnswered) answered++;
+      if (a.isMarkedForReview) marked++;
+      if (a.isAnswered && a.isMarkedForReview) answeredMarked++;
+    });
+
+    res.json({
+      visited,
+      answered,
+      marked,
+      answeredMarked
+    });
+
+  } catch (e) {
+    res.status(500).json({ message: "Server error" });
   }
 };
 

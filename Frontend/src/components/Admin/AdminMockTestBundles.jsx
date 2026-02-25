@@ -264,9 +264,9 @@ const AdminMockTestBundles = () => {
                 <button
                   onClick={() => openEditModal(bundle)}
                   className="p-2 border rounded text-blue-600
-                             hover:bg-blue-50 transition cursor-pointer"
+                             hover:bg-blue-50 transition cursor-pointer font-bold"
                 >
-                  <Pencil className="w-4 h-4" />
+                  <Pencil className="w-5 h-5" />
                 </button>
               </div>
 
