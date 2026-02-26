@@ -12,6 +12,8 @@ import {
   Award,
 } from "lucide-react";
 
+import dummyImage from "../../assets/user-img.jpeg";
+
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 /* ================= TIME ================= */
@@ -74,8 +76,8 @@ function PodiumCard({ user, rank, height, color, icon, highlight }) {
   return (
     <div className="flex flex-col items-center w-24 md:w-32">
       <img
-        src={user.photo}
-        alt=""
+        src={user.photo || dummyImage}
+        alt={user.name}
         className={`w-14 h-14 md:w-16 md:h-16 rounded-full object-cover border-4 ${
           highlight
             ? "border-yellow-400"
@@ -150,8 +152,8 @@ function LeaderRow({ u }) {
         <td className="p-3">
           <div className="flex items-center gap-3">
             <img
-              src={u.photo}
-              alt=""
+              src={u.photo || dummyImage}
+              alt={u.name}
               className="w-9 h-9 rounded-full object-cover"
             />
             <div className="font-medium text-gray-900 dark:text-gray-100">
