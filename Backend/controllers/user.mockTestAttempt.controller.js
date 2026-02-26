@@ -522,35 +522,6 @@ export const saveAnswer = async (req, res) => {
   }
 };
 
-export const getAttemptStats = async (req, res) => {
-  try {
-    const { attemptId } = req.params;
-
-    const answers = await MockTestAnswer.find({ attemptId });
-
-    let visited = 0;
-    let answered = 0;
-    let marked = 0;
-    let answeredMarked = 0;
-
-    answers.forEach((a) => {
-      if (a.isVisited) visited++;
-      if (a.isAnswered) answered++;
-      if (a.isMarkedForReview) marked++;
-      if (a.isAnswered && a.isMarkedForReview) answeredMarked++;
-    });
-
-    res.json({
-      visited,
-      answered,
-      marked,
-      answeredMarked,
-    });
-  } catch (e) {
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
 export const submitMockTest = async (req, res) => {
   try {
     const { attemptId } = req.params;
@@ -673,6 +644,42 @@ export const getAttemptResult = async (req, res) => {
     if (!attempts.length) {
       return res.status(404).json({
         message: "No completed attempts found",
+      });
+    }
+
+    const latestAttempt = attempts[0];
+
+    const latestResult = await MockTestResult.findOne({
+      attemptId: latestAttempt._id,
+    }).lean();
+
+    if (!latestResult.solutionsUnlocked) {
+      return res.json({
+        locked: true,
+
+        mockTest: {
+          id: mockTestId,
+          title: mockTest.title,
+          totalMarks: mockTest.totalMarks,
+          durationMinutes: mockTest.durationMinutes,
+          mockTestType: mockTest.mockTestType,
+          allowedAttempts: mockTest.allowedAttempts,
+        },
+
+        attempt: {
+          attemptNumber: latestAttempt.attemptNumber,
+          submittedAt: latestAttempt.submittedAt,
+        },
+
+        result: {
+          score: latestResult.score,
+          correctCount: latestResult.correctCount,
+          incorrectCount: latestResult.incorrectCount,
+          unattemptedCount: latestResult.unattemptedCount,
+          timeTakenSeconds: latestResult.timeTakenSeconds,
+        },
+
+        latestAttemptNumber: latestAttempt.attemptNumber,
       });
     }
 

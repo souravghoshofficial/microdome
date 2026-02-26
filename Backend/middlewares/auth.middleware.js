@@ -27,3 +27,25 @@ export const verifyJWT = async(req, _, next) => {
     }
     
 }
+
+
+export const optionalAuth = async (req, res, next) => {
+  try {
+    const token =
+      req.cookies?.accessToken ||
+      req.headers.authorization?.replace("Bearer ", "");
+
+    if (!token) return next(); // anonymous
+
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    const user = await User.findById(decoded._id).select("_id");
+
+    if (user) req.user = user;
+
+    next();
+  } catch (err) {
+    // ignore invalid token → treat as anonymous
+    next();
+  }
+};
