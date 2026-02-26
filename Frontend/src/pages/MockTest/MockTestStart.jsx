@@ -18,8 +18,6 @@ import debounce from "lodash.debounce";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
-
-
 /* ================= EXPIRED SCREEN ================= */
 
 function ExpiredScreen({ onViewResult, theme }) {
@@ -28,7 +26,6 @@ function ExpiredScreen({ onViewResult, theme }) {
       className={`${theme === "dark" ? "dark" : ""} fixed inset-0 z-50 flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
     >
       <div className="w-[420px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center">
-        
         {/* icon */}
         <div className="mx-auto mb-4 w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-500/15 flex items-center justify-center">
           <Clock className="w-7 h-7 text-amber-600 dark:text-amber-400" />
@@ -941,8 +938,8 @@ export default function MockTestStart() {
     );
   }
 
-  {
-    showExpiredScreen && (
+  if (showExpiredScreen) {
+    return (
       <ExpiredScreen theme={theme} onViewResult={handleViewExpiredResult} />
     );
   }
