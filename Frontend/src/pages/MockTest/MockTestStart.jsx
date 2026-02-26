@@ -18,6 +18,41 @@ import debounce from "lodash.debounce";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
+
+
+/* ================= EXPIRED SCREEN ================= */
+
+function ExpiredScreen({ onViewResult, theme }) {
+  return (
+    <div
+      className={`${theme === "dark" ? "dark" : ""} fixed inset-0 z-50 flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
+    >
+      <div className="w-[420px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center">
+        
+        {/* icon */}
+        <div className="mx-auto mb-4 w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-500/15 flex items-center justify-center">
+          <Clock className="w-7 h-7 text-amber-600 dark:text-amber-400" />
+        </div>
+
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Time is up
+        </h3>
+
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 mb-6">
+          Your mock test has been automatically submitted.
+        </p>
+
+        <button
+          onClick={onViewResult}
+          className="w-full py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+        >
+          View Result
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ================ ERROR SCREEN ================ //
 
 function ErrorScreen({ error, errorCode, navigate, theme }) {
@@ -126,34 +161,33 @@ function SubmitSuccessScreen({ attemptId, testId, navigate }) {
 
   return (
     <div
-  className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
->
-  <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center w-[420px]">
-    
-    {/* Icon */}
-    <div className="flex justify-center mb-3">
-      <CheckCircle2 className="w-12 h-12 text-green-600 dark:text-green-400" />
-    </div>
-
-    {/* Title */}
-    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-      Test Submitted Successfully
-    </h3>
-
-    {/* Subtitle */}
-    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 mb-6">
-      Your responses have been recorded.
-    </p>
-
-    {/* Button */}
-    <button
-      onClick={exitAndGo}
-      className="w-full cursor-pointer py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+      className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
     >
-      View Result
-    </button>
-  </div>
-</div>
+      <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center w-[420px]">
+        {/* Icon */}
+        <div className="flex justify-center mb-3">
+          <CheckCircle2 className="w-12 h-12 text-green-600 dark:text-green-400" />
+        </div>
+
+        {/* Title */}
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Test Submitted Successfully
+        </h3>
+
+        {/* Subtitle */}
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 mb-6">
+          Your responses have been recorded.
+        </p>
+
+        {/* Button */}
+        <button
+          onClick={exitAndGo}
+          className="w-full cursor-pointer py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+        >
+          View Result
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -494,6 +528,8 @@ export default function MockTestStart() {
   const [autoSubmitted, setAutoSubmitted] = useState(false);
   const [error, setError] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
+  const [showExpiredScreen, setShowExpiredScreen] = useState(false);
+  const [expiredAttemptId, setExpiredAttemptId] = useState(null);
 
   const remaining = useExamTimer(startedAt, durationSeconds);
 
@@ -564,6 +600,16 @@ export default function MockTestStart() {
     });
   }, [sections]);
 
+  const handleViewExpiredResult = async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+    } catch {}
+
+    navigate(`/mock-tests/${testId}/result`, { replace: true });
+  };
+
   /* ===== INIT ===== */
 
   useEffect(() => {
@@ -586,7 +632,8 @@ export default function MockTestStart() {
 
       // ===== CASE 1: expired attempt =====
       if (data.expired) {
-        navigate(`/mock-tests/${testId}/result`, { replace: true });
+        setExpiredAttemptId(data.attemptId);
+        setShowExpiredScreen(true);
         return;
       }
 
@@ -894,6 +941,12 @@ export default function MockTestStart() {
     );
   }
 
+  {
+    showExpiredScreen && (
+      <ExpiredScreen theme={theme} onViewResult={handleViewExpiredResult} />
+    );
+  }
+
   return (
     <div
       className={`${theme === "dark" ? "dark" : ""} min-h-screen bg-gray-50 dark:bg-gray-950 dark:text-gray-200`}
@@ -1107,7 +1160,6 @@ export default function MockTestStart() {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
