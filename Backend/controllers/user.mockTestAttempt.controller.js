@@ -870,13 +870,26 @@ export const getMockTestLeaderboard = async (req, res) => {
     }
 
     /* ===============================
+       FETCH MOCK TEST META
+    =============================== */
+
+    const mockTest = await MockTest.findById(mockTestId)
+      .select("title durationMinutes totalMarks mockTestType")
+      .lean();
+
+    if (!mockTest) {
+      return res.status(404).json({
+        message: "Mock test not found",
+      });
+    }
+
+    /* ===============================
        BEST ATTEMPT PER USER
     =============================== */
 
     const bestAttempts = await MockTestResult.aggregate([
       { $match: { mockTestId: new mongoose.Types.ObjectId(mockTestId) } },
 
-      // sort by best first
       {
         $sort: {
           score: -1,
@@ -885,7 +898,6 @@ export const getMockTestLeaderboard = async (req, res) => {
         },
       },
 
-      // pick best per user
       {
         $group: {
           _id: "$userId",
@@ -893,10 +905,8 @@ export const getMockTestLeaderboard = async (req, res) => {
         },
       },
 
-      // flatten
       { $replaceRoot: { newRoot: "$best" } },
 
-      // final rank sort
       {
         $sort: {
           score: -1,
@@ -939,7 +949,7 @@ export const getMockTestLeaderboard = async (req, res) => {
     const userMap = new Map(users.map((u) => [u._id.toString(), u]));
 
     /* ===============================
-       FETCH OTHER ATTEMPTS
+       FETCH ALL ATTEMPTS
     =============================== */
 
     const allAttempts = await MockTestResult.find({
@@ -987,8 +997,18 @@ export const getMockTestLeaderboard = async (req, res) => {
       };
     });
 
+    /* ===============================
+       RESPONSE
+    =============================== */
+
     return res.json({
-      mockTestId,
+      mockTest: {
+        _id: mockTest._id,
+        title: mockTest.title,
+        durationMinutes: mockTest.durationMinutes,
+        totalMarks: mockTest.totalMarks,
+        mockTestType: mockTest.mockTestType,
+      },
       totalParticipants: leaderboard.length,
       leaderboard,
     });

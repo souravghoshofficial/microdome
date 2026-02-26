@@ -1,41 +1,360 @@
-import { useParams } from "react-router";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import {
+  Trophy,
+  Medal,
+  Clock,
+  ChevronDown,
+  AlertCircle,
+  Hash,
+  Award,
+} from "lucide-react";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
-const MockTestLeaderboard = () => {
-  const { testId } = useParams();
-  const theme = useSelector((state) => state.theme.theme);
-  
+/* ================= TIME ================= */
+
+function formatTime(sec) {
+  if (sec == null) return "—";
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}m ${s}s`;
+}
+
+/* ================= PODIUM ================= */
+
+function Podium({ top3 }) {
+  if (!top3.length) return null;
+
+  const [first, second, third] = top3;
+
   return (
-    <div className={`w-full min-h-screen flex justify-center bg-white dark:bg-gray-950 text-black dark:text-white ${theme === 'dark' ? 'dark' : ''}`}>
-      <div className="my-24 md:my-32 w-[90%] max-w-4xl">
+    <div className="flex items-end justify-center gap-4 md:gap-8 mt-10 mb-14">
+      {second && (
+        <PodiumCard
+          user={second}
+          rank={2}
+          height="h-28"
+          color="bg-gray-200 dark:bg-gray-700"
+          icon={<Medal className="w-5 h-5 text-gray-800 dark:text-gray-100" />}
+        />
+      )}
 
-        <h1 className="text-3xl font-bold">Leaderboard</h1>
+      {first && (
+        <PodiumCard
+          user={first}
+          rank={1}
+          height="h-36"
+          color="bg-yellow-300 dark:bg-yellow-500"
+          icon={
+            <Trophy className="w-6 h-6 text-yellow-900 dark:text-yellow-100" />
+          }
+          highlight
+        />
+      )}
 
-        <div className="mt-8 border rounded-xl overflow-hidden">
+      {third && (
+        <PodiumCard
+          user={third}
+          rank={3}
+          height="h-24"
+          color="bg-amber-600/80"
+          icon={<Medal className="w-5 h-5 text-white" />}
+        />
+      )}
+    </div>
+  );
+}
+
+function PodiumCard({ user, rank, height, color, icon, highlight }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="flex flex-col items-center w-24 md:w-32">
+      <img
+        src={user.photo}
+        alt=""
+        className={`w-14 h-14 md:w-16 md:h-16 rounded-full object-cover border-4 ${
+          highlight
+            ? "border-yellow-400"
+            : "border-gray-200 dark:border-gray-700"
+        }`}
+      />
+
+      <div className="mt-2 text-center">
+        <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+          {user.name}
+        </div>
+
+        <div className="text-xs text-gray-600 dark:text-gray-300">
+          Attempt {user.bestAttempt.attemptNumber} •{" "}
+          {user.bestAttempt.score} •{" "}
+          {formatTime(user.bestAttempt.timeTakenSeconds)}
+        </div>
+      </div>
+
+      {user.attempts.length > 1 && (
+        <button
+          onClick={() => setOpen(!open)}
+          className="mt-1 flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400"
+        >
+          Attempts
+          <ChevronDown
+            className={`w-3 h-3 transition ${
+              open ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+      )}
+
+      <div
+        className={`mt-2 w-full rounded-t-xl flex items-center justify-center ${height} ${color}`}
+      >
+        <div className="flex flex-col items-center text-sm font-bold">
+          {icon}
+          <span className="text-gray-900 dark:text-gray-100">#{rank}</span>
+        </div>
+      </div>
+
+      {open && (
+        <div className="mt-2 w-full space-y-1">
+          {user.attempts.map((a) => (
+            <div
+              key={a.attemptNumber}
+              className="text-[11px] px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-center"
+            >
+              Attempt {a.attemptNumber} • {a.score} •{" "}
+              {formatTime(a.timeTakenSeconds)}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ================= ROW ================= */
+
+function LeaderRow({ u }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <tr className="border-t border-gray-200 dark:border-gray-800">
+        <td className="p-3 font-semibold text-gray-900 dark:text-gray-100">
+          {u.rank}
+        </td>
+
+        <td className="p-3">
+          <div className="flex items-center gap-3">
+            <img
+              src={u.photo}
+              alt=""
+              className="w-9 h-9 rounded-full object-cover"
+            />
+            <div className="font-medium text-gray-900 dark:text-gray-100">
+              {u.name}
+            </div>
+          </div>
+        </td>
+
+        <td className="p-3 font-semibold text-gray-900 dark:text-gray-100">
+          Attempt {u.bestAttempt.attemptNumber} • {u.bestAttempt.score}
+        </td>
+
+        <td className="p-3 text-gray-600 dark:text-gray-300">
+          <div className="flex items-center gap-1">
+            <Clock className="w-4 h-4" />
+            {formatTime(u.bestAttempt.timeTakenSeconds)}
+          </div>
+        </td>
+
+        <td className="p-3 text-right">
+          {u.attempts.length > 1 && (
+            <button
+              onClick={() => setOpen(!open)}
+              className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400"
+            >
+              Attempts
+              <ChevronDown
+                className={`w-4 h-4 transition ${
+                  open ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+          )}
+        </td>
+      </tr>
+
+      {open && (
+        <tr className="bg-gray-50 dark:bg-gray-900/40">
+          <td colSpan="5" className="px-6 py-3">
+            <div className="flex flex-wrap gap-3">
+              {u.attempts.map((a) => (
+                <div
+                  key={a.attemptNumber}
+                  className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs text-gray-800 dark:text-gray-200"
+                >
+                  Attempt {a.attemptNumber} • {a.score} •{" "}
+                  {formatTime(a.timeTakenSeconds)}
+                </div>
+              ))}
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
+  );
+}
+
+/* ================= ERROR ================= */
+
+function Blocked({ msg, navigate }) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+      <div className="text-center max-w-sm">
+        <div className="mx-auto mb-4 w-14 h-14 rounded-full bg-red-100 dark:bg-red-500/15 flex items-center justify-center">
+          <AlertCircle className="w-7 h-7 text-red-600 dark:text-red-400" />
+        </div>
+
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          Leaderboard Locked
+        </h2>
+
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          {msg}
+        </p>
+
+        <button
+          onClick={() => navigate("/mock-tests")}
+          className="mt-6 px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+        >
+          Back to Tests
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ================= MAIN ================= */
+
+export default function MockTestLeaderboard() {
+  const { testId } = useParams();
+  const theme = useSelector((s) => s.theme.theme);
+  const navigate = useNavigate();
+
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchBoard();
+  }, []);
+
+  const fetchBoard = async () => {
+    try {
+      const res = await axios.get(
+        `${ApiUrl}/user/mock-tests/${testId}/leaderboard`,
+        { withCredentials: true },
+      );
+      setData(res.data);
+    } catch (e) {
+      if (e.response?.status === 403) {
+        setError(e.response.data.message);
+      } else {
+        setError("Failed to load leaderboard");
+      }
+    }
+  };
+
+  if (error) {
+    return <Blocked msg={error} navigate={navigate} />;
+  }
+
+  if (!data) {
+    return (
+      <div
+        className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
+      >
+        <div className="text-gray-600 dark:text-gray-400">
+          Loading leaderboard…
+        </div>
+      </div>
+    );
+  }
+
+  const top3 = data.leaderboard.slice(0, 3);
+  const rest = data.leaderboard.slice(3);
+  const meta = data.mockTest;
+
+  return (
+    <div
+      className={`${theme === "dark" ? "dark" : ""} min-h-screen bg-white dark:bg-gray-950`}
+    >
+      <div className="max-w-5xl mx-auto px-4 py-12">
+        {/* HEADER WITH META */}
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            {meta?.title || "Leaderboard"}
+          </h1>
+
+          {meta && (
+            <div className="mt-2 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-1">
+                <Hash className="w-4 h-4" />
+                {meta.mockTestType}
+              </div>
+
+              <div className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                {meta.durationMinutes} min
+              </div>
+
+              <div className="flex items-center gap-1">
+                <Award className="w-4 h-4" />
+                {meta.totalMarks} marks
+              </div>
+
+              <div className="ml-auto">
+                {data.totalParticipants} participants
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* PODIUM */}
+        <Podium top3={top3} />
+
+        {/* TABLE */}
+        <div className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-gray-100 dark:bg-gray-900">
               <tr>
-                <th className="p-3 text-left">Rank</th>
-                <th className="p-3 text-left">User</th>
-                <th className="p-3 text-left">Score</th>
+                <th className="p-3 text-left text-gray-700 dark:text-gray-300">
+                  Rank
+                </th>
+                <th className="p-3 text-left text-gray-700 dark:text-gray-300">
+                  User
+                </th>
+                <th className="p-3 text-left text-gray-700 dark:text-gray-300">
+                  Best Attempt
+                </th>
+                <th className="p-3 text-left text-gray-700 dark:text-gray-300">
+                  Time
+                </th>
+                <th></th>
               </tr>
             </thead>
 
             <tbody>
-              <tr className="border-t">
-                <td className="p-3">1</td>
-                <td className="p-3">User A</td>
-                <td className="p-3">95</td>
-              </tr>
+              {rest.map((u) => (
+                <LeaderRow key={u.userId} u={u} />
+              ))}
             </tbody>
           </table>
         </div>
-
       </div>
     </div>
   );
-};
-
-export default MockTestLeaderboard;
+}

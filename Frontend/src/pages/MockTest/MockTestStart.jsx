@@ -41,7 +41,7 @@ function ExpiredScreen({ onViewResult, theme }) {
 
         <button
           onClick={onViewResult}
-          className="w-full py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+          className="w-full cursor-pointer py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
         >
           View Result
         </button>
