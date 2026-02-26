@@ -46,6 +46,16 @@ function ErrorScreen({ error, errorCode, navigate, theme }) {
 
   const { title, icon: Icon } = config[errorCode] || config[500];
 
+  const exitFullscreenIfActive = async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+    } catch (e) {
+      console.warn("Fullscreen exit failed", e);
+    }
+  };
+
   return (
     <div
       className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
@@ -66,13 +76,84 @@ function ErrorScreen({ error, errorCode, navigate, theme }) {
 
         {/* Action */}
         <button
-          onClick={() => navigate("/mock-tests")}
+          onClick={async () => {
+            await exitFullscreenIfActive();
+            navigate("/mock-tests");
+          }}
           className="mt-6 px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
         >
           Back to Mock Tests
         </button>
       </div>
     </div>
+  );
+}
+
+function SubmittingScreen({ auto }) {
+  const theme = useSelector((s) => s.theme.theme);
+  return (
+    <div
+      className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-black/50 backdrop-blur-sm`}
+    >
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl px-8 py-7 shadow-2xl border border-gray-200 dark:border-zinc-700 text-center">
+        <div className="mx-auto mb-4 w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin" />
+
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          {auto ? "Time is up" : "Submitting Test"}
+        </h3>
+
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          {auto
+            ? "Your test is being submitted automatically"
+            : "Please wait while we submit your answers"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function SubmitSuccessScreen({ attemptId, testId, navigate }) {
+  const theme = useSelector((s) => s.theme.theme);
+  const exitAndGo = async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+    } catch {}
+
+    navigate(`/mock-tests/${testId}/result`, { replace: true });
+  };
+
+  return (
+    <div
+  className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
+>
+  <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center w-[420px]">
+    
+    {/* Icon */}
+    <div className="flex justify-center mb-3">
+      <CheckCircle2 className="w-12 h-12 text-green-600 dark:text-green-400" />
+    </div>
+
+    {/* Title */}
+    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+      Test Submitted Successfully
+    </h3>
+
+    {/* Subtitle */}
+    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 mb-6">
+      Your responses have been recorded.
+    </p>
+
+    {/* Button */}
+    <button
+      onClick={exitAndGo}
+      className="w-full cursor-pointer py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+    >
+      View Result
+    </button>
+  </div>
+</div>
   );
 }
 
@@ -409,7 +490,7 @@ export default function MockTestStart() {
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitState, setSubmitState] = useState("IDLE");
   const [autoSubmitted, setAutoSubmitted] = useState(false);
   const [error, setError] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
@@ -708,12 +789,12 @@ export default function MockTestStart() {
 
   /* ===== SUBMIT ===== */
 
-  const handleAutoSubmit = async () => {
-    if (isSubmitting) return;
+  const handleSubmit = async (auto = false) => {
+    if (submitState !== "IDLE") return;
 
     try {
-      setIsSubmitting(true);
-      setAutoSubmitted(true);
+      setAutoSubmitted(auto);
+      setSubmitState("SUBMITTING");
 
       await axios.post(
         `${ApiUrl}/user/mock-tests/attempt/${attemptId}/submit`,
@@ -721,33 +802,15 @@ export default function MockTestStart() {
         { withCredentials: true },
       );
 
-      // redirect after short delay
-      setTimeout(() => {
-        navigate(`/mock-tests/${testId}/result`);
-      }, 1800);
+      setSubmitState("SUBMITTED");
     } catch (e) {
-      console.error("Auto submit failed", e);
+      console.error("Submit failed", e);
+      setSubmitState("IDLE");
     }
   };
 
-  const submitTest = async () => {
-    if (isSubmitting) return;
-
-    try {
-      setIsSubmitting(true);
-
-      await axios.post(
-        `${ApiUrl}/user/mock-tests/attempt/${attemptId}/submit`,
-        {},
-        { withCredentials: true },
-      );
-
-      navigate(`/mock-tests/${testId}/result`);
-    } catch (e) {
-      console.error(e);
-      setIsSubmitting(false);
-    }
-  };
+  const submitTest = () => handleSubmit(false);
+  const handleAutoSubmit = () => handleSubmit(true);
 
   /* ===== PREVIOUS AND NEXT ===== */
 
@@ -813,6 +876,20 @@ export default function MockTestStart() {
         errorCode={errorCode}
         navigate={navigate}
         theme={theme}
+      />
+    );
+  }
+
+  if (submitState === "SUBMITTING") {
+    return <SubmittingScreen auto={autoSubmitted} />;
+  }
+
+  if (submitState === "SUBMITTED") {
+    return (
+      <SubmitSuccessScreen
+        attemptId={attemptId}
+        testId={testId}
+        navigate={navigate}
       />
     );
   }
@@ -1031,24 +1108,6 @@ export default function MockTestStart() {
           </div>
         )}
 
-        {isSubmitting && (
-          <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl px-8 py-7 shadow-2xl border border-gray-200 dark:border-zinc-700 text-center">
-              {/* Spinner */}
-              <div className="mx-auto mb-4 w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin" />
-
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {autoSubmitted ? "Time is up" : "Submitting Test"}
-              </h3>
-
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                {autoSubmitted
-                  ? "Your test is being submitted automatically"
-                  : "Please wait while we submit your answers"}
-              </p>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
