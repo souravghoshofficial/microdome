@@ -128,3 +128,81 @@ export const checkAttemptOwnership = async (req,res,next)=>{
   req.attempt = attempt;
   next();
 };
+
+
+export const ensureNoAttemptsLeft = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const { mockTestId } = req.params;
+
+    const mockTest = await MockTest.findById(mockTestId).lean();
+    if (!mockTest) {
+      return res.status(404).json({ message: "Mock test not found" });
+    }
+
+    const attempts = await MockTestAttempt.countDocuments({
+      userId,
+      mockTestId,
+    });
+
+    if (attempts < mockTest.allowedAttempts) {
+      return res.status(403).json({
+        message: "Result available after completing all attempts",
+        attemptsUsed: attempts,
+        allowedAttempts: mockTest.allowedAttempts,
+      });
+    }
+
+    next();
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: "Attempt check failed" });
+  }
+};
+
+
+
+export const requireAttemptedMockTest = async (req, res, next) => {
+  try {
+    const { mockTestId } = req.params;
+    const userId = req.user?._id;
+
+    /* ===============================
+       VALIDATION
+    =============================== */
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({
+        message: "Invalid mock test id",
+      });
+    }
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    /* ===============================
+       CHECK COMPLETED ATTEMPT
+       (SUBMITTED or EXPIRED)
+    =============================== */
+    const attempted = await MockTestAttempt.exists({
+      userId,
+      mockTestId,
+      status: { $in: ["SUBMITTED", "EXPIRED"] },
+    });
+
+    if (!attempted) {
+      return res.status(403).json({
+        message: "You must attempt this mock test to view leaderboard",
+      });
+    }
+
+    next();
+  } catch (err) {
+    console.error("requireAttemptedMockTest:", err);
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};

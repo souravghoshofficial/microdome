@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router";
-import { PlayCircle } from "lucide-react";
+import { PlayCircle, AlertCircle } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -16,9 +16,7 @@ const MockTestInstructions = () => {
   const [error, setError] = useState(null);
   const [isEnrolled, setIsEnrolled] = useState(true);
 
-  // Modal state
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState(null); // "start" or "cancel"
+  const [showStartModal, setShowStartModal] = useState(false);
 
   useEffect(() => {
     const fetchMockTestInstructions = async () => {
@@ -32,8 +30,6 @@ const MockTestInstructions = () => {
 
         setMockTestDetails(res.data.data);
       } catch (error) {
-        console.error(error);
-
         if (error.response) {
           if (error.response.status === 403) {
             setIsEnrolled(false);
@@ -51,39 +47,15 @@ const MockTestInstructions = () => {
       }
     };
 
-    if (testId) {
-      fetchMockTestInstructions();
-    }
+    if (testId) fetchMockTestInstructions();
   }, [testId]);
 
-  // 🔵 Open Modal
-  const openModal = (type) => {
-    setModalType(type);
-    setShowModal(true);
-  };
-
-  // 🔴 Close Modal
-  const closeModal = () => {
-    setShowModal(false);
-    setModalType(null);
-  };
-
-  // ✅ Confirm Action and Navigate with Fullscreen for Start
-  const handleConfirm = () => {
-    if (modalType === "cancel") {
-      navigate(-1);
-      return;
+  const startTest = () => {
+    const el = document.documentElement;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().catch(() => {});
     }
-
-    if (modalType === "start") {
-      // request fullscreen
-      const el = document.documentElement;
-      if (el.requestFullscreen) {
-        el.requestFullscreen().catch(() => {});
-      }
-
-      navigate(`/mock-tests/${testId}/start`);
-    }
+    navigate(`/mock-tests/${testId}/start`);
   };
 
   return (
@@ -93,19 +65,19 @@ const MockTestInstructions = () => {
       }`}
     >
       <div className="my-16 w-[90%] max-w-4xl">
-        {/* 🔵 Loading */}
+        {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center h-screen">
             <div className="w-9 h-9 rounded-full border-4 border-gray-200 border-t-blue-600 animate-spin" />
           </div>
         )}
 
-        {/* 🔴 Error */}
+        {/* Error */}
         {!loading && error && (
           <div className="text-center text-red-500 font-semibold">{error}</div>
         )}
 
-        {/* 🟢 Success */}
+        {/* Content */}
         {!loading && !error && mockTestDetails && (
           <>
             <h1 className="text-3xl font-bold">{mockTestDetails.title}</h1>
@@ -116,10 +88,9 @@ const MockTestInstructions = () => {
             </div>
 
             <div className="mt-6 space-y-3 text-gray-700 dark:text-gray-300">
-              {mockTestDetails.instructions &&
-              mockTestDetails.instructions.length > 0 ? (
-                mockTestDetails.instructions.map((instruction, index) => (
-                  <p key={index}>• {instruction}</p>
+              {mockTestDetails.instructions?.length ? (
+                mockTestDetails.instructions.map((inst, i) => (
+                  <p key={i}>• {inst}</p>
                 ))
               ) : (
                 <>
@@ -133,18 +104,18 @@ const MockTestInstructions = () => {
             {/* Buttons */}
             <div className="mt-8 flex gap-4">
               <button
-                onClick={() => openModal("cancel")}
-                className="px-6 py-3 rounded-lg font-semibold border border-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer"
+                onClick={() => navigate(-1)}
+                className="px-6 py-3 rounded-lg font-semibold border border-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer"
               >
-                Cancel Test
+                Cancel
               </button>
 
               <button
-                onClick={() => openModal("start")}
+                onClick={() => setShowStartModal(true)}
                 disabled={!isEnrolled}
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white cursor-pointer ${
+                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition ${
                   isEnrolled
-                    ? "bg-blue-600 hover:bg-blue-700"
+                    ? "bg-blue-600 hover:bg-blue-700 cursor-pointer"
                     : "bg-gray-400 cursor-not-allowed"
                 }`}
               >
@@ -156,33 +127,42 @@ const MockTestInstructions = () => {
         )}
       </div>
 
-      {/* Confirmation Modal */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-lg bg-black/50 z-50">
-          <div className="bg-white dark:bg-zinc-800 p-6 rounded-xl w-[90%] max-w-md shadow-lg">
-            <h2 className="text-xl font-bold mb-4">
-              {modalType === "start" ? "Start Mock Test?" : "Cancel Mock Test?"}
+      {/* START CONFIRM MODAL */}
+      {showStartModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="relative w-[92%] max-w-md rounded-2xl bg-white dark:bg-zinc-900 shadow-2xl border border-gray-200 dark:border-zinc-700 p-6">
+            {/* Icon */}
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/40">
+                <AlertCircle className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+            </div>
+
+            {/* Title */}
+            <h2 className="text-lg font-semibold text-center text-gray-900 dark:text-gray-100">
+              Start Mock Test
             </h2>
 
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              {modalType === "start"
-                ? "Once started, the test will run in full-screen mode and cannot be paused. Continue?"
-                : "Are you sure you want to cancel and go back?"}
+            {/* Message */}
+            <p className="mt-2 text-sm text-center text-gray-600 dark:text-gray-400">
+              The test will open in full-screen mode and the timer will start
+              immediately. You cannot pause once started.
             </p>
 
-            <div className="flex justify-end gap-4">
+            {/* Buttons */}
+            <div className="mt-6 flex gap-3">
               <button
-                onClick={closeModal}
-                className="px-5 py-1.5 rounded-lg border border-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-600 cursor-pointer"
+                onClick={() => setShowStartModal(false)}
+                className="flex-1 py-2 cursor-pointer rounded-lg border border-gray-300 dark:border-zinc-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 transition"
               >
-                No
+                Cancel
               </button>
 
               <button
-                onClick={handleConfirm}
-                className="px-5 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                onClick={startTest}
+                className="flex-1 py-2 cursor-pointer rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition"
               >
-                Yes
+                Start Test
               </button>
             </div>
           </div>

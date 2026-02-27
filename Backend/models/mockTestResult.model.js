@@ -6,51 +6,52 @@ const mockTestResultSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "MockTestAttempt",
       required: true,
-      unique: true
+      unique: true,
     },
 
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
+      index: true,
     },
 
     mockTestId: {
       type: Schema.Types.ObjectId,
       ref: "MockTest",
-      required: true
+      required: true,
+      index: true,
     },
 
     bundleId: {
       type: Schema.Types.ObjectId,
       ref: "MockTestBundle",
-      default: null
+      default: null,
     },
 
-    score: {
+    /* ===== leaderboard fields ===== */
+
+    attemptNumber: {
       type: Number,
-      default: 0
+      required: true,
     },
 
-    correctCount: {
-      type: Number,
-      default: 0
+    timeTakenSeconds: {
+      type: Number, // duration user actually used
+      required: true,
     },
 
-    incorrectCount: {
-      type: Number,
-      default: 0
-    },
+    /* ===== score ===== */
 
-    unattemptedCount: {
-      type: Number,
-      default: 0
-    },
+    score: { type: Number, default: 0 },
+    correctCount: { type: Number, default: 0 },
+    incorrectCount: { type: Number, default: 0 },
+    unattemptedCount: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const MockTestResult = mongoose.model(
   "MockTestResult",
-  mockTestResultSchema
+  mockTestResultSchema,
 );

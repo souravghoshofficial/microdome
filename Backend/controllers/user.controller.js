@@ -346,7 +346,7 @@ const updateUserAvatar = async (req, res) => {
     req.user?._id,
     {
       $set: {
-        profileImage: profileImage.url,
+        profileImage: profileImage.secure_url,
       },
     },
     { new: true }

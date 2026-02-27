@@ -1,12 +1,192 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
-import { Clock, CheckCircle2, ChevronDown } from "lucide-react";
+import {
+  Clock,
+  CheckCircle2,
+  ChevronDown,
+  AlertTriangle,
+  AlertCircle,
+  Lock,
+  ShieldX,
+  SearchX,
+  ServerCrash,
+} from "lucide-react";
 import { toast, Toaster } from "react-hot-toast";
 import debounce from "lodash.debounce";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
+
+/* ================= EXPIRED SCREEN ================= */
+
+function ExpiredScreen({ onViewResult, theme }) {
+  return (
+    <div
+      className={`${theme === "dark" ? "dark" : ""} fixed inset-0 z-50 flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
+    >
+      <div className="w-[420px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center">
+        {/* icon */}
+        <div className="mx-auto mb-4 w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-500/15 flex items-center justify-center">
+          <Clock className="w-7 h-7 text-amber-600 dark:text-amber-400" />
+        </div>
+
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Time is up
+        </h3>
+
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 mb-6">
+          Your mock test has been automatically submitted.
+        </p>
+
+        <button
+          onClick={onViewResult}
+          className="w-full cursor-pointer py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+        >
+          View Result
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ================ ERROR SCREEN ================ //
+
+function ErrorScreen({ error, errorCode, navigate, theme }) {
+  const config = {
+    400: {
+      title: "Invalid Test",
+      icon: AlertCircle,
+    },
+    401: {
+      title: "Login Required",
+      icon: Lock,
+    },
+    403: {
+      title: "Access Denied",
+      icon: ShieldX,
+    },
+    404: {
+      title: "Test Not Found",
+      icon: SearchX,
+    },
+    500: {
+      title: "Server Error",
+      icon: ServerCrash,
+    },
+  };
+
+  const { title, icon: Icon } = config[errorCode] || config[500];
+
+  const exitFullscreenIfActive = async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+    } catch (e) {
+      console.warn("Fullscreen exit failed", e);
+    }
+  };
+
+  return (
+    <div
+      className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
+    >
+      <div className="text-center max-w-md px-6">
+        {/* Icon */}
+        <div className="mx-auto mb-4 w-14 h-14 rounded-full bg-red-100 dark:bg-red-500/15 flex items-center justify-center">
+          <Icon className="w-7 h-7 text-red-600 dark:text-red-400" />
+        </div>
+
+        {/* Title */}
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          {title}
+        </h2>
+
+        {/* Message */}
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{error}</p>
+
+        {/* Action */}
+        <button
+          onClick={async () => {
+            await exitFullscreenIfActive();
+            navigate("/mock-tests");
+          }}
+          className="mt-6 px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
+        >
+          Back to Mock Tests
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function SubmittingScreen({ auto }) {
+  const theme = useSelector((s) => s.theme.theme);
+  return (
+    <div
+      className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-black/50 backdrop-blur-sm`}
+    >
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl px-8 py-7 shadow-2xl border border-gray-200 dark:border-zinc-700 text-center">
+        <div className="mx-auto mb-4 w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin" />
+
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          {auto ? "Time is up" : "Submitting Test"}
+        </h3>
+
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          {auto
+            ? "Your test is being submitted automatically"
+            : "Please wait while we submit your answers"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function SubmitSuccessScreen({ attemptId, testId, navigate }) {
+  const theme = useSelector((s) => s.theme.theme);
+  const exitAndGo = async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+    } catch {}
+
+    navigate(`/mock-tests/${testId}/result`, { replace: true });
+  };
+
+  return (
+    <div
+      className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
+    >
+      <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center w-[420px]">
+        {/* Icon */}
+        <div className="flex justify-center mb-3">
+          <CheckCircle2 className="w-12 h-12 text-green-600 dark:text-green-400" />
+        </div>
+
+        {/* Title */}
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Test Submitted Successfully
+        </h3>
+
+        {/* Subtitle */}
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 mb-6">
+          Your responses have been recorded.
+        </p>
+
+        {/* Button */}
+        <button
+          onClick={exitAndGo}
+          className="w-full cursor-pointer py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+        >
+          View Result
+        </button>
+      </div>
+    </div>
+  );
+}
 
 /* ================= UI ================= */
 
@@ -20,13 +200,24 @@ function Card({ children, className = "" }) {
   );
 }
 
+function Stat({ label, value, color }) {
+  return (
+    <>
+      <div className="text-gray-500 dark:text-gray-400">{label}</div>
+      <div className={`font-semibold ${color}`}>{value}</div>
+    </>
+  );
+}
+
 function Button({ children, onClick, variant = "primary", className = "" }) {
-  const base = "px-4 py-2 rounded-xl font-medium transition";
+  const base =
+    "px-4 py-2.5 md:py-2 rounded-xl font-medium transition hover:translate-y-[-2px]";
   const styles = {
     primary: "bg-blue-600 text-white hover:bg-blue-700",
     success: "bg-green-600 text-white hover:bg-green-700",
     danger: "bg-red-600 text-white hover:bg-red-700",
-    ghost: "bg-gray-200 dark:bg-gray-800",
+    ghost:
+      "border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800",
     purple: "bg-purple-600 text-white hover:bg-purple-700",
   };
   return (
@@ -42,14 +233,19 @@ function Button({ children, onClick, variant = "primary", className = "" }) {
 /* ================= TIMER ================= */
 
 function useExamTimer(startedAt, durationSeconds) {
-  const [remaining, setRemaining] = useState(durationSeconds);
+  const [remaining, setRemaining] = useState(null);
 
   useEffect(() => {
     if (!startedAt || !durationSeconds) return;
+
     const end = new Date(startedAt).getTime() + durationSeconds * 1000;
-    const id = setInterval(() => {
+
+    const tick = () =>
       setRemaining(Math.max(0, Math.floor((end - Date.now()) / 1000)));
-    }, 1000);
+
+    tick(); // immediate sync
+    const id = setInterval(tick, 1000);
+
     return () => clearInterval(id);
   }, [startedAt, durationSeconds]);
 
@@ -314,6 +510,7 @@ function QuestionView({ q, answer, onAnswer }) {
 export default function MockTestStart() {
   const { testId } = useParams();
   const theme = useSelector((s) => s.theme.theme);
+  const navigate = useNavigate();
 
   const [attemptId, setAttemptId] = useState(null);
   const [mockTest, setMockTest] = useState(null);
@@ -323,8 +520,17 @@ export default function MockTestStart() {
   const [startedAt, setStartedAt] = useState(null);
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [submitState, setSubmitState] = useState("IDLE");
+  const [autoSubmitted, setAutoSubmitted] = useState(false);
+  const [error, setError] = useState(null);
+  const [errorCode, setErrorCode] = useState(null);
+  const [showExpiredScreen, setShowExpiredScreen] = useState(false);
+  const [expiredAttemptId, setExpiredAttemptId] = useState(null);
 
   const remaining = useExamTimer(startedAt, durationSeconds);
+
+  const timerReady = durationSeconds > 0 && startedAt;
 
   const currentSection = sections[activeSection];
   const currentQuestions = currentSection?.questions || [];
@@ -379,6 +585,28 @@ export default function MockTestStart() {
     };
   }, [sections]);
 
+  const sectionStats = useMemo(() => {
+    return sections.map((sec) => {
+      const answered = sec.questions.filter((q) => q.state?.isAnswered).length;
+
+      return {
+        title: sec.sectionTitle,
+        answered,
+        limit: sec.questionsToAttempt,
+      };
+    });
+  }, [sections]);
+
+  const handleViewExpiredResult = async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+    } catch {}
+
+    navigate(`/mock-tests/${testId}/result`, { replace: true });
+  };
+
   /* ===== INIT ===== */
 
   useEffect(() => {
@@ -386,26 +614,64 @@ export default function MockTestStart() {
   }, []);
 
   const init = async () => {
-    const startRes = await axios.post(
-      `${ApiUrl}/user/mock-tests/${testId}/start`,
-      {},
-      { withCredentials: true },
-    );
+    try {
+      setLoading(true);
+      setError(null);
+      setErrorCode(null);
 
-    const { attemptId, startedAt, durationSeconds, mockTest } = startRes.data;
-    setAttemptId(attemptId);
-    setStartedAt(startedAt);
-    setDurationSeconds(durationSeconds);
-    setMockTest(mockTest);
+      const startRes = await axios.post(
+        `${ApiUrl}/user/mock-tests/${testId}/start`,
+        {},
+        { withCredentials: true },
+      );
 
-    const sessionRes = await axios.get(
-      `${ApiUrl}/user/mock-tests/attempt/${attemptId}`,
-      { withCredentials: true },
-    );
+      const data = startRes.data;
 
-    setSections(sessionRes.data.sections);
-    setLoading(false);
+      // ===== CASE 1: expired attempt =====
+      if (data.expired) {
+        setExpiredAttemptId(data.attemptId);
+        setShowExpiredScreen(true);
+        return;
+      }
+
+      setAttemptId(data.attemptId);
+      setStartedAt(data.startedAt);
+      setDurationSeconds(data.durationSeconds);
+      setMockTest(data.mockTest);
+
+      const sessionRes = await axios.get(
+        `${ApiUrl}/user/mock-tests/attempt/${data.attemptId}`,
+        { withCredentials: true },
+      );
+
+      setSections(sessionRes.data.sections);
+    } catch (err) {
+      console.error(err);
+
+      if (err.response) {
+        setErrorCode(err.response.status);
+        setError(err.response.data?.message || "Something went wrong.");
+      } else {
+        setErrorCode(500);
+        setError("Server not responding. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
+
+  /* ===== TIMER EFFECT ===== */
+  useEffect(() => {
+    if (!attemptId || !timerReady) return;
+
+    if (remaining === 300) {
+      toast("Only 5 minutes remaining", { icon: "⏱️" });
+    }
+
+    if (remaining === 0) {
+      handleAutoSubmit();
+    }
+  }, [remaining, attemptId, timerReady]);
 
   /* ===== VISIT ===== */
 
@@ -567,13 +833,71 @@ export default function MockTestStart() {
 
   /* ===== SUBMIT ===== */
 
-  const submitTest = async () => {
-    await axios.post(
-      `${ApiUrl}/user/mock-tests/attempt/${attemptId}/submit`,
-      {},
-      { withCredentials: true },
-    );
-    alert("Test submitted");
+  const handleSubmit = async (auto = false) => {
+    if (submitState !== "IDLE") return;
+
+    try {
+      setAutoSubmitted(auto);
+      setSubmitState("SUBMITTING");
+
+      await axios.post(
+        `${ApiUrl}/user/mock-tests/attempt/${attemptId}/submit`,
+        {},
+        { withCredentials: true },
+      );
+
+      setSubmitState("SUBMITTED");
+    } catch (e) {
+      console.error("Submit failed", e);
+      setSubmitState("IDLE");
+    }
+  };
+
+  const submitTest = () => handleSubmit(false);
+  const handleAutoSubmit = () => handleSubmit(true);
+
+  /* ===== PREVIOUS AND NEXT ===== */
+
+  const goNext = () => {
+    if (!sections.length) return;
+
+    const isLastQuestion = qIndex === currentQuestions.length - 1;
+
+    const isLastSection = activeSection === sections.length - 1;
+
+    // normal next
+    if (!isLastQuestion) {
+      setQIndex((i) => i + 1);
+      return;
+    }
+
+    // last question → next section
+    if (!isLastSection) {
+      setActiveSection((s) => s + 1);
+      setQIndex(0);
+      return;
+    }
+
+    // last question of last section
+    toast("You are at the last question of the test.", { icon: null });
+  };
+
+  const goPrev = () => {
+    if (!sections.length) return;
+
+    const isFirstQuestion = qIndex === 0;
+
+    if (!isFirstQuestion) {
+      setQIndex((i) => i - 1);
+      return;
+    }
+
+    // move to previous section last question
+    if (activeSection > 0) {
+      const prevSection = sections[activeSection - 1];
+      setActiveSection((s) => s - 1);
+      setQIndex(prevSection.questions.length - 1);
+    }
   };
 
   if (loading)
@@ -588,6 +912,37 @@ export default function MockTestStart() {
         </div>
       </div>
     );
+
+  if (error) {
+    return (
+      <ErrorScreen
+        error={error}
+        errorCode={errorCode}
+        navigate={navigate}
+        theme={theme}
+      />
+    );
+  }
+
+  if (submitState === "SUBMITTING") {
+    return <SubmittingScreen auto={autoSubmitted} />;
+  }
+
+  if (submitState === "SUBMITTED") {
+    return (
+      <SubmitSuccessScreen
+        attemptId={attemptId}
+        testId={testId}
+        navigate={navigate}
+      />
+    );
+  }
+
+  if (showExpiredScreen) {
+    return (
+      <ExpiredScreen theme={theme} onViewResult={handleViewExpiredResult} />
+    );
+  }
 
   return (
     <div
@@ -662,20 +1017,18 @@ export default function MockTestStart() {
           <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:gap-2">
             <Button
               variant="ghost"
-              onClick={() => setQIndex((i) => Math.max(0, i - 1))}
+              onClick={goPrev}
               className="w-full md:w-auto"
             >
-              Previous
+              Previous Question
             </Button>
 
             <Button
               variant="success"
-              onClick={() =>
-                setQIndex((i) => Math.min(currentQuestions.length - 1, i + 1))
-              }
+              onClick={goNext}
               className="w-full md:w-auto"
             >
-              Save & Next
+              Next Question
             </Button>
 
             <Button
@@ -698,12 +1051,112 @@ export default function MockTestStart() {
           {/* submit */}
           <Button
             variant="primary"
-            onClick={submitTest}
+            onClick={() => setShowSubmitModal(true)}
             className="w-full md:w-auto flex items-center justify-center gap-2"
           >
             <CheckCircle2 className="w-4 h-4" /> Submit
           </Button>
         </div>
+
+        {showSubmitModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+            <div className="w-full max-w-lg mx-4 rounded-2xl bg-white dark:bg-zinc-900 shadow-2xl border border-gray-200 dark:border-zinc-700">
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-zinc-700 flex items-center gap-3">
+                <div className="w-9 h-9 flex items-center justify-center rounded-full bg-red-100 dark:bg-red-500/15">
+                  <CheckCircle2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  Submit Test
+                </h2>
+              </div>
+
+              {/* Body */}
+              <div className="px-6 py-5 space-y-4 text-sm text-gray-600 dark:text-gray-300">
+                <p>
+                  Once submitted, you will{" "}
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                    not be able to change
+                  </span>{" "}
+                  your answers.
+                </p>
+
+                {/* ===== Stats Box ===== */}
+                <div className="rounded-xl border border-dashed border-gray-300 dark:border-zinc-600 p-4 bg-gray-50 dark:bg-zinc-800/40">
+                  <div className="grid grid-cols-2 gap-y-2 text-sm">
+                    <Stat
+                      label="Answered"
+                      value={stats.answered}
+                      color="text-green-600"
+                    />
+                    <Stat
+                      label="Not Answered"
+                      value={stats.notAnswered}
+                      color="text-orange-500"
+                    />
+                    <Stat
+                      label="Marked"
+                      value={stats.markedOnly}
+                      color="text-purple-600"
+                    />
+                    <Stat
+                      label="Marked & Answered"
+                      value={stats.answeredMarked}
+                      color="text-purple-600"
+                    />
+                    <Stat
+                      label="Not Visited"
+                      value={stats.notVisited}
+                      color="text-gray-500"
+                    />
+                  </div>
+                </div>
+
+                {sectionStats.some((s) => s.limit !== null) && (
+                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-zinc-600 space-y-1 text-xs">
+                    {sectionStats.map((s, i) =>
+                      s.limit !== null ? (
+                        <div key={i} className="flex justify-between">
+                          <span className="text-gray-500 dark:text-gray-400">
+                            {s.title}
+                          </span>
+                          <span className="font-medium text-gray-700 dark:text-gray-200">
+                            {s.answered}/{s.limit}
+                          </span>
+                        </div>
+                      ) : null,
+                    )}
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Please review unanswered or marked questions before
+                  confirming.
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="px-6 py-4 border-t border-gray-200 dark:border-zinc-700 flex justify-end gap-3">
+                <button
+                  onClick={() => setShowSubmitModal(false)}
+                  className="px-4 py-2 cursor-pointer rounded-lg border border-gray-300 dark:border-zinc-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition"
+                >
+                  Review
+                </button>
+
+                <button
+                  onClick={async () => {
+                    setShowSubmitModal(false);
+                    await submitTest();
+                  }}
+                  className="px-4 py-2 cursor-pointer rounded-lg bg-red-600 text-white hover:bg-red-700 transition font-medium shadow-sm"
+                >
+                  Submit Test
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
