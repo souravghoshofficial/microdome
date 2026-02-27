@@ -89,7 +89,7 @@ function StatCard({ label, value }) {
 
 function ResultLegend() {
   return (
-    <div className="flex items-center gap-4 text-xs md:text-sm">
+    <div className="flex flex-wrap items-center gap-4 text-xs md:text-sm">
       <div className="flex items-center gap-1">
         <span className="w-3 h-3 rounded bg-green-500 inline-block" />
         <span className="text-gray-700 dark:text-gray-300">
