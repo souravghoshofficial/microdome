@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Helmet } from "react-helmet-async";
+import { toast, Toaster } from "react-hot-toast";
 
-import { Clock, Target, PlayCircle, ClipboardList, Loader2 } from "lucide-react";
-import { Link } from "react-router";
+import {
+  Clock,
+  Target,
+  PlayCircle,
+  ClipboardList,
+  Loader2,
+} from "lucide-react";
+import { Link, useNavigate } from "react-router";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -14,13 +22,16 @@ const MockTests = () => {
   const [bundles, setBundles] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const isLoggedIn = useSelector((state) => state.auth.status);
+  const navigate = useNavigate();
+
   useEffect(() => {
     AOS.init({ duration: 900, once: true, easing: "ease-out-cubic" });
 
     const fetchData = async () => {
       try {
         const [mockTestsRes, bundlesRes] = await Promise.all([
-          axios.get(`${ApiUrl}/user/mock-tests`),
+          axios.get(`${ApiUrl}/user/mock-tests`, { withCredentials: true }),
           axios.get(`${ApiUrl}/user/mock-test-bundles`),
         ]);
 
@@ -36,16 +47,24 @@ const MockTests = () => {
     fetchData();
   }, []);
 
+  const handleClick = (testId) => {
+    if (!isLoggedIn) {
+      toast.error("Please log in to attempt the test.");
+      return;
+    }
+    navigate(`/mock-tests/${testId}`);
+  };
+
   if (loading) {
-  return (
-    <div className="w-full h-screen flex items-center justify-center bg-white dark:bg-gray-950 text-black dark:text-white">
-      <div className="flex items-center gap-3 text-sm font-medium">
-        <Loader2 className="w-5 h-5 animate-spin" />
-        <span>Loading...</span>
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-white dark:bg-gray-950 text-black dark:text-white">
+        <div className="flex items-center gap-3 text-sm font-medium">
+          <Loader2 className="w-5 h-5 animate-spin" />
+          <span>Loading...</span>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <>
@@ -59,6 +78,7 @@ const MockTests = () => {
 
       <div className="w-full flex justify-center bg-white dark:bg-gray-950 text-black dark:text-white">
         <div className="my-24 md:my-32 w-[90%] max-w-6xl">
+          <Toaster position="top-center" reverseOrder={false} />
           {/* PAGE HEADING */}
           <h1
             data-aos="fade-up"
@@ -78,7 +98,11 @@ const MockTests = () => {
           {/* ================= NO TESTS AVAILABLE ================= */}
           {freeMockTests.length === 0 && bundles.length === 0 && (
             <div className="mt-8 min-h-[80vh] text-center">
-              <p data-aos="fade-up" data-aos-delay="200" className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">
+              <p
+                data-aos="fade-up"
+                data-aos-delay="200"
+                className="text-gray-600 dark:text-gray-400 text-xs md:text-sm"
+              >
                 No mock tests available at the moment.
               </p>
             </div>
@@ -168,7 +192,10 @@ const MockTests = () => {
                           </div>
                         </div>
 
-                        <Link to={`/mock-tests/bundles/${bundle._id}`} className="mt-4 w-full px-3 py-2 text-center text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-md transition">
+                        <Link
+                          to={`/mock-tests/bundles/${bundle._id}`}
+                          className="mt-4 w-full px-3 py-2 text-center text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-md transition"
+                        >
                           View Series
                         </Link>
                       </div>
@@ -181,91 +208,150 @@ const MockTests = () => {
 
           {/* ================= FREE MOCK TESTS ================= */}
           {freeMockTests.length > 0 && (
-             <section data-aos="fade-up" className="mt-20">
-            <h2
-              data-aos="fade-up"
-              data-aos-delay="100"
-              className="text-xl md:text-2xl font-semibold"
-            >
-              Free Mock Tests
-            </h2>
+            <section data-aos="fade-up" className="mt-20">
+              <h2
+                data-aos="fade-up"
+                data-aos-delay="100"
+                className="text-xl md:text-2xl font-semibold"
+              >
+                Free Mock Tests
+              </h2>
 
-            <p
-              data-aos="fade-up"
-              data-aos-delay="200"
-              className="mt-1 text-sm text-gray-600 dark:text-gray-400"
-            >
-              Try individual mock tests at zero cost
-            </p>
+              <p
+                data-aos="fade-up"
+                data-aos-delay="200"
+                className="mt-1 text-sm text-gray-600 dark:text-gray-400"
+              >
+                Try individual mock tests at zero cost
+              </p>
 
-            <div
-              data-aos="fade-up"
-              data-aos-delay="300"
-              className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
-              {freeMockTests.map((test) => (
-                <div
-                  key={test._id}
-                  className="group relative p-5 rounded-2xl border border-zinc-900/10 dark:border-gray-700/25 
-             bg-white dark:bg-zinc-900 shadow 
-             hover:border-blue-500 transition-all duration-300 
-             hover:shadow-xl hover:-translate-y-3"
-                >
-                  {/* FREE BADGE */}
-                  <span
-                    className="absolute top-4 right-4 text-xs font-semibold px-3 py-1 rounded-full
-                   bg-green-100 text-green-700 dark:bg-gray-100 dark:text-black"
-                  >
-                    FREE
-                  </span>
+              <div
+                data-aos="fade-up"
+                data-aos-delay="300"
+                className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              >
+                {freeMockTests.map((test) => {
+                  const attempted = test.attempted === true;
+                  const reattempt = test.reattempt === true;
 
-                  {/* BIG ICON / VISUAL */}
-                  <div
-                    className="flex items-center justify-center w-14 h-14 rounded-xl 
-                  bg-blue-100 text-blue-600 dark:bg-gray-800 mb-4
-                  group-hover:scale-105 transition"
-                  >
-                    <ClipboardList className="w-7 h-7" />
-                  </div>
+                  return (
+                    <div
+                      key={test._id}
+                      className="group relative p-5 rounded-2xl border border-zinc-900/10 dark:border-gray-700/25 
+      bg-white dark:bg-zinc-900 shadow 
+      hover:border-blue-500 transition-all duration-300 
+      hover:shadow-xl hover:-translate-y-3"
+                    >
+                      {/* FREE BADGE */}
+                      <span
+                        className="absolute top-4 right-4 text-xs font-semibold px-3 py-1 rounded-full
+        bg-green-100 text-green-700 dark:bg-gray-100 dark:text-black"
+                      >
+                        FREE
+                      </span>
+                
 
-                  {/* TITLE */}
-                  <h3 className="text-lg font-semibold leading-snug">
-                    {test.title}
-                  </h3>
+                      {/* ICON */}
+                      <div
+                        className="flex items-center justify-center w-14 h-14 rounded-xl 
+        bg-blue-100 text-blue-600 dark:bg-gray-800 mb-4
+        group-hover:scale-105 transition"
+                      >
+                        <ClipboardList className="w-7 h-7" />
+                      </div>
 
-                  {/* DESCRIPTION */}
-                  <p className="text-sm my-1 text-gray-600 dark:text-gray-400 line-clamp-2">
-                    {test.description}
-                  </p>
+                      {/* TITLE */}
+                      <h3 className="text-lg font-semibold leading-snug">
+                        {test.title}
+                      </h3>
 
-                  {/* META INFO */}
-                  <div className="mt-2 flex items-center gap-4 text-sm text-gray-700 dark:text-gray-300">
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="w-4 h-4 text-gray-500" />
-                      <span>{test.durationMinutes} mins</span>
+                      {/* DESCRIPTION */}
+                      <p className="text-sm my-1 text-gray-600 dark:text-gray-400 line-clamp-2">
+                        {test.description}
+                      </p>
+
+                      {/* META */}
+                      <div className="mt-2 flex items-center gap-4 text-sm text-gray-700 dark:text-gray-300">
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="w-4 h-4 text-gray-500" />
+                          <span>{test.durationMinutes} mins</span>
+                        </div>
+
+                        <div className="flex items-center gap-1.5">
+                          <Target className="w-4 h-4 text-gray-500" />
+                          <span>{test.totalMarks} marks</span>
+                        </div>
+                      </div>
+
+                      {/* CTA BUTTONS */}
+                      <div className="mt-4 flex gap-2">
+                        {/* NOT LOGGED IN */}
+                        {!isLoggedIn && (
+                          <button
+                            onClick={() => handleClick(test._id)}
+                            className="w-full flex items-center justify-center gap-2
+            bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold cursor-pointer"
+                          >
+                            <PlayCircle className="w-5 h-5" />
+                            Start Test
+                          </button>
+                        )}
+
+                        {/* LOGGED IN — NOT ATTEMPTED */}
+                        {isLoggedIn && !attempted && (
+                          <button
+                            onClick={() => navigate(`/mock-tests/${test._id}`)}
+                            className="w-full flex items-center justify-center gap-2
+            bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold cursor-pointer"
+                          >
+                            <PlayCircle className="w-5 h-5" />
+                            Start Test
+                          </button>
+                        )}
+
+                        {/* LOGGED IN — ATTEMPTED */}
+                        {isLoggedIn && attempted && (
+                          <>
+                            {reattempt && (
+                              <button
+                                onClick={() =>
+                                  navigate(`/mock-tests/${test._id}`)
+                                }
+                                className="flex-1 flex items-center justify-center gap-2
+                bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-semibold cursor-pointer"
+                              >
+                                Reattempt
+                              </button>
+                            )}
+
+                            <Link
+                              to={`/mock-tests/${test._id}/result`}
+                              className="flex flex-1 items-center justify-center gap-2
+                            border border-blue-600 text-blue-600 
+                            hover:bg-blue-600 hover:text-white
+                            py-2 rounded-lg text-sm font-semibold transition"
+                            >
+                              Result
+                            </Link>
+
+                            <Link
+                              to={`/mock-tests/${test._id}/leaderboard`}
+                              className="flex flex-1 items-center justify-center gap-2
+                            border border-gray-400 text-gray-700 
+                            dark:border-gray-600 dark:text-gray-300
+                            hover:bg-gray-800 hover:text-white
+                            py-2 rounded-lg text-sm font-semibold transition"
+                            >
+                              Leaderboard
+                            </Link>
+                          </>
+                        )}
+                      </div>
                     </div>
-
-                    <div className="flex items-center gap-1.5">
-                      <Target className="w-4 h-4 text-gray-500" />
-                      <span>{test.totalMarks} marks</span>
-                    </div>
-                  </div>
-
-                  {/* CTA */}
-                  <Link
-                    to={`/mock-tests/${test._id}`}
-                    className="mt-3 w-full flex items-center justify-center gap-2
-               bg-blue-600 hover:bg-blue-700 
-               text-white py-2 rounded-lg 
-               font-semibold transition cursor-pointer"
-                  >
-                    <PlayCircle className="w-5 h-5" />
-                    Start Test
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </section>
+                  );
+                })}
+              </div>
+            </section>
           )}
         </div>
       </div>

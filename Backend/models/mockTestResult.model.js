@@ -47,6 +47,13 @@ const mockTestResultSchema = new Schema(
     correctCount: { type: Number, default: 0 },
     incorrectCount: { type: Number, default: 0 },
     unattemptedCount: { type: Number, default: 0 },
+
+    // use to check if full solutions are unlocked for this result
+    solutionsUnlocked: {
+      type: Boolean,
+      default: true,
+    },
+
   },
   { timestamps: true },
 );

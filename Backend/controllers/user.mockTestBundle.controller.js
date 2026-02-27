@@ -1,5 +1,6 @@
 import { MockTestBundle } from "../models/mockTestBundle.model.js";
 import { MockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
+import { MockTestResult } from "../models/mockTestResult.model.js";
 
 import mongoose from "mongoose";
 import { MockTest } from "../models/mockTest.model.js";
@@ -96,15 +97,14 @@ export const getEnrolledMockTestBundles = async (req, res) => {
 
 
 export const getEnrolledBundleDetailsByBundleId = async (req, res) => {
-
-    // fetch all the published mock tests available in this bundle
   try {
     const { bundleId } = req.params;
+    const userId = req.user._id; // assuming auth middleware
 
     if (!mongoose.Types.ObjectId.isValid(bundleId)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid bundleId"
+        message: "Invalid bundleId",
       });
     }
 
@@ -113,15 +113,58 @@ export const getEnrolledBundleDetailsByBundleId = async (req, res) => {
     if (!bundle || !bundle.isActive) {
       return res.status(404).json({
         success: false,
-        message: "Bundle not found or inactive"
+        message: "Bundle not found or inactive",
       });
     }
 
-    // Fetch only PUBLISHED mock tests in this bundle
+    /* ================= MOCK TESTS ================= */
+
     const mockTests = await MockTest.find({
       _id: { $in: bundle.mockTestIds },
-      status: "PUBLISHED"
-    }).select("-instructions"); // optional: hide heavy fields
+      status: "PUBLISHED",
+    }).select("-instructions");
+
+    /* ================= USER ATTEMPTS AGG ================= */
+
+    const attemptStats = await MockTestResult.aggregate([
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+          mockTestId: { $in: mockTests.map((m) => m._id) },
+        },
+      },
+      {
+        $group: {
+          _id: "$mockTestId",
+          attemptsUsed: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // convert to map for fast lookup
+    const attemptsMap = {};
+    attemptStats.forEach((a) => {
+      attemptsMap[a._id.toString()] = a.attemptsUsed;
+    });
+
+    /* ================= MERGE STATE ================= */
+
+    const mockTestsWithState = mockTests.map((test) => {
+      const attemptsUsed = attemptsMap[test._id.toString()] || 0;
+
+      const attempted = attemptsUsed > 0;
+      const reattempt = attemptsUsed < test.allowedAttempts;
+
+      return {
+        ...test.toObject(),
+        attempted,
+        reattempt,
+        attemptsUsed,
+        allowedAttempts: test.allowedAttempts,
+      };
+    });
+
+    /* ================= RESPONSE ================= */
 
     return res.status(200).json({
       success: true,
@@ -131,14 +174,13 @@ export const getEnrolledBundleDetailsByBundleId = async (req, res) => {
         description: bundle.description,
         thumbnail: bundle.thumbnail,
       },
-      mockTests
+      mockTests: mockTestsWithState,
     });
-
   } catch (error) {
     console.error("Get Enrolled Bundle Details Error:", error);
     return res.status(500).json({
       success: false,
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 };

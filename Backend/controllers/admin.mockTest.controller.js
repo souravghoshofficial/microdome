@@ -2,6 +2,7 @@ import { MockTest } from "../models/mockTest.model.js";
 import { MockTestSection } from "../models/mockTestSection.model.js";
 import { MockTestQuestion } from "../models/mockTestQuestion.model.js";
 import { MockTestBundle } from "../models/mockTestBundle.model.js";
+import { MockTestResult } from "../models/mockTestResult.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/cloudinary.js";
 import mongoose from "mongoose";
@@ -1314,6 +1315,10 @@ export const increaseMockTestAttempt = async (req, res) => {
       return res.status(400).json({ message: "Invalid mockTestId" });
     }
 
+    /* ===============================
+       INCREASE ALLOWED ATTEMPTS
+    =============================== */
+
     const mocktest = await MockTest.findByIdAndUpdate(
       mockTestId,
       { $inc: { allowedAttempts: 1 } },
@@ -1324,9 +1329,19 @@ export const increaseMockTestAttempt = async (req, res) => {
       return res.status(404).json({ message: "Mock test not found" });
     }
 
+    /* ===============================
+       LOCK ALL EXISTING RESULTS
+    =============================== */
+
+    const updateRes = await MockTestResult.updateMany(
+      { mockTestId },
+      { $set: { solutionsUnlocked: false } },
+    );
+
     return res.status(200).json({
-      message: "Allowed attempts increased",
+      message: "Allowed attempts increased and previous solutions locked",
       allowedAttempts: mocktest.allowedAttempts,
+      lockedResults: updateRes.modifiedCount,
     });
   } catch (error) {
     console.error("Increase attempt error:", error);

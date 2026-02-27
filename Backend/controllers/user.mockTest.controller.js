@@ -1,25 +1,49 @@
 import mongoose from "mongoose";
 import { MockTest } from "../models/mockTest.model.js";
+import { MockTestResult } from "../models/mockTestResult.model.js";
 
-export const getMockTests = async (req, res) => {
+export const getFreeMockTests = async (req, res) => {
   try {
-    const mockTests = await MockTest.find({
+    const tests = await MockTest.find({
       accessType: "FREE",
-      status: "PUBLISHED"
-    })
-
-    return res.status(200).json({
-      success: true,
-      message: "Free & published mock tests retrieved successfully",
-      data: mockTests
+      status: "PUBLISHED",
     });
-  } catch (error) {
-    console.error("Get MockTests Error:", error);
 
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error"
+    // not logged in → return plain
+    if (!req.user) {
+      return res.status(200).json({ success: true, message: "Tests retrieved successfully", data: tests });
+    }
+
+    // logged in → attach attempt state
+    const userId = req.user._id;
+
+    const ids = tests.map(t => t._id);
+
+    const results = await MockTestResult.aggregate([
+      { $match: { userId, mockTestId: { $in: ids } } },
+      { $group: { _id: "$mockTestId", attemptsUsed: { $sum: 1 } } }
+    ]);
+
+    const map = new Map();
+    results.forEach(r => map.set(r._id.toString(), r.attemptsUsed));
+
+    const enriched = tests.map(t => {
+      const attemptsUsed = map.get(t._id.toString()) || 0;
+      const attempted = attemptsUsed > 0;
+      const reattempt = attemptsUsed < t.allowedAttempts;
+
+      return {
+        ...t.toObject(),
+        attempted,
+        reattempt,
+        attemptsUsed
+      };
     });
+
+    return res.json({ data: enriched });
+
+  } catch (e) {
+    res.status(500).json({ message: "Failed to load tests" });
   }
 };
 
