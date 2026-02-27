@@ -216,71 +216,54 @@ export const startMockTestAttempt = async (req, res) => {
     const mockTest = await MockTest.findById(mockTestId)
       .select("-instructions")
       .lean();
+
     if (!mockTest || mockTest.status !== "PUBLISHED") {
       return res.status(404).json({ message: "Mock test not found" });
     }
 
     const durationSeconds = mockTest.durationMinutes * 60;
 
-    // latest attempt
-    const latest = await MockTestAttempt.findOne({
+    // =============================
+    // RESUME EXISTING IN_PROGRESS
+    // =============================
+    const latestInProgress = await MockTestAttempt.findOne({
       userId,
       mockTestId,
+      status: "IN_PROGRESS",
     }).sort({ attemptNumber: -1 });
 
-    // =====================================
-    // RESUME EXISTING
-    // =====================================
-    if (latest && latest.status === "IN_PROGRESS") {
-      const remaining = computeRemainingSeconds(latest);
+    if (latestInProgress) {
+      const remaining = computeRemainingSeconds(latestInProgress);
 
-      // EXPIRED
-      if (remaining <= 0) {
-        // Prevent double processing
-        if (latest.status === "SUBMITTED" || latest.status === "EXPIRED") {
-          return res.json({
-            expired: true,
-            attemptId: latest._id,
-            mockTest,
-          });
-        }
+      if (remaining > 0) {
+        return res.json({
+          attemptId: latestInProgress._id,
+          mockTest,
+          resume: true,
+          startedAt: latestInProgress.startedAt,
+          durationSeconds: latestInProgress.durationSeconds,
+          remainingSeconds: remaining,
+        });
+      }
 
-        /* ===============================
-     LOCK ATTEMPT AS EXPIRED
-  =============================== */
-        latest.status = "EXPIRED";
-
-        // exact official end time
-        const submittedAt = new Date(
-          latest.startedAt.getTime() + latest.durationSeconds * 1000,
+      // expire it safely once
+      if (latestInProgress.status === "IN_PROGRESS") {
+        latestInProgress.status = "EXPIRED";
+        latestInProgress.submittedAt = new Date(
+          latestInProgress.startedAt.getTime() +
+            latestInProgress.durationSeconds * 1000,
         );
+        await latestInProgress.save();
 
-        latest.submittedAt = submittedAt;
+        const result = await evaluateAttempt(latestInProgress._id);
 
-        await latest.save();
-
-        /* ===============================
-     EVALUATE
-  =============================== */
-        const result = await evaluateAttempt(latest._id);
-
-        /* ===============================
-     TIME TAKEN (expired = full duration)
-  =============================== */
-        const timeTakenSeconds = latest.durationSeconds;
-
-        /* ===============================
-     SAVE RESULT
-  =============================== */
-        const savedResult = await MockTestResult.create({
-          attemptId: latest._id,
-          userId: latest.userId,
-          mockTestId: latest.mockTestId,
-          bundleId: latest.bundleId || null,
-
-          attemptNumber: latest.attemptNumber,
-          timeTakenSeconds,
-
+        await MockTestResult.create({
+          attemptId: latestInProgress._id,
+          userId: latestInProgress.userId,
+          mockTestId: latestInProgress.mockTestId,
+          bundleId: latestInProgress.bundleId || null,
+          attemptNumber: latestInProgress.attemptNumber,
+          timeTakenSeconds: latestInProgress.durationSeconds,
           score: result.totalScore,
           correctCount: result.correct,
           incorrectCount: result.wrong,
@@ -289,50 +272,57 @@ export const startMockTestAttempt = async (req, res) => {
 
         return res.json({
           expired: true,
-          attemptId: latest._id,
+          attemptId: latestInProgress._id,
           mockTest,
-          result: savedResult,
         });
       }
-
-      // STILL ACTIVE
-      return res.json({
-        attemptId: latest._id,
-        mockTest,
-        resume: true,
-        startedAt: latest.startedAt,
-        durationSeconds: latest.durationSeconds,
-        remainingSeconds: remaining,
-      });
     }
 
-    // =====================================
-    // CHECK ALLOWED ATTEMPTS
-    // =====================================
-    const nextAttempt = (latest?.attemptNumber || 0) + 1;
+    // =============================
+    // CREATE NEW ATTEMPT (SAFE)
+    // =============================
+    let attemptDoc;
+    let retries = 3;
 
-    if (nextAttempt > mockTest.allowedAttempts) {
-      return res.status(403).json({
-        message: "No attempts remaining",
-      });
+    while (retries > 0) {
+      // get latest number
+      const latest = await MockTestAttempt.findOne({
+        userId,
+        mockTestId,
+      }).sort({ attemptNumber: -1 });
+
+      const nextAttempt = (latest?.attemptNumber || 0) + 1;
+
+      if (nextAttempt > mockTest.allowedAttempts) {
+        return res.status(403).json({ message: "No attempts remaining" });
+      }
+
+      try {
+        attemptDoc = await MockTestAttempt.create({
+          userId,
+          mockTestId,
+          bundleId: mockTest.bundleId,
+          attemptNumber: nextAttempt,
+          durationSeconds,
+        });
+
+        break; // success
+      } catch (err) {
+        // duplicate attemptNumber race → retry
+        if (err.code === 11000) {
+          retries--;
+          if (retries === 0) throw err;
+          continue;
+        }
+        throw err;
+      }
     }
-
-    // =====================================
-    // CREATE NEW ATTEMPT
-    // =====================================
-    const newAttempt = await MockTestAttempt.create({
-      userId,
-      mockTestId,
-      bundleId: mockTest.bundleId,
-      attemptNumber: nextAttempt,
-      durationSeconds,
-    });
 
     return res.json({
-      attemptId: newAttempt._id,
+      attemptId: attemptDoc._id,
       mockTest,
       resume: false,
-      startedAt: newAttempt.startedAt,
+      startedAt: attemptDoc.startedAt,
       durationSeconds,
       remainingSeconds: durationSeconds,
     });
