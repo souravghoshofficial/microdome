@@ -2,39 +2,87 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { Loader2, ChevronDown, ChevronUp, Trophy } from "lucide-react";
-
+import { Loader2, ChevronDown, ChevronUp, Trophy, Trash2, Download } from "lucide-react";
+import { useSelector } from "react-redux";
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const AdminMockTestResults = () => {
   const { mockTestId } = useParams();
-
+  const user = useSelector((state) => state.auth?.userData);
   const [loading, setLoading] = useState(true);
   const [mockTest, setMockTest] = useState(null);
   const [students, setStudents] = useState([]);
   const [expandedUser, setExpandedUser] = useState(null);
-
+  const [showModal,setShowModal] = useState(false);
+  
   /* ================= FETCH ================= */
-  useEffect(() => {
     const fetchResults = async () => {
-      try {
-        const res = await axios.get(
-          `${ApiUrl}/admin/mock-tests/${mockTestId}/results`,
-          { withCredentials: true }
-        );
+    try {
+      const res = await axios.get(
+        `${ApiUrl}/admin/mock-tests/${mockTestId}/results`,
+        { withCredentials: true }
+      );
 
-        setMockTest(res.data.mockTest);
-        setStudents(res.data.students || []);
-      } catch (e) {
-        console.error(e);
-        toast.error("Failed to load results");
-      } finally {
-        setLoading(false);
-      }
-    };
-
+      setMockTest(res.data.mockTest);
+      setStudents(res.data.students || []);
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to load results");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchResults();
   }, [mockTestId]);
+
+    const handleDelete = async () => {
+    try {
+      setLoading(true);
+
+      await axios.delete(
+        `${ApiUrl}/admin/mock-tests/delete-mocktest-data/${mockTestId}`,
+        { withCredentials: true }
+      );
+
+      setShowModal(false);
+      toast.success("Enrollments deleted successfully");
+      fetchResults();
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadResultsExcel = async (mockTestId, title = "results") => {
+  try {
+    const res = await axios.get(
+      `${ApiUrl}/admin/mock-tests/${mockTestId}/export-results`,
+      {
+        responseType: "blob", // IMPORTANT
+        withCredentials: true,
+      }
+    );
+
+    // create blob link
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${title.replace(/\s+/g, "_")}_results.xlsx`;
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    window.URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error(e);
+    toast.error("Failed to download results");
+  }
+};
 
   /* ================= IST FORMAT ================= */
   const formatIST = (date) =>
@@ -78,9 +126,29 @@ const AdminMockTestResults = () => {
 
       {/* HEADER */}
       <div className="mb-6 border-b pb-4">
-        <h1 className="text-2xl font-bold text-gray-800">
+       <div className="flex items-center justify-between">
+         <h1 className="text-2xl font-bold text-gray-800">
           {mockTest.title}
         </h1>
+
+        { user.role==="admin" && (
+          <div className="flex gap-2 items-center">
+          <button onClick={() => downloadResultsExcel(mockTestId, mockTest.title)}
+         className="py-2 px-4 flex bg-blue-500 text-white items-center gap-1 rounded cursor-pointer hover:bg-blue-600">
+          <Download className="h-4 w-4"/>
+          <span>Download Results</span>
+        </button>
+
+          <button onClick={() => setShowModal(true)}
+         className="py-2 px-4 flex bg-red-500 text-white items-center gap-1 rounded cursor-pointer hover:bg-red-600">
+          <Trash2 className="h-4 w-4"/>
+          <span>Delete Results</span>
+        </button>
+          </div>
+        )
+        }
+        
+       </div>
 
         <div className="mt-2 flex gap-4 text-sm text-gray-600">
           <span>Type: {mockTest.mockTestType}</span>
@@ -164,13 +232,13 @@ const AdminMockTestResults = () => {
 
                     {/* EXPAND */}
                     <td className="px-4 py-3 text-right">
-                      <button
+                      <button 
                         onClick={() =>
                           setExpandedUser(
                             expanded ? null : s.userId
                           )
                         }
-                        className="p-1 rounded hover:bg-gray-200"
+                        className="p-1 rounded hover:bg-gray-200 cursor-pointer"
                       >
                         {expanded ? (
                           <ChevronUp className="w-5 h-5" />
@@ -267,6 +335,38 @@ const AdminMockTestResults = () => {
           </tbody>
         </table>
       </div>
+      {showModal && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center backdrop-blur-sm z-50"
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className="p-6 bg-white rounded-lg shadow-lg w-[400px]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-gray-800 mb-6">
+              Are you sure you want to delete the results of this Mock Test ?
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleDelete}
+                disabled={loading}
+                className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+              >
+                {loading ? "Deleting..." : "Yes, Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

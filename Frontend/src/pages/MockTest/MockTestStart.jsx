@@ -457,7 +457,7 @@ function QuestionView({ q, answer, onAnswer }) {
   };
 
   return (
-    <Card className="p-6 mb-6">
+    <Card className="p-6 mb-6 select-none">
       <div className="mb-4 font-semibold flex items-center justify-between">
         Question {q.questionOrder}
         <span className="ml-3 text-sm font-normal text-gray-500">
@@ -536,6 +536,18 @@ export default function MockTestStart() {
   const currentQuestions = currentSection?.questions || [];
   const currentQuestion = currentQuestions[qIndex];
 
+   useEffect(() => {
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+    };
+
+    document.addEventListener("contextmenu", handleContextMenu);
+
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+    };
+  }, []);
+  
   const sectionAnsweredCount = useMemo(() => {
     if (!currentSection) return 0;
     return currentSection.questions.filter((q) => q.state?.isAnswered).length;
@@ -946,7 +958,7 @@ export default function MockTestStart() {
 
   return (
     <div
-      className={`${theme === "dark" ? "dark" : ""} min-h-screen bg-gray-50 dark:bg-gray-950 dark:text-gray-200`}
+      className={`${theme === "dark" ? "dark" : ""} min-h-screen bg-gray-50 dark:bg-gray-950 dark:text-gray-200 select-none`}
     >
       <div className="max-w-5xl mx-auto px-4 py-8 md:p-10">
         <Toaster

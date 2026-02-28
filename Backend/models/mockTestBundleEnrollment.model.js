@@ -16,4 +16,9 @@ const mockTestBundleEnrollmentSchema = new Schema({
   timestamps: true
 })
 
+mockTestBundleEnrollmentSchema.index(
+  { bundleId: 1, userId: 1 },
+  { unique: true }
+);
+
 export const MockTestBundleEnrollment = mongoose.model("MockTestBundleEnrollment", mockTestBundleEnrollmentSchema)

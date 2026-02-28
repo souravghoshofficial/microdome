@@ -91,8 +91,8 @@ function PodiumCard({ user, rank, height, color, icon, highlight }) {
         </div>
 
         <div className="text-xs text-gray-600 dark:text-gray-300">
-          Attempt {user.bestAttempt.attemptNumber} •{" "}
-          {user.bestAttempt.score} •{" "}
+          Attempt {user.bestAttempt.attemptNumber} •{" Score: "}
+          {user.bestAttempt.score} •{" Time: "}
           {formatTime(user.bestAttempt.timeTakenSeconds)}
         </div>
       </div>
@@ -127,7 +127,7 @@ function PodiumCard({ user, rank, height, color, icon, highlight }) {
               key={a.attemptNumber}
               className="text-[11px] px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-center"
             >
-              Attempt {a.attemptNumber} • {a.score} •{" "}
+              Attempt {a.attemptNumber} • Score: {a.score} •{" Time: "} 
               {formatTime(a.timeTakenSeconds)}
             </div>
           ))}

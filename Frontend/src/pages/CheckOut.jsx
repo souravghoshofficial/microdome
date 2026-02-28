@@ -28,6 +28,19 @@ const CheckOut = () => {
   const [showPaymentHelp, setShowPaymentHelp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [discountAmount, setDiscountAmount] = useState(0);
+
+   useEffect(() => {
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+    };
+
+    document.addEventListener("contextmenu", handleContextMenu);
+
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+    };
+  }, []);
 
   useEffect(() => {
     if (!id || !itemType) return;
@@ -55,6 +68,8 @@ const CheckOut = () => {
 
         setItem(data);
         setFinalAmount(data?.discountedPrice || 0);
+        setDiscountAmount(data?.discountedPrice || 0)
+        
       } catch (err) {
         toast.error("Failed to load details");
       } finally {
@@ -324,9 +339,10 @@ const CheckOut = () => {
 
               <div className="space-y-3 border-t pt-4">
                 <PriceRow label="Original Price" value={`₹${actualPrice}`} />
+                <PriceRow label="Discount" value={`- ₹${actualPrice-discountAmount}`}/>
                 {appliedDiscount > 0 && (
                   <PriceRow
-                    label={`Discount (${appliedDiscount}%)`}
+                    label={`Coupon Applied (${appliedDiscount}%)`}
                     value={`- ₹${Math.floor(
                       (item.discountedPrice * appliedDiscount) / 100
                     )}`}

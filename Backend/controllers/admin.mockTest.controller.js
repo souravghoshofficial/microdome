@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+import ExcelJS from "exceljs";
 import { MockTest } from "../models/mockTest.model.js";
 import { MockTestSection } from "../models/mockTestSection.model.js";
 import { MockTestQuestion } from "../models/mockTestQuestion.model.js";
@@ -5,7 +7,9 @@ import { MockTestBundle } from "../models/mockTestBundle.model.js";
 import { MockTestResult } from "../models/mockTestResult.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/cloudinary.js";
-import mongoose from "mongoose";
+import { MockTestAttempt } from "../models/mockTestAttempt.model.js";
+import { MockTestAnswer } from "../models/mockTestAnswers.model.js";
+
 
 export const createMockTest = async (req, res) => {
   try {
@@ -1480,5 +1484,240 @@ export const getAdminMockTestResults = async (req, res) => {
       success: false,
       message: "Failed to load results",
     });
+  }
+};
+
+
+export const deleteMockTestResult = async (req, res) => {
+  const { mockTestId } = req.params;
+
+  // 1️⃣ Validate presence
+  if (!mockTestId) {
+    return res.status(400).json({
+      success: false,
+      message: "Mock Test ID is required",
+    });
+  }
+
+  // 2️⃣ Validate ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid Mock Test ID format",
+    });
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // 3️⃣ Find all attempts of this mockTest
+    const attempts = await MockTestAttempt.find({ mockTestId }).session(session);
+
+    const attemptIds = attempts.map((attempt) => attempt._id);
+
+    // 4️⃣ Delete Answers (based on attemptIds)
+    if (attemptIds.length > 0) {
+      await MockTestAnswer.deleteMany({
+        attemptId: { $in: attemptIds },
+      }).session(session);
+    }
+
+    // 5️⃣ Delete Results
+    await MockTestResult.deleteMany({ mockTestId }).session(session);
+
+    // 6️⃣ Delete Attempts
+    await MockTestAttempt.deleteMany({ mockTestId }).session(session);
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(200).json({
+      success: true,
+      message: "All attempts, answers, and results deleted successfully",
+      deletedAttempts: attemptIds.length,
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error("Delete MockTest Data Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while deleting mock test data",
+      error: error.message,
+    });
+  }
+};
+
+
+const formatDuration = (seconds) => {
+  if (seconds == null) return "—";
+
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+
+  return `${m}m ${s}s`;
+};
+
+export const exportMockTestResultsExcel = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({ message: "Invalid mockTestId" });
+    }
+
+    /* ===============================
+       MOCK TEST META
+    =============================== */
+    const mockTest = await MockTest.findById(mockTestId)
+      .populate("bundleId", "title")
+      .lean();
+
+    if (!mockTest) {
+      return res.status(404).json({ message: "Mock test not found" });
+    }
+
+    /* ===============================
+       RESULTS + USER
+    =============================== */
+    const results = await MockTestResult.aggregate([
+      { $match: { mockTestId: new mongoose.Types.ObjectId(mockTestId) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+      {
+        $project: {
+          name: "$user.name",
+          email: "$user.email",
+          instituteName: "$user.instituteName",
+          presentCourseOfStudy: "$user.presentCourseOfStudy",
+
+          attemptNumber: 1,
+          score: 1,
+          correctCount: 1,
+          incorrectCount: 1,
+          unattemptedCount: 1,
+          timeTakenSeconds: 1,
+          createdAt: 1,
+        },
+      },
+      { $sort: { name: 1, attemptNumber: 1 } },
+    ]);
+
+    /* ===============================
+       CREATE EXCEL
+    =============================== */
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Results");
+
+
+    const examTypeMap = {
+      IIT_JAM: "IIT JAM",
+      CUET_PG: "CUET PG",
+      GAT_B: "GAT-B",
+      GATE: "GATE",
+    }
+
+    /* ===== METADATA BLOCK ===== */
+
+    const metaRows = [
+      ["Mock Test Title", mockTest.title],
+      ["Exam Type", examTypeMap[mockTest.mockTestType] || mockTest.mockTestType],
+      ["Duration (mins)", mockTest.durationMinutes],
+      ["Total Marks", mockTest.totalMarks],
+      ["Allowed Attempts", mockTest.allowedAttempts],
+      ["Bundle", mockTest.bundleId?.title || "—"],
+      [
+        "Exported At",
+        new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+      ],
+    ];
+
+    metaRows.forEach((r) => sheet.addRow(r));
+
+    sheet.addRow([]); // empty row gap
+
+    /* ===== TABLE HEADER ===== */
+
+    const headerRow = sheet.addRow([
+      "Name",
+      "Email",
+      "Institute",
+      "Course",
+      "Attempt",
+      "Score",
+      "Correct",
+      "Incorrect",
+      "Unattempted",
+      "Time Taken",
+      "Attempt Date",
+    ]);
+
+    headerRow.font = { bold: true };
+
+    /* ===== TABLE DATA ===== */
+
+    results.forEach((r) => {
+      sheet.addRow([
+        r.name,
+        r.email,
+        r.instituteName,
+        r.presentCourseOfStudy,
+        r.attemptNumber,
+        r.score,
+        r.correctCount,
+        r.incorrectCount,
+        r.unattemptedCount,
+        formatDuration(r.timeTakenSeconds), 
+        new Date(r.createdAt).toLocaleString("en-IN", {
+          timeZone: "Asia/Kolkata",
+        }),
+      ]);
+    });
+
+    /* ===== COLUMN WIDTH ===== */
+
+    sheet.columns = [
+      { width: 25 },
+      { width: 30 },
+      { width: 25 },
+      { width: 20 },
+      { width: 10 },
+      { width: 10 },
+      { width: 10 },
+      { width: 10 },
+      { width: 12 },
+      { width: 14 },
+      { width: 22 },
+    ];
+
+    /* ===============================
+       SEND FILE
+    =============================== */
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=${mockTest.title.replace(/\s+/g, "_")}_results.xlsx`,
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (e) {
+    console.error("exportMockTestResultsExcel error:", e);
+    res.status(500).json({ message: "Failed to export results" });
   }
 };
