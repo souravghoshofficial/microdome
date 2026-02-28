@@ -34,43 +34,176 @@ export const sendCourseConfirmationEmail = async ({
   accessLink,
   whatsappLink,
 }) => {
-  const subject = `✅ Course Enrollment Confirmed: ${courseTitle}`;
+  const subject = `🎉 Course Enrolled Successfully: ${courseTitle}`;
 
   const html = `
-  <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-    <h2 style="color: #2e6c80;">Hi ${studentName},</h2>
-    <p>Thank you for your payment! Your enrollment for the course <strong>${courseTitle}</strong> is now confirmed. 🎉</p>
-    
-    <h3>📚 Course Details:</h3>
-    <ul>
-      <li><strong>Course:</strong> ${courseTitle}</li>
-    </ul>
+  <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Course Enrollment Confirmed</title>
+  </head>
 
-    <p>
-      <a href="${accessLink}" target="_blank" 
-         style="display: inline-block; padding: 12px 20px; margin-top: 10px; background-color: #2e6c80; color: white; text-decoration: none; border-radius: 5px;">
-         🚀 View Course
-      </a>
-    </p>
+  <body style="margin:0; padding:0;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center" style="padding:8px;">
 
-    <h3>💬 Join Our Community:</h3>
-    <p>We have a dedicated WhatsApp group for this course. Join using the link below:</p>
-    <p>
-      <a href="${whatsappLink}" target="_blank"
-         style="display: inline-block; padding: 12px 20px; margin-top: 10px; background-color: #25D366; color: white; text-decoration: none; border-radius: 5px;">
-         📲 Join WhatsApp Group
-      </a>
-    </p>
+          <!-- Main Card -->
+          <table
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            style="
+              max-width:600px;
+              background:#ffffff;
+              border-radius:16px;
+              overflow:hidden;
+              border:2px solid #3eb5a2;
+              box-shadow:0 6px 16px rgba(0,0,0,0.08);
+              font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            "
+          >
 
-    <p>We’re excited to have you on board. If you have any questions, feel free to reach out to us.</p>
+            <!-- Header -->
+            <tr>
+              <td align="center" style="padding:20px;">
+                <table
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="
+                    background:#1c1c1c;
+                    border-radius:12px;
+                    border:1px solid #ffffff;
+                    padding:14px 20px;
+                    width:100%;
+                  "
+                >
+                  <tr>
+                    <td align="center">
+                      <img
+                        src="https://res.cloudinary.com/dpsmiqy61/image/upload/v1770138895/mylogo_l8q7ql.png"
+                        alt="Microdome Classes"
+                        height="48"
+                        style="display:block; margin:0 auto;"
+                      />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
 
-    <p>Best regards,<br/>
-    Microdome Classes Team<br/>
-    📧 team@microdomeclasses.in</p>
+            <!-- Body -->
+            <tr>
+              <td style="padding:28px; color:#111827;">
 
-    <hr/>
-    <small>This is an automated message. If you did not make this purchase, please contact us immediately.</small>
-  </div>
+                <p style="font-size:15px; margin:0 0 12px;">
+                  Hi <strong>${studentName || "Student"}</strong>,
+                </p>
+
+                <p style="font-size:16px; margin:0 0 16px;">
+                  🎉 <strong>Enrollment Confirmed!</strong>
+                </p>
+
+                <p style="font-size:15px; line-height:1.6; margin:0 0 16px;">
+                  Thank you for your payment. You are now successfully enrolled in:
+                </p>
+
+                <!-- Course Title -->
+                <p style="font-size:18px; font-weight:600; margin:0 0 24px;">
+                  ${courseTitle}
+                </p>
+
+                <p style="font-size:14px; color:#4b5563; margin:0 0 28px;">
+                  You can now access all course lectures and resources from your dashboard.
+                </p>
+
+                <!-- View Course CTA -->
+                <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:18px;">
+                  <tr>
+                    <td align="center">
+                      <a
+                        href="${accessLink}"
+                        target="_blank"
+                        style="
+                          background:#3eb5a2;
+                          color:#ffffff;
+                          text-decoration:none;
+                          padding:12px 26px;
+                          font-size:14px;
+                          font-weight:600;
+                          border-radius:8px;
+                          display:inline-block;
+                        "
+                      >
+                        ▶ View Course
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- WhatsApp Section -->
+                <p style="font-size:15px; margin:20px 0 8px;">
+                  💬 <strong>Join Course Community</strong>
+                </p>
+
+                <p style="font-size:14px; color:#4b5563; margin:0 0 16px;">
+                  Join the dedicated WhatsApp group for updates, discussions, and support.
+                </p>
+
+                <table cellpadding="0" cellspacing="0" width="100%">
+                  <tr>
+                    <td align="center">
+                      <a
+                        href="${whatsappLink}"
+                        target="_blank"
+                        style="
+                          background:#25D366;
+                          color:#ffffff;
+                          text-decoration:none;
+                          padding:12px 26px;
+                          font-size:14px;
+                          font-weight:600;
+                          border-radius:8px;
+                          display:inline-block;
+                        "
+                      >
+                        📲 Join WhatsApp Group
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="font-size:13px; color:#6b7280; margin-top:32px;">
+                  Best regards,<br />
+                  <strong>Microdome Classes</strong>
+                </p>
+
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                align="center"
+                style="
+                  background:#f9fafb;
+                  padding:14px;
+                  font-size:12px;
+                  color:#9ca3af;
+                "
+              >
+                © ${new Date().getFullYear()} Microdome Classes<br/>
+                This is an automated message. If you did not make this purchase, please contact us.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
 `;
 
   try {
@@ -87,7 +220,11 @@ export const sendCourseConfirmationEmail = async ({
   }
 };
 
-export const sendAccessRevokedEmail = async ({ to, studentName, courseTitle }) => {
+export const sendAccessRevokedEmail = async ({
+  to,
+  studentName,
+  courseTitle,
+}) => {
   const subject = `⚠️ Access Revoked: ${courseTitle}`;
 
   const html = `
@@ -222,7 +359,7 @@ export const sendMessage = async (req, res) => {
   const { name, email, message } = req.body;
 
   const mailOptions = {
-    from: 'no-reply@microdomeclasses.in',
+    from: "no-reply@microdomeclasses.in",
     to: process.env.EMAIL_USER,
     subject: `New Contact from ${name}`,
     text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
@@ -256,41 +393,144 @@ export const sendMockTestConfirmationEmail = async ({
     const mailOptions = {
       from: `"Microdome Classes" <no-reply@microdomeclasses.in>`,
       to,
-      subject: "🎉 Mock Test Bundle Enrolled Successfully",
+      subject: `🎉 Mock Test Series Enrolled Successfully - ${mockTestBundleTitle}`,
       html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f8fafc;">
-          <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-            
-            <h2 style="color: #2563eb; margin-bottom: 10px;">
-              Congratulations ${name} 🎉
-            </h2>
+        <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Enrollment Successful</title>
+  </head>
 
-            <p style="color: #334155; font-size: 15px;">
-              You have successfully enrolled in:
-            </p>
+  <body style="margin:0; padding:0;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center" style="padding:8px;">
 
-            <h3 style="color: #111827; margin-top: 10px;">
-              ${mockTestBundleTitle}
-            </h3>
+          <!-- Main Card -->
+          <table
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            style="
+              max-width:600px;
+              background:#ffffff;
+              border-radius:16px;
+              overflow:hidden;
+              border:2px solid #2563eb;
+              box-shadow:0 6px 16px rgba(0,0,0,0.08);
+              font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            "
+          >
 
-            <p style="margin-top: 20px; font-size: 14px; color: #475569;">
-              You can now start practicing and access your test series from your dashboard.
-            </p>
+            <!-- Header -->
+            <tr>
+              <td align="center" style="padding:20px;">
+                <table
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="
+                    background:#1c1c1c;
+                    border-radius:12px;
+                    border:1px solid #ffffff;
+                    padding:14px 20px;
+                    width:100%;
+                  "
+                >
+                  <tr>
+                    <td align="center">
+                      <img
+                        src="https://res.cloudinary.com/dpsmiqy61/image/upload/v1770138895/mylogo_l8q7ql.png"
+                        alt="Microdome Classes"
+                        height="48"
+                        style="display:block; margin:0 auto;"
+                      />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
 
-            <a href="${dashboardLink}"
-               style="display: inline-block; margin-top: 20px; padding: 12px 20px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold;">
-              Go to My Test Series
-            </a>
+            <!-- Body -->
+            <tr>
+              <td style="padding:28px; color:#111827;">
 
-            <hr style="margin: 30px 0; border: none; border-top: 1px solid #e2e8f0;" />
+                <p style="font-size:15px; margin:0 0 12px;">
+                  Hi <strong>${name || "Student"}</strong>,
+                </p>
 
-            <p style="font-size: 12px; color: #94a3b8;">
-              This is an automated email. Please do not reply to this message.
-            </p>
+                <p style="font-size:16px; margin:0 0 16px;">
+                  🎉 <strong>Congratulations!</strong>
+                </p>
 
+                <p style="font-size:15px; line-height:1.6; margin:0 0 16px;">
+                  You have successfully enrolled in the following test series:
+                </p>
 
-          </div>
-        </div>
+                <!-- Bundle Name -->
+                <p style="font-size:18px; font-weight:600; margin:0 0 24px;">
+                  ${mockTestBundleTitle}
+                </p>
+
+                <p style="font-size:14px; color:#4b5563; margin:0 0 28px;">
+                  You can now start practicing mock tests and track your performance
+                  directly from your dashboard.
+                </p>
+
+                <!-- CTA -->
+                <table cellpadding="0" cellspacing="0" width="100%">
+                  <tr>
+                    <td align="center">
+                      <a
+                        href="${dashboardLink}"
+                        target="_blank"
+                        style="
+                          background:#2563eb;
+                          color:#ffffff;
+                          text-decoration:none;
+                          padding:12px 26px;
+                          font-size:14px;
+                          font-weight:600;
+                          border-radius:8px;
+                          display:inline-block;
+                        "
+                      >
+                        ▶ Go to My Test Series
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="font-size:13px; color:#6b7280; margin-top:32px;">
+                  Best wishes,<br />
+                  <strong>Microdome Classes</strong>
+                </p>
+
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                align="center"
+                style="
+                  background:#f9fafb;
+                  padding:14px;
+                  font-size:12px;
+                  color:#9ca3af;
+                "
+              >
+                © ${new Date().getFullYear()} Microdome Classes<br/>
+                This is an automated email. Please do not reply.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
       `,
     };
 
