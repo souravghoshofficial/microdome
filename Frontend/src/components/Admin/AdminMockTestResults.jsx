@@ -46,7 +46,7 @@ const AdminMockTestResults = () => {
       );
 
       setShowModal(false);
-      toast.success("Enrollments deleted successfully");
+      toast.success("Results deleted successfully");
       fetchResults();
     } catch (error) {
       console.error(error);
