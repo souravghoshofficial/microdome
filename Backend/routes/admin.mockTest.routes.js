@@ -23,6 +23,8 @@ import {
     decreaseMockTestAttempt,
     getPaidAvailableMockTest,
     getAdminMockTestResults,
+    deleteMockTestResult,
+    exportMockTestResultsExcel
 } from "../controllers/admin.mockTest.controller.js";
 
 
@@ -64,7 +66,12 @@ router.route("/:mockTestId/increase-allowed-attempt").patch(authorizedRoles("adm
 
 router.route("/:mockTestId/decrease-allowed-attempt").patch(authorizedRoles("admin"),decreaseMockTestAttempt)
 
+router.route("/delete-mocktest-data/:mockTestId").delete(authorizedRoles("admin"),deleteMockTestResult);
 
-
+router.get(
+  "/:mockTestId/export-results",
+   authorizedRoles("admin"),
+  exportMockTestResultsExcel
+);
 
 export default router;

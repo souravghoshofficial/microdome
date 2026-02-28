@@ -11,7 +11,10 @@ import {
   getMockTestBundleById,
   getAllBundlesWithEnrollmentCount,
   getBundleStudents,
+  deleteEnrollmentsAndResults,
+  exportBundleStudentsExcel
 } from "../controllers/admin.mockTestBundle.controller.js";
+
 
 const router = Router();
 
@@ -59,13 +62,24 @@ router.delete(
 );
 
 
-
-
 // Route to get students enrolled in a mock test bundle
 router.get(
   "/:bundleId/students",
   authorizedRoles("admin"),
   getBundleStudents,
+);
+
+// DELETE all data related to a bundle
+router.delete(
+  "/delete-bundle-data/:bundleId",
+  authorizedRoles("admin"),
+  deleteEnrollmentsAndResults
+);
+
+router.get(
+  "/:bundleId/students/export",
+  authorizedRoles("admin"),
+  exportBundleStudentsExcel
 );
 
 export default router;

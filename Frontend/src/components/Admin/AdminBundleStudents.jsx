@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { Loader2, Users } from "lucide-react";
+import { Loader2, Users,Trash2 } from "lucide-react";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -26,34 +26,81 @@ const AdminBundleStudents = () => {
 
   const [students, setStudents] = useState([]);
   const [bundleTitle, setBundleTitle] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 10;
-
+  const [showModal,setShowModal] = useState(false);
   /* ================= FETCH ================= */
 
-  useEffect(() => {
     const fetchStudents = async () => {
-      try {
-        const res = await axios.get(
-          `${ApiUrl}/admin/mock-test-bundles/${bundleId}/students`,
-          { withCredentials: true }
-        );
+    try {
+      const res = await axios.get(
+        `${ApiUrl}/admin/mock-test-bundles/${bundleId}/students`,
+        { withCredentials: true }
+      );
 
-        setStudents(res.data.students || []);
-        setBundleTitle(res.data.bundle?.title || "Bundle");
-      } catch (err) {
-        console.error(err);
-        toast.error("Failed to load students");
-      } finally {
-        setLoading(false);
-      }
-    };
-
+      setStudents(res.data.students || []);
+      setBundleTitle(res.data.bundle?.title || "Bundle");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to load students");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() =>{
     fetchStudents();
   }, [bundleId]);
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+
+      await axios.delete(
+        `${ApiUrl}/admin/mock-test-bundles/delete-bundle-data/${bundleId}`,
+        { withCredentials: true }
+      );
+
+      setShowModal(false);
+      toast.success("Enrollments deleted successfully");
+      fetchStudents();
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+    const downloadEnrollmentsExcel = async (bundleId, title = "enrollments") => {
+    try {
+      const res = await axios.get(
+        `${ApiUrl}/admin/mock-test-bundles/${bundleId}/students/export`,
+        {
+          responseType: "blob", // IMPORTANT
+          withCredentials: true,
+        }
+      );
+  
+      // create blob link
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+  
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${title.replace(/\s+/g, "_")}_enrollments.xlsx`;
+  
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+  
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to download enrollments");
+    }
+  };
 
   /* ================= SEARCH ================= */
 
@@ -105,7 +152,8 @@ const AdminBundleStudents = () => {
           {bundleTitle} — Students ({students.length})
         </h2>
 
-        <input
+        <div className="flex items-center gap-2">
+          <input
           type="text"
           placeholder="Search by name..."
           value={searchQuery}
@@ -116,6 +164,20 @@ const AdminBundleStudents = () => {
           className="border rounded-md px-3 py-1.5 text-sm
                      focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
+
+        <button onClick={() => downloadEnrollmentsExcel(bundleId, bundleTitle)}
+                 className="py-2 px-4 flex bg-blue-500 text-white items-center gap-1 rounded cursor-pointer hover:bg-blue-600">
+                  <Download className="h-4 w-4"/>
+                  <span>Download Results</span>
+        </button>
+
+
+        <button onClick={() => setShowModal(true)}
+         className="py-2 px-4 flex bg-red-500 text-white items-center gap-1 rounded cursor-pointer hover:bg-red-600">
+          <Trash2 className="h-4 w-4"/>
+          <span>Delete Enrollments</span>
+        </button>
+        </div>
       </div>
 
       {/* TABLE */}
@@ -225,6 +287,38 @@ const AdminBundleStudents = () => {
           >
             Next
           </button>
+        </div>
+      )}
+    {showModal && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center backdrop-blur-sm z-50"
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className="p-6 bg-white rounded-lg shadow-lg w-[400px]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-gray-800 mb-6">
+              Are you sure you want to delete enrollments in this Mock Test Bundle ?
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleDelete}
+                disabled={loading}
+                className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+              >
+                {loading ? "Deleting..." : "Yes, Delete"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

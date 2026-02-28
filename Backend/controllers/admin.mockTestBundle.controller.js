@@ -1,9 +1,13 @@
+import mongoose from "mongoose";
 import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js";
 import { MockTestBundle } from "../models/mockTestBundle.model.js";
 import { MockTest } from "../models/mockTest.model.js";
 import { MockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
-import mongoose from "mongoose";
-
+import { MockTestAttempt } from "../models/mockTestAttempt.model.js";
+import { MockTestAnswer } from "../models/mockTestAnswers.model.js";
+import { MockTestResult } from "../models/mockTestResult.model.js";
+import ExcelJS from "exceljs";
+import { User } from "../models/user.model.js"
 
 export const createMockTestBundle = async (req, res) => {
   try {
@@ -244,63 +248,6 @@ export const getMockTestBundleById = async (req, res) => {
 };
 
 
-// export const addMockTestsToBundle = async (req, res) => {
-//   try {
-//     const { bundleId } = req.params;
-//     const { mockTestIds } = req.body;
-
-//     if (!mongoose.Types.ObjectId.isValid(bundleId)) {
-//       return res.status(400).json({ message: "Invalid bundleId" });
-//     }
-
-//     if (!Array.isArray(mockTestIds) || mockTestIds.length === 0) {
-//       return res.status(400).json({
-//         message: "mockTestIds must be a non-empty array"
-//       });
-//     }
-
-//     const bundle = await MockTestBundle.findById(bundleId);
-//     if (!bundle) {
-//       return res.status(404).json({ message: "Mock test bundle not found" });
-//     }
-
-//     // Filter valid ObjectIds only
-//     const validMockTestIds = mockTestIds.filter(id =>
-//       mongoose.Types.ObjectId.isValid(id)
-//     );
-
-//     if (validMockTestIds.length === 0) {
-//       return res.status(400).json({
-//         message: "No valid mockTestIds provided"
-//       });
-//     }
-
-//     // $addToSet prevents duplicates automatically
-//     await MockTestBundle.findByIdAndUpdate(
-//       bundleId,
-//       {
-//         $addToSet: {
-//           mockTestIds: { $each: validMockTestIds }
-//         }
-//       },
-//       { new: true }
-//     );
-
-//     return res.status(200).json({
-//       success: true,
-//       message: "Mock tests added to bundle successfully"
-//     });
-
-//   } catch (error) {
-//     console.error("Add MockTests To Bundle Error:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Internal server error"
-//     });
-//   }
-// };
-
-
 export const addMockTestsToBundle = async (req, res) => {
   try {
     const { bundleId } = req.params;
@@ -360,48 +307,6 @@ export const addMockTestsToBundle = async (req, res) => {
     });
   }
 };
-
-// export const removeMockTestFromBundle = async (req, res) => {
-//   try {
-//     const { bundleId, mockTestId } = req.params;
-
-//     if (
-//       !mongoose.Types.ObjectId.isValid(bundleId) ||
-//       !mongoose.Types.ObjectId.isValid(mockTestId)
-//     ) {
-//       return res.status(400).json({
-//         message: "Invalid bundleId or mockTestId"
-//       });
-//     }
-
-//     const bundle = await MockTestBundle.findById(bundleId);
-//     if (!bundle) {
-//       return res.status(404).json({
-//         message: "Mock test bundle not found"
-//       });
-//     }
-
-//     await MockTestBundle.findByIdAndUpdate(
-//       bundleId,
-//       {
-//         $pull: { mockTestIds: mockTestId }
-//       },
-//       { new: true }
-//     );
-
-//     return res.status(200).json({
-//       success: true,
-//       message: "Mock test removed from bundle successfully"
-//     });
-
-//   } catch (error) {
-//     console.error("Remove MockTest From Bundle Error:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Internal server error"
-//     });
-//   }
-// };
 
 
 export const removeMockTestFromBundle = async (req, res) => {
@@ -577,6 +482,194 @@ export const getBundleStudents = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to load bundle students",
+    });
+  }
+};
+
+
+export const deleteEnrollmentsAndResults = async (req, res) => {
+  const { bundleId } = req.params;
+
+  // 1️⃣ Validate bundleId presence
+  if (!bundleId) {
+    return res.status(400).json({
+      success: false,
+      message: "Bundle ID is required",
+    });
+  }
+
+  // 2️⃣ Validate ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(bundleId)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid Bundle ID format",
+    });
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // 3️⃣ Find all attempts related to this bundle
+    const attempts = await MockTestAttempt.find({ bundleId }).session(session);
+
+    const attemptIds = attempts.map((attempt) => attempt._id);
+
+    // 4️⃣ Delete Answers (based on attemptIds)
+    if (attemptIds.length > 0) {
+      await MockTestAnswer.deleteMany({
+        attemptId: { $in: attemptIds },
+      }).session(session);
+    }
+
+    // 5️⃣ Delete Results
+    await MockTestResult.deleteMany({ bundleId }).session(session);
+
+    // 6️⃣ Delete Attempts
+    await MockTestAttempt.deleteMany({ bundleId }).session(session);
+
+    // 7️⃣ Delete Enrollments
+    await MockTestBundleEnrollment.deleteMany({ bundleId }).session(session);
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(200).json({
+      success: true,
+      message: "All enrollments, attempts, answers and results deleted successfully",
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error("Delete Bundle Related Data Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while deleting bundle data",
+      error: error.message,
+    });
+  }
+};
+
+
+
+export const exportBundleStudentsExcel = async (req, res) => {
+  try {
+    const { bundleId } = req.params;
+
+    /* ===============================
+       VALIDATE
+    =============================== */
+    if (!mongoose.Types.ObjectId.isValid(bundleId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid bundleId",
+      });
+    }
+
+    /* ===============================
+       BUNDLE META
+    =============================== */
+    const bundle = await MockTestBundle.findById(bundleId)
+      .select("title")
+      .lean();
+
+    if (!bundle) {
+      return res.status(404).json({
+        success: false,
+        message: "Bundle not found",
+      });
+    }
+
+    /* ===============================
+       ENROLLMENTS + USER
+    =============================== */
+    const enrollments = await MockTestBundleEnrollment.find({ bundleId })
+      .populate({
+        path: "userId",
+        select:
+          "name email profileImage instituteName presentCourseOfStudy",
+      })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const students = enrollments.map((e) => ({
+      name: e.userId?.name || "",
+      email: e.userId?.email || "",
+      instituteName: e.userId?.instituteName || "",
+      presentCourseOfStudy: e.userId?.presentCourseOfStudy || "",
+      enrolledAt: e.createdAt,
+    }));
+
+    /* ===============================
+       CREATE EXCEL
+    =============================== */
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Bundle Students");
+
+    /* ===== META BLOCK ===== */
+    sheet.addRow(["Bundle Title", bundle.title]);
+    sheet.addRow([
+      "Exported At",
+      new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+    ]);
+    sheet.addRow([]);
+
+    /* ===== HEADER ===== */
+    const header = sheet.addRow([
+      "Name",
+      "Email",
+      "Institute",
+      "Course",
+      "Enrolled At (IST)",
+    ]);
+    header.font = { bold: true };
+
+    /* ===== DATA ===== */
+    students.forEach((s) => {
+      sheet.addRow([
+        s.name,
+        s.email,
+        s.instituteName,
+        s.presentCourseOfStudy,
+        s.enrolledAt
+          ? new Date(s.enrolledAt).toLocaleString("en-IN", {
+              timeZone: "Asia/Kolkata",
+            })
+          : "",
+      ]);
+    });
+
+    /* ===== WIDTH ===== */
+    sheet.columns = [
+      { width: 25 },
+      { width: 30 },
+      { width: 25 },
+      { width: 20 },
+      { width: 22 },
+    ];
+
+    /* ===============================
+       SEND FILE
+    =============================== */
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=${bundle.title.replace(/\s+/g, "_")}_students.xlsx`
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error("exportBundleStudentsExcel error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to export students",
     });
   }
 };

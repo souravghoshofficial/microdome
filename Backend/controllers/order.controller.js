@@ -115,86 +115,91 @@ const verifyPayment = async (req, res) => {
 
     if (signature !== expectedSignature) {
       console.error("Invalid signature, possible spoofing attempt");
-      return res
-        .status(200)
-        .json({ success: false, message: "Invalid signature" });
+      return res.status(200).json({
+        success: false,
+        message: "Invalid signature",
+      });
     }
 
     const event = req.body;
 
     if (event.event !== "payment.captured") {
       console.warn("Ignored non-payment event:", event.event);
-      return res
-        .status(200)
-        .json({ success: false, message: "Unexpected event" });
+      return res.status(200).json({
+        success: false,
+        message: "Unexpected event",
+      });
     }
 
     const payment = event.payload.payment.entity;
 
-    // Find order
-    const order = await Order.findOne({ razorpayOrderId: payment.order_id });
+    const order = await Order.findOne({
+      razorpayOrderId: payment.order_id,
+    });
 
     if (!order) {
       console.error("Order not found for payment:", payment.order_id);
-      return res
-        .status(200)
-        .json({ success: false, message: "Order not found" });
+      return res.status(200).json({
+        success: false,
+        message: "Order not found",
+      });
     }
 
-    // Update order
     order.razorpayPaymentId = payment.id;
-
     order.status = "Completed";
     await order.save();
 
-    // Get user
     const user = await User.findById(order.userId);
-    
+
     if (!user) {
       console.error("User not found for order:", order._id);
-      return res
-        .status(200)
-        .json({ success: false, message: "User not found" });
+      return res.status(200).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
-    // Handle itemType
+    // ================= COURSE =================
     if (order.itemType === "course") {
       user.isPremiumMember = true;
 
       if (!user.enrolledCourses.includes(order.itemId)) {
         user.enrolledCourses.push(order.itemId);
       }
+
       await user.save();
 
       const courseDetails = await Course.findById(order.itemId);
 
-      await CourseEnrollment.create({
-        courseId: courseDetails._id,
-        userId: user._id,
-      });
+      try {
+        await CourseEnrollment.create({
+          courseId: courseDetails._id,
+          userId: user._id,
+        });
+      } catch (error) {
+        if (error.code === 11000) {
+          return res.status(200).json({
+            success: false,
+            message: "User is already enrolled in this course",
+          });
+        }
 
-      // Only for LIVE courses
+        return res.status(200).json({
+          success: false,
+          message: "Something went wrong",
+        });
+      }
+
       if (courseDetails.mode?.toLowerCase() === "live") {
         const MONTH_KEYS = [
-          "jan",
-          "feb",
-          "mar",
-          "apr",
-          "may",
-          "jun",
-          "jul",
-          "aug",
-          "sep",
-          "oct",
-          "nov",
-          "dec",
+          "jan","feb","mar","apr","may","jun",
+          "jul","aug","sep","oct","nov","dec"
         ];
 
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
         const currentMonthKey = MONTH_KEYS[currentDate.getMonth()];
 
-        // Check if already exists (important safeguard)
         const exists = await MonthlyFee.findOne({
           userId: user._id,
           courseId: courseDetails._id,
@@ -211,7 +216,6 @@ const verifyPayment = async (req, res) => {
         }
       }
 
-      // 1. Send course confirmation email
       await sendCourseConfirmationEmail({
         to: user.email,
         studentName: user.name,
@@ -220,24 +224,10 @@ const verifyPayment = async (req, res) => {
         whatsappLink: courseDetails.whatsappLink,
       });
 
-      // 2. Check if this course is an MSc Entrance batch
-      const MSC_ENTRANCE_BATCH_IDS = [
-        "68a3910c37c7e92815cbac12",
-        "68a6cdeefa66a524a5255dcd",
-      ];
+    }
 
-      if (MSC_ENTRANCE_BATCH_IDS.includes(order.itemId.toString())) {
-        user.hasAccessToQuizzes = true;
-        await user.save();
-
-        // Send quiz confirmation email
-        await sendQuizConfirmationEmail({
-          to: user.email,
-          studentName: user.name,
-          quizLink: "https://microdomeclasses.in/quizzes",
-        });
-      }
-    } else if (order.itemType === "quiz") {
+    // ================= QUIZ =================
+    else if (order.itemType === "quiz") {
       user.hasAccessToQuizzes = true;
       await user.save();
 
@@ -246,32 +236,46 @@ const verifyPayment = async (req, res) => {
         studentName: user.name,
         quizLink: "https://microdomeclasses.in/quizzes",
       });
-    } else if(order.itemType === "mock_test_bundle") {
-      const mockTestBundleEnrollment = await MockTestBundleEnrollment.create({
-        bundleId: order.itemId,
-        userId: user._id
-      })
-      const bundle = await MockTestBundle.findById(order.itemId)
-      //mock test confirmation email 
-      await sendMockTestConfirmationEmail({
-        to: user.email,
-        name: user.name,
-        mockTestBundleTitle: bundle.title,
-        bundleId: bundle._id
-      })
     }
 
-    // Always respond 200 to Razorpay
+    // ================= MOCK TEST BUNDLE =================
+    else if (order.itemType === "mock_test_bundle") {
+      try {
+        await MockTestBundleEnrollment.create({
+          bundleId: order.itemId,
+          userId: user._id,
+        });
+
+        const bundle = await MockTestBundle.findById(order.itemId);
+
+        await sendMockTestConfirmationEmail({
+          to: user.email,
+          name: user.name,
+          mockTestBundleTitle: bundle.title,
+          bundleId: bundle._id,
+        });
+
+      } catch (error) {
+        if (error.code === 11000) {
+          return res.status(200).json({
+            success: false,
+            message: "User is already enrolled in this course",
+          });
+        }
+      }
+    }
+
+    // ✅ FINAL RESPONSE (properly outside all itemType blocks)
     return res.status(200).json({
       success: true,
       message: "Payment processed",
       razorpay_order_id: payment.order_id,
       razorpay_payment_id: payment.id,
     });
+
   } catch (error) {
     console.error("Error in webhook processing:", error);
 
-    // Still respond 200 to Razorpay, just mark as failed internally
     return res.status(200).json({
       success: false,
       message: "Internal error while processing payment",

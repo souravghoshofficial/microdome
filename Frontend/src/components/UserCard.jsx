@@ -33,7 +33,7 @@ const UserCard = ({ className = "" }) => {
     <div
       className={`${showProfileCard ? "block" : "hidden"}  ${
         isLoggedIn ? "block" : "hidden"
-      } ${className} w-60  border border-gray-200 dark:border-gray-50/[.1] rounded-md bg-white dark:bg-zinc-900 text-black dark:text-white`}
+      } ${className} w-62 border border-gray-200 dark:border-gray-50/[.1] rounded-md bg-white dark:bg-zinc-900 text-black dark:text-white`}
     >
       <div className="relative px-4 py-6 flex flex-col items-center">
         <UserIcon className="w-16 h-16" />
@@ -52,7 +52,7 @@ const UserCard = ({ className = "" }) => {
           className={`${userData?.role === "admin" || userData?.role === "instructor" ? "flex" : "hidden"} mt-2 px-3 py-1.5 rounded-md items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-highlighted cursor-pointer  transition-all duration-300`}
         >
           <ShieldUser size={20} strokeWidth={1} />
-          <p>Admin Dashboard</p>
+          <p>{userData.role==="admin" ? "Admin Dashboard" : "Instructor Dashboard"}</p>
         </Link>
         <div
           onClick={logoutUser}

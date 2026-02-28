@@ -257,7 +257,7 @@ const Navbar = () => {
                 }
               >
                 <Settings size={22}/>
-                <span>Admin Dashboard</span>
+                <span>{role==="admin" ? "Admin Dashboard" : "Instructor Dashboard"}</span>
               </NavLink>
                 </div>
   )}
