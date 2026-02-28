@@ -675,7 +675,7 @@ const AdminMockTestQuestions = () => {
               {/* NAT */}
               {section.questionType === "NAT" && (
                 <div className="grid grid-cols-2 gap-2">
-                  <div>
+                  <div className="flex flex-col w-full">
                     <label className="text-sm font-medium">
                       Numeric Answer
                     </label>
@@ -685,11 +685,11 @@ const AdminMockTestQuestions = () => {
                       onChange={(e) =>
                         setForm({ ...form, numericAnswer: e.target.value })
                       }
-                      className="border rounded px-3 py-2 mt-1"
+                      className="w-full border rounded px-3 py-2 mt-1"
                       required
                     />
                   </div>
-                  <div>
+                  <div className="w-full flex flex-col">
                     <label className="text-sm font-medium">Tolerance</label>
                     <input
                       type="number"
@@ -697,7 +697,7 @@ const AdminMockTestQuestions = () => {
                       onChange={(e) =>
                         setForm({ ...form, tolerance: e.target.value })
                       }
-                      className="border rounded px-3 py-2 mt-1"
+                      className="w-full border rounded px-3 py-2 mt-1"
                     />
                   </div>
                 </div>

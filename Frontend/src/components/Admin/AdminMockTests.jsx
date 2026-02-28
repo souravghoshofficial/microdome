@@ -455,7 +455,7 @@ const AdminMockTests = () => {
       {/* ================= MODAL ================= */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-full max-w-lg p-6 relative max-h-[90vh] overflow-y-auto scrollbar-none">
+          <div className="bg-white rounded-xl w-full max-w-2xl p-6 relative max-h-[90vh] overflow-y-auto scrollbar-none">
             <button
               onClick={() => {
                 setShowModal(false);
@@ -573,7 +573,7 @@ const AdminMockTests = () => {
                   value={formData.instructions}
                   onChange={handleChange}
                   placeholder="Each question has only one correct answer"
-                  className="w-full border rounded px-3 py-2 mt-1"
+                  className="w-full border rounded px-3 py-2 mt-1 h-40"
                 />
               </div>
 
