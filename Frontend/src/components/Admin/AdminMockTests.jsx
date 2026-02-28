@@ -556,8 +556,9 @@ const AdminMockTests = () => {
                 <select
                   name="accessType"
                   value={formData.accessType}
+                  disabled={!!editingTest}
                   onChange={handleChange}
-                  className="w-full border rounded px-3 py-2 mt-1 cursor-pointer"
+                  className="w-full border rounded px-3 py-2 mt-1 cursor-pointer disabled:bg-gray-100"
                 >
                   <option value="FREE">FREE</option>
                   <option value="PAID">PAID</option>
