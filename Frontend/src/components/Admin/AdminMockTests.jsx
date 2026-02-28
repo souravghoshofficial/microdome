@@ -7,7 +7,7 @@ import {
   Pencil,
   Trash2,
   Layers,
-  Minus
+  Minus,
 } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -36,7 +36,8 @@ const AdminMockTests = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingTestId, setDeletingTestId] = useState(null);
   const [deleting, setDeleting] = useState(false);
-  const [updatingMockTestAllowedAttempts,setUpdatingMocktestAllowedAttempts] = useState(false);
+  const [updatingMockTestAllowedAttempts, setUpdatingMocktestAllowedAttempts] =
+    useState(false);
   const [statusModal, setStatusModal] = useState(null);
   const [statusUpdating, setStatusUpdating] = useState(false);
 
@@ -135,39 +136,39 @@ const AdminMockTests = () => {
     }
   };
 
-  const handleIncreaseAllowedAttempts = async (mockTestId)=>{
+  const handleIncreaseAllowedAttempts = async (mockTestId) => {
     try {
-      setUpdatingMocktestAllowedAttempts(true)
-      await axios.patch(`${ApiUrl}/admin/mock-tests/${mockTestId}/increase-allowed-attempt`,
+      setUpdatingMocktestAllowedAttempts(true);
+      await axios.patch(
+        `${ApiUrl}/admin/mock-tests/${mockTestId}/increase-allowed-attempt`,
         {},
-        { withCredentials: true }
-      )
-      toast.success("Allowed attempts increased successfully")
-      fetchMockTests()
+        { withCredentials: true },
+      );
+      toast.success("Allowed attempts increased successfully");
+      fetchMockTests();
     } catch (error) {
-      toast.error("Something went wrong.")
+      toast.error("Something went wrong.");
+    } finally {
+      setUpdatingMocktestAllowedAttempts(false);
     }
-    finally{
-      setUpdatingMocktestAllowedAttempts(false)
-    }
-  }
+  };
 
-  const handleDecreaseAllowedAttempts = async (mockTestId)=>{
-      try {
-        setUpdatingMocktestAllowedAttempts(true)
-      await axios.patch(`${ApiUrl}/admin/mock-tests/${mockTestId}/decrease-allowed-attempt`,
+  const handleDecreaseAllowedAttempts = async (mockTestId) => {
+    try {
+      setUpdatingMocktestAllowedAttempts(true);
+      await axios.patch(
+        `${ApiUrl}/admin/mock-tests/${mockTestId}/decrease-allowed-attempt`,
         {},
-        { withCredentials: true }
-      )
-      toast.success("Allowed attempts decreased successfully")
-      fetchMockTests()
+        { withCredentials: true },
+      );
+      toast.success("Allowed attempts decreased successfully");
+      fetchMockTests();
     } catch (error) {
-      toast.error("Something went wrong.")
+      toast.error("Something went wrong.");
+    } finally {
+      setUpdatingMocktestAllowedAttempts(false);
     }
-    finally{
-      setUpdatingMocktestAllowedAttempts(false)
-    }
-  }
+  };
   /* ================= CREATE ================= */
 
   const handleCreateMockTest = async (e) => {
@@ -235,7 +236,6 @@ const AdminMockTests = () => {
     }
   };
 
-
   /* ================= STATUS UPDATE ================= */
 
   const handleConfirmStatusChange = async () => {
@@ -255,9 +255,7 @@ const AdminMockTests = () => {
       setStatusModal(null);
       fetchMockTests();
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Failed to update status",
-      );
+      toast.error(error?.response?.data?.message || "Failed to update status");
     } finally {
       setStatusUpdating(false);
     }
@@ -281,14 +279,13 @@ const AdminMockTests = () => {
       <header className="mb-4 px-4">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-blue-800">All Mock Tests</h1>
-            <button
-              onClick={openCreateModal}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              Create Mock Test
-            </button>
-         
+          <button
+            onClick={openCreateModal}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            Create Mock Test
+          </button>
         </div>
       </header>
 
@@ -361,27 +358,57 @@ const AdminMockTests = () => {
 
               {user?.role === "admin" && (
                 <div className="mt-4 w-[95%] mx-auto flex items-center justify-center gap-2">
-                <p className="text-xs font-semibold px-2 py-1 rounded bg-blue-100 text-blue-700">Allowed Attempts: {test.allowedAttempts}</p>
-                
-                <button onClick={()=>{handleDecreaseAllowedAttempts(test._id)}}  title={test.allowedAttempts <= 1 ? "Disabled: decrease further" : `Decrease attempts by 1`} disabled={test.allowedAttempts <= 1 || updatingMockTestAllowedAttempts} className="p-1 border border-red-600 text-red-600 rounded-full hover:bg-red-50 
-                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                  <Minus className="w-3 h-3" />
-                </button>
-                <button onClick={()=>{handleIncreaseAllowedAttempts(test._id)}} 
-                disabled={updatingMockTestAllowedAttempts} title="Increase attempts by 1" className="p-1 border border-green-600 text-green-600 rounded-full hover:bg-green-50
-                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                  <Plus className="w-3 h-3" />
-                </button>
-              </div>
+                  <p className="text-xs font-semibold px-2 py-1 rounded bg-blue-100 text-blue-700">
+                    Allowed Attempts: {test.allowedAttempts}
+                  </p>
+
+                  <button
+                    onClick={() => {
+                      handleDecreaseAllowedAttempts(test._id);
+                    }}
+                    title={
+                      test.allowedAttempts <= 1
+                        ? "Disabled: decrease further"
+                        : `Decrease attempts by 1`
+                    }
+                    disabled={
+                      test.allowedAttempts <= 1 ||
+                      updatingMockTestAllowedAttempts
+                    }
+                    className="p-1 border border-red-600 text-red-600 rounded-full hover:bg-red-50 
+                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Minus className="w-3 h-3" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleIncreaseAllowedAttempts(test._id);
+                    }}
+                    disabled={updatingMockTestAllowedAttempts}
+                    title="Increase attempts by 1"
+                    className="p-1 border border-green-600 text-green-600 rounded-full hover:bg-green-50
+                cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </button>
+                </div>
               )}
 
               <div className="mt-4 w-[95%] mx-auto flex items-center gap-2">
-                {/* Primary action */}
+                {/* Manage */}
                 <Link
                   to={`/admin/mock-tests/${test._id}`}
                   className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 text-center cursor-pointer"
                 >
                   Manage
+                </Link>
+
+                {/* Results */}
+                <Link
+                  to={`/admin/mock-tests/${test._id}/results`}
+                  className="flex-1 bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 text-center cursor-pointer"
+                >
+                  Results
                 </Link>
 
                 {/* Edit */}
@@ -406,24 +433,21 @@ const AdminMockTests = () => {
                 </button>
               </div>
               {/* PUBLISH / UNPUBLISH */}
-            <button
-              onClick={() =>
-                setStatusModal({
-                  id: test._id,
-                  status:
-                    test.status === "PUBLISHED"
-                      ? "DRAFT"
-                      : "PUBLISHED",
-                })
-              }
-              className={`w-[95%] mx-auto mt-2 py-2 rounded cursor-pointer ${
-                test.status === "PUBLISHED"
-                  ? "border border-red-500 text-red-600 hover:bg-red-50"
-                  : "border border-green-500 text-green-600 hover:bg-green-50"
-              }`}
-            >
-              {test.status === "PUBLISHED" ? "Unpublish" : "Publish"}
-            </button>
+              <button
+                onClick={() =>
+                  setStatusModal({
+                    id: test._id,
+                    status: test.status === "PUBLISHED" ? "DRAFT" : "PUBLISHED",
+                  })
+                }
+                className={`w-[95%] mx-auto mt-2 py-2 rounded cursor-pointer ${
+                  test.status === "PUBLISHED"
+                    ? "border border-red-500 text-red-600 hover:bg-red-50"
+                    : "border border-green-500 text-green-600 hover:bg-green-50"
+                }`}
+              >
+                {test.status === "PUBLISHED" ? "Unpublish" : "Publish"}
+              </button>
             </div>
           ))}
         </div>
@@ -540,7 +564,6 @@ const AdminMockTests = () => {
                 </select>
               </div>
 
-
               {/* Instructions */}
               <div>
                 <label className="text-sm font-medium">Instructions</label>
@@ -611,7 +634,6 @@ const AdminMockTests = () => {
         </div>
       )}
 
-
       {/* ================= STATUS MODAL ================= */}
       {statusModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -622,7 +644,10 @@ const AdminMockTests = () => {
 
             <p className="text-sm text-gray-600 mt-2">
               Are you sure you want to{" "}
-              <b>{statusModal.status === "PUBLISHED" ? "Publish" : "Unpublish"}</b> this mock test?
+              <b>
+                {statusModal.status === "PUBLISHED" ? "Publish" : "Unpublish"}
+              </b>{" "}
+              this mock test?
             </p>
 
             <div className="mt-6 flex justify-end gap-3">
@@ -639,9 +664,7 @@ const AdminMockTests = () => {
                 disabled={statusUpdating}
                 className="px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white flex items-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                {statusUpdating && (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                )}
+                {statusUpdating && <Loader2 className="w-4 h-4 animate-spin" />}
                 Confirm
               </button>
             </div>
@@ -649,6 +672,6 @@ const AdminMockTests = () => {
         </div>
       )}
     </div>
-);
+  );
 };
 export default AdminMockTests;

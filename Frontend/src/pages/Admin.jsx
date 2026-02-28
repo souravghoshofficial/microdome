@@ -27,6 +27,7 @@ const adminMenuItems = [
   { name: "All Quizzes", icon: <FileQuestion size={20} />, href: "/admin/quizzes" },
   { name: "Mock Tests", icon: <ClipboardList size={20}/>, href: "/admin/mock-tests"},
   { name: "Mock Test Bundles", icon: <Folder size={20}/>, href: "/admin/mock-test-bundles"},
+  { name: "Bundle Enrollments", icon: <Users size={20}/>, href: "/admin/bundles/enrollments"},
   { name: "Coupons", icon: <Tickets size={20} />, href: "/admin/coupons" },
 ];
 
