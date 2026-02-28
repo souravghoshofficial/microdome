@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { RiMenuFill, RiCloseLine, RiLogoutBoxRLine } from "@remixicon/react";
-import { House, Book, Info, FileText, User, Users, Settings, LogOut,  FileQuestion, School } from "lucide-react"
+import { House, Book, Info, FileText, User, Users, Settings, LogOut,  FileQuestion, School, ClipboardCheck } from "lucide-react"
 import Logo from "./Logo";
 import ThemeBtn from "./ThemeBtn";
 import UserCard from "./UserCard";
@@ -19,6 +19,10 @@ const navItems = [
   {
     navItemName: "Courses",
     linkAddress: "/courses",
+  },
+    {
+    navItemName: "Mock Tests",
+    linkAddress: "/mock-tests",
   },
   {
     navItemName: "Quizzes",
@@ -180,6 +184,16 @@ const Navbar = () => {
           </NavLink>
           <NavLink
             onClick={() => setShowSideNav(false)}
+            to="/mock-tests"
+            className={({ isActive }) =>
+              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
+            }
+          >
+           <ClipboardCheck size={22}/>
+           <span>Mock Tests</span>
+          </NavLink>
+          <NavLink
+            onClick={() => setShowSideNav(false)}
             to="/quizzes"
             className={({ isActive }) =>
               `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
@@ -188,6 +202,7 @@ const Navbar = () => {
             <FileQuestion size={22}/>
             <span>Quizzes</span>
           </NavLink>
+
           <NavLink
             onClick={() => setShowSideNav(false)}
             to="/about-us"
