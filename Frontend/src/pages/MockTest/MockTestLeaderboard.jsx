@@ -196,8 +196,7 @@ function LeaderRow({ u }) {
                   key={a.attemptNumber}
                   className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs text-gray-800 dark:text-gray-200"
                 >
-                  Attempt {a.attemptNumber} • Score:{a.score} •Time Taken:{" "}
-                  {formatTime(a.timeTakenSeconds)}
+                  Attempt {a.attemptNumber} | Score: {a.score} | Time: {formatTime(a.timeTakenSeconds)}
                 </div>
               ))}
             </div>
