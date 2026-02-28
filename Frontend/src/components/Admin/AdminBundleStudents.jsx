@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { Loader2, Users,Trash2 } from "lucide-react";
+import { Loader2, Users,Trash2, Download } from "lucide-react";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
