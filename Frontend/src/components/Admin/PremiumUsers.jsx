@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
+import { Users } from 'lucide-react'
 import axios from "axios";
 
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -36,20 +37,25 @@ const PremiumUsers = () => {
               className="h-56 w-full object-cover rounded-md"
             />
 
-            <h2 className="text-xl font-semibold text-center mt-4">
+           <div className="w-full my-1">
+             <h2 className="text-xl font-semibold text-left mt-4">
               {course.courseTitle}
             </h2>
+           </div>
 
-            <p className="mt-2 text-gray-600">
-              Students Enrolled:{" "}
-              <span className="font-bold">{course.studentCount}</span>
-            </p>
+              <div className="ml-auto flex items-center gap-1 text-blue-700 py-1 px-3 rounded bg-blue-50">
+                <Users className="w-4 h-4" />
+              <span className="font-semibold text-sm">{course.studentCount}</span>
+              </div>
+          
 
             <Link
               to={`/admin/premium-users/${course._id}`}
-              className="mt-4 bg-blue-600 text-white text-center py-2 rounded hover:bg-blue-700 w-full"
+              className="mt-4 bg-blue-600 text-white text-center py-2 rounded hover:bg-blue-700 w-full flex items-center justify-center gap-2"
+
             >
-              View Details
+              <Users className="w-4 h-4" />
+              <span className="font-semibold">View Students</span>
             </Link>
           </div>
         ))}

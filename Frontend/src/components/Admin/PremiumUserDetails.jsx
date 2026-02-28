@@ -37,7 +37,7 @@ const PremiumUserDetails = () => {
               email: u.email || "---",
               profilePic: u?.profileImage || userImage,
               dateJoined: u.createdAt
-                ? new Date(u.createdAt).toLocaleDateString("en-US", {
+                ? new Date(u.createdAt).toLocaleDateString("en-IN", {
                     month: "short",
                     day: "numeric",
                     year: "numeric",
@@ -116,7 +116,7 @@ const PremiumUserDetails = () => {
       {/* ================= HEADER ================= */}
       <div className="flex flex-col md:flex-row justify-between items-center px-4 md:px-6 py-4 border-b gap-3">
         <h2 className="text-base md:text-lg font-semibold">
-          {courseName}
+          {courseName} - {users.length} {users.length === 1 ? "Student" : "Students"}
         </h2>
 
         <div className="flex items-center gap-2">

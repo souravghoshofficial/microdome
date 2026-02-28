@@ -337,7 +337,7 @@ const CheckOut = () => {
                 {description}
               </p>
 
-              <div className="space-y-3 border-t pt-4">
+              <div className="space-y-3 border-t border-black/50 dark:border-white/50 pt-4">
                 <PriceRow label="Original Price" value={`₹${actualPrice}`} />
                 <PriceRow label="Discount" value={`- ₹${actualPrice-discountAmount}`}/>
                 {appliedDiscount > 0 && (
@@ -349,7 +349,7 @@ const CheckOut = () => {
                     highlight
                   />
                 )}
-                <div className="flex justify-between font-bold text-lg pt-4 border-t text-black dark:text-white">
+                <div className="flex justify-between font-bold text-lg pt-4 border-t text-black dark:text-white px-1">
                   <span>Total</span>
                   <span>₹{price}</span>
                 </div>
@@ -404,11 +404,11 @@ const InputField = ({ label, value, onChange, placeholder }) => (
 const PriceRow = ({ label, value, highlight }) => (
   <div
     className={`
-      flex justify-between items-center p-3 rounded-xl
+      flex justify-between items-center mt-1 px-3 rounded-lg
       transition-all duration-300
       ${
         highlight
-          ? "text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-500/10"
+          ? "text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-500/10 py-1.5"
           : "text-slate-600 dark:text-slate-300"
       }
     `}

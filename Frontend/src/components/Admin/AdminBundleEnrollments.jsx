@@ -109,7 +109,7 @@ const AdminBundleEnrollments = () => {
                 {b.isActive ? "ACTIVE" : "INACTIVE"}
               </span>
 
-              <span className="flex items-center gap-1 text-sm font-semibold text-blue-700">
+              <span className="flex items-center gap-1 text-sm font-semibold text-blue-700 px-3 py-1 bg-blue-50 rounded">
                 <Users className="w-4 h-4" />
                 {b.enrolledCount}
               </span>
