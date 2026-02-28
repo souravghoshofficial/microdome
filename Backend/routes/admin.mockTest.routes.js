@@ -22,6 +22,7 @@ import {
     increaseMockTestAttempt,
     decreaseMockTestAttempt,
     getPaidAvailableMockTest,
+    getAdminMockTestResults,
 } from "../controllers/admin.mockTest.controller.js";
 
 
@@ -37,6 +38,8 @@ router.route("/:mockTestId").get(authorizedRoles("admin","instructor"), getMockT
 router.route("/:mockTestId").patch(authorizedRoles("admin","instructor"), updateMockTest)
 router.route("/:mockTestId").delete(authorizedRoles("admin","instructor"), deleteMockTest)
 router.route("/:mockTestId/status").patch(authorizedRoles("admin","instructor"), updateMockTestStatus)
+
+router.route("/:mockTestId/results").get(authorizedRoles("admin","instructor"), getAdminMockTestResults)
 
 router.route("/:mockTestId/sections").post(authorizedRoles("admin","instructor"), createMockTestSection)
 router.route("/:mockTestId/sections").get(authorizedRoles("admin","instructor"), getMockTestSections)
@@ -60,5 +63,8 @@ router.route("/:mockTestId/:mockTestSectionId/questions").get(authorizedRoles("a
 router.route("/:mockTestId/increase-allowed-attempt").patch(authorizedRoles("admin"),increaseMockTestAttempt)
 
 router.route("/:mockTestId/decrease-allowed-attempt").patch(authorizedRoles("admin"),decreaseMockTestAttempt)
+
+
+
 
 export default router;

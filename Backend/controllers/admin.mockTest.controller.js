@@ -1378,3 +1378,107 @@ export const decreaseMockTestAttempt = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+export const getAdminMockTestResults = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({ message: "Invalid mockTestId" });
+    }
+
+    /* ===============================
+       MOCK TEST META
+    =============================== */
+    const mockTest = await MockTest.findById(mockTestId)
+      .select("title mockTestType durationMinutes totalMarks allowedAttempts bundleId")
+      .lean();
+
+    if (!mockTest) {
+      return res.status(404).json({ message: "Mock test not found" });
+    }
+
+    /* ===============================
+       ALL ATTEMPTS PER USER
+    =============================== */
+    const students = await MockTestResult.aggregate([
+      {
+        $match: {
+          mockTestId: new mongoose.Types.ObjectId(mockTestId),
+        },
+      },
+
+      { $sort: { attemptNumber: 1 } },
+
+      {
+        $group: {
+          _id: "$userId",
+
+          attempts: {
+            $push: {
+              attemptNumber: "$attemptNumber",
+              score: "$score",
+              correctCount: "$correctCount",
+              incorrectCount: "$incorrectCount",
+              unattemptedCount: "$unattemptedCount",
+              timeTakenSeconds: "$timeTakenSeconds",
+              createdAt: "$createdAt",
+            },
+          },
+
+          latestScore: { $last: "$score" },
+          bestScore: { $max: "$score" },
+          latestAttemptNumber: { $last: "$attemptNumber" },
+        },
+      },
+
+      /* user join */
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+
+      {
+        $project: {
+          _id: 0,
+
+          userId: "$user._id",
+          name: "$user.name",
+          email: "$user.email",
+          profileImage: "$user.profileImage",
+          instituteName: "$user.instituteName",
+          presentCourseOfStudy: "$user.presentCourseOfStudy",
+
+          attempts: 1,
+          latestScore: 1,
+          bestScore: 1,
+          latestAttemptNumber: 1,
+        },
+      },
+
+      { $sort: { latestScore: -1 } },
+    ]);
+
+    /* ===============================
+       RESPONSE
+    =============================== */
+    return res.json({
+      success: true,
+      mockTest,
+      totalStudents: students.length,
+      students,
+    });
+  } catch (e) {
+    console.error("getAdminMockTestResults error:", e);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to load results",
+    });
+  }
+};

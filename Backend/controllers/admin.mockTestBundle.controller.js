@@ -1,6 +1,7 @@
 import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js";
 import { MockTestBundle } from "../models/mockTestBundle.model.js";
 import { MockTest } from "../models/mockTest.model.js";
+import { MockTestBundleEnrollment } from "../models/mockTestBundleEnrollment.model.js";
 import mongoose from "mongoose";
 
 
@@ -444,6 +445,138 @@ export const removeMockTestFromBundle = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error"
+    });
+  }
+};
+
+
+
+export const getAllBundlesWithEnrollmentCount = async (req, res) => {
+  try {
+    /* ===============================
+       AGGREGATE ENROLLMENT COUNTS
+    =============================== */
+    const counts = await MockTestBundleEnrollment.aggregate([
+      {
+        $group: {
+          _id: "$bundleId",
+          enrolledCount: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const countMap = new Map();
+    counts.forEach((c) =>
+      countMap.set(c._id.toString(), c.enrolledCount)
+    );
+
+    /* ===============================
+       FETCH ALL BUNDLES
+    =============================== */
+    const bundles = await MockTestBundle.find({})
+      .select("title description isActive thumbnail")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    /* ===============================
+       MERGE COUNTS
+    =============================== */
+    const data = bundles.map((b) => ({
+      bundleId: b._id,
+      title: b.title,
+      description: b.description,
+      thumbnail: b.thumbnail,
+      isActive: b.isActive,
+      enrolledCount: countMap.get(b._id.toString()) || 0,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      bundles: data,
+      totalBundles: data.length,
+    });
+  } catch (error) {
+    console.error("getAllBundlesWithEnrollmentCount error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to load bundle stats",
+    });
+  }
+};
+
+
+export const getBundleStudents = async (req, res) => {
+  try {
+    const { bundleId } = req.params;
+
+    /* ===============================
+       VALIDATE
+    =============================== */
+    if (!mongoose.Types.ObjectId.isValid(bundleId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid bundleId",
+      });
+    }
+
+    /* ===============================
+       FETCH BUNDLE META
+    =============================== */
+    const bundle = await MockTestBundle.findById(bundleId)
+      .select("title")
+      .lean();
+
+    if (!bundle) {
+      return res.status(404).json({
+        success: false,
+        message: "Bundle not found",
+      });
+    }
+
+    /* ===============================
+       FETCH ENROLLED STUDENTS
+    =============================== */
+    const enrollments = await MockTestBundleEnrollment.find({
+      bundleId,
+    })
+      .populate({
+        path: "userId",
+        select:
+          "name email profileImage instituteName presentCourseOfStudy",
+      })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    /* ===============================
+       SHAPE RESPONSE
+    =============================== */
+    const students = enrollments.map((e) => ({
+      userId: e.userId?._id || null,
+      name: e.userId?.name || "",
+      email: e.userId?.email || "",
+      profileImage: e.userId?.profileImage || null,
+      instituteName: e.userId?.instituteName || "",
+      presentCourseOfStudy: e.userId?.presentCourseOfStudy || "",
+      enrolledAt: e.createdAt,
+    }));
+
+    /* ===============================
+       RESPONSE
+    =============================== */
+    return res.status(200).json({
+      success: true,
+      bundle: {
+        _id: bundleId,
+        title: bundle.title,
+      },
+      students,
+      totalStudents: students.length,
+    });
+  } catch (error) {
+    console.error("getBundleStudents error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to load bundle students",
     });
   }
 };
