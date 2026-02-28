@@ -168,7 +168,7 @@ const AdminBundleStudents = () => {
         <button onClick={() => downloadEnrollmentsExcel(bundleId, bundleTitle)}
                  className="py-2 px-4 flex bg-blue-500 text-white items-center gap-1 rounded cursor-pointer hover:bg-blue-600">
                   <Download className="h-4 w-4"/>
-                  <span>Download Results</span>
+                  <span>Download Enrollments</span>
         </button>
 
 
