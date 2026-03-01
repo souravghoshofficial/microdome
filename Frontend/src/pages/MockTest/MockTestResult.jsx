@@ -578,7 +578,7 @@ export default function MockTestResult() {
           gutter={8}
           containerStyle={{ top: 20 }}
           toastOptions={{
-            duration: 2500,
+            duration: 3000,
             style: {
               fontSize: "13px",
               borderRadius: "10px",
