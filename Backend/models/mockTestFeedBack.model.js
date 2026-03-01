@@ -15,14 +15,18 @@ const mockTestFeedBackSchema = new Schema({
     type: Number,
     required: true,
     min: 1,
-    max: 5
+    max: 5,
+    default: null
   },
   review: {
     type: String,
-    trim: true
+    trim: true,
+    default: ""
   }
 },
 { timestamps: true }
 );
+
+mockTestFeedBackSchema.index({ userId: 1, mockTestId: 1 }, { unique: true });
 
 export const MockTestFeedBack = mongoose.model("MockTestFeedBack",mockTestFeedBackSchema)

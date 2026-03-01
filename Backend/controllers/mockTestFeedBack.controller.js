@@ -1,96 +1,118 @@
 import { MockTestFeedBack } from "../models/mockTestFeedBack.model.js";
 import mongoose from "mongoose";
-import { MockTest } from "../models/mockTest.model.js";
+
 
 export const submitFeedBack = async (req, res) => {
   try {
     const { mockTestId } = req.params;
     const { rating, review } = req.body;
+    const userId = req.user._id;
 
-    // Validate mockTestId
-    if (!mockTestId) {
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
       return res.status(400).json({
         success: false,
-        message: "Mock Test Id is required."
+        message: "Invalid Mock Test Id",
+      });
+    }
+
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({
+        success: false,
+        message: "Rating must be 1–5",
+      });
+    }
+
+    const feedback = await MockTestFeedBack.findOneAndUpdate(
+      { userId, mockTestId },
+      {
+        rating,
+        review,
+      },
+      {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    return res.json({
+      success: true,
+      message: "Feedback submitted",
+      data: feedback,
+    });
+  } catch (e) {
+    console.error("submitFeedBack", e);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+
+export const markFeedbackPrompted = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
+    const userId = req.user._id;
+
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({ success: false });
+    }
+
+    await MockTestFeedBack.updateOne(
+      { userId, mockTestId },
+      {
+        $setOnInsert: {
+          userId,
+          mockTestId,
+          promptedAt: new Date(),
+          rating: null,
+        },
+      },
+      { upsert: true }
+    );
+
+    return res.json({ success: true });
+  } catch (e) {
+    console.error("markFeedbackPrompted", e);
+    res.status(500).json({ success: false });
+  }
+};
+
+
+export const checkFeedbackPrompt = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
+    const userId = req.user?._id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
       });
     }
 
     if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid Mock Test Id."
+        message: "Invalid mockTestId",
       });
     }
 
-    // Validate rating
-    if (!rating || rating < 1 || rating > 5) {
-      return res.status(400).json({
-        success: false,
-        message: "Rating must be between 1 and 5."
-      });
-    }
-
-    const user = req.user;
-
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized user."
-      });
-    }
-
-    // Check if mock test exists
-    const mockTest = await MockTest.findById(mockTestId);
-
-    if (!mockTest) {
-      return res.status(404).json({
-        success: false,
-        message: "Mock Test not found."
-      });
-    }
-
-    // Check if feedback already exists
-    const existingFeedBack = await MockTestFeedBack.findOne({
-      userId: user._id,
-      mockTestId
-    });
-
-    let feedback;
-
-    if (existingFeedBack) {
-      // Update existing feedback
-      existingFeedBack.rating = rating;
-      existingFeedBack.review = review || existingFeedBack.review;
-
-      feedback = await existingFeedBack.save();
-
-      return res.status(200).json({
-        success: true,
-        message: "Feedback updated successfully.",
-        data: feedback
-      });
-    }
-
-    // Create new feedback
-    feedback = await MockTestFeedBack.create({
-      userId: user._id,
+    const existing = await MockTestFeedBack.findOne({
+      userId,
       mockTestId,
-      rating,
-      review
-    });
+    })
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "Feedback submitted successfully.",
-      data: feedback
+      showFeedback: !existing
     });
-
   } catch (error) {
-    console.error("Submit Feedback Error:", error);
-
+    console.error("checkFeedbackPrompt error:", error);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error"
+      message: "Failed to check feedback status",
     });
   }
 };
