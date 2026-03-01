@@ -447,7 +447,7 @@ export const getBundleStudents = async (req, res) => {
       .populate({
         path: "userId",
         select:
-          "name email profileImage instituteName presentCourseOfStudy",
+          "name email mobileNumber profileImage instituteName presentCourseOfStudy",
       })
       .sort({ createdAt: -1 })
       .lean();
@@ -459,6 +459,7 @@ export const getBundleStudents = async (req, res) => {
       userId: e.userId?._id || null,
       name: e.userId?.name || "",
       email: e.userId?.email || "",
+      mobileNumber: e.userId?.mobileNumber || "",
       profileImage: e.userId?.profileImage || null,
       instituteName: e.userId?.instituteName || "",
       presentCourseOfStudy: e.userId?.presentCourseOfStudy || "",
@@ -589,7 +590,7 @@ export const exportBundleStudentsExcel = async (req, res) => {
       .populate({
         path: "userId",
         select:
-          "name email profileImage instituteName presentCourseOfStudy",
+          "name email mobileNumber profileImage instituteName presentCourseOfStudy",
       })
       .sort({ createdAt: -1 })
       .lean();
@@ -597,6 +598,7 @@ export const exportBundleStudentsExcel = async (req, res) => {
     const students = enrollments.map((e) => ({
       name: e.userId?.name || "",
       email: e.userId?.email || "",
+      mobileNumber: e.userId?.mobileNumber || "",
       instituteName: e.userId?.instituteName || "",
       presentCourseOfStudy: e.userId?.presentCourseOfStudy || "",
       enrolledAt: e.createdAt,
@@ -620,8 +622,9 @@ export const exportBundleStudentsExcel = async (req, res) => {
     const header = sheet.addRow([
       "Name",
       "Email",
-      "Institute",
-      "Course",
+      "Mobile Number",
+      "Institute Name",
+      "Present Course",
       "Enrolled At (IST)",
     ]);
     header.font = { bold: true };
@@ -631,6 +634,7 @@ export const exportBundleStudentsExcel = async (req, res) => {
       sheet.addRow([
         s.name,
         s.email,
+        s.mobileNumber,
         s.instituteName,
         s.presentCourseOfStudy,
         s.enrolledAt

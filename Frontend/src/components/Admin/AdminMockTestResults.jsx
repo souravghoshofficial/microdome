@@ -164,8 +164,8 @@ const AdminMockTestResults = () => {
           <thead className="bg-gray-100 text-gray-600 text-sm">
             <tr>
               <th className="px-4 py-3 text-left">Student</th>
-              <th className="px-4 py-3 text-center">Institute</th>
-              <th className="px-4 py-3 text-center">Course</th>
+              <th className="px-4 py-3 text-center">Institute Name</th>
+              <th className="px-4 py-3 text-center">Present Course</th>
               <th className="px-4 py-3 text-center">Latest</th>
               <th className="px-4 py-3 text-center">Best</th>
               <th className="px-4 py-3 text-center">Attempts</th>
@@ -206,12 +206,12 @@ const AdminMockTestResults = () => {
                     </td>
 
                     {/* INSTITUTE */}
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-4 py-3 text-center text-sm">
                       {s.instituteName || "---"}
                     </td>
 
                     {/* COURSE */}
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-4 py-3 text-center text-sm">
                       {s.presentCourseOfStudy || "---"}
                     </td>
 
