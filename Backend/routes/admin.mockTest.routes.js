@@ -24,8 +24,10 @@ import {
     getPaidAvailableMockTest,
     getAdminMockTestResults,
     deleteMockTestResult,
-    exportMockTestResultsExcel
+    exportMockTestResultsExcel,
+    getMockTestFeedBack
 } from "../controllers/admin.mockTest.controller.js";
+import { get } from "http";
 
 
 const router = Router()
@@ -73,5 +75,7 @@ router.get(
    authorizedRoles("admin"),
   exportMockTestResultsExcel
 );
+
+router.route("/:mockTestId/feedbacks").get(authorizedRoles("admin","instructor"),getMockTestFeedBack);
 
 export default router;

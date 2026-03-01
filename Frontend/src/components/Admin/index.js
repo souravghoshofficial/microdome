@@ -22,7 +22,7 @@ import MonthlyFeeSheet from "./MonthlyFeeSheet";
 import AdminBundleEnrollments from "./AdminBundleEnrollments";
 import AdminBundleStudents from "./AdminBundleStudents";
 import AdminMockTestResults from "./AdminMockTestResults";
-
+import AdminMockTestFeedback from "./AdminMockTestFeedBack";
 export {
   Dashboard,
   AddSection,
@@ -47,5 +47,6 @@ export {
   MonthlyFeeSheet,
   AdminBundleEnrollments,
   AdminBundleStudents,
-  AdminMockTestResults
+  AdminMockTestResults,
+  AdminMockTestFeedback
 };

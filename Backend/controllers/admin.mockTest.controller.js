@@ -9,6 +9,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { deleteFromCloudinary } from "../utils/cloudinary.js";
 import { MockTestAttempt } from "../models/mockTestAttempt.model.js";
 import { MockTestAnswer } from "../models/mockTestAnswers.model.js";
+import { MockTestFeedBack } from "../models/mockTestFeedBack.model.js";
 
 
 export const createMockTest = async (req, res) => {
@@ -1719,5 +1720,57 @@ export const exportMockTestResultsExcel = async (req, res) => {
   } catch (e) {
     console.error("exportMockTestResultsExcel error:", e);
     res.status(500).json({ message: "Failed to export results" });
+  }
+};
+
+
+export const getMockTestFeedBack = async (req, res) => {
+  try {
+    const { mockTestId } = req.params;
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(mockTestId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Mock Test ID",
+      });
+    }
+
+    // Check if mock test exists
+    const mockTest = await MockTest.findById(mockTestId).select("title");
+
+    if (!mockTest) {
+      return res.status(404).json({
+        success: false,
+        message: "Mock Test not found",
+      });
+    }
+
+    // Fetch feedbacks where rating is not null
+    const feedbacks = await MockTestFeedBack.find({
+      mockTestId,
+      rating: { $ne: null },
+    })
+      .populate({
+        path: "userId",
+        select: "name email profileImage",
+      })
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      mockTest: {
+        _id: mockTest._id,
+        title: mockTest.title,
+      },
+      totalFeedbacks: feedbacks.length,
+      feedbacks,
+    });
+  } catch (error) {
+    console.error("Error fetching mock test feedback:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };

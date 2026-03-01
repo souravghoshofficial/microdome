@@ -402,14 +402,7 @@ const AdminMockTests = () => {
                 >
                   Manage
                 </Link>
-
-                {/* Results */}
-                <Link
-                  to={`/admin/mock-tests/${test._id}/results`}
-                  className="flex-1 bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 text-center cursor-pointer"
-                >
-                  Results
-                </Link>
+                
 
                 {/* Edit */}
                 <button
@@ -431,6 +424,21 @@ const AdminMockTests = () => {
                 >
                   <Trash2 className="w-5 h-5" />
                 </button>
+              </div>
+              <div className="mt-2 w-[95%] mx-auto flex items-center gap-2">
+                <Link
+                  to={`/admin/mock-tests/${test._id}/results`}
+                  className="flex-1 bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 text-center cursor-pointer"
+                >
+                  Results
+                </Link>
+                
+                <Link
+                  to={`/admin/mock-tests/${test._id}/feedbacks`}
+                  className="flex-1 bg-violet-600 text-white py-2 rounded hover:bg-violet-800 text-center cursor-pointer"
+                >
+                  Feedbacks
+                </Link>
               </div>
               {/* PUBLISH / UNPUBLISH */}
               <button
