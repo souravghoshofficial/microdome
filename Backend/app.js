@@ -42,7 +42,7 @@ import userMockTestRouter from "./routes/user.mockTest.route.js";
 import adminMockTestBundleRouter from "./routes/admin.mockTestBundle.routes.js";
 import userMockTestBundleRouter from "./routes/user.mockTestBundle.route.js" 
 import adminMonthlyFeeRouter from "./routes/admin.monthlyFee.routes.js";
-
+import mockTestFeedBackRouter from "./routes/mockTestFeedBack.routes.js";
 
 
 //route declaration
@@ -57,6 +57,7 @@ app.use("/api/v1/user/mock-tests", userMockTestRouter);
 app.use("/api/v1/user/mock-test-bundles",userMockTestBundleRouter);
 app.use("/api/v1/admin/mock-test-bundles", verifyJWT, adminMockTestBundleRouter);
 app.use("/api/v1/admin/monthly-fee", verifyJWT, adminMonthlyFeeRouter);
+app.use("/api/v1/mock-tests",verifyJWT,mockTestFeedBackRouter);
 
 export { app }
 
