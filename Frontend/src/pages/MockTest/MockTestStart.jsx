@@ -377,6 +377,7 @@ function ExamHeader({
     </div>
   );
 }
+
 function LegendItem({
   color,
   text,
