@@ -151,7 +151,7 @@ const PremiumUserDetails = () => {
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2 text-center">Date Joined</th>
                 <th className="px-4 py-2 text-center">Mobile</th>
-                <th className="px-4 py-2 text-center">Institute</th>
+                <th className="px-4 py-2 text-center">Institute Name</th>
                 <th className="px-4 py-2 text-center">
                   Present Course
                 </th>

@@ -165,7 +165,7 @@ const Dashboard = () => {
                 <th className="px-4 py-2 text-center whitespace-nowrap">Date Joined</th>
                 <th className="px-4 py-2 text-center whitespace-nowrap">Is Premium</th>
                 <th className="px-4 py-2 text-center whitespace-nowrap">Institute Name</th>
-                <th className="px-4 py-2 text-center ">Present Course of Study</th>
+                <th className="px-4 py-2 text-center ">Present Course</th>
               </tr>
             </thead>
             <tbody>

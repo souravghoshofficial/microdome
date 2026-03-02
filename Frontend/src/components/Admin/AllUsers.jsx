@@ -10,6 +10,7 @@ const AllUsers = () => {
   const currentUser = useSelector((state) => state.auth?.userData)
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false); 
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,8 +64,8 @@ const AllUsers = () => {
   };
 
 
-
-  useEffect(() => {
+  const fetchUsers = () => {
+    setLoading(true);
     axios
       .get(`${ApiUrl}/admin/get-all-users`, { withCredentials: true })
       .then((res) => {
@@ -90,6 +91,7 @@ const AllUsers = () => {
           toast.success(res.data.message || "Users fetched successfully");
         } else {
           toast.error("No users found from backend");
+          setUsers([]);         
         }
       })
       .catch((err) => {
@@ -99,7 +101,16 @@ const AllUsers = () => {
         } else {
           toast.error("Failed to load users");
         }
+        setUsers([]); 
+      })
+      .finally(() => {
+        setLoading(false);
       });
+  };  
+
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
 
   // Filter users by search query
@@ -112,6 +123,14 @@ const AllUsers = () => {
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <p className="text-gray-500">Loading users...</p>
+      </div>
+    );
+  } 
 
   return (
     <div className="h-[90vh] flex flex-col bg-white rounded-lg shadow-md">
@@ -152,7 +171,7 @@ const AllUsers = () => {
                   Is Premium
                 </th>
                 <th className="px-4 py-2 text-center">Institute Name</th>
-                <th className="px-4 py-2 text-center ">Present Course of Study</th>
+                <th className="px-4 py-2 text-center ">Present Course</th>
               </tr>
             </thead>
             <tbody>

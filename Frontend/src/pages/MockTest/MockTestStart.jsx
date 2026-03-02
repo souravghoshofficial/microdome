@@ -25,7 +25,7 @@ function ExpiredScreen({ onViewResult, theme }) {
     <div
       className={`${theme === "dark" ? "dark" : ""} fixed inset-0 z-50 flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
     >
-      <div className="w-[420px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center">
+      <div className=" w-[95vw] max-w-[420px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center">
         {/* icon */}
         <div className="mx-auto mb-4 w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-500/15 flex items-center justify-center">
           <Clock className="w-7 h-7 text-amber-600 dark:text-amber-400" />
@@ -153,14 +153,17 @@ function SubmitSuccessScreen({ attemptId, testId, navigate }) {
       }
     } catch {}
 
-    navigate(`/mock-tests/${testId}/result`, { replace: true });
+    // allow browser to actually exit fullscreen
+    setTimeout(() => {
+      navigate(`/mock-tests/${testId}/result`, { replace: true });
+    }, 120);
   };
 
   return (
     <div
       className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
     >
-      <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center w-[420px]">
+      <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-xl text-center w-[95vw] max-w-[420px]">
         {/* Icon */}
         <div className="flex justify-center mb-3">
           <CheckCircle2 className="w-12 h-12 text-green-600 dark:text-green-400" />
@@ -192,7 +195,6 @@ function SubmitSuccessScreen({ attemptId, testId, navigate }) {
 
 // // ⭐ MODIFIED/ADDED: Fullscreen Escape Warning Modal
 function FullscreenWarning({ theme, onClose }) {
-
   // 🔥 ADDED: Force fullscreen function
   const forceFullscreen = async () => {
     try {
@@ -208,7 +210,9 @@ function FullscreenWarning({ theme, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className={`${theme === "dark" ? "dark" : ""} w-[420px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-2xl text-center`}>
+      <div
+        className={`${theme === "dark" ? "dark" : ""} w-[95vw] max-w-[420px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-2xl text-center`}
+      >
         <div className="mx-auto mb-6 w-20 h-20 rounded-full bg-red-100 dark:bg-red-500/20 flex items-center justify-center">
           <AlertTriangle className="w-10 h-10 text-red-600 dark:text-red-400" />
         </div>
@@ -218,11 +222,8 @@ function FullscreenWarning({ theme, onClose }) {
         </h3>
 
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-          Leaving fullscreen during the exam is not allowed. Please stay in fullscreen mode to continue.
-        </p>
-
-        <p className="text-xs text-red-500 dark:text-red-400 mb-8 font-medium">
-          Repeated attempts will be considered as malpractice.
+          Leaving fullscreen during the exam is not allowed. Please stay in
+          fullscreen mode to continue.
         </p>
 
         {/* 🔥 MODIFIED: onClick now forces fullscreen */}
@@ -577,9 +578,9 @@ export default function MockTestStart() {
   const [errorCode, setErrorCode] = useState(null);
   const [showExpiredScreen, setShowExpiredScreen] = useState(false);
   const [expiredAttemptId, setExpiredAttemptId] = useState(null);
+  const [examActive, setExamActive] = useState(true);
 
-  // ⭐ MODIFIED/ADDED: Anti-cheat warning states
-  const [showScreenshotWarning, setShowScreenshotWarning] = useState(false);
+  // New state for fullscreen warning
   const [showFullscreenWarning, setShowFullscreenWarning] = useState(false);
 
   const remaining = useExamTimer(startedAt, durationSeconds);
@@ -590,61 +591,27 @@ export default function MockTestStart() {
   const currentQuestions = currentSection?.questions || [];
   const currentQuestion = currentQuestions[qIndex];
 
-  // ⭐ MODIFIED/ADDED: Context menu + Screenshot detection
+  // Fullscreen guard
   useEffect(() => {
-    const handleContextMenu = (event) => {
-      event.preventDefault();
-    };
-
-    // ⭐ NEW: Screenshot detection (works on most browsers)
-    const handleCopy = (e) => {
-      if (navigator.userAgent.includes('Chrome') || navigator.userAgent.includes('Firefox')) {
-        setShowScreenshotWarning(true);
-        toast("Screenshot attempt detected!", { 
-          icon: "📸", 
-          style: { background: '#fef3c7', color: '#92400e' }
-        });
-      }
-    };
-
-    // ⭐ NEW: Fullscreen change detection
     const handleFullscreenChange = () => {
-      if (!document.fullscreenElement && attemptId) {
+      if (!document.fullscreenElement && examActive) {
+        // user tried to exit during exam
         setShowFullscreenWarning(true);
-        // Force back to fullscreen
-        const examContainer = document.documentElement;
-        if (examContainer.requestFullscreen) {
-          examContainer.requestFullscreen();
-        }
+
+        // re-enter fullscreen safely
+        setTimeout(() => {
+          if (examActive) {
+            document.documentElement.requestFullscreen().catch(() => {});
+          }
+        }, 150);
       }
     };
 
-    document.addEventListener("contextmenu", handleContextMenu);
-    document.addEventListener("copy", handleCopy);
     document.addEventListener("fullscreenchange", handleFullscreenChange);
-    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-    document.addEventListener("mozfullscreenchange", handleFullscreenChange);
-    document.addEventListener("MSFullscreenChange", handleFullscreenChange);
 
-    return () => {
-      document.removeEventListener("contextmenu", handleContextMenu);
-      document.removeEventListener("copy", handleCopy);
+    return () =>
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-      document.removeEventListener("mozfullscreenchange", handleFullscreenChange);
-      document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
-    };
-  }, [attemptId]);
-
-  // ⭐ NEW: Auto-enter fullscreen when exam starts
-  useEffect(() => {
-    if (attemptId && !document.fullscreenElement) {
-      const examContainer = document.documentElement;
-      if (examContainer.requestFullscreen) {
-        examContainer.requestFullscreen().catch(() => {});
-      }
-    }
-  }, [attemptId]);
+  }, [examActive]);
 
   const sectionAnsweredCount = useMemo(() => {
     if (!currentSection) return 0;
@@ -714,7 +681,9 @@ export default function MockTestStart() {
       }
     } catch {}
 
-    navigate(`/mock-tests/${testId}/result`, { replace: true });
+    setTimeout(() => {
+      navigate(`/mock-tests/${testId}/result`, { replace: true });
+    }, 120);
   };
 
   /* ===== INIT ===== */
@@ -957,6 +926,7 @@ export default function MockTestStart() {
       );
 
       setSubmitState("SUBMITTED");
+      setExamActive(false);
     } catch (e) {
       console.error("Submit failed", e);
       setSubmitState("IDLE");
@@ -1087,11 +1057,11 @@ export default function MockTestStart() {
           }}
         />
 
-        {/* ⭐ MODIFIED/ADDED: Render warning modals (highest z-index) */}
+        {/* Exit full screen warning */}
         {showFullscreenWarning && (
-          <FullscreenWarning 
-            theme={theme} 
-            onClose={() => setShowFullscreenWarning(false)} 
+          <FullscreenWarning
+            theme={theme}
+            onClose={() => setShowFullscreenWarning(false)}
           />
         )}
 
