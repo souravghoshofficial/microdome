@@ -188,6 +188,55 @@ function SubmitSuccessScreen({ attemptId, testId, navigate }) {
   );
 }
 
+/* ================= NEW: ANTI-CHEAT WARNING MODALS ================= */
+
+// // ⭐ MODIFIED/ADDED: Fullscreen Escape Warning Modal
+function FullscreenWarning({ theme, onClose }) {
+
+  // 🔥 ADDED: Force fullscreen function
+  const forceFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      }
+      onClose(); // close modal only after fullscreen is restored
+    } catch (err) {
+      console.error("Fullscreen request failed:", err);
+      // If fullscreen fails, keep modal open
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className={`${theme === "dark" ? "dark" : ""} w-[420px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl px-8 py-7 shadow-2xl text-center`}>
+        <div className="mx-auto mb-6 w-20 h-20 rounded-full bg-red-100 dark:bg-red-500/20 flex items-center justify-center">
+          <AlertTriangle className="w-10 h-10 text-red-600 dark:text-red-400" />
+        </div>
+
+        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+          Fullscreen Exit Attempted!
+        </h3>
+
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+          Leaving fullscreen during the exam is not allowed. Please stay in fullscreen mode to continue.
+        </p>
+
+        <p className="text-xs text-red-500 dark:text-red-400 mb-8 font-medium">
+          Repeated attempts will be considered as malpractice.
+        </p>
+
+        {/* 🔥 MODIFIED: onClick now forces fullscreen */}
+        <button
+          onClick={forceFullscreen}
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 cursor-pointer"
+        >
+          Return to Fullscreen
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ================= UI ================= */
 
 function Card({ children, className = "" }) {
@@ -528,6 +577,10 @@ export default function MockTestStart() {
   const [showExpiredScreen, setShowExpiredScreen] = useState(false);
   const [expiredAttemptId, setExpiredAttemptId] = useState(null);
 
+  // ⭐ MODIFIED/ADDED: Anti-cheat warning states
+  const [showScreenshotWarning, setShowScreenshotWarning] = useState(false);
+  const [showFullscreenWarning, setShowFullscreenWarning] = useState(false);
+
   const remaining = useExamTimer(startedAt, durationSeconds);
 
   const timerReady = durationSeconds > 0 && startedAt;
@@ -536,18 +589,62 @@ export default function MockTestStart() {
   const currentQuestions = currentSection?.questions || [];
   const currentQuestion = currentQuestions[qIndex];
 
-   useEffect(() => {
+  // ⭐ MODIFIED/ADDED: Context menu + Screenshot detection
+  useEffect(() => {
     const handleContextMenu = (event) => {
       event.preventDefault();
     };
 
+    // ⭐ NEW: Screenshot detection (works on most browsers)
+    const handleCopy = (e) => {
+      if (navigator.userAgent.includes('Chrome') || navigator.userAgent.includes('Firefox')) {
+        setShowScreenshotWarning(true);
+        toast("Screenshot attempt detected!", { 
+          icon: "📸", 
+          style: { background: '#fef3c7', color: '#92400e' }
+        });
+      }
+    };
+
+    // ⭐ NEW: Fullscreen change detection
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && attemptId) {
+        setShowFullscreenWarning(true);
+        // Force back to fullscreen
+        const examContainer = document.documentElement;
+        if (examContainer.requestFullscreen) {
+          examContainer.requestFullscreen();
+        }
+      }
+    };
+
     document.addEventListener("contextmenu", handleContextMenu);
+    document.addEventListener("copy", handleCopy);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+    document.addEventListener("MSFullscreenChange", handleFullscreenChange);
 
     return () => {
       document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("copy", handleCopy);
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      document.removeEventListener("mozfullscreenchange", handleFullscreenChange);
+      document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
     };
-  }, []);
-  
+  }, [attemptId]);
+
+  // ⭐ NEW: Auto-enter fullscreen when exam starts
+  useEffect(() => {
+    if (attemptId && !document.fullscreenElement) {
+      const examContainer = document.documentElement;
+      if (examContainer.requestFullscreen) {
+        examContainer.requestFullscreen().catch(() => {});
+      }
+    }
+  }, [attemptId]);
+
   const sectionAnsweredCount = useMemo(() => {
     if (!currentSection) return 0;
     return currentSection.questions.filter((q) => q.state?.isAnswered).length;
@@ -988,6 +1085,14 @@ export default function MockTestStart() {
                   },
           }}
         />
+
+        {/* ⭐ MODIFIED/ADDED: Render warning modals (highest z-index) */}
+        {showFullscreenWarning && (
+          <FullscreenWarning 
+            theme={theme} 
+            onClose={() => setShowFullscreenWarning(false)} 
+          />
+        )}
 
         <ExamHeader
           title={mockTest?.title}
