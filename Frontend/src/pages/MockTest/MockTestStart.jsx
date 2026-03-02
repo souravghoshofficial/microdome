@@ -78,16 +78,6 @@ function ErrorScreen({ error, errorCode, navigate, theme }) {
 
   const { title, icon: Icon } = config[errorCode] || config[500];
 
-  const exitFullscreenIfActive = async () => {
-    try {
-      if (document.fullscreenElement) {
-        await document.exitFullscreen();
-      }
-    } catch (e) {
-      console.warn("Fullscreen exit failed", e);
-    }
-  };
-
   return (
     <div
       className={`${theme === "dark" ? "dark" : ""} min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950`}
@@ -108,8 +98,10 @@ function ErrorScreen({ error, errorCode, navigate, theme }) {
 
         {/* Action */}
         <button
-          onClick={async () => {
-            await exitFullscreenIfActive();
+          onClick={() => {
+            if (document.fullscreenElement) {
+              document.exitFullscreen().catch(() => {});
+            }
             navigate("/mock-tests");
           }}
           className="mt-6 px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
