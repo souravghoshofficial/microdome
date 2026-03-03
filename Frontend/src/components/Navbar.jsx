@@ -119,7 +119,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Controls */}
-          <div className="md:hidden flex items-center gap-4 text-base">
+          <div className="md:hidden flex items-center gap-3 text-base">
             <ThemeBtn />
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -144,10 +144,10 @@ const Navbar = () => {
         {/* Mobile Expand Section */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-300 ${
-            menuOpen ? "max-h-[600px] py-4 px-6" : "max-h-0"
+            menuOpen ? "max-h-[90vh] py-4 px-6" : "max-h-0"
           }`}
         >
-          <div className="flex flex-col gap-5 text-lg">
+          <div className="flex flex-col gap-2 text-base">
             <MobileItem to="/" close={setMenuOpen}>
               Home
             </MobileItem>
@@ -197,16 +197,16 @@ const Navbar = () => {
                   </MobileItem>
                 )}
 
-                <div
+                <button
                   onClick={() => {
                     logoutUser();
                     setMenuOpen(false);
                   }}
-                  className="flex items-center gap-2 text-red-500 cursor-pointer"
+                  className="flex items-center gap-2 text-red-500 cursor-pointer px-3 py-2 rounded-lg"
                 >
                   <LogOut size={18} />
                   Logout
-                </div>
+                </button>
               </>
             )}
 
