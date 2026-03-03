@@ -1,34 +1,38 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router";
-import { VerifiedBadge } from "../components";
 import {
-  RiShieldUserLine,
-  RiEditBoxLine,
-  RiBookOpenLine,
-  RiExternalLinkLine,
-  RiQuestionAnswerLine
-} from "@remixicon/react";
-import { Pencil } from "lucide-react"
+  Pencil,
+  BookOpen,
+  User,
+  ClipboardList,
+  ExternalLink,
+  FileQuestionMark,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 import userImg from "../assets/user-img.jpeg";
+
 const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const ProfileDashboard = () => {
   const userData = useSelector((state) => state.auth.userData);
-  const enrolledMockTestBundles = useSelector((state) => state.enrolledMockTestBundles.MockTestBundleDetails)
+  const enrolledMockTestBundles = useSelector(
+    (state) => state.enrolledMockTestBundles.MockTestBundleDetails
+  );
+
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
         const courseIds = userData?.enrolledCourses || [];
-        if (courseIds.length === 0) return;
+        if (!courseIds.length) return;
 
-        const { data } = await axios.post(`${ApiUrl}/courses/get-enrolled-courses`, {
-          courseIds,
-        });
+        const { data } = await axios.post(
+          `${ApiUrl}/courses/get-enrolled-courses`,
+          { courseIds }
+        );
 
         setCourses(data?.courses || []);
       } catch (error) {
@@ -40,126 +44,152 @@ const ProfileDashboard = () => {
   }, [userData]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 flex justify-center items-center px-4 py-12 text-black dark:text-white transition-colors duration-300">
-      <div className="w-full max-w-5xl mt-8 md:mt-4 bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+      <div className="max-w-6xl mx-auto px-6 py-28">
 
-        {/* Left: Profile Section */}
-          <div className="relative md:w-1/3 p-10 
-          bg-gradient-to-br from-slate-800 via-slate-900 to-black
-          text-white
-          flex flex-col items-center justify-center
-          rounded-l-3xl
-          shadow-xl">
-          <img
-            src={userData?.profileImage || userImg}
-            alt="Profile"
-            className="w-36 h-36 rounded-full border-3 border-highlighted p-1 object-center object-cover"
-          />
-         <div className="mt-6 flex items-center justify-center gap-2" >
-           <h2 className="text-2xl font-semibold">{userData?.name || "User Name"}</h2>
-          {userData?.isPremiumMember && <VerifiedBadge />}
-         </div>
-          <p className="text-sm opacity-80 mt-2">
-            Member since {userData?.createdAt ? new Date(userData.createdAt).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : "N/A"}
-          </p>
-          <Link
-            to="edit"
-            className="absolute top-4 right-4 bg-white text-blue-600 p-2 rounded-full shadow hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-          >
-            <Pencil size={20} />
-          </Link>
-        </div>
+        {/* Main Grid */}
+        <div className="grid md:grid-cols-3 gap-4 md:gap-10">
 
-        {/* Right: Info Cards */}
-        <div className="flex-1 p-6 md:p-8 grid grid-cols-1 gap-6">
+          {/* ================= LEFT PROFILE CARD ================= */}
+          <div className="md:col-span-1">
+            <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-md p-8 text-center relative">
 
-          {/* Personal Info */}
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
-            <div className="flex items-center gap-2 mb-4 text-blue-600 font-semibold">
-              <RiShieldUserLine size={20} />
-              Personal Information
-            </div>
-            <div className="text-sm space-y-2">
-              <p><span className="font-medium">Full Name:</span> {userData?.name || "-"}</p>
-              <p><span className="font-medium">Email:</span> {userData?.email || "-"}</p>
-              <p><span className="font-medium">Mobile:</span> {userData?.mobileNumber || "-"}</p>
-              <p><span className="font-medium">Institute Name:</span> {userData?.instituteName || "-"}</p>
-              <p><span className="font-medium">Present Course of Study:</span> {userData?.presentCourseOfStudy || "-"}</p>
+              <Link
+                to="edit"
+                className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 transition"
+              >
+                <Pencil size={18} />
+              </Link>
+
+              <img
+                src={userData?.profileImage || userImg}
+                alt="Profile"
+                className="w-28 h-28 mx-auto rounded-full ring-3 ring-highlighted ring-offset-3 ring-offset-white dark:ring-offset-zinc-800 object-cover"
+              />
+
+              <h2 className="mt-5 text-xl font-semibold">
+                {userData?.name || "User Name"}
+              </h2>
+
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Member since{" "}
+                {userData?.createdAt
+                  ? new Date(userData.createdAt).toLocaleDateString("en-IN", {
+                      month: "short",
+                      year: "numeric",
+                    })
+                  : "N/A"}
+              </p>
+
+              {/* Quick Stats */}
+              <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
+                <Stat label="Courses" value={courses.length} />
+                <Stat
+                  label="Test Series"
+                  value={enrolledMockTestBundles?.length || 0}
+                />
+              </div>
             </div>
           </div>
 
-          {/* Enrolled Courses */}
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
-            <div className="flex items-center gap-2 mb-4 text-green-600 font-semibold">
-              <RiBookOpenLine size={20} />
-              Enrolled Courses
-            </div>
-            <div className="text-sm space-y-2">
-              {courses.length > 0 ? (
+          {/* ================= RIGHT CONTENT ================= */}
+          <div className="md:col-span-2 space-y-4">
+
+            {/* Personal Info */}
+            <Card title="Personal Information" icon={<User size={18} />}>
+              <InfoRow label="Full Name" value={userData?.name} />
+              <InfoRow label="Email" value={userData?.email} />
+              <InfoRow label="Mobile" value={userData?.mobileNumber} />
+              <InfoRow label="Institute Name" value={userData?.instituteName} />
+              <InfoRow
+                label="Present Course"
+                value={userData?.presentCourseOfStudy}
+              />
+            </Card>
+
+            {/* Enrolled Courses */}
+            <Card title="Enrolled Courses" icon={<BookOpen size={18} />}>
+              {courses.length ? (
                 courses.map((course) => (
-                  <p key={course._id}>
-                    <Link
-                      to={`/my-courses/${course._id}`}
-                      className="text-blue-600 hover:underline flex items-center gap-1"
-                    >
-                      <RiExternalLinkLine size={14} />
-                      {course.courseTitle}
-                    </Link>
-                  </p>
+                  <DashboardLink
+                    key={course._id}
+                    to={`/my-courses/${course._id}`}
+                  >
+                    {course.courseTitle}
+                  </DashboardLink>
                 ))
               ) : (
-                <p className="text-gray-500">You haven't enrolled in any course</p>
+                <EmptyState text="You haven't enrolled in any course yet." />
               )}
-              
-            </div>
+            </Card>
+
+            {/* Test Series */}
+            {enrolledMockTestBundles?.length > 0 && (
+              <Card title="Test Series" icon={<ClipboardList size={18} />}>
+                {enrolledMockTestBundles.map((bundle) => (
+                  <DashboardLink
+                    key={bundle._id}
+                    to={`/my-bundles/${bundle._id}`}
+                  >
+                    {bundle.title}
+                  </DashboardLink>
+                ))}
+              </Card>
+            )}
+
+            {/* Quizzes */}
+            {userData?.hasAccessToQuizzes && (
+              <Card title="Quizzes" icon={<FileQuestionMark size={18} />}>
+                <DashboardLink to="/quizzes">
+                  Go to Quizzes
+                </DashboardLink>
+              </Card>
+            )}
           </div>
-
-          {/* Mock Test Series */}
-
-          {
-            enrolledMockTestBundles?.length>0 && 
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
-            <div className="flex items-center gap-2 mb-4 text-green-600 font-semibold">
-              <RiQuestionAnswerLine size={20} />
-              Test Series
-            </div>
-            <div className="text-sm space-y-2">    
-                    {enrolledMockTestBundles?.map(bundle=>(
-                      <Link key={bundle._id}
-                      to={`/my-bundles/${bundle._id}`}
-                      className="text-blue-600 hover:underline flex items-center gap-1"
-                    >
-                      <RiExternalLinkLine size={14} />
-                      {bundle.title}
-                    </Link>
-                    ))}
-            </div>
-          </div>
-          }
-
-          {/* Quizzes */}
-           {
-            userData?.hasAccessToQuizzes && <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
-            <div className="flex items-center gap-2 mb-4 text-green-600 font-semibold">
-              <RiQuestionAnswerLine size={20} />
-              Purchased Quizzes
-            </div>
-            <div className="text-sm space-y-2">    
-                    <Link
-                      to={`/quizzes`}
-                      className="text-blue-600 hover:underline flex items-center gap-1"
-                    >
-                      <RiExternalLinkLine size={14} />
-                      {"Go to Quizzes"}
-                    </Link>
-            </div>
-          </div>
-           }
-
         </div>
       </div>
     </div>
   );
 };
+
+/* ================= REUSABLE COMPONENTS ================= */
+
+const Card = ({ title, icon, children }) => (
+  <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-md p-6">
+    <div className="flex items-center gap-2 mb-4 font-semibold text-highlighted">
+      {icon}
+      {title}
+    </div>
+    <div className="space-y-3 text-sm">{children}</div>
+  </div>
+);
+
+const InfoRow = ({ label, value }) => (
+  <div className="flex justify-between text-gray-700 dark:text-gray-300">
+    <span className="font-medium">{label}</span>
+    <span>{value || "-"}</span>
+  </div>
+);
+
+const DashboardLink = ({ to, children }) => (
+  <Link
+    to={to}
+    className="flex items-center justify-between text-blue-600 dark:text-blue-400 hover:underline underline-offset-4"
+  >
+    {children}
+    <ExternalLink size={14} />
+  </Link>
+);
+
+const EmptyState = ({ text }) => (
+  <p className="text-gray-500 dark:text-gray-400 text-sm">{text}</p>
+);
+
+const Stat = ({ label, value }) => (
+  <div className="bg-gray-100 dark:bg-zinc-800 rounded-xl py-3">
+    <p className="text-lg font-semibold">{value}</p>
+    <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
+  </div>
+);
 
 export default ProfileDashboard;

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { RiArrowLeftLine } from "@remixicon/react";
-import { Pencil, Camera } from "lucide-react"; 
+import { Pencil, Camera } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import { login, logout } from "../features/auth/authSlice";
+import { login } from "../features/auth/authSlice";
 import axios from "axios";
 import { Link } from "react-router";
 import userImage from "../assets/user-img.jpeg";
@@ -14,27 +14,32 @@ const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 const EditUserDetails = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.userData);
-  const [imageSrc, setImageSrc] = useState(userData?.profileImage || userImage);
+
+  const [imageSrc, setImageSrc] = useState(
+    userData?.profileImage || userImage
+  );
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setProfileImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageSrc(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    setProfileImage(file);
+
+    const reader = new FileReader();
+    reader.onloadend = () => setImageSrc(reader.result);
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    if (!profileImage) {
+      toast.error("Please select an image");
+      return;
+    }
 
-    if (!profileImage) return alert("Please select an image");
+    setLoading(true);
 
     const formData = new FormData();
     formData.append("profileImage", profileImage);
@@ -43,20 +48,14 @@ const EditUserDetails = () => {
       const res = await axios.post(
         `${ApiUrl}/users/update-user-profile-image`,
         formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        { withCredentials: true }
       );
-      toast.success("Image Uploaded Successfully");
-      dispatch(logout());
+
       dispatch(login(res.data.data));
-      setImageSrc(res.data.data.profileImage);
+      toast.success("Profile image updated");
       setProfileImage(null);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Upload failed");
     } finally {
       setLoading(false);
@@ -64,72 +63,82 @@ const EditUserDetails = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24 bg-white dark:bg-gray-950 text-black dark:text-white transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <Toaster position="top-right" />
-      <div className="max-w-5xl mx-auto px-4">
-        {/* Back button */}
+
+      <div className="max-w-6xl mx-auto px-6 py-28">
+
+        {/* Back */}
         <Link
           to="/profile"
-          className="inline-flex items-center gap-1 text-sm border border-gray-300 dark:border-gray-700 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-highlighted transition"
         >
-          <RiArrowLeftLine size={20} />
+          <RiArrowLeftLine size={18} />
           Back to profile
         </Link>
 
-        {/* Content card */}
-        <div className="mt-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-2xl shadow-xl p-6 md:p-10 flex flex-col md:flex-row gap-10">
-          {/* Image upload section */}
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col items-center gap-4 w-full md:w-1/3"
-          >
-            <div className="relative w-28 h-28 group">
-              <label htmlFor="profileImage">
-                <img
-                  className="w-full h-full rounded-full object-cover border-2 border-highlighted p-1 shadow-md cursor-pointer"
-                  src={imageSrc}
-                  alt="Upload Profile"
-                />
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer">
-                  <Pencil className="text-white w-6 h-6" />
-                </div>
-                {/* Camera Icon Button */}
-                <div className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow-md cursor-pointer hover:bg-blue-700 transition">
-                  <Camera className="w-4 h-4" />
-                </div>
-              </label>
-              <input
-                type="file"
-                id="profileImage"
-                name="profileImage"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageChange}
-              />
-            </div>
+        {/* Card */}
+        <div className="mt-8 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-md p-8">
 
-            <div className="text-center">
-              <h5 className="font-semibold">Profile Photo</h5>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                PNG, JPG, JPEG (Max. 1MB)
-              </p>
-              {profileImage && (
+          <div className="grid md:grid-cols-3 gap-12">
+
+            {/* ================= LEFT IMAGE SECTION ================= */}
+            <div className="md:col-span-1 flex flex-col items-center">
+
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col items-center gap-4"
+              >
+                <div className="relative w-32 h-32 group">
+                  <label htmlFor="profileImage">
+                    <img
+                      src={imageSrc}
+                      alt="Profile"
+                      className="w-full h-full rounded-full object-cover border-4 border-highlighted shadow-md cursor-pointer"
+                    />
+
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer">
+                      <Pencil className="text-white w-6 h-6" />
+                    </div>
+
+                    {/* Camera icon */}
+                    <div className="absolute bottom-0 right-0 bg-highlighted text-white p-2 rounded-full shadow cursor-pointer hover:scale-105 transition">
+                      <Camera className="w-4 h-4" />
+                    </div>
+                  </label>
+
+                  <input
+                    type="file"
+                    id="profileImage"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </div>
+
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                  PNG, JPG, JPEG (Max 1MB)
+                </p>
+
                 <button
-                  disabled={loading}
+                  disabled={!profileImage || loading}
                   type="submit"
-                  className="mt-3 px-4 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="mt-2 px-5 py-2 text-sm font-medium bg-highlighted hover:bg-highlighted-hover text-white rounded-lg transition disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
                 >
-                  {loading ? "Uploading..." : "Upload"}
+                  {loading ? "Uploading..." : "Save Image"}
                 </button>
-              )}
+              </form>
             </div>
-          </form>
 
-          {/* Profile Update Form */}
-          <div className="w-full">
-            <h3 className="text-lg font-semibold mb-4">Edit Your Details</h3>
-            <ProfileUpdateForm toast={toast} />
+            {/* ================= RIGHT FORM SECTION ================= */}
+            <div className="md:col-span-2">
+              <h3 className="text-xl font-semibold mb-6">
+                Edit Personal Details
+              </h3>
+
+              <ProfileUpdateForm toast={toast} />
+            </div>
           </div>
         </div>
       </div>
