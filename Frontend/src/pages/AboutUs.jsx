@@ -164,7 +164,7 @@ const AboutUs = () => {
           <div className="text-center" data-aos="zoom-in-up">
             <Link
               className="inline-block bg-highlighted hover:bg-highlighted-hover text-white font-semibold 
-            text-lg md:text-xl px-10 py-4 md:px-12 md:py-5 rounded-full shadow-lg transition 
+            text-lg px-6 py-3 rounded-full shadow-lg transition 
             duration-500 ease-in-out transform hover:scale-110"
               to="/courses"
             >

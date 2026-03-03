@@ -56,7 +56,7 @@ const UserCard = ({ className = "" }) => {
         </Link>
         <div
           onClick={logoutUser}
-          className="px-3 py-1.5 mt-2 rounded-md flex items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-highlighted cursor-pointer  transition-all duration-300"
+          className="px-3 py-1.5 mt-2 rounded-md flex items-center gap-2 w-full hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-red-500 cursor-pointer  transition-all duration-300"
         >
           <LogOut size={20} strokeWidth={1} />
           <p>Sign Out</p>

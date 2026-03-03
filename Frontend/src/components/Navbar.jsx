@@ -1,316 +1,275 @@
 import { useState, useEffect, useRef } from "react";
-import { NavLink } from "react-router";
-import { RiMenuFill, RiCloseLine, RiLogoutBoxRLine } from "@remixicon/react";
-import { House, Book, Info, FileText, User, Users, Settings, LogOut,  FileQuestion, School, ClipboardCheck } from "lucide-react"
+import { NavLink, useNavigate } from "react-router";
+import { Menu, X, ChevronDown, LogOut } from "lucide-react";
 import Logo from "./Logo";
 import ThemeBtn from "./ThemeBtn";
 import UserCard from "./UserCard";
 import UserIcon from "./UserIcon";
 import { useSelector, useDispatch } from "react-redux";
 import { toogleCard } from "../features/profileCard/profileCardSlice";
-import { logout } from "../features/auth/authSlice.js";
+import { logout } from "../features/auth/authSlice";
 import axios from "axios";
-import { removeBundles } from "../features/enrolledMockTestBundles/enrolledMockTestBundlesSlice.js";
-const navItems = [
-  {
-    navItemName: "Home",
-    linkAddress: "/",
-  },
-  {
-    navItemName: "Courses",
-    linkAddress: "/courses",
-  },
-    {
-    navItemName: "Mock Tests",
-    linkAddress: "/mock-tests",
-  },
-  {
-    navItemName: "Quizzes",
-    linkAddress: "/quizzes",
-  },
-  {
-    navItemName: "About Us",
-    linkAddress: "/about-us",
-  },
-  {
-    navItemName: "Our Faculties",
-    linkAddress: "/faculties",
-  },
-  {
-    navItemName: "Resources",
-    linkAddress: "/resources",
-  },
-  {
-    navItemName: "Institutes",
-    linkAddress: "/exams",
-  },    
-];
+import { removeBundles } from "../features/enrolledMockTestBundles/enrolledMockTestBundlesSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const isLoggedIn = useSelector((state) => state.auth.status);
   const role = useSelector((state) => state.auth?.userData?.role);
-  const [showSideNav, setShowSideNav] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true);
-  const lastScrollYRef = useRef(0);
+  const theme = useSelector((state) => state.theme.theme);
 
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
+
+  const lastScrollY = useRef(0);
   const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
+  /* Scroll Hide / Show */
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY > lastScrollYRef.current) {
-        setShowNavbar(false); // scrolling down
+      const current = window.scrollY;
+      if (current > lastScrollY.current && current > 80) {
+        setShowNavbar(false);
       } else {
-        setShowNavbar(true); // scrolling up
+        setShowNavbar(true);
       }
-
-      lastScrollYRef.current = currentScrollY;
+      lastScrollY.current = current;
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const logoutUser = () => {
-    axios
-      .post(
-        `${ApiUrl}/users/logout`,
-        {},
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        if (res.data.statusCode === 200) {
-          dispatch(logout());
-          dispatch(removeBundles());
-          navigate("/");
-        }
-      });
+  const logoutUser = async () => {
+    await axios.post(`${ApiUrl}/users/logout`, {}, { withCredentials: true });
+    dispatch(logout());
+    dispatch(removeBundles());
+    navigate("/");
   };
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full transition-transform duration-300 ${
-        showNavbar ? "translate-y-0" : "-translate-y-full"
-      } flex items-center justify-center z-50 backdrop-blur-2xl text-black dark:text-white`}
+      className={`${theme} fixed top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl transition-all duration-300 ${
+        showNavbar ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
+      } z-50`}
     >
-      <div className="w-[90%] py-4 flex items-center justify-between relative">
-        <div>
-          <a className="flex items-center gap-2" href="/">
-            <Logo className="w-7 md:w-9" />
-            <p className="text-lg font-bold gradiant-text">MicroDome</p>
-          </a>
-        </div>
-        <ul className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
-            <li key={item.linkAddress} className="relative group">
-              <NavLink
-                to={item.linkAddress}
-                className={({ isActive }) =>
-                  `${
-                    isActive ? "text-highlighted font-semibold" : ""
-                  } relative inline-block transition-colors duration-300`
-                }
-              >
-                {item.navItemName}
-                <span className="absolute left-0 bottom-0 h-[1.5px] w-full scale-x-0 bg-black dark:bg-white transition-transform duration-300 group-hover:scale-x-100 origin-left"></span>
-              </NavLink>
-            </li>
-          ))}
-          <div className="px-4 border-l border-r border-gray-400/50">
-            <ThemeBtn className="w-11 h-6 after:top-[2px] after:h-5 after:w-5" />
-          </div>
-          {isLoggedIn && (
-            <div onClick={() => dispatch(toogleCard())}>
-              <UserIcon className="w-9 h-9 cursor-pointer" />
-            </div>
-          )}
-          {!isLoggedIn && (
-            <NavLink
-              to="/login"
-              className="px-5 py-1.5 bg-button hover:bg-highlighted-hover text-white font-semibold rounded-sm"
-            >
-              Login
-            </NavLink>
-          )}
-        </ul>
-        <div className=" md:hidden">
-          <RiMenuFill size={24} onClick={() => setShowSideNav(true)} />
-        </div>
-        <UserCard className="absolute top-16 right-0" />
-      </div>
-
-      {/* Mobile Side Nav */}
-
       <div
-        className={`md:hidden ${
-          showSideNav ? "block" : "hidden"
-        } absolute top-0 w-full h-screen z-50 flex items-start justify-items-start bg-white dark:bg-gray-950`}
+        className={`rounded-2xl text-black dark:text-white
+        bg-white/80 dark:bg-zinc-900/70
+        backdrop-blur-xl
+        border border-gray-200/60 dark:border-zinc-700/60
+        shadow-md transition-all duration-300`}
       >
-        <div className="w-[90%] absolute top-0 left-[50%] translate-x-[-50%] flex items-center justify-between py-4">
-          <a className="flex items-center gap-2" href="/">
-            <Logo className="w-7" />
-            <p className="text-lg font-bold">
-              <span className="gradiant-text">MicroDome</span>
-            </p>
-          </a>
-          <div className="">
-            <RiCloseLine size={24} onClick={() => setShowSideNav(false)} />
-          </div>
-        </div>
-        <div className="w-[90%] relative mx-auto mt-24 flex flex-col gap-6">
-          <NavLink
-            onClick={() => setShowSideNav(false)}
-            to="/"
-            className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
-            }
-          >
-            <House size={22}/>
-            <span>Home</span>
-          </NavLink>
-          <NavLink
-            onClick={() => setShowSideNav(false)}
-            to="/courses"
-            className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
-            }
-          >
-            <Book size={22}/>
-            <span>Courses</span>
-          </NavLink>
-          <NavLink
-            onClick={() => setShowSideNav(false)}
-            to="/mock-tests"
-            className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
-            }
-          >
-           <ClipboardCheck size={22}/>
-           <span>Mock Tests</span>
-          </NavLink>
-          <NavLink
-            onClick={() => setShowSideNav(false)}
-            to="/quizzes"
-            className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
-            }
-          >
-            <FileQuestion size={22}/>
-            <span>Quizzes</span>
+        {/* Top Row */}
+        <div className="px-6 h-16 flex items-center justify-between">
+          <NavLink to="/" className="flex items-center gap-2">
+            <Logo className="w-8" />
+            <span className="text-lg font-bold gradiant-text">MicroDome</span>
           </NavLink>
 
-          <NavLink
-            onClick={() => setShowSideNav(false)}
-            to="/about-us"
-            className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
-            }
-          >
-            <Info size={22} />
-            <span>About Us</span>
-          </NavLink>
-          <NavLink
-            onClick={() => setShowSideNav(false)}
-            to="/faculties"
-            className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
-            }
-          >
-           <Users size={22} />
-           <span>Our Faculties</span>
-          </NavLink>
-          <NavLink
-            onClick={() => setShowSideNav(false)}
-            to="/resources"
-            className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
-            }
-          >
-           <FileText size={22}/>
-           <span>Resources</span>
-          </NavLink>
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-8">
+            <NavItem to="/">Home</NavItem>
+            <NavItem to="/courses">Courses</NavItem>
+            <NavItem to="/mock-tests">Mock Tests</NavItem>
+            <NavItem to="/about-us">About Us</NavItem>
 
+            {/* More Dropdown */}
+            <div className="relative group">
+              <div className="flex items-center gap-1 cursor-pointer relative">
+                More
+                <ChevronDown
+                  size={16}
+                  className="transition-transform duration-200 group-hover:rotate-180"
+                />
+                <Underline />
+              </div>
 
-          <NavLink
-            onClick={() => setShowSideNav(false)}
-            to="/exams"
-            className={({ isActive }) =>
-              `${isActive ? "text-highlighted font-semibold" : ""} text-lg flex items-center gap-4 pl-2`
-            }
-          >
-           <School size={22}/>
-           <span>Institutes</span>
-          </NavLink>
-
-
-                   
-          {isLoggedIn && (
-            <div className="w-full">
-              <NavLink
-                onClick={() => setShowSideNav(false)}
-                to="/profile"
-                className={({ isActive }) =>
-                  `${
-                    isActive ? "text-highlighted font-semibold" : ""
-                  } text-lg flex items-center gap-4 pl-2`
-                }
-              >
-               <User size={22}/>
-               <span>Profile</span>
-              </NavLink>
-              <NavLink
-                onClick={() => setShowSideNav(false)}
-                to="/admin/dashboard"
-                className={({ isActive }) =>
-                  `${role === "admin" || role === "instructor" ? "block" : "hidden"} ${
-                    isActive ? "text-highlighted font-semibold" : ""
-                  } text-lg mt-6 flex items-center gap-4 pl-2`
-                }
-              >
-                <Settings size={22}/>
-                <span>{role==="admin" ? "Admin Dashboard" : "Instructor Dashboard"}</span>
-              </NavLink>
-                </div>
-  )}
-
-            <div className="w-full flex items-center justify-center my-1">
-            <div className="w-[70%] flex items-center justify-between gap-4 px-4 py-3 bg-gray-100 dark:bg-zinc-800 rounded-lg">
-              <span className="text-sm">Theme</span>
-            <ThemeBtn className="w-9 h-5 after:top-[1px] after:h-4 after:w-4" />
-            </div>
-          </div>
-          
-          {!isLoggedIn && (
-            <NavLink
-              onClick={() => setShowSideNav(false)}
-              to="/login"
-              className="mt-2 w-full py-2 text-center text-lg bg-highlighted hover:bg-highlighted-hover text-white font-semibold rounded-sm"
-            >
-              Login
-            </NavLink>
-          )}
-{isLoggedIn &&
-              (  <div>
               <div
-                onClick={() => {
-                  logoutUser();
-                  setShowSideNav(false);
-                }}
-                className="mt-16 rounded-md flex items-center gap-2 w-full cursor-pointer text-lg pl-2 text-red-500"
+                className="absolute top-10 left-0 w-48 rounded-xl
+    bg-white dark:bg-zinc-900
+    border border-gray-200 dark:border-zinc-700
+    shadow-md
+    opacity-0 invisible translate-y-2
+    group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+    transition-all duration-200 overflow-hidden"
               >
-                <LogOut size={22} />
-                <p>Sign Out</p>
+                <DropdownItem to="/quizzes">Quizzes</DropdownItem>
+                <DropdownItem to="/faculties">Faculties</DropdownItem>
+                <DropdownItem to="/exams">Institutes</DropdownItem>
+                <DropdownItem to="/resources">Resources</DropdownItem>
               </div>
             </div>
-          )}
+
+            <ThemeBtn />
+
+            {isLoggedIn ? (
+              <div onClick={() => dispatch(toogleCard())}>
+                <UserIcon className="w-9 h-9 cursor-pointer" />
+              </div>
+            ) : (
+              <NavLink
+                to="/login"
+                className="px-4 py-1.5 bg-highlighted hover:bg-highlighted-hover text-white rounded-lg font-semibold transition"
+              >
+                Login
+              </NavLink>
+            )}
+          </div>
+
+          {/* Mobile Controls */}
+          <div className="md:hidden flex items-center gap-4 text-base">
+            <ThemeBtn />
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="w-9 h-9 flex items-center justify-center
+             rounded-full
+             bg-white/60 dark:bg-zinc-800/70
+             border border-gray-200 dark:border-zinc-700
+             backdrop-blur-md
+             hover:bg-white dark:hover:bg-zinc-700
+             active:scale-95
+             transition-all duration-200 cursor-pointer"
+            >
+              {menuOpen ? (
+                <X size={20} className="text-black dark:text-gray-200" />
+              ) : (
+                <Menu size={20} className="text-black dark:text-gray-200" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Expand Section */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ${
+            menuOpen ? "max-h-[600px] py-4 px-6" : "max-h-0"
+          }`}
+        >
+          <div className="flex flex-col gap-5 text-lg">
+            <MobileItem to="/" close={setMenuOpen}>
+              Home
+            </MobileItem>
+            <MobileItem to="/courses" close={setMenuOpen}>
+              Courses
+            </MobileItem>
+
+            <MobileItem to="/mock-tests" close={setMenuOpen}>
+              Mock Tests
+            </MobileItem>
+
+            <MobileItem to="/about-us" close={setMenuOpen}>
+              About Us
+            </MobileItem>
+
+            <MobileItem to="/quizzes" close={setMenuOpen}>
+              Quizzes
+            </MobileItem>
+
+            <MobileItem to="/faculties" close={setMenuOpen}>
+              Faculties
+            </MobileItem>
+
+            <MobileItem to="/exams" close={setMenuOpen}>
+              Institutes
+            </MobileItem>
+
+            <MobileItem to="/resources" close={setMenuOpen}>
+              Resources
+            </MobileItem>
+
+            {isLoggedIn && (
+              <>
+                <MobileItem to="/profile" close={setMenuOpen}>
+                  Profile
+                </MobileItem>
+
+                {role === "admin" && (
+                  <MobileItem to="/admin/dashboard" close={setMenuOpen}>
+                    Admin Dashboard
+                  </MobileItem>
+                )}
+
+                {role === "instructor" && (
+                  <MobileItem to="/admin/dashboard" close={setMenuOpen}>
+                    Instructor Dashboard
+                  </MobileItem>
+                )}
+
+                <div
+                  onClick={() => {
+                    logoutUser();
+                    setMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2 text-red-500 cursor-pointer"
+                >
+                  <LogOut size={18} />
+                  Logout
+                </div>
+              </>
+            )}
+
+            {!isLoggedIn && (
+              <NavLink
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-2 bg-highlighted text-white rounded-lg text-center font-semibold"
+              >
+                Login
+              </NavLink>
+            )}
+          </div>
         </div>
       </div>
+
+      <UserCard className="absolute top-20 right-6" />
     </nav>
   );
 };
+
+/* Components */
+
+const NavItem = ({ to, children }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      `relative group ${isActive ? "text-highlighted font-semibold" : ""}`
+    }
+  >
+    {children}
+    <Underline />
+  </NavLink>
+);
+
+const Underline = () => (
+  <span className="absolute left-0 -bottom-1 h-[1.5px] w-full scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100 origin-left"></span>
+);
+
+const DropdownItem = ({ to, children }) => (
+  <NavLink
+    to={to}
+    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition"
+  >
+    {children}
+  </NavLink>
+);
+
+const MobileItem = ({ to, children, close }) => (
+  <NavLink
+    to={to}
+    onClick={() => close(false)}
+    className={({ isActive }) =>
+      `block py-2 px-3 rounded-lg transition
+       ${
+         isActive
+           ? "text-highlighted bg-gray-100 dark:bg-zinc-800 font-semibold"
+           : "text-gray-700 dark:text-gray-300"
+       }`
+    }
+  >
+    {children}
+  </NavLink>
+);
 
 export default Navbar;
