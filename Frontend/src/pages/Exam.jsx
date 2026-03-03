@@ -13,7 +13,7 @@ const Exam = () => {
   return (
     <>
       <Helmet>
-        <title>Exams & Colleges | Microdome Classes</title>
+        <title>Exams & Institutes | Microdome Classes</title>
         <meta
           name="description"
           content="Explore exams like IIT JAM, GAT-B, CUET-PG and discover colleges and courses available through each exam."
@@ -26,11 +26,11 @@ const Exam = () => {
           {/* Heading */}
           <div className="text-center space-y-3" data-aos="fade-down">
             <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white">
-              Exams & <span className="text-highlighted">Colleges</span>
+              Exams & <span className="text-highlighted">Institutes</span>
             </h2>
             <p className="text-gray-600 dark:text-gray-300 text-lg max-w-3xl mx-auto">
               Explore top national entrance exams and discover the{" "}
-              <span className="font-semibold">colleges & courses</span>{" "}
+              <span className="font-semibold">institutes & courses</span>{" "}
               available through each exam.
             </p>
           </div>

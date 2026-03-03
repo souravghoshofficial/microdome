@@ -96,8 +96,8 @@ const Navbar = () => {
     transition-all duration-200 overflow-hidden"
               >
                 <DropdownItem to="/quizzes">Quizzes</DropdownItem>
-                <DropdownItem to="/faculties">Faculties</DropdownItem>
-                <DropdownItem to="/exams">Institutes</DropdownItem>
+                <DropdownItem to="/faculties">Our Faculties</DropdownItem>
+                <DropdownItem to="/exams-and-institutes">Exams & Institutes</DropdownItem>
                 <DropdownItem to="/resources">Resources</DropdownItem>
               </div>
             </div>
@@ -168,11 +168,11 @@ const Navbar = () => {
             </MobileItem>
 
             <MobileItem to="/faculties" close={setMenuOpen}>
-              Faculties
+              Our Faculties
             </MobileItem>
 
-            <MobileItem to="/exams" close={setMenuOpen}>
-              Institutes
+            <MobileItem to="/exams-and-institutes" close={setMenuOpen}>
+              Exams & Institutes
             </MobileItem>
 
             <MobileItem to="/resources" close={setMenuOpen}>
