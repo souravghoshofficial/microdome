@@ -265,9 +265,9 @@ const QuizList = () => {
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
               Get access to our{" "}
-              <span className="font-semibold">Mock Test Series </span>
-              and practice with multiple quizzes designed to boost your
-              preparation.
+               <span className="font-semibold">Quiz Series </span>
+               and challenge yourself with carefully curated quizzes designed to
+               strengthen your concepts and boost your preparation.
             </p>
 
             {/* Pricing Section */}
@@ -300,7 +300,7 @@ const QuizList = () => {
                   <ul className="mt-2 text-sm text-yellow-600 dark:text-yellow-700 list-disc list-inside space-y-1">
                     <li>Make sure to allow <b>third-party cookies</b> in your browser settings.</li>
                     <li>Recommended Browser: <b>Google Chrome</b></li>
-                    <li>Contact: <b>microdomeclasses2@gmail.com</b></li>
+                    <li>Contact: <b>team@microdomeclasses.in</b></li>
                   </ul>
                 </div>
 

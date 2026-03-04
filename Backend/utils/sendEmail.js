@@ -315,7 +315,7 @@ export const sendQuizConfirmationEmail = async ({
   studentName,
   quizLink,
 }) => {
-  const subject = `📝 Mock Test Series `;
+  const subject = `📝 Quiz Series Enrollment Confirmed! `;
 
   const html = `
   <div style="font-family: Arial, sans-serif; line-height: 1.6;">
