@@ -22,6 +22,10 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
 
+  /* ===== MODIFIED: state for mobile More dropdown ===== */
+  const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
+  /* ===================================================== */
+
   const lastScrollY = useRef(0);
   const ApiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -73,6 +77,7 @@ const Navbar = () => {
             <NavItem to="/">Home</NavItem>
             <NavItem to="/courses">Courses</NavItem>
             <NavItem to="/mock-tests">Mock Tests</NavItem>
+            <NavItem to="/quizzes">Quizzes</NavItem>
             <NavItem to="/about-us">About Us</NavItem>
 
             {/* More Dropdown */}
@@ -93,11 +98,12 @@ const Navbar = () => {
     shadow-md
     opacity-0 invisible translate-y-2
     group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
-    transition-all duration-200 overflow-hidden"
+    transition-all duration-200 overflow-hidden "
               >
-                <DropdownItem to="/quizzes">Quizzes</DropdownItem>
                 <DropdownItem to="/faculties">Our Faculties</DropdownItem>
-                <DropdownItem to="/exams-and-institutes">Exams & Institutes</DropdownItem>
+                <DropdownItem to="/exams-and-institutes">
+                  Exams & Institutes
+                </DropdownItem>
                 <DropdownItem to="/resources">Resources</DropdownItem>
               </div>
             </div>
@@ -154,30 +160,48 @@ const Navbar = () => {
             <MobileItem to="/courses" close={setMenuOpen}>
               Courses
             </MobileItem>
-
             <MobileItem to="/mock-tests" close={setMenuOpen}>
               Mock Tests
             </MobileItem>
-
             <MobileItem to="/about-us" close={setMenuOpen}>
               About Us
             </MobileItem>
-
             <MobileItem to="/quizzes" close={setMenuOpen}>
               Quizzes
             </MobileItem>
 
-            <MobileItem to="/faculties" close={setMenuOpen}>
-              Our Faculties
-            </MobileItem>
+            {/* ===== MODIFIED: Mobile More Dropdown Added ===== */}
+            <div className="flex flex-col">
+              <button
+                onClick={() => setMobileMoreOpen(!mobileMoreOpen)}
+                className="flex items-center justify-between py-2 px-3 rounded-lg text-gray-700 dark:text-gray-300"
+              >
+                <span>More</span>
+                <ChevronDown
+                  size={18}
+                  className={`transition-transform duration-300 ${
+                    mobileMoreOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
 
-            <MobileItem to="/exams-and-institutes" close={setMenuOpen}>
-              Exams & Institutes
-            </MobileItem>
-
-            <MobileItem to="/resources" close={setMenuOpen}>
-              Resources
-            </MobileItem>
+              <div
+                className={`overflow-hidden transition-all duration-300 ${
+                  mobileMoreOpen ? "max-h-40 mt-1" : "max-h-0"
+                }`}
+              >
+                <MobileItem to="/faculties" close={setMenuOpen}>
+                  Our Faculties
+                </MobileItem>
+                <MobileItem to="/exams-and-institutes" close={setMenuOpen}>
+                  Exams & Institutes
+                </MobileItem>
+                <MobileItem to="/resources" close={setMenuOpen}>
+                  Resources
+                </MobileItem>
+              </div>
+            </div>
+            {/* ================================================= */}
 
             {isLoggedIn && (
               <>
@@ -249,7 +273,7 @@ const Underline = () => (
 const DropdownItem = ({ to, children }) => (
   <NavLink
     to={to}
-    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition"
+    className="block px-4 py-2 hover:bg-gray-100 hover:text-highlighted dark:hover:bg-zinc-800 transition"
   >
     {children}
   </NavLink>
