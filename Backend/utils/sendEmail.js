@@ -315,29 +315,32 @@ export const sendQuizConfirmationEmail = async ({
   studentName,
   quizLink,
 }) => {
-  const subject = `📝 Quiz Series Enrollment Confirmed! `;
+  const subject = `🧠 Quiz Series Enrollment Confirmed!`;
 
   const html = `
   <div style="font-family: Arial, sans-serif; line-height: 1.6;">
     <h2 style="color: #2e6c80;">Hi ${studentName},</h2>
-    <p>You have successfully enrolled for the Mock Test Series. 🎉</p>
+    <p>You have successfully enrolled in our <strong>Quiz Series</strong>. 🎉</p>
 
+    <p>Get ready to test your knowledge and boost your preparation!</p>
 
     <p>
       <a href="${quizLink}" target="_blank" 
          style="display: inline-block; padding: 12px 20px; margin-top: 10px; background-color: #2e6c80; color: white; text-decoration: none; border-radius: 5px;">
-         🚀 Start Test
+         🚀 Start Quiz
       </a>
     </p>
 
-    <p>Make sure to attempt the test before the deadline. Good luck! 🍀</p>
+    <p>Please make sure to complete the quiz before the deadline.</p>
+
+    <p>We wish you all the best! 🍀</p>
 
     <p>Best regards,<br/>
     Microdome Classes Team<br/>
     📧 team@microdomeclasses.in</p>
 
     <hr/>
-    <small>This is an automated message. If you did not enroll in this test, please contact us immediately.</small>
+    <small>This is an automated message. If you did not enroll in this quiz, please contact us immediately.</small>
   </div>
 `;
 
@@ -349,9 +352,9 @@ export const sendQuizConfirmationEmail = async ({
       html,
     });
 
-    console.log("Mock test confirmation email sent to", to);
+    console.log("Quiz series confirmation email sent to", to);
   } catch (error) {
-    console.error("Error sending mock test confirmation email:", error);
+    console.error("Error sending quiz series confirmation email:", error);
   }
 };
 
