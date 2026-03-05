@@ -101,11 +101,11 @@ const Footer = () => {
 
         {/* Centered Button */}
         <div className="flex justify-center mb-6">
-          <a href="https://microdomeclasses.in/developers">
+          <Link to={`/developers`}>
             <button className="cursor-pointer px-4 py-1.5 bg-highlighted text-white text-sm font-semibold rounded-xl shadow-md hover:bg-highlighted-hover transition duration-300">
               Meet Our Developers
             </button>
-          </a>
+          </Link>
         </div>
 
         <hr className="w-full text-gray-600" />

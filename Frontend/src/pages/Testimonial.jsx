@@ -104,7 +104,7 @@ const Testimonial = () => {
   return (
     <div
       id="testimonials"
-      className="my-8 md:my-16 w-full flex items-center justify-center"
+      className="scroll-mt-36 my-8 md:my-16 w-full flex items-center justify-center"
     >
       <div className="w-[90%]">
         {/* Headings */}

@@ -20,7 +20,7 @@ import CourseSyllabus from "./CourseSyllabus";
 import CourseSection from "./CourseSection";
 import PaymentSuccess from "./PaymentSucess";
 import AdminLayout from "./AdminLayout";
-
+import ScrollToTop from "./ScrollToTop";
 
 export {
   Navbar,
@@ -45,4 +45,5 @@ export {
   CourseSection,
   PaymentSuccess,
   AdminLayout,
+  ScrollToTop
 };

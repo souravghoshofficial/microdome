@@ -81,7 +81,8 @@ import {
   AuthLayout,
   PaymentSuccess,
   AdminLayout,
-  Footer
+  Footer,
+  ScrollToTop
 } from "./components";
 
 import { useCourses } from "./hooks/courses.js";
@@ -105,6 +106,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
+    <ScrollToTop/>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route
