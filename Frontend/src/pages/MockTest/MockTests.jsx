@@ -70,9 +70,58 @@ const MockTests = () => {
     <>
       <Helmet>
         <title>Mock Tests | Microdome Classes</title>
+
         <meta
           name="description"
-          content="Attempt free mock tests or enroll in premium mock test series designed for competitive exams."
+          content="Attempt free mock tests or enroll in premium mock test series for IIT JAM, GATE Life Sciences and CUET PG biology entrance exams. Practice real exam-level questions and improve your speed, accuracy and exam confidence with Microdome Classes."
+        />
+
+        <meta
+          name="keywords"
+          content="Biology mock tests, IIT JAM mock test biology, GATE life sciences mock test, CUET PG biology mock test, online biology test series, free biology mock tests, Microdome mock tests"
+        />
+
+        <meta name="author" content="Microdome" />
+
+        <meta property="og:title" content="Mock Tests | Microdome Classes" />
+
+        <meta
+          property="og:description"
+          content="Practice with free mock tests or enroll in premium mock test series designed for IIT JAM, GATE Life Sciences and CUET PG aspirants."
+        />
+
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content="https://microdomeclasses.in/mock-tests"
+        />
+        <meta property="og:image" content="/microdomeLogo.png" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+
+        <meta name="twitter:title" content="Mock Tests | Microdome Classes" />
+
+        <meta
+          name="twitter:description"
+          content="Attempt free mock tests or enroll in premium mock test series designed for IIT JAM, GATE Life Sciences and CUET PG biology entrance exams."
+        />
+
+        <meta name="twitter:image" content="/microdomeLogo.png" />
+
+        <link rel="canonical" href="https://microdomeclasses.in/mock-tests" />
+
+        <link rel="icon" href="/microdomeLogo.png" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
         />
       </Helmet>
 
@@ -249,7 +298,6 @@ const MockTests = () => {
                       >
                         FREE
                       </span>
-                
 
                       {/* ICON */}
                       <div
