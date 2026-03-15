@@ -267,13 +267,13 @@ const NavItem = ({ to, children }) => (
 );
 
 const Underline = () => (
-  <span className="absolute left-0 -bottom-1 h-[1.5px] w-full scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100 origin-left"></span>
+  <span className="text-gray-700 dark:text-gray-300 absolute left-0 -bottom-0.5 h-[1.5px] w-full scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100 origin-left"></span>
 );
 
 const DropdownItem = ({ to, children }) => (
   <NavLink
     to={to}
-    className="block px-4 py-2 hover:bg-gray-100 hover:text-highlighted dark:hover:bg-zinc-800 transition"
+    className={({isActive}) => `block px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition ${isActive ? "text-highlighted" : "text-gray-700 dark:text-gray-300"}`}
   >
     {children}
   </NavLink>

@@ -15,25 +15,35 @@ const Layout = () => {
 
       {/* Animated WhatsApp Box */}
       <div
-        className={`fixed z-10 bottom-20 md:bottom-24 w-[85%] md:w-[25%] right-5 md:right-8 p-4 md:p-5 rounded-sm border border-gray-200 dark:border-gray-50/[.1] bg-white dark:bg-zinc-900 text-black dark:text-white transform transition-all duration-500 ease-in-out ${
+        className={`fixed z-20 bottom-20 md:bottom-24 right-4 md:right-8 w-80 md:w-90 p-5 rounded-xl border border-gray-200 dark:border-zinc-700/60 bg-white dark:bg-zinc-900/70 backdrop-blur-xl shadow-xl text-black dark:text-white transform transition-all duration-500 ease-in-out ${
           showMessage
             ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
             : "opacity-0 scale-95 translate-y-4 pointer-events-none"
         }`}
       >
-        <h4 className="text-lg font-bold">Let's Connect</h4>
-        <p className="text-sm">
-          Join our free WhatsApp group and become a part of our extended family.
-          This group is solely for updating group members about the biological
-          sciences field, notifications related to jobs, workshops, seminars,
-          PhD vacancies, exams etc.
+        <h4 className="text-lg font-semibold mb-1">
+          Join Our WhatsApp Community
+        </h4>
+
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+          Get important updates about :
         </p>
+
+        <ul className="text-sm space-y-1 mb-3 text-gray-700 dark:text-gray-300">
+          <li>• Biology entrance exam updates</li>
+          <li>• PhD & job opportunities</li>
+          <li>• Workshops & seminars</li>
+          <li>• Important academic notifications</li>
+        </ul>
+
         <a
           href="https://chat.whatsapp.com/LepMbONA6YlF95IGOITe8h"
           target="_blank"
-          className="mt-2 md:mt-4 inline-block rounded-sm w-full py-2 bg-highlighted hover:bg-highlighted-hover text-white text-center font-semibold cursor-pointer"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-green-500 hover:bg-green-600 text-white text-center font-semibold transition-colors"
         >
-          Join Now
+          <RiWhatsappLine className="size-5" />
+          Join WhatsApp Group
         </a>
       </div>
 
